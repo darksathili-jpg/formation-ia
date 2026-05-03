@@ -27,7 +27,7 @@ Formation pratique en 3 niveaux progressifs — Lycée Antoine Watteau, Valencie
 
 ## À propos
 
-Ce dépôt accompagne le site [darksathili.kesug.com](https://darksathili.kesug.com), une ressource pédagogique destinée aux **enseignants de la spécialité NSI** (Numérique et Sciences Informatiques) souhaitant intégrer l'intelligence artificielle dans leur pratique de classe.
+Ce dépôt accompagne le site [DarkSATHI Li](https://darksathili-jpg.github.io/formation-ia/), une ressource pédagogique destinée aux **enseignants de la spécialité NSI** (Numérique et Sciences Informatiques) souhaitant intégrer l'intelligence artificielle dans leur pratique de classe.
 
 Le projet propose :
 
@@ -225,7 +225,7 @@ Activités clé en main pour la classe, conçues pour être **testées par l'ens
 
 **DarkSATHI Li**  
 Enseignant de spécialité NSI — Lycée Antoine Watteau, Valenciennes  
-Site personnel : [darksathili.kesug.com](https://darksathili.kesug.com)
+Site personnel : [DarkSATHI Li](https://darksathili-jpg.github.io/formation-ia/)
 
 > Ce projet a été co-conçu avec [Claude](https://claude.ai), assistant IA développé par [Anthropic](https://www.anthropic.com).
 
