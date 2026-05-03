@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>TP – Assistant Vocal IA Local sur Raspberry Pi 5</title>
+ 
+
+  <!-- Active SharedArrayBuffer via mini-coi (requis par PyScript workers) -->
+  <script src="./mini-coi.js"></script>
+  <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+        <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="titre">
+    <div id="li" class="emo-card" style="float:left;background-color: #8ca5b400 ;border:none">
+      <div class="emo-face" style="background-color: #8ca5b400 ;border:none">
+        <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+          <rect width="54" height="54" fill="#080d14" />
+          <circle cx="27" cy="27" r="24" fill="none" stroke="#ffc83c" stroke-width="1" opacity="0.25">
+            <animate attributeName="r" values="20;24;20" dur="0.8s" repeatCount="indefinite" />
+          </circle>
+          <ellipse cx="17" cy="20" rx="8" ry="8" fill="#e6f0ff" />
+          <ellipse cx="17" cy="20" rx="5" ry="5" fill="#50b4ff" />
+          <ellipse cx="17" cy="20" rx="2.5" ry="2.5" fill="#0a0f19" />
+          <ellipse cx="14" cy="17" rx="1.3" ry="1.3" fill="white" />
+          <ellipse cx="37" cy="20" rx="8" ry="8" fill="#e6f0ff" />
+          <ellipse cx="37" cy="20" rx="5" ry="5" fill="#50b4ff" />
+          <ellipse cx="37" cy="20" rx="2.5" ry="2.5" fill="#0a0f19" />
+          <ellipse cx="34" cy="17" rx="1.3" ry="1.3" fill="white" />
+          <ellipse cx="27" cy="40" rx="11" ry="6" fill="#ff6478">
+            <animate attributeName="ry" values="2;7;4;9;3;6;2" dur="0.8s" repeatCount="indefinite" />
+          </ellipse>
+          <rect x="19" y="36" width="16" height="3" rx="1.5" fill="#8ca5b499">
+            <animate attributeName="opacity" values="1;1;0;0;1" dur="0.8s" repeatCount="indefinite" />
+          </rect>
+        </svg>
+      </div>
+    </div>
+    <h1>Li — Assistant Vocal IA Local</h1>
+  </div>
+  <p class="subtitle">Terminale NSI — Intelligence Artificielle Embarquée — TP Pratique &amp; Projet</p>
+
+  <!-- Navigation -->
+  <div class="nav-parts" id="navParts">
+    <div class="progress-step active" onclick="showPart(0)">Présentation</div>
+    <div class="progress-step" onclick="showPart(1)">Architecture</div>
+    <div class="progress-step" onclick="showPart(2)">Matériel</div>
+    <div class="progress-step" onclick="showPart(3)">Code Python</div>
+    <div class="progress-step" onclick="showPart(4)">Visage animé</div>
+    <div class="progress-step" onclick="showPart(5)">Synthèse</div>
+  </div>
+
+  <div class="container">
+
+    <!-- ══════════ INTRO ══════════ -->
+    <div class="card">
+      <div class="section-head">
+        <h2>Objectifs du TP</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+      <div class="objectif-grid">
+        <div class="objectif-item">
+          <p><strong>IA embarquée locale</strong>Comprendre pourquoi et comment faire tourner un LLM sur un
+            nano-ordinateur sans cloud.</p>
+        </div>
+        <div class="objectif-item">
+          <p><strong>Pipeline voix → IA → voix</strong>Analyser chaque étape : STT, LLM, TTS et leur enchaînement
+            logiciel.</p>
+        </div>
+        <div class="objectif-item">
+          <p><strong>Programmation orientée objet</strong>Implémenter les modules Python du projet : visage, wake word,
+            synthèse audio.</p>
+        </div>
+        <div class="objectif-item">
+          <p><strong>Retour d'expérience matériel</strong>Choisir et câbler des composants réels (GPIO, SPI, I2C) sur
+            Raspberry Pi 5.</p>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="section-head">
+          <h2 style="font-size:0.9rem;">Prérequis</h2>
+          <div class="line"></div>
+        </div>
+        <div class="prereq-pills">
+          <div class="pill">Python 3 : classes, fonctions, modules</div>
+          <div class="pill">Bases de Linux (terminal, apt, pip)</div>
+          <div class="pill">Notions de signaux numériques (audio PCM)</div>
+          <div class="pill">Raspberry Pi OS (GPIO, SPI)</div>
+          <div class="pill">Bases de l'IA générative</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 1 — PRÉSENTATION ══════════ -->
+    <div id="part-0">
+      <div class="section-head">
+        <h2>Partie 1 — Présentation du projet Li</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+
+        <!-- Colonne boîtier + face -->
+        <div class="card">
+          <div class="card-title">1.1 — Le produit fini<span>Boîtier PETG imprimé en 3D — Écran TFT ST7735
+              240&times;240</span></div>
+
+          <div class="li-demo-wrap">
+            <div class="li-enclosure">
+              <div class="li-case-body"></div>
+              <!-- Écran TFT -->
+              <div class="li-screen-bezel">
+                <div class="li-screen-canvas">
+                  <svg class="li-face-svg" viewBox="0 0 102 102" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="102" height="102" fill="#080d14" />
+                    <!-- halo speaking -->
+                    <circle cx="51" cy="51" r="48" fill="none" stroke="#ffc83c" stroke-width="1.2" opacity="0.2">
+                      <animate attributeName="r" values="42;48;42" dur="1.1s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.1;0.3;0.1" dur="1.1s" repeatCount="indefinite" />
+                    </circle>
+                    <!-- Œil gauche -->
+                    <ellipse cx="30" cy="40" rx="15" ry="15" fill="#e6f0ff" />
+                    <g style="animation:liIrisWander 6s ease-in-out infinite">
+                      <ellipse cx="30" cy="40" rx="10" ry="10" fill="#50b4ff" />
+                      <ellipse cx="30" cy="40" rx="5" ry="5" fill="#0a0f19" />
+                      <ellipse cx="25" cy="35" rx="2.5" ry="2.5" fill="white" />
+                    </g>
+                    <!-- paupière G -->
+                    <rect x="15" y="25" width="30" height="30" fill="#080d14"
+                      style="transform-origin:30px 40px;transform:scaleY(0)">
+                      <animate attributeName="transform" attributeType="CSS"
+                        values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)" keyTimes="0;0.87;0.92;1" dur="5s"
+                        repeatCount="indefinite" />
+                    </rect>
+                    <path d="M17 25 Q30 19 43 25" fill="none" stroke="#50b4ff" stroke-width="2"
+                      stroke-linecap="round" />
+                    <!-- Œil droit -->
+                    <ellipse cx="72" cy="40" rx="15" ry="15" fill="#e6f0ff" />
+                    <g style="animation:liIrisWander 6s ease-in-out infinite 0.3s">
+                      <ellipse cx="72" cy="40" rx="10" ry="10" fill="#50b4ff" />
+                      <ellipse cx="72" cy="40" rx="5" ry="5" fill="#0a0f19" />
+                      <ellipse cx="67" cy="35" rx="2.5" ry="2.5" fill="white" />
+                    </g>
+                    <rect x="57" y="25" width="30" height="30" fill="#080d14"
+                      style="transform-origin:72px 40px;transform:scaleY(0)">
+                      <animate attributeName="transform" attributeType="CSS"
+                        values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)" keyTimes="0;0.87;0.92;1" dur="5s"
+                        repeatCount="indefinite" />
+                    </rect>
+                    <path d="M59 25 Q72 19 85 25" fill="none" stroke="#50b4ff" stroke-width="2"
+                      stroke-linecap="round" />
+                    <!-- Bouche speaking -->
+                    <ellipse cx="51" cy="74" rx="17" ry="7" fill="#ff6478">
+                      <animate attributeName="ry" values="3;9;5;11;4;7;3" dur="0.85s" repeatCount="indefinite" />
+                    </ellipse>
+                    <rect x="37" y="70" width="28" height="4" rx="2" fill="#e6f0ff" opacity="0.85">
+                      <animate attributeName="opacity" values="0.85;0.85;0;0;0.85" dur="0.85s"
+                        repeatCount="indefinite" />
+                    </rect>
+                    <!-- point état -->
+                    <circle cx="51" cy="96" r="3" fill="#ffc83c">
+                      <animate attributeName="opacity" values="0.4;1;0.4" dur="1s" repeatCount="indefinite" />
+                    </circle>
+                  </svg>
+                </div>
+              </div>
+              <!-- LEDs -->
+              <div class="li-leds">
+                <div class="li-led"></div>
+                <div class="li-led"></div>
+                <div class="li-led"></div>
+              </div>
+              <!-- Micro -->
+              <div class="li-mic">
+                <div class="li-mic-dots">
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                  <div class="li-mic-dot"></div>
+                </div>
+              </div>
+              <!-- HP -->
+              <div class="li-speaker">
+                <div class="li-sp-line" style="height:9px"></div>
+                <div class="li-sp-line" style="height:12px"></div>
+                <div class="li-sp-line" style="height:14px"></div>
+                <div class="li-sp-line" style="height:12px"></div>
+                <div class="li-sp-line" style="height:9px"></div>
+              </div>
+              <div class="li-logo">Li</div>
+              <div class="li-ports">
+                <div class="li-port">USB</div>
+                <div class="li-port li-usbc"></div>
+                <div class="li-port">ETH</div>
+              </div>
+            </div>
+
+            <div
+              style="font-family:'Courier New',monospace;font-size:0.7rem;color:#e0e0e0;text-align:center;line-height:1.7;">
+              Boîtier PETG 130&times;85&times;60 mm<br>
+              Écran TFT ST7735 240&times;240 IPS<br>
+              Micro ReSpeaker 2-Mics HAT<br>
+              Batterie Anker 737 — 6 à 8h autonomie
+            </div>
+          </div>
+
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">Le détail sur Li</div>
+              <div class="etape-desc">Suivre le lien pour voir Li : <a href="li_visual.html" target="_blank"><strong>Li-ai.fr</strong></a></div>
+            </div>
+          </div>
+             <button type="button" class="btn btn-info mb-2"><a href="https://openscad.org/" target="_blank"><img width="10%" src="https://upload.wikimedia.org/wikipedia/commons/9/97/OpenSCAD-logo.png"/> Télécharger OpenSCAD</a></button>
+            <button type="button" class="btn btn-warning mb-2"><a href="li_boitier_v2.scad" download="li_boitier.scad"><img width="10%" src="https://upload.wikimedia.org/wikipedia/commons/9/97/OpenSCAD-logo.png"/> Fichier OpenSCAD - Boitier 3D</a></button>
+            <button type="button" class="btn btn-dark"><a href="li_impression3d.html" target="_blank">Fiche technique pour l'impression 3D</a></button>
+            
+            <div class="question-block">
+            <div class="q-num">1</div>
+            <p><strong>Question :</strong> Quels avantages y a-t-il à faire tourner un assistant vocal
+              <strong>entièrement en local</strong> (sans cloud) ? Cite au moins 3 avantages concrets.
+            </p>
+          </div>
+        </div>
+
+        <!-- Caractéristiques clés -->
+        <div class="card">
+          <div class="card-title">1.2 — Caractéristiques techniques<span>100% local · 100% offline · open-source</span>
+          </div>
+
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">LLM embarqué — Ollama + llama3.2:3b</div>
+              <div class="etape-desc">Modèle de langage de 3 milliards de paramètres, quantifié en 4-bit (≈2 Go RAM).
+                Génère du texte cohérent localement sur le CPU du RPi5.</div>
+              <div class="etape-time">~3–8 s par réponse</div>
+            </div>
+          </div>
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">Transcription vocale — Whisper Small</div>
+              <div class="etape-desc">Modèle de reconnaissance vocale d'OpenAI, exécuté en mode <code
+                  style="color:#ffc107">int8</code> via <em>faster-whisper</em>. Supporte 99 langues.</div>
+              <div class="etape-time">~1–3 s pour 6 s d'audio</div>
+            </div>
+          </div>
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">Synthèse vocale — Piper TTS</div>
+              <div class="etape-desc">Moteur TTS neuronal optimisé ARM64. Voix française <em>fr_FR-upmc-medium</em>,
+                naturelle et fluide. Génère un fichier WAV en &lt;1 s.</div>
+              <div class="etape-time">&lt; 1 s pour une réponse courte</div>
+            </div>
+          </div>
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">Wake Word — openWakeWord "Hello Li"</div>
+              <div class="etape-desc">Détection du mot déclencheur sans serveur. Modèle ONNX léger (~50 Mo RAM), 3–5%
+                CPU en écoute continue. Entraînable sur vos propres mots.</div>
+              <div class="etape-time">&lt; 300 ms après le mot</div>
+            </div>
+          </div>
+
+          <div class="alert-info" style="margin-top:8px;">
+            <strong>Cœurs CPU alloués :</strong> Le RPi5 dispose de 4 cœurs ARM Cortex-A76. Li les répartit ainsi : 1
+            cœur dédié au wake word + animation, 3 cœurs pour Whisper/Ollama lors de chaque échange.
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">2</div>
+            <p><strong>Question :</strong> Le modèle Llama 3.2 3B possède 3 milliards de paramètres stockés en 4 bits.
+              <strong>Combien d'octets</strong> cela représente-t-il au minimum ? Montre le calcul.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 2 — ARCHITECTURE ══════════ -->
+    <div id="part-1">
+      <div class="section-head">
+        <h2>Partie 2 — Architecture logicielle</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="card-title">2.1 — Pipeline de traitement<span>De la voix captée à la voix restituée</span></div>
+
+        <div class="flux-pipeline">
+          <div class="flux-step vert">IDLE<br><small>attente</small></div>
+          <div class="flux-arrow">→</div>
+          <div class="flux-step bleu">Wake Word<br><small>"Hello Li"</small></div>
+          <div class="flux-arrow">→</div>
+          <div class="flux-step vert">Écoute<br><small>6 secondes</small></div>
+          <div class="flux-arrow">→</div>
+          <div class="flux-step violet">Whisper<br><small>STT</small></div>
+          <div class="flux-arrow">→</div>
+          <div class="flux-step violet">Ollama<br><small>LLM</small></div>
+          <div class="flux-arrow">→</div>
+          <div class="flux-step orange">Piper TTS<br><small>+ bouche</small></div>
+          <div class="flux-arrow">→</div>
+          <div class="flux-step vert">Retour<br><small>IDLE</small></div>
+        </div>
+
+        <div class="question-block">
+          <div class="q-num">3</div>
+          <p><strong>Question :</strong> Identifie les étapes <strong>bloquantes</strong> (qui mettent en pause le
+            programme) et les étapes pouvant s'exécuter en <strong>parallèle</strong> (threading). Justifie.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">2.2 — Structure des modules Python<span>4 fichiers, 4 responsabilités</span></div>
+
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">li_main.py — Orchestrateur</div>
+              <div class="etape-desc">Crée et relie tous les modules. Contient la boucle principale et le pipeline
+                complet d'un échange.</div>
+            </div>
+          </div>
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">li_face.py — Animation visage</div>
+              <div class="etape-desc">Thread 30 FPS. Gère les 7 états émotionnels, le clignement, le regard et
+                l'animation labiale.</div>
+            </div>
+          </div>
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">li_wake.py — Wake word</div>
+              <div class="etape-desc">Thread d'écoute continue. Détecte "Hello Li" via openWakeWord, appelle le callback
+                de réveil.</div>
+            </div>
+          </div>
+          <div class="etape-row">
+            <div class="etape-content">
+              <div class="etape-title">li_audio.py — Sync labiale</div>
+              <div class="etape-desc">Extrait les niveaux RMS du WAV Piper, les envoie frame par frame à LiFace pendant
+                la lecture.</div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">4</div>
+            <p><strong>Question :</strong> Pourquoi est-il judicieux de séparer le code en 4 modules distincts plutôt
+              qu'un seul fichier ? Cite les principes de conception logicielle impliqués.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2.3 — Threads et concurrence<span>Exécution parallèle en Python</span></div>
+
+          <p style="font-size:0.82rem;color:#e0e0e0;line-height:1.6;margin-bottom:10px;">
+            Li utilise plusieurs <strong style="color:white">threads</strong> Python pour réaliser des tâches
+            simultanément. Sans threading, le visage se fige pendant qu'Ollama réfléchit !
+          </p>
+
+          <div class="summary-table">
+            <thead>
+              <tr>
+                <th>Thread</th>
+                <th>Rôle</th>
+                <th>Fréquence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="color:#ffc107">Thread principal</span></td>
+                <td>Pipeline échange voix↔IA</td>
+                <td>À la demande</td>
+              </tr>
+              <tr>
+                <td><span style="color:#7effc8">Thread face</span></td>
+                <td>Rendu visage 30 FPS</td>
+                <td>Permanent</td>
+              </tr>
+              <tr>
+                <td><span style="color:#c9a9ff">Thread wake</span></td>
+                <td>Écoute micro 16 kHz</td>
+                <td>Permanent</td>
+              </tr>
+            </tbody>
+          </div>
+
+<div class="code-box" style="margin-top:12px;"><span class="c-muted"># Démarrage des threads dans li_main.py</span>
+<span class="c-pink">self</span>.face = LiFace()
+<span class="c-pink">self</span>.face.<span class="c-yellow">start</span>() <span class="c-muted"># → thread face</span>
+
+<span class="c-pink">self</span>.wake_detector = WakeWordDetector(on_wake_callback=<span class="c-pink">self</span>._on_wake_word)
+<span class="c-pink">self</span>.wake_detector.<span class="c-yellow">start</span>() <span class="c-muted">#→ thread wake</span>
+
+<span class="c-muted"># Le pipeline s'exécute dans un 3e thread</span>
+<span class="c-muted"># déclenché par le callback wake word :</span>
+thread = threading.Thread(target=<span class="c-pink">self</span>._pipeline, daemon=<span class="c-blue">True</span>)
+thread.<span class="c-yellow">start</span>()
+</div>
+
+          <div class="question-block">
+            <div class="q-num">5</div>
+            <p><strong>Question :</strong> Que signifie <code style="color:#ffc107">daemon=True</code> pour un thread
+              Python ? Quel problème cela résout-il à l'arrêt du programme ?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 3 — MATÉRIEL ══════════ -->
+    <div id="part-2">
+      <div class="section-head">
+        <h2>Partie 3 — Fiche matériel &amp; câblage</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="card-title">3.1 — Liste du matériel<span>Budget total estimé : ~161 € (hors RPi5)</span></div>
+        <div class="materiel-grid">
+          <div class="mat-card posseede">
+            <div class="mat-name">Raspberry Pi 5</div>
+            <div class="mat-detail">16 Go RAM — ARM Cortex-A76 2.4 GHz &times; 4</div>
+            <div class="mat-prix">~120 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">SanDisk Extreme Pro</div>
+            <div class="mat-detail">128 Go microSD — A2 V30 — 200 Mo/s</div>
+            <div class="mat-prix">~20 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">Active Cooler RPi5</div>
+            <div class="mat-detail">Officiel Raspberry Pi Foundation</div>
+            <div class="mat-prix">~6 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">ReSpeaker 2-Mics HAT</div>
+            <div class="mat-detail">HAT GPIO · 2 micros · jack 3.5 mm · LEDs RGB</div>
+            <div class="mat-prix">~15 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">Écran ST7735 1.3"</div>
+            <div class="mat-detail">IPS 240&times;240 RGB SPI · compatible RPi5</div>
+            <div class="mat-prix">~12 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">HP 40mm + PAM8403</div>
+            <div class="mat-detail">4Ω 3W · amplificateur classe D</div>
+            <div class="mat-prix">~5 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">Anker 737 PowerBank</div>
+            <div class="mat-detail">24 000 mAh · USB-C 65W · 6–8h autonomie</div>
+            <div class="mat-prix">~80 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">Filament PETG 500g</div>
+            <div class="mat-detail">Pour boîtier 3D imprimé · 130&times;85&times;60 mm</div>
+            <div class="mat-prix">~10 €</div>
+          </div>
+          <div class="mat-card">
+            <div class="mat-name">Visserie M2.5</div>
+            <div class="mat-detail">Inserts laiton thermofusibles · 4&times; M2.5&times;5</div>
+            <div class="mat-prix">~5 €</div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="q-num">6</div>
+          <p><strong>Question :</strong> Le RPi5 consomme environ 10 W en charge. La batterie de 24 000 mAh fournit 5 V.
+            <strong>Calcule l'autonomie théorique</strong> en heures. Quelle formule utilises-tu ?
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3.2 — Câblage écran TFT ST7735 → GPIO Raspberry Pi 5<span>Protocole SPI (Serial
+            Peripheral Interface)</span></div>
+
+        <div class="diff-banner">
+          <p>Le ST7735 utilise le protocole <strong>SPI</strong> (Serial Peripheral Interface) : une communication série
+            synchrone entre le RPi5 (maître) et l'écran (esclave). 4 fils suffisent pour transmettre les pixels à 40
+            MHz.</p>
+        </div>
+
+        <table class="gpio-table" style="margin-top:14px;">
+          <thead>
+            <tr>
+              <th>Broche TFT</th>
+              <th>Pin physique RPi5</th>
+              <th>GPIO</th>
+              <th>Rôle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>VCC</td>
+              <td><span class="pin-badge">Pin 17</span></td>
+              <td>3.3V</td>
+              <td>Alimentation écran</td>
+            </tr>
+            <tr>
+              <td>GND</td>
+              <td><span class="pin-badge">Pin 20</span></td>
+              <td>GND</td>
+              <td>Masse commune</td>
+            </tr>
+            <tr>
+              <td>DIN (MOSI)</td>
+              <td><span class="pin-badge">Pin 19</span></td>
+              <td>GPIO 10</td>
+              <td>Données SPI (RPi → écran)</td>
+            </tr>
+            <tr>
+              <td>CLK (SCK)</td>
+              <td><span class="pin-badge">Pin 23</span></td>
+              <td>GPIO 11</td>
+              <td>Horloge SPI</td>
+            </tr>
+            <tr>
+              <td>CS</td>
+              <td><span class="pin-badge">Pin 24</span></td>
+              <td>GPIO 8 (CE0)</td>
+              <td>Chip Select — active l'écran</td>
+            </tr>
+            <tr>
+              <td>DC</td>
+              <td><span class="pin-badge">Pin 22</span></td>
+              <td>GPIO 25</td>
+              <td>Data / Command selector</td>
+            </tr>
+            <tr>
+              <td>RST</td>
+              <td><span class="pin-badge">Pin 18</span></td>
+              <td>GPIO 24</td>
+              <td>Reset matériel</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert-info" style="margin-top:12px;">
+          <strong>ST7735 vs ST7789 :</strong> Les deux contrôleurs sont compatibles avec le même brochage SPI et les
+          mêmes GPIO. Seule la bibliothèque Python change : <code>adafruit_st7735r</code> pour le ST7735,
+          <code>adafruit_st7789</code> pour le ST7789. Le code détecte automatiquement lequel est disponible au
+          démarrage.
+        </div>
+
+        <div class="question-block">
+          <div class="q-num">7</div>
+          <p><strong>Question :</strong> À quoi sert le fil <strong>DC (Data/Command)</strong> dans le protocole SPI de
+            cet écran ? Pourquoi ne peut-on pas distinguer une commande d'une donnée pixel autrement ?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 4 — CODE PYTHON ══════════ -->
+    <div id="part-3">
+      <div class="section-head">
+        <h2>Partie 4 — Étude du code Python</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab-btn active" onclick="switchTab(this,'tab-p1')">4.1 Orchestrateur</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-p2')">4.2 Wake Word</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-p3')">4.3 Audio RMS</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-p4')">4.4 Installation</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-p5')">4.5 Exercices</div>
+      </div>
+
+      <div class="card" style="border-radius:0 8px 8px 8px;">
+
+        <!-- 4.1 Orchestrateur -->
+        <div class="tab-panel active" id="tab-p1">
+          <div class="card-title">Pipeline principal — li_main.py<span>Gestion de l'état, threading, mémoire
+              conversationnelle</span></div>
+
+          <button type="button" class="btn btn-warning"><a href="li_main.py">Télécharger li_main.py</a></button>
+          <div class="question-block">
+            <div class="q-num">8</div>
+            <p><strong>Question :</strong> Ligne <code
+                style="color:#ffc107">self.history = [self.history[0]] + self.history[-20:]</code> — explique
+              précisément ce que fait cette instruction. Pourquoi conserve-t-on <code
+                style="color:#ffc107">self.history[0]</code> séparément ?</p>
+          </div>
+          <div class="question-block" style="margin-top:8px;">
+            <div class="q-num">9</div>
+            <p><strong>Question :</strong> Le paramètre <code style="color:#ffc107">vad_filter=True</code> de Whisper
+              active un filtre de détection d'activité vocale (VAD). Selon toi, quel est son intérêt ? Que se passe-t-il
+              sans lui ?</p>
+          </div>
+        </div>
+
+        <!-- 4.2 Wake Word -->
+        <div class="tab-panel" id="tab-p2">
+          <div class="card-title">Détecteur de wake word — li_wake.py<span>openWakeWord · Thread d'écoute continue ·
+              Callback</span></div>
+
+         <button type="button" class="btn btn-warning"><a href="li_wake.py">Télécharger li_wake.py</a></button>
+
+          <div class="alert-info">
+            <strong>Pourquoi 1280 échantillons à 16 kHz ?</strong><br>
+            1280 / 16 000 = 0.08 s = 80 ms par chunk. openWakeWord analyse des fenêtres de ~80 ms glissantes pour
+            détecter le motif acoustique. Des chunks plus petits augmentent la latence CPU, des chunks plus grands
+            retardent la détection.
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">10</div>
+            <p><strong>Question :</strong> À quoi sert le paramètre <code style="color:#ffc107">COOLDOWN_S = 2.0</code>
+              ? Sans ce mécanisme, que se passerait-il concrètement après que l'utilisateur dit "Hello Li" ?</p>
+          </div>
+          <div class="question-block" style="margin-top:8px;">
+            <div class="q-num">11</div>
+            <p><strong>Question :</strong> Le modèle renvoie un <code style="color:#ffc107">score</code> entre 0 et 1.
+              Si <code style="color:#ffc107">THRESHOLD = 0.7</code> et que tu le baisses à 0.3, quelles conséquences
+              prévisibles sur le comportement de Li ?</p>
+          </div>
+        </div>
+
+        <!-- 4.3 Audio RMS -->
+        <div class="tab-panel" id="tab-p3">
+          <div class="card-title">Synchronisation labiale — li_audio.py<span>Analyse RMS du WAV Piper pour animer la
+              bouche</span></div>
+
+          <button type="button" class="btn btn-warning"><a href="li_audio.py">Télécharger li_audio.py</a></button>
+
+          <div class="formula-box" style="margin-top:12px;">
+            <span class="f-label">formule RMS (Root Mean Square)</span>
+            <span class="hi">RMS</span> = √( <span class="gr">1/N</span> · Σ xᵢ² ) &nbsp;&nbsp;&nbsp; avec xᵢ =
+            échantillon audio, N = nb échantillons
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">12</div>
+            <p><strong>Question :</strong> Pourquoi utilise-t-on la valeur <strong>RMS</strong> et pas simplement la
+              valeur maximale (<code style="color:#ffc107">np.max</code>) ou la moyenne (<code
+                style="color:#ffc107">np.mean</code>) des échantillons pour mesurer l'énergie d'un signal audio ?</p>
+          </div>
+          <div class="question-block" style="margin-top:8px;">
+            <div class="q-num">13</div>
+            <p><strong>Question :</strong> Un fichier WAV 16-bit (sampwidth=2) enregistré à 16 000 Hz pendant 3 secondes
+              contient combien d'échantillons au total ? Combien de chunks de 50 ms cela représente-t-il ?</p>
+          </div>
+        </div>
+
+        <!-- 4.4 Installation -->
+        <div class="tab-panel" id="tab-p4">
+          <div class="card-title">Guide d'installation — Raspberry Pi OS Bookworm<span>Étapes dans l'ordre · ~45
+              min</span></div>
+
+          <div class="etape-row">
+            <div class="etape-badge">1</div>
+            <div class="etape-content">
+              <div class="etape-title">Mise à jour et dépendances système</div>
+              <div class="code-box">sudo apt update && sudo apt upgrade -y
+                sudo apt install -y python3-pip python3-venv portaudio19-dev \
+                alsa-utils ffmpeg git spi-tools i2c-tools
+                sudo raspi-config <span class="c-muted"># → Interface → SPI → Enable</span>
+                sudo reboot</div>
+              <div class="etape-time">~10 min selon connexion</div>
+            </div>
+          </div>
+
+          <div class="etape-row">
+            <div class="etape-badge">2</div>
+            <div class="etape-content">
+              <div class="etape-title">Environnement Python virtuel</div>
+              <div class="code-box">python3 -m venv ~/ai-assistant
+                source ~/ai-assistant/bin/activate
+                pip install faster-whisper pyaudio numpy ollama \
+                openWakeWord adafruit-circuitpython-st7735r \
+                adafruit-blinka Pillow</div>
+              <div class="etape-time">~15 min (compilation pyaudio)</div>
+            </div>
+          </div>
+
+          <div class="etape-row">
+            <div class="etape-badge">3</div>
+            <div class="etape-content">
+              <div class="etape-title">Ollama + modèle LLM</div>
+              <div class="code-box">curl -fsSL https://ollama.com/install.sh | sh
+                ollama pull llama3.2:3b <span class="c-muted"># ~2 Go — attendre...</span></div>
+              <div class="etape-time">~10 min selon connexion</div>
+            </div>
+          </div>
+
+          <div class="etape-row">
+            <div class="etape-badge">4</div>
+            <div class="etape-content">
+              <div class="etape-title">Piper TTS — voix française</div>
+              <div class="code-box">cd ~/ai-assistant
+                wget https://github.com/rhasspy/piper/releases/latest/download/piper_linux_aarch64.tar.gz
+                tar -xzf piper_linux_aarch64.tar.gz
+                cd piper
+                wget <span class="c-muted">https://huggingface.co/.../fr_FR-upmc-medium.onnx</span>
+                wget <span class="c-muted">https://huggingface.co/.../fr_FR-upmc-medium.onnx.json</span></div>
+              <div class="etape-time">~5 min</div>
+            </div>
+          </div>
+
+          <div class="etape-row">
+            <div class="etape-badge">5</div>
+            <div class="etape-content">
+              <div class="etape-title">Lancer Li !</div>
+              <div class="code-box">source ~/ai-assistant/bin/activate
+                cd ~/ai-assistant/li
+                python3 li_main.py
+                <span class="c-muted"># → "Li est prêt — Dites Hello Li !"</span>
+              </div>
+              <div class="etape-time">Premier démarrage : ~30 s (chargement Whisper)</div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">14</div>
+            <p><strong>Question :</strong> Pourquoi créer un <strong>environnement virtuel Python</strong> (<code
+                style="color:#ffc107">python3 -m venv</code>) plutôt qu'installer les paquets directement avec <code
+                style="color:#ffc107">sudo pip install</code> sur l'OS ?</p>
+          </div>
+        </div>
+
+        <!-- 4.5 Exercices -->
+        <div class="tab-panel" id="tab-p5">
+          <div class="card-title">Exercices de programmation<span>À compléter / modifier</span></div>
+
+          <p style="font-size:0.82rem;color:#e0e0e0;line-height:1.6;margin-bottom:14px;">
+            Les extraits suivants contiennent des <strong style="color:#ffc107">erreurs volontaires</strong> ou des
+            <strong style="color:#ffc107">parties à compléter</strong>. Corrige-les sur ton cahier ou dans l'éditeur de
+            code de ton professeur.
+          </p>
+
+          <div class="card-title" style="font-size:0.85rem;margin-top:4px;">Exercice A — Corriger la classe LiFace
+            <span style="color:#ff8080;font-family:'Courier New',monospace;font-size:0.7rem;">3 erreurs à trouver</span>
+          </div>
+<div class="code-box"><span class="c-blue">class</span> <span class="c-yellow">LiFace</span>:
+    <span class="c-blue">def</span> <span class="c-yellow">__init__</span>(<span class="c-pink">self</span>):
+        <span class="c-pink">self</span>._emotion = Emotion.IDLE
+        <span class="c-pink">self</span>._mouth_open = <span class="c-orange">0.0</span>
+        <span class="c-pink">self</span>._running = <span class="c-blue">True</span> <span class="c-muted"># ← ERREUR 1</span>
+        <span class="c-pink">self</span>._lock = [] <span class="c-muted"># ← ERREUR 2</span>
+
+    <span class="c-blue">def</span> <span class="c-yellow">set_speaking</span>(<span class="c-pink">self</span>, speaking, audio_level):
+        <span class="c-pink">self</span>._emotion = Emotion.SPEAKING <span class="c-blue">if</span> speaking
+        <span class="c-pink">self</span>._mouth_open = audio_level <span class="c-muted"># ← ERREUR 3</span>
+</div>
+
+          <div class="question-block">
+            <div class="q-num">A</div>
+            <p><strong>Identifie et corrige</strong> les 3 erreurs dans ce code. Pour chaque erreur, explique pourquoi
+              c'est un problème.</p>
+          </div>
+
+          <div class="card-title" style="font-size:0.85rem;margin-top:16px;">Exercice B — Compléter la fonction calculer_rms
+          </div><div class="code-box"><span class="c-blue">import</span> math
+<span class="c-blue">def</span> <span
+    class="c-yellow">calculer_rms</span>(samples_int16):
+      <span class="c-orange">"""
+        Calcule le niveau RMS normalisé entre 0.0 et 1.0.
+        samples_int16 : liste ou tableau numpy d'entiers 16-bit
+        max_val : valeur maximale d'un int16 = 32768
+      """</span>
+      max_val = <span class="c-orange">32768.0</span>
+      samples_float = [x / max_val <span class="c-blue">for</span> x <span class="c-blue">in</span> samples_int16]
+
+      <span class="c-muted"># À COMPLÉTER : calculer la somme des carrés</span>
+      somme_carres = <span class="c-orange">...</span>
+
+      <span class="c-muted"># À COMPLÉTER : calculer la moyenne des carrés</span>
+      moyenne = <span class="c-orange">...</span>
+
+      <span class="c-muted"># À COMPLÉTER : retourner la racine carrée (utilise math.sqrt)</span>
+      <span class="c-blue">return</span> <span class="c-orange">...</span>
+</div>
+
+          <div class="question-block">
+            <div class="q-num">Ex.B</div>
+            <p><strong>Complète</strong> les 3 lignes manquantes de la fonction <code
+                style="color:#ffc107">calculer_rms</code>. Teste-la avec <code
+                style="color:#ffc107">calculer_rms([0, 32767, 0, -32767])</code> : le résultat doit être proche de
+              <strong>0.707</strong>.
+            </p>
+          </div>
+        </div>
+
+      </div><!-- /card tabs -->
+    </div>
+
+    <!-- ══════════ PARTIE 5 — VISAGE ANIMÉ ══════════ -->
+    <div id="part-4">
+      <div class="section-head">
+        <h2>Partie 5 — Le visage animé de Li</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+
+        <div class="card">
+          <div class="card-title">5.1 — Les 7 états émotionnels<span>Cartoon friendly — 30 FPS sur ST7735</span></div>
+          <div class="emotions-mini">
+            <!-- IDLE -->
+            <div class="emo-card">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <ellipse cx="17" cy="21" rx="8" ry="8" fill="#e6f0ff" />
+                  <ellipse cx="17" cy="21" rx="5" ry="5" fill="#50b4ff" />
+                  <ellipse cx="17" cy="21" rx="2.5" ry="2.5" fill="#0a0f19" />
+                  <ellipse cx="14" cy="18" rx="1.3" ry="1.3" fill="white" />
+                  <ellipse cx="37" cy="21" rx="8" ry="8" fill="#e6f0ff" />
+                  <ellipse cx="37" cy="21" rx="5" ry="5" fill="#50b4ff" />
+                  <ellipse cx="37" cy="21" rx="2.5" ry="2.5" fill="#0a0f19" />
+                  <ellipse cx="34" cy="18" rx="1.3" ry="1.3" fill="white" />
+                  <path d="M16 38 Q27 45 38 38" fill="none" stroke="#ff6478" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="emo-label" style="color:#aaa">IDLE</div>
+            </div>
+            <!-- LISTENING -->
+            <div class="emo-card" style="border-color:var(--li-cyan)">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <circle cx="27" cy="27" r="25" fill="none" stroke="#32dcc8" stroke-width="1" opacity="0.5">
+                    <animate attributeName="r" values="20;25;20" dur="1.5s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.5s" repeatCount="indefinite" />
+                  </circle>
+                  <ellipse cx="17" cy="21" rx="9" ry="9" fill="#e6f0ff" />
+                  <ellipse cx="17" cy="21" rx="6" ry="6" fill="#50b4ff" />
+                  <ellipse cx="17" cy="21" rx="3" ry="3" fill="#0a0f19" />
+                  <ellipse cx="14" cy="18" rx="1.5" ry="1.5" fill="white" />
+                  <ellipse cx="37" cy="21" rx="9" ry="9" fill="#e6f0ff" />
+                  <ellipse cx="37" cy="21" rx="6" ry="6" fill="#50b4ff" />
+                  <ellipse cx="37" cy="21" rx="3" ry="3" fill="#0a0f19" />
+                  <ellipse cx="34" cy="18" rx="1.5" ry="1.5" fill="white" />
+                  <ellipse cx="27" cy="40" rx="8" ry="4" fill="#ff6478" opacity="0.5" />
+                </svg>
+              </div>
+              <div class="emo-label" style="color:var(--li-cyan)">ÉCOUTE</div>
+            </div>
+            <!-- THINKING -->
+            <div class="emo-card" style="border-color:var(--li-purple)">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <ellipse cx="17" cy="22" rx="8" ry="8" fill="#e6f0ff" />
+                  <ellipse cx="15" cy="20" rx="5" ry="5" fill="#50b4ff" />
+                  <ellipse cx="15" cy="20" rx="2.5" ry="2.5" fill="#0a0f19" />
+                  <ellipse cx="37" cy="22" rx="8" ry="8" fill="#e6f0ff" />
+                  <ellipse cx="35" cy="20" rx="5" ry="5" fill="#50b4ff" />
+                  <ellipse cx="35" cy="20" rx="2.5" ry="2.5" fill="#0a0f19" />
+                  <path d="M10 14 L22 17" fill="none" stroke="#50b4ff" stroke-width="2" stroke-linecap="round" />
+                  <path d="M32 17 L44 14" fill="none" stroke="#50b4ff" stroke-width="2" stroke-linecap="round" />
+                  <path d="M20 40 Q27 37 34 40" fill="none" stroke="#ff6478" stroke-width="1.5"
+                    stroke-linecap="round" />
+                  <circle cx="44" cy="12" r="1.5" fill="#c896ff">
+                    <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="48" cy="7" r="2.2" fill="#c896ff">
+                    <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.4s" />
+                  </circle>
+                </svg>
+              </div>
+              <div class="emo-label" style="color:var(--li-purple)">PENSE</div>
+            </div>
+            <!-- SPEAKING -->
+            <div class="emo-card" style="border-color:var(--li-orange)">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <circle cx="27" cy="27" r="24" fill="none" stroke="#ffc83c" stroke-width="1" opacity="0.25">
+                    <animate attributeName="r" values="20;24;20" dur="0.8s" repeatCount="indefinite" />
+                  </circle>
+                  <ellipse cx="17" cy="20" rx="8" ry="8" fill="#e6f0ff" />
+                  <ellipse cx="17" cy="20" rx="5" ry="5" fill="#50b4ff" />
+                  <ellipse cx="17" cy="20" rx="2.5" ry="2.5" fill="#0a0f19" />
+                  <ellipse cx="14" cy="17" rx="1.3" ry="1.3" fill="white" />
+                  <ellipse cx="37" cy="20" rx="8" ry="8" fill="#e6f0ff" />
+                  <ellipse cx="37" cy="20" rx="5" ry="5" fill="#50b4ff" />
+                  <ellipse cx="37" cy="20" rx="2.5" ry="2.5" fill="#0a0f19" />
+                  <ellipse cx="34" cy="17" rx="1.3" ry="1.3" fill="white" />
+                  <ellipse cx="27" cy="40" rx="11" ry="6" fill="#ff6478">
+                    <animate attributeName="ry" values="2;7;4;9;3;6;2" dur="0.8s" repeatCount="indefinite" />
+                  </ellipse>
+                  <rect x="19" y="36" width="16" height="3" rx="1.5" fill="#e6f0ff">
+                    <animate attributeName="opacity" values="1;1;0;0;1" dur="0.8s" repeatCount="indefinite" />
+                  </rect>
+                </svg>
+              </div>
+              <div class="emo-label" style="color:var(--li-orange)">PARLE</div>
+            </div>
+            <!-- HAPPY -->
+            <div class="emo-card" style="border-color:#64dd64">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <ellipse cx="17" cy="20" rx="8" ry="6" fill="#e6f0ff" />
+                  <ellipse cx="17" cy="20" rx="5" ry="4" fill="#50b4ff" />
+                  <ellipse cx="17" cy="20" rx="2.5" ry="2" fill="#0a0f19" />
+                  <ellipse cx="37" cy="20" rx="8" ry="6" fill="#e6f0ff" />
+                  <ellipse cx="37" cy="20" rx="5" ry="4" fill="#50b4ff" />
+                  <ellipse cx="37" cy="20" rx="2.5" ry="2" fill="#0a0f19" />
+                  <path d="M13 38 Q27 50 41 38" fill="#ff6478" stroke="#ff6478" stroke-width="1" />
+                  <ellipse cx="9" cy="34" rx="5" ry="3" fill="#ff6478" opacity="0.3" />
+                  <ellipse cx="45" cy="34" rx="5" ry="3" fill="#ff6478" opacity="0.3" />
+                </svg>
+              </div>
+              <div class="emo-label" style="color:#64dd64">JOYEUX</div>
+            </div>
+            <!-- SURPRISED -->
+            <div class="emo-card" style="border-color:var(--li-pink)">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <ellipse cx="17" cy="21" rx="10" ry="10" fill="#e6f0ff" />
+                  <ellipse cx="17" cy="21" rx="7" ry="7" fill="#50b4ff" />
+                  <ellipse cx="17" cy="21" rx="3.5" ry="3.5" fill="#0a0f19" />
+                  <ellipse cx="13" cy="17" rx="1.8" ry="1.8" fill="white" />
+                  <ellipse cx="37" cy="21" rx="10" ry="10" fill="#e6f0ff" />
+                  <ellipse cx="37" cy="21" rx="7" ry="7" fill="#50b4ff" />
+                  <ellipse cx="37" cy="21" rx="3.5" ry="3.5" fill="#0a0f19" />
+                  <ellipse cx="33" cy="17" rx="1.8" ry="1.8" fill="white" />
+                  <path d="M9 11 Q17 7 25 11" fill="none" stroke="#50b4ff" stroke-width="2" stroke-linecap="round" />
+                  <path d="M29 11 Q37 7 45 11" fill="none" stroke="#50b4ff" stroke-width="2" stroke-linecap="round" />
+                  <ellipse cx="27" cy="43" rx="7" ry="7" fill="#ff6478" />
+                </svg>
+              </div>
+              <div class="emo-label" style="color:var(--li-pink)">SURPRIS</div>
+            </div>
+            <!-- SLEEPING -->
+            <div class="emo-card" style="border-color:#3050a0">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <path d="M9 23 Q17 28 25 23" fill="none" stroke="#e6f0ff" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M29 23 Q37 28 45 23" fill="none" stroke="#e6f0ff" stroke-width="2.5"
+                    stroke-linecap="round" />
+                  <line x1="21" y1="38" x2="33" y2="38" stroke="#ff6478" stroke-width="2" stroke-linecap="round" />
+                  <text x="40" y="17" font-size="7" fill="#3050a0" font-family="monospace">
+                    <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" />z
+                  </text>
+                  <text x="44" y="11" font-size="9" fill="#3050a0" font-family="monospace">
+                    <animate attributeName="opacity" values="0;0.6;0" dur="2s" repeatCount="indefinite" begin="0.5s" />Z
+                  </text>
+                </svg>
+              </div>
+              <div class="emo-label" style="color:#3050a0">VEILLE</div>
+            </div>
+            <!-- WAKE -->
+            <div class="emo-card" style="border-color:var(--li-blue)">
+              <div class="emo-face">
+                <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="54" height="54" fill="#080d14" />
+                  <circle cx="27" cy="27" r="23" fill="none" stroke="#50b4ff" stroke-width="1" opacity="0.6">
+                    <animate attributeName="r" values="22;28;22" dur="1s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.6;0;0.6" dur="1s" repeatCount="indefinite" />
+                  </circle>
+                  <rect x="22" y="16" width="10" height="13" rx="5" fill="#50b4ff" />
+                  <path d="M18 28 Q18 36 27 36 Q36 36 36 28" fill="none" stroke="#50b4ff" stroke-width="2"
+                    stroke-linecap="round" />
+                  <line x1="27" y1="36" x2="27" y2="41" stroke="#50b4ff" stroke-width="1.5" />
+                  <line x1="22" y1="41" x2="32" y2="41" stroke="#50b4ff" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="emo-label" style="color:var(--li-blue)">WAKE</div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">15</div>
+            <p><strong>Question :</strong> En Python, le visage tourne à <strong>30 FPS</strong> dans un thread dédié.
+              Calcule le temps maximal disponible par frame en millisecondes pour que l'animation reste fluide.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">5.2 — Architecture orientée objet de LiFace<span>Thread-safe · lock · états</span>
+          </div>
+
+          <button type="button" class="btn btn-warning"><a href="li_face.py">Télécharger li_face.py</a></button>
+
+          <div class="diff-banner" style="margin-top:12px;">
+            <p>Le <strong>threading.Lock()</strong> (verrou mutex) empêche les conditions de course : si le thread audio
+              écrit <code style="color:#f9a8d4">_mouth_open</code> en même temps que le thread face le lit, des valeurs
+              corrompues pourraient apparaître. Le verrou garantit l'accès exclusif à la section critique.</p>
+          </div>         
+
+          <div class="question-block">
+            <div class="q-num">16</div>
+            <p><strong>Question :</strong> L'interpolation du regard utilise la formule <code
+                style="color:#ffc107">x += (target - x) * 0.08</code>. Simule 5 étapes à partir de <code>x=0</code>,
+              <code>target=1</code>. Quel type de mouvement cela produit-il ? Comment s'appelle ce type d'easing ?
+            </p>
+          </div>
+
+          <div class="question-block" style="margin-top:8px;">
+            <div class="q-num">17</div>
+            <p><strong>Question :</strong> Qu'est-ce qu'une <strong>condition de course</strong> (race condition) en
+              programmation concurrente ? Donne un exemple concret avec Li où cela pourrait provoquer un bug visible.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 6 — SYNTHÈSE ══════════ -->
+    <div id="part-5">
+      <div class="section-head">
+        <h2>Partie 6 — Synthèse &amp; Aller plus loin</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="card-title">Tableau récapitulatif — Composants du projet Li<span>Technologies, rôles et
+            performances</span></div>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Composant</th>
+              <th>Technologie</th>
+              <th>Rôle</th>
+              <th>Perf. RPi5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:#ffc107">Wake Word</strong></td>
+              <td>openWakeWord ONNX</td>
+              <td>Détecte "Hello Li" en continu</td>
+              <td>&lt;300ms · 3-5% CPU</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#7effc8">STT</strong></td>
+              <td>faster-whisper small int8</td>
+              <td>Voix → texte transcrit</td>
+              <td>1–3s · ~500 Mo RAM</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#c9a9ff">LLM</strong></td>
+              <td>Ollama llama3.2:3b</td>
+              <td>Génère la réponse textuelle</td>
+              <td>3–8s · ~2.1 Go RAM</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#ff8800">TTS</strong></td>
+              <td>Piper fr_FR-upmc-medium</td>
+              <td>Texte → voix naturelle WAV</td>
+              <td>&lt;1s · ~100 Mo RAM</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#50b4ff">Animation</strong></td>
+              <td>PIL/Pillow · SPI ST7735</td>
+              <td>Visage expressif 30 FPS</td>
+              <td>5% CPU · thread dédié</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#ff6478">Threading</strong></td>
+              <td>threading.Thread Python</td>
+              <td>Parallélisme des tâches</td>
+              <td>3 threads permanents</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3">
+        <div class="niveau-card n1">
+          <div class="badge-niveau">⭐ NIVEAU 1</div>
+          <h3>Changer la personnalité de Li</h3>
+          <div class="meta">Prompt engineering · system_prompt</div>
+          <ul>
+            <li>Modifier <code>CONFIG["system_prompt"]</code></li>
+            <li>Tester Li en tant que tuteur NSI</li>
+            <li>Li qui répond toujours en rimes</li>
+            <li>Mesurer l'impact sur les réponses</li>
+          </ul>
+        </div>
+        <div class="niveau-card n2">
+          <div class="badge-niveau">⭐⭐ NIVEAU 2</div>
+          <h3>Ajouter une émotion "Embarrassé"</h3>
+          <div class="meta">POO · rendu PIL · threading</div>
+          <ul>
+            <li>Ajouter <code>Emotion.EMBARRASSED</code></li>
+            <li>Dessiner des joues rouges intenses</li>
+            <li>Regard fuyant vers le bas</li>
+            <li>Déclencher si Li répond "je ne sais pas"</li>
+          </ul>
+        </div>
+        <div class="niveau-card n3">
+          <div class="badge-niveau">⭐⭐⭐ NIVEAU 3</div>
+          <h3>Entraîner le wake word custom</h3>
+          <div class="meta">ML · ONNX · openWakeWord training</div>
+          <ul>
+            <li>Générer 1000 échantillons TTS du mot</li>
+            <li>Lancer l'entraînement du modèle</li>
+            <li>Évaluer le taux de faux positifs</li>
+            <li>Comparer seuils 0.5 / 0.7 / 0.9</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Ressources utiles<span>Pour aller plus loin</span></div>
+        <ul class="link-list">
+          <li><a href="https://ollama.com/library" target="_blank">Bibliothèque de modèles Ollama</a> — Catalogue de
+            tous les LLM disponibles localement <span class="tag">Doc</span></li>
+          <li><a href="https://github.com/openai/whisper" target="_blank">OpenAI Whisper — GitHub</a> — Code source et
+            documentation officielle <span class="tag grey">Doc</span></li>
+          <li><a href="https://github.com/rhasspy/piper" target="_blank">Piper TTS — GitHub</a> — Voix disponibles,
+            installation, usage <span class="tag grey">Doc</span></li>
+          <li><a href="https://github.com/dscripka/openWakeWord" target="_blank">openWakeWord — GitHub</a> — Guide
+            d'entraînement de modèles personnalisés <span class="tag blue">ML</span></li>
+          <li><a href="https://docs.circuitpython.org/projects/st7735r/en/latest/" target="_blank">Adafruit ST7735R —
+              Documentation</a> — Librairie Python pour l'écran TFT <span class="tag grey">Doc</span></li>
+          <li><a href="https://docs.python.org/3/library/threading.html" target="_blank">Python threading —
+              Documentation officielle</a> — Threads, locks, synchronisation <span class="tag blue">Référence</span>
+          </li>
+        </ul>
+      </div>
+    </div><!-- /container -->
+
+    <footer>
+      TP Intelligence Artificielle Embarquée — Terminale NSI &nbsp;|&nbsp;
+      Projet Li — Assistant Vocal Local sur Raspberry Pi 5 &nbsp;·&nbsp;
+      <a href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt"
+        target="_blank">Programme NSI officiel</a>
+    </footer>
+
+  </div><!-- /container -->
+
+  <script>
+    function switchTab(btn, id) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const t = document.getElementById(id);
+      if (t) t.classList.add('active');
+    }
+
+    function showPart(idx) {
+      const ids = ['part-0', 'part-1', 'part-2', 'part-3', 'part-4', 'part-5'];
+      const el = document.getElementById(ids[idx]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.progress-step').forEach((s, i) => s.classList.toggle('active', i === idx));
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = ['part-0', 'part-1', 'part-2', 'part-3', 'part-4', 'part-5'].indexOf(entry.target.id);
+          if (idx >= 0) document.querySelectorAll('.progress-step').forEach((s, i) => s.classList.toggle('active', i === idx));
+        }
+      });
+    }, { threshold: 0.25 });
+
+    ['part-0', 'part-1', 'part-2', 'part-3', 'part-4', 'part-5'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  </script>
+
+</body>
+
+</html>

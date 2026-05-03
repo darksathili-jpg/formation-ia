@@ -1,0 +1,667 @@
+/* ========================================
+   IMPORTS & RESET — fidèle à style.css
+======================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #8ca5b499;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* ========================================
+   TITRE PRINCIPAL
+======================================== */
+h1 {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 0 20px 0 calc(6.5vw + 30px);
+    height: auto;
+    min-height: 5vw;
+    line-height: 5vw;
+    font-family: "Rubik Dirt", system-ui;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: relative;
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+}
+
+h1::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6.5vw;
+    height: 6.5vw;
+    background-image: url(assets/images/logoIA.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* ========================================
+   SOUS-TITRE PAGE
+======================================== */
+.page-subtitle {
+    text-align: center;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    margin: -10px auto 30px auto;
+    opacity: 0.85;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================
+   CONTENEUR PRINCIPAL
+======================================== */
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+/* ========================================
+   CARTE — base identique à style.css
+======================================== */
+.card {
+    flex: 0 0 calc(40% - 10px);
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+    color: white;
+    text-align: center;
+    font-family: "Rubik Dirt", system-ui;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.card-title span {
+    display: block;
+    font-size: 13px;
+    color: #e0e0e0;
+    margin-top: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: normal;
+}
+
+/* ========================================
+   CARTES PLEINE LARGEUR (sections article)
+======================================== */
+.card-full {
+    flex: 0 0 100%;
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 28px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.card-full:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-wide {
+    flex: 0 0 calc(60% - 10px);
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.card-wide:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   TYPOGRAPHIE ARTICLE
+======================================== */
+.section-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: #ffc107;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: "Rubik Dirt", system-ui;
+    color: white;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+}
+
+h3 {
+    font-family: "Rubik Dirt", system-ui;
+    color: #fff3cd;
+    font-size: 1.05rem;
+    margin: 20px 0 10px 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+p {
+    color: white;
+    line-height: 1.75;
+    margin-bottom: 1em;
+    font-size: 0.95rem;
+}
+
+p strong {
+    color: #fff3cd;
+}
+
+p em {
+    color: #e0e0e0;
+    font-style: italic;
+}
+
+/* ========================================
+   CITATION EN EXERGUE
+======================================== */
+blockquote {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-left: 4px solid #ffc107;
+    border-radius: 0 5px 5px 0;
+    margin: 20px 0;
+    padding: 16px 20px;
+    font-style: italic;
+    color: #f0f0f0;
+    font-size: 0.93rem;
+    line-height: 1.7;
+}
+
+blockquote cite {
+    display: block;
+    font-style: normal;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: #ffc107;
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================
+   TABLEAU
+======================================== */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: 6px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+thead tr {
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffc107;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 193, 7, 0.12);
+}
+
+tbody td {
+    padding: 11px 16px;
+    color: white;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    vertical-align: top;
+    line-height: 1.5;
+    font-size: 0.88rem;
+}
+
+tbody td:first-child {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    color: #fff3cd;
+    font-weight: bold;
+}
+
+.ok {
+    color: #6fcf97;
+    font-weight: bold;
+}
+
+.nok {
+    color: #ff7c7c;
+}
+
+.mid {
+    color: #f2c94c;
+}
+
+/* ========================================
+   PIPELINE ÉTAPES
+======================================== */
+.pipeline {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 16px 0;
+}
+
+.pipeline-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    color: #ffc107;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.pipeline-steps {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.step {
+    flex: 1;
+    min-width: 120px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    padding: 12px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.step-num {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    color: #ffc107;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.step-titre {
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 0.85rem;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.step-desc {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+}
+
+.step-arrow {
+    display: flex;
+    align-items: center;
+    color: #ffc107;
+    font-size: 1.4rem;
+    padding-top: 16px;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   ENCARTS
+======================================== */
+.encart-warning {
+    background-color: rgba(220, 53, 69, 0.2);
+    border-left: 4px solid #dc3545;
+    border-radius: 0 5px 5px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+}
+
+.encart-warning .encart-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: #ff7c7c;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.encart-info {
+    background-color: rgba(255, 193, 7, 0.15);
+    border-left: 4px solid #ffc107;
+    border-radius: 0 5px 5px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+}
+
+.encart-info .encart-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: #ffc107;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.encart-success {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-left: 4px solid #28a745;
+    border-radius: 0 5px 5px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+}
+
+.encart-success .encart-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    color: #6fcf97;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* ========================================
+   BENCHMARK BARRES
+======================================== */
+.benchmark {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 16px 0;
+}
+
+.bench-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    color: #ffc107;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+
+.bench-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.bench-nom {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.78rem;
+    color: white;
+    width: 210px;
+    flex-shrink: 0;
+    line-height: 1.4;
+}
+
+.bench-nom em {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: normal;
+    font-size: 0.72rem;
+    display: block;
+}
+
+.bench-bar-wrap {
+    flex: 1;
+    height: 26px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bench-bar {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    font-weight: bold;
+    transition: width 1.2s ease;
+}
+
+.bar-gold {
+    background: linear-gradient(90deg, #ffc107, #ffe066);
+    color: #1a1a1a;
+}
+
+.bar-blue {
+    background: #4a6fa5;
+    color: white;
+}
+
+.bar-purple {
+    background: #6b4a8a;
+    color: white;
+}
+
+.bar-green {
+    background: #28a745;
+    color: white;
+}
+
+.bench-score {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.82rem;
+    font-weight: bold;
+    color: #fff3cd;
+    width: 50px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   SÉPARATEUR
+======================================== */
+.sep {
+    width: 100%;
+    flex: 0 0 100%;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1.4rem;
+    margin: 8px 0;
+    letter-spacing: 0.5em;
+}
+
+/* ========================================
+   BOUTONS
+======================================== */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: white;
+    font-family: "Rubik Dirt", system-ui;
+}
+
+.btn-warning:hover {
+    background-color: #ffb300;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* ========================================
+   BADGES CHIFFRES
+======================================== */
+.chiffres-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin: 10px 0;
+}
+
+.chiffre-item {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 14px 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chiffre-valeur {
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 1.6rem;
+    color: #ffc107;
+    display: block;
+    line-height: 1.1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.chiffre-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+    display: block;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+.footer-card {
+    flex: 0 0 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-card p {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 4px 0;
+}
+
+.footer-card a {
+    color: #ffc107;
+    text-decoration: none;
+}
+
+.footer-card a:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media screen and (max-width: 1080px) {
+
+    .card,
+    .card-wide {
+        flex: 0 0 100%;
+    }
+
+    .pipeline-steps {
+        flex-direction: column;
+    }
+
+    .step-arrow {
+        display: none;
+    }
+
+    h1 {
+        width: 100% !important;
+        line-height: 1.4;
+        font-size: clamp(1.2rem, 5vw, 2rem);
+        padding: 10px 15px;
+    }
+
+    h1::before {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+
+    .card,
+    .card-full,
+    .card-wide {
+        padding: 15px;
+    }
+
+    .bench-nom {
+        width: 140px;
+        font-size: 0.72rem;
+    }
+}
+
+/* ========================================
+   FOCUS ACCESSIBILITÉ
+======================================== */
+button:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid #ffc107;
+    outline-offset: 2px;
+}

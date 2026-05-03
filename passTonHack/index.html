@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTHD 2026 — Lycée Watteau Valenciennes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     CHARTE — identique à darksathili.kesug.com
+     ============================================ */
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #8ca5b499;
+    min-height: 100vh;
+    padding: 20px;
+    font-weight: fine;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- TITRE h1 ---- */
+  h1 {
+    display: block;
+    width: fit-content;
+    margin: 20px auto 6px;
+    padding: 0 20px 0 20px;
+    height: auto;
+    min-height: clamp(44px, 6.5vw, 88px);
+    line-height: clamp(44px, 6.5vw, 88px);
+    font-family: "Rubik Dirt", system-ui;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: relative;
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+  }
+
+  /* ---- Sous-titre ---- */
+  .subtitle {
+    text-align: center;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- Conteneur principal ---- */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ---- CARTE ---- */
+  .card {
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Titre de carte */
+  .card-title {
+    color: white;
+    font-family: "Rubik Dirt", system-ui;
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-title span {
+    display: block;
+    font-size: 0.8rem;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-weight: normal;
+    margin-top: 3px;
+  }
+
+  /* ---- BOUTONS ---- */
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .btn-warning {
+    background-color: #ffc107;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
+  }
+
+  .btn-warning:hover {
+    background-color: #ffb300;
+    transform: scale(1.02);
+    text-decoration: none;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  /* ---- GRILLES ---- */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  /* ---- Séparateur de section ---- */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .section-head h2 {
+    font-family: "Rubik Dirt", system-ui;
+    color: white;
+    font-size: 1.15rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+  }
+
+  .section-head .line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.4), transparent);
+    border-radius: 2px;
+  }
+
+  /* ---- Niveaux (cartes colorées podium) ---- */
+  .niveau-card {
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .niveau-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .niveau-card .badge-niveau {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .niveau-card h3 {
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 1rem;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    margin-bottom: 6px;
+  }
+
+  .niveau-card .meta {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 12px;
+  }
+
+  .niveau-card ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .niveau-card ul li {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+    padding-left: 1.1em;
+    position: relative;
+  }
+
+  .niveau-card ul li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Couleurs podium */
+  .n1 { background: linear-gradient(135deg, #b87b00, #e09a00); }
+  .n1 .badge-niveau { background: rgba(0,0,0,0.25); color: #ffe89e; }
+
+  .n2 { background: linear-gradient(135deg, #4a4a55, #7a7a8a); }
+  .n2 .badge-niveau { background: rgba(0,0,0,0.25); color: #d8d8e8; }
+
+  .n3 { background: linear-gradient(135deg, #7a3a10, #b56030); }
+  .n3 .badge-niveau { background: rgba(0,0,0,0.25); color: #f0b080; }
+
+  .n4 { background: linear-gradient(135deg, #1a6b4a, #25a06e); }
+  .n4 .badge-niveau { background: rgba(0,0,0,0.25); color: #7effc8; }
+
+  .n5 { background: linear-gradient(135deg, #4a1a9a, #7040c0); }
+  .n5 .badge-niveau { background: rgba(0,0,0,0.25); color: #c9a9ff; }
+
+  .n6 { background: linear-gradient(135deg, #1a4a6b, #2580a0); }
+  .n6 .badge-niveau { background: rgba(0,0,0,0.25); color: #7ec8ff; }
+
+  .n7 { background: linear-gradient(135deg, #3a3a3a, #5a5a5a); }
+  .n7 .badge-niveau { background: rgba(0,0,0,0.25); color: #c0c0c0; }
+
+  /* ---- Tableau de classement ---- */
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+  }
+
+  .ranking-table thead tr {
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+  }
+
+  .ranking-table th {
+    color: #ffc107;
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ranking-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.15s;
+  }
+
+  .ranking-table tbody tr:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .ranking-table td {
+    padding: 9px 10px;
+    color: rgba(255,255,255,0.88);
+    vertical-align: middle;
+  }
+
+  .td-team {
+    font-weight: bold;
+    color: white;
+    font-family: 'Courier New', monospace;
+  }
+
+  .td-rank { color: #ffc107; font-weight: bold; }
+  .td-score { color: white; font-weight: bold; }
+  .td-obj { color: #e0e0e0; }
+
+  .row-gold   td { background: rgba(255,193,7,0.08); }
+  .row-silver td { background: rgba(200,200,210,0.08); }
+  .row-bronze td { background: rgba(180,100,50,0.08); }
+
+  /* ---- Liste de ressources ---- */
+  .link-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .link-list li {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.875rem;
+    color: white;
+    transition: background 0.2s;
+  }
+
+  .link-list li:hover { background: rgba(255, 255, 255, 0.25); }
+
+  .link-list li .tag {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 0.67rem;
+    font-weight: 700;
+    background: #ffc107;
+    color: #1a2a35;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .link-list li .tag.green { background: #28a745; color: white; }
+  .link-list li .tag.grey { background: rgba(255,255,255,0.3); color: white; }
+
+  /* ---- Alerte info ---- */
+  .alert-info {
+    background: rgba(255, 255, 255, 0.12);
+    border-left: 4px solid #ffc107;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  .alert-info strong { color: white; }
+
+  /* ---- Bloc code terminal ---- */
+  .code-box {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: #a8ffa0;
+    line-height: 1.7;
+  }
+
+  /* ---- Footer ---- */
+  footer {
+    margin-top: 10px;
+    text-align: center;
+    color: #e0e0e0;
+    font-size: 0.75rem;
+    font-family: 'Courier New', monospace;
+    padding: 10px 0;
+  }
+
+  footer a { color: #ffc107; }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 750px) {
+    h1 { width: 100%; padding: 10px 15px; line-height: 1.3; font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Pass Ton Hack D'abord 2026</h1>
+<p class="subtitle">Lycée Antoine Watteau — Valenciennes &mdash; Résultats officiels PTHD_26</p>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Présentation</h2>
+      <div class="line"></div>
+    </div>
+    <p style="color:#e0e0e0; font-size:0.9rem; line-height:1.7; font-family:'Courier New',monospace;">
+      Le concours <strong style="color:white">Pass Ton Hack D'abord</strong> est une compétition nationale de cybersécurité au format CTF (Capture The Flag) ouverte aux lycéens, étudiants et professionnels. L'édition 2026 a réuni <strong style="color:#ffc107">1 892 équipes</strong> issues de toute la France. Les équipes du lycée Watteau de Valenciennes se sont illustrées dans trois classements distincts : général, bac général/technologique, et académie de Lille.
+    </p>
+    <div class="alert-info" style="margin-top:14px">
+      <strong>Source :</strong> Classement officiel PTHD_26 — Mise à jour du 16/02/2026. Les rangs proviennent directement du fichier de classement fourni par les organisateurs. Le classement bac général/techno compte <strong>1 089 équipes</strong> au total.
+    </div>
+  </div>
+
+  <!-- STATS RAPIDES -->
+  <div class="grid-3">
+    <div class="card" style="text-align:center">
+      <div style="font-family:'Rubik Dirt',system-ui; font-size:2.2rem; color:#ffc107; text-shadow:1px 1px 4px rgba(0,0,0,0.4);">1 892</div>
+      <div style="font-family:'Courier New',monospace; font-size:0.75rem; color:#e0e0e0; margin-top:4px;">équipes — classement général</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-family:'Rubik Dirt',system-ui; font-size:2.2rem; color:#ffc107; text-shadow:1px 1px 4px rgba(0,0,0,0.4);">1 089</div>
+      <div style="font-family:'Courier New',monospace; font-size:0.75rem; color:#e0e0e0; margin-top:4px;">équipes — bac général/techno</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-family:'Rubik Dirt',system-ui; font-size:2.2rem; color:#ffc107; text-shadow:1px 1px 4px rgba(0,0,0,0.4);">7</div>
+      <div style="font-family:'Courier New',monospace; font-size:0.75rem; color:#e0e0e0; margin-top:4px;">équipes Watteau engagées</div>
+    </div>
+  </div>
+
+  <!-- PODIUM VISUEL -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Top 3 — Classement Général</h2>
+      <div class="line"></div>
+    </div>
+    <div class="grid-3">
+      <div class="niveau-card n1">
+        <span class="badge-niveau">RANG 237 / 1 892</span>
+        <h3>Bitmaster</h3>
+        <p class="meta">Score : 840 pts &mdash; 21 objectifs</p>
+        <ul>
+          <li>Top 12,5 % national</li>
+          <li>Rang 80 / 1 089 en Bac G/T</li>
+          <li>Académie de Lille : [LIL]</li>
+        </ul>
+      </div>
+      <div class="niveau-card n2">
+        <span class="badge-niveau">RANG 255 / 1 892</span>
+        <h3>Les Octects Perdus</h3>
+        <p class="meta">Score : 840 pts &mdash; 21 objectifs</p>
+        <ul>
+          <li>Top 13,5 % national</li>
+          <li>Rang 88 / 1 089 en Bac G/T</li>
+          <li>Académie de Lille : [LIL]</li>
+        </ul>
+      </div>
+      <div class="niveau-card n3">
+        <span class="badge-niveau">RANG 365 / 1 892</span>
+        <h3>Pas de bits, pas de chocolats</h3>
+        <p class="meta">Score : 740 pts &mdash; 20 objectifs</p>
+        <ul>
+          <li>Top 19 % national</li>
+          <li>Rang 141 / 1 089 en Bac G/T</li>
+          <li>Académie de Lille : [LIL]</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLASSEMENT GÉNÉRAL -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Classement Général</h2>
+      <div class="line"></div>
+    </div>
+    <p class="card-title"><span>1 892 équipes participantes — source : classement-général PTHD_26</span></p>
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>Équipe</th>
+          <th>Rang</th>
+          <th>Score</th>
+          <th>Objectifs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-gold">
+          <td class="td-team">Bitmaster</td>
+          <td class="td-rank">237 / 1 892</td>
+          <td class="td-score">840</td>
+          <td class="td-obj">21</td>
+        </tr>
+        <tr class="row-silver">
+          <td class="td-team">Les Octects Perdus</td>
+          <td class="td-rank">255 / 1 892</td>
+          <td class="td-score">840</td>
+          <td class="td-obj">21</td>
+        </tr>
+        <tr class="row-bronze">
+          <td class="td-team">Pas de bits, pas de chocolats</td>
+          <td class="td-rank">365 / 1 892</td>
+          <td class="td-score">740</td>
+          <td class="td-obj">20</td>
+        </tr>
+        <tr>
+          <td class="td-team">NeoNova</td>
+          <td class="td-rank">1 072 / 1 892</td>
+          <td class="td-score">390</td>
+          <td class="td-obj">13</td>
+        </tr>
+        <tr>
+          <td class="td-team">Le gang de l'octet</td>
+          <td class="td-rank">1 284 / 1 892</td>
+          <td class="td-score">290</td>
+          <td class="td-obj">11</td>
+        </tr>
+        <tr>
+          <td class="td-team">Les trois mousquetaires</td>
+          <td class="td-rank">1 800 / 1 892</td>
+          <td class="td-score">52</td>
+          <td class="td-obj">4</td>
+        </tr>
+        <tr>
+          <td class="td-team">On Est Pas Des Flèches 59!</td>
+          <td class="td-rank">1 892 / 1 892</td>
+          <td class="td-score">0</td>
+          <td class="td-obj">0</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert-info">
+      Les équipes Bitmaster, Les Octects Perdus et Pas de bits, pas de chocolats se classent dans le <strong>top 20 % national</strong> avec respectivement 21, 21 et 20 objectifs validés. NeoNova et Le gang de l'octet complètent la participation avec des scores honorables de 390 et 290 points.
+    </div>
+  </div>
+
+  <!-- CLASSEMENT BAC G/T -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Classement Bac Général / Technologique</h2>
+      <div class="line"></div>
+    </div>
+    <p class="card-title"><span>1 089 équipes — source : classement-bac-gen-tech PTHD_26</span></p>
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>Équipe</th>
+          <th>Rang Bac G/T</th>
+          <th>Score</th>
+          <th>Objectifs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-gold">
+          <td class="td-team">Bitmaster</td>
+          <td class="td-rank">80 / 1 089</td>
+          <td class="td-score">840</td>
+          <td class="td-obj">21</td>
+        </tr>
+        <tr class="row-silver">
+          <td class="td-team">Les Octects Perdus</td>
+          <td class="td-rank">88 / 1 089</td>
+          <td class="td-score">840</td>
+          <td class="td-obj">21</td>
+        </tr>
+        <tr class="row-bronze">
+          <td class="td-team">Pas de bits, pas de chocolats</td>
+          <td class="td-rank">141 / 1 089</td>
+          <td class="td-score">740</td>
+          <td class="td-obj">20</td>
+        </tr>
+        <tr>
+          <td class="td-team">NeoNova</td>
+          <td class="td-rank">474 / 1 089</td>
+          <td class="td-score">390</td>
+          <td class="td-obj">13</td>
+        </tr>
+        <tr>
+          <td class="td-team">Le gang de l'octet</td>
+          <td class="td-rank">585 / 1 089</td>
+          <td class="td-score">290</td>
+          <td class="td-obj">11</td>
+        </tr>
+        <tr>
+          <td class="td-team">Les trois mousquetaires</td>
+          <td class="td-rank">861 / 1 089</td>
+          <td class="td-score">52</td>
+          <td class="td-obj">4</td>
+        </tr>
+        <tr>
+          <td class="td-team">On Est Pas Des Flèches 59!</td>
+          <td class="td-rank">897 / 1 089</td>
+          <td class="td-score">0</td>
+          <td class="td-obj">0</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert-info">
+      Dans la catégorie lycées bac général et technologique, <strong>Bitmaster</strong> (rang 80) et <strong>Les Octects Perdus</strong> (rang 88) se positionnent dans le <strong>top 9 %</strong> de leur catégorie. <strong>Pas de bits, pas de chocolats</strong> intègre le top 13 % avec le rang 141.
+    </div>
+  </div>
+
+  <!-- CLASSEMENT ACADÉMIE LILLE -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Classement Académie de Lille</h2>
+      <div class="line"></div>
+    </div>
+    <p class="card-title"><span>112 équipes [LIL] — rang calculé depuis le classement général PTHD_26</span></p>
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>Équipe</th>
+          <th>Rang Académie Lille</th>
+          <th>Rang Général</th>
+          <th>Score</th>
+          <th>Objectifs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-gold">
+          <td class="td-team">Bitmaster</td>
+          <td class="td-rank">10 / 112</td>
+          <td class="td-rank">237 / 1 892</td>
+          <td class="td-score">840</td>
+          <td class="td-obj">21</td>
+        </tr>
+        <tr class="row-silver">
+          <td class="td-team">Les Octects Perdus</td>
+          <td class="td-rank">11 / 112</td>
+          <td class="td-rank">255 / 1 892</td>
+          <td class="td-score">840</td>
+          <td class="td-obj">21</td>
+        </tr>
+        <tr class="row-bronze">
+          <td class="td-team">Pas de bits, pas de chocolats</td>
+          <td class="td-rank">14 / 112</td>
+          <td class="td-rank">365 / 1 892</td>
+          <td class="td-score">740</td>
+          <td class="td-obj">20</td>
+        </tr>
+        <tr>
+          <td class="td-team">NeoNova</td>
+          <td class="td-rank">48 / 112</td>
+          <td class="td-rank">1 072 / 1 892</td>
+          <td class="td-score">390</td>
+          <td class="td-obj">13</td>
+        </tr>
+        <tr>
+          <td class="td-team">Le gang de l'octet</td>
+          <td class="td-rank">59 / 112</td>
+          <td class="td-rank">1 284 / 1 892</td>
+          <td class="td-score">290</td>
+          <td class="td-obj">11</td>
+        </tr>
+        <tr>
+          <td class="td-team">Les trois mousquetaires</td>
+          <td class="td-rank">97 / 112</td>
+          <td class="td-rank">1 800 / 1 892</td>
+          <td class="td-score">52</td>
+          <td class="td-obj">4</td>
+        </tr>
+        <tr>
+          <td class="td-team">On Est Pas Des Flèches 59!</td>
+          <td class="td-rank">105 / 112</td>
+          <td class="td-rank">1 892 / 1 892</td>
+          <td class="td-score">0</td>
+          <td class="td-obj">0</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert-info">
+      L'académie de Lille compte <strong>112 équipes</strong> identifiées par le marqueur [LIL]. <strong>Bitmaster</strong> (10e) et <strong>Les Octects Perdus</strong> (11e) se placent dans le <strong>top 10 % académique</strong>. <strong>Pas de bits, pas de chocolats</strong> (14e) complète le podium watélien dans l'académie, dans le top 13 %. Ces rangs sont calculés directement à partir du classement général officiel.
+    </div>
+  </div>
+
+  <!-- ANALYSE -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Bilan et mise en valeur des résultats</h2>
+      <div class="line"></div>
+    </div>
+    <ul class="link-list">
+      <li>
+        Bitmaster et Les Octects Perdus atteignent tous deux <strong>840 points / 21 objectifs</strong> — score identique, différencié par le temps de validation
+        <span class="tag green">TOP 9 %</span>
+      </li>
+      <li>
+        Pas de bits, pas de chocolats valide <strong>20 objectifs</strong> pour 740 points — rang 141 en Bac G/T
+        <span class="tag green">TOP 13 %</span>
+      </li>
+      <li>
+        NeoNova (13 objectifs, 390 pts) et Le gang de l'octet (11 objectifs, 290 pts) franchissent le cap de la mi-table nationale
+        <span class="tag">MILIEU DE TABLE</span>
+      </li>
+      <li>
+        Les trois mousquetaires valident <strong>4 objectifs</strong> et inscrivent 52 points au tableau — participation active récompensée
+        <span class="tag grey">PARTICIPANTS</span>
+      </li>
+      <li>
+        On Est Pas Des Flèches 59! — la participation au concours national est en elle-même une expérience formatrice
+        <span class="tag grey">PARTICIPANTS</span>
+      </li>
+    </ul>
+
+    <div class="code-box" style="margin-top:14px">
+      <span style="color:#ffc107"># Synthèse PTHD_26 — Lycée Antoine Watteau</span>
+      Équipes engagées       : 7
+      Top 10 % Bac G/T       : Bitmaster (80/1089), Les Octects Perdus (88/1089)
+      Top 15 % Bac G/T       : Pas de bits, pas de chocolats (141/1089)
+      Score max atteint      : 840 pts / 940 pts possibles = 89 %
+      Objectifs max          : 21 / 22 objectifs (95 %)
+      <span style="color:#ffc107"># Les données proviennent du fichier officiel PTHD_26 (16/02/2026)</span>
+    </div>
+  </div>
+
+  <!-- PALMARÈS DÉTAILLÉ -->
+  <div class="card">
+    <div class="section-head">
+      <h2>Palmarès détaillé — toutes catégories</h2>
+      <div class="line"></div>
+    </div>
+    <div class="grid-3" style="gap:12px">
+      <div class="niveau-card n4">
+        <span class="badge-niveau">BITMASTER</span>
+        <h3>Rang 237 général</h3>
+        <p class="meta">Rang 80 Bac G/T</p>
+        <ul>
+          <li>840 points</li>
+          <li>21 objectifs validés</li>
+          <li>Validation en 1j 15h 42min</li>
+          <li>Top 7,4 % Bac G/T</li>
+        </ul>
+      </div>
+      <div class="niveau-card n5">
+        <span class="badge-niveau">LES OCTECTS PERDUS</span>
+        <h3>Rang 255 général</h3>
+        <p class="meta">Rang 88 Bac G/T</p>
+        <ul>
+          <li>840 points</li>
+          <li>21 objectifs validés</li>
+          <li>Validation en 3j 13h 10min</li>
+          <li>Top 8,1 % Bac G/T</li>
+        </ul>
+      </div>
+      <div class="niveau-card n6">
+        <span class="badge-niveau">PAS DE BITS...</span>
+        <h3>Rang 365 général</h3>
+        <p class="meta">Rang 141 Bac G/T</p>
+        <ul>
+          <li>740 points</li>
+          <li>20 objectifs validés</li>
+          <li>Validation en 2j 14h 16min</li>
+          <li>Top 12,9 % Bac G/T</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Lycée Antoine Watteau &mdash; Valenciennes &mdash; PTHD 2026
+  &mdash; Données : <a href="#">classement officiel PTHD_26 (16/02/2026)</a>
+</footer>
+
+</body>
+</html>

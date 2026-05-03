@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anatomie d'un Prompt Expert — Guide pédagogique NSI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+ <style>
+  a{
+    text-decoration: none;
+    color: white;
+  }
+    /* =============================================
+       VARIABLES & RESET
+    ============================================= */
+    :root {
+      --blanc:       #ffffff;
+      --gris-clair:  #f4f6f9;
+      --gris-moyen:  #e8ecf2;
+      --gris-texte:  #4a5568;
+      --gris-fonce:  #2d3748;
+      --noir:        #1a202c;
+
+      --bleu-nsi:    #1a56a0;
+      --bleu-clair:  #ebf2fb;
+      --bleu-moyen:  #c3d9f5;
+
+      --vert:        #1a7a4a;
+      --vert-clair:  #e6f4ed;
+
+      --orange:      #c05c00;
+      --orange-clair:#fef0e4;
+
+      --rouge:       #b91c1c;
+      --rouge-clair: #fef2f2;
+
+      --violet:      #6d28d9;
+      --violet-clair:#f5f3ff;
+
+      --or:          #92620a;
+      --or-clair:    #fefce8;
+
+      --accent:      #0e7490;
+      --accent-clair:#ecfeff;
+
+      --rayon:       6px;
+      --ombre:       0 2px 12px rgba(0,0,0,0.08);
+      --ombre-forte: 0 4px 24px rgba(0,0,0,0.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 17px; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 400;
+      color: var(--gris-fonce);
+      background: var(--gris-clair);
+      line-height: 1.75;
+    }
+
+    /* =============================================
+       TYPOGRAPHIE
+    ============================================= */
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', serif;
+      color: var(--noir);
+      line-height: 1.25;
+    }
+
+    h1 { font-size: 2.6rem; font-weight: 900; }
+    h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+    h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; }
+    h4 { font-size: 1.05rem; font-weight: 700; font-family: 'Source Sans 3', sans-serif; }
+
+    p { margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    strong { font-weight: 700; color: var(--noir); }
+    em { font-style: italic; color: var(--gris-texte); }
+
+    code, .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82em;
+      background: var(--gris-moyen);
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+      color: var(--bleu-nsi);
+    }
+
+    /* =============================================
+       MISE EN PAGE PRINCIPALE
+    ============================================= */
+    .page-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* =============================================
+       EN-TÊTE
+    ============================================= */
+    header {
+      background: linear-gradient(135deg, #1a3a6b 0%, #1a56a0 60%, #0e7490 100%);
+      color: white;
+      padding: 3.5rem 0 3rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -40px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-label {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #cce4ff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3em 0.9em;
+      border-radius: 2em;
+      margin-bottom: 1rem;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+
+    .header-subtitle {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.85);
+      max-width: 680px;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .meta-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #7dd3fc;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       NAVIGATION
+    ============================================= */
+    nav.sommaire {
+      background: white;
+      border: 1px solid var(--gris-moyen);
+      border-radius: var(--rayon);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--ombre);
+    }
+
+    nav.sommaire h2 {
+      font-size: 1.1rem;
+      color: var(--bleu-nsi);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 700;
+    }
+
+    .sommaire-grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.5rem;
+    }
+
+    nav.sommaire a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--gris-fonce);
+      font-size: 0.92rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: 4px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    nav.sommaire a:hover {
+      background: var(--bleu-clair);
+      color: var(--bleu-nsi);
+    }
+
+    .nav-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--bleu-nsi);
+      background: var(--bleu-clair);
+      padding: 0.1em 0.5em;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       SECTIONS
+    ============================================= */
+    section {
+      background: white;
+      border-radius: var(--rayon);
+      padding: 2.2rem 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--ombre);
+      border: 1px solid var(--gris-moyen);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 2px solid var(--gris-moyen);
+    }
+
+    .section-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--bleu-moyen);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 2.4rem;
+      text-align: center;
+    }
+
+    .section-titre-bloc h2 {
+      margin-bottom: 0.25rem;
+      color: var(--bleu-nsi);
+    }
+
+    .section-titre-bloc p {
+      font-size: 0.92rem;
+      color: var(--gris-texte);
+      margin: 0;
+    }
+
+    /* =============================================
+       TECHNIQUE CARD
+    ============================================= */
+    .technique-card {
+      border-left: 4px solid var(--bleu-nsi);
+      background: var(--bleu-clair);
+      border-radius: 0 var(--rayon) var(--rayon) 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .technique-card.vert   { border-color: var(--vert);   background: var(--vert-clair); }
+    .technique-card.orange { border-color: var(--orange); background: var(--orange-clair); }
+    .technique-card.rouge  { border-color: var(--rouge);  background: var(--rouge-clair); }
+    .technique-card.violet { border-color: var(--violet); background: var(--violet-clair); }
+    .technique-card.or     { border-color: var(--or);     background: var(--or-clair); }
+    .technique-card.accent { border-color: var(--accent); background: var(--accent-clair); }
+
+    .technique-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .technique-card            .technique-label { color: var(--bleu-nsi); }
+    .technique-card.vert       .technique-label { color: var(--vert); }
+    .technique-card.orange     .technique-label { color: var(--orange); }
+    .technique-card.rouge      .technique-label { color: var(--rouge); }
+    .technique-card.violet     .technique-label { color: var(--violet); }
+    .technique-card.or         .technique-label { color: var(--or); }
+    .technique-card.accent     .technique-label { color: var(--accent); }
+
+    /* =============================================
+       EXTRAIT DE PROMPT
+    ============================================= */
+    .extrait-prompt {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--rayon);
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--gris-fonce);
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .extrait-prompt .label-extrait {
+      position: absolute;
+      top: 0.5rem; right: 0.7rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    .hl-bleu   { background: #bfdbfe; border-radius: 2px; padding: 0 2px; }
+    .hl-vert   { background: #bbf7d0; border-radius: 2px; padding: 0 2px; }
+    .hl-orange { background: #fed7aa; border-radius: 2px; padding: 0 2px; }
+    .hl-violet { background: #ddd6fe; border-radius: 2px; padding: 0 2px; }
+    .hl-rouge  { background: #fecaca; border-radius: 2px; padding: 0 2px; }
+
+    /* =============================================
+       GRILLE DE TECHNIQUES
+    ============================================= */
+    .grille-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1.2rem 0;
+    }
+
+    .grille-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+
+    .carte-mini {
+      background: var(--gris-clair);
+      border: 1px solid var(--gris-moyen);
+      border-radius: var(--rayon);
+      padding: 1rem 1.1rem;
+    }
+
+    .carte-mini h4 {
+      font-size: 0.92rem;
+      margin-bottom: 0.4rem;
+      color: var(--bleu-nsi);
+    }
+
+    .carte-mini p {
+      font-size: 0.85rem;
+      color: var(--gris-texte);
+      margin: 0;
+    }
+
+    /* =============================================
+       COMPARATIF AVANT / APRÈS
+    ============================================= */
+    .comparatif {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+
+    .comp-avant, .comp-apres {
+      border-radius: var(--rayon);
+      padding: 1rem 1.2rem;
+    }
+
+    .comp-avant {
+      background: var(--rouge-clair);
+      border: 1px solid #fca5a5;
+    }
+
+    .comp-apres {
+      background: var(--vert-clair);
+      border: 1px solid #86efac;
+    }
+
+    .comp-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .comp-avant .comp-label { color: var(--rouge); }
+    .comp-apres .comp-label { color: var(--vert); }
+
+    .comp-avant p, .comp-apres p {
+      font-size: 0.88rem;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+      margin: 0;
+      color: var(--gris-fonce);
+    }
+
+    /* =============================================
+       TABLEAU DE SYNTHÈSE
+    ============================================= */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.92rem;
+    }
+
+    thead th {
+      background: var(--bleu-nsi);
+      color: white;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    thead th:first-child { border-radius: var(--rayon) 0 0 0; }
+    thead th:last-child  { border-radius: 0 var(--rayon) 0 0; }
+
+    tbody tr:nth-child(even) { background: var(--gris-clair); }
+    tbody tr:hover { background: var(--bleu-clair); }
+
+    tbody td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--gris-moyen);
+      vertical-align: top;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2em 0.6em;
+      border-radius: 2em;
+    }
+
+    .badge-bleu   { background: var(--bleu-clair);   color: var(--bleu-nsi); }
+    .badge-vert   { background: var(--vert-clair);   color: var(--vert); }
+    .badge-orange { background: var(--orange-clair); color: var(--orange); }
+    .badge-violet { background: var(--violet-clair); color: var(--violet); }
+    .badge-rouge  { background: var(--rouge-clair);  color: var(--rouge); }
+
+    /* =============================================
+       ANNOTATION INTERACTIVE
+    ============================================= */
+    .prompt-annote {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--rayon);
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.85;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .prompt-annote .ligne-prompt {
+      display: block;
+      padding: 0 0.4rem;
+      border-radius: 3px;
+      transition: background 0.1s;
+    }
+
+    .prompt-annote .ligne-prompt:hover {
+      background: rgba(0,0,0,0.03);
+    }
+
+    .annotation {
+      display: inline-block;
+      margin-left: 1rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.75rem;
+      font-style: italic;
+      color: #94a3b8;
+      vertical-align: middle;
+    }
+
+    /* =============================================
+       LISTE STYLISÉE
+    ============================================= */
+    ul.liste-nsi {
+      list-style: none;
+      margin: 0.8rem 0 1rem;
+      padding: 0;
+    }
+
+    ul.liste-nsi li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.95rem;
+    }
+
+    ul.liste-nsi li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--bleu-nsi);
+      margin-top: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    ul.liste-nsi.vert  li::before { background: var(--vert); }
+    ul.liste-nsi.rouge li::before { background: var(--rouge); }
+
+    /* =============================================
+       ENCADRÉ RETENIR
+    ============================================= */
+    .retenir {
+      background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+      border: 1.5px solid #93c5fd;
+      border-radius: var(--rayon);
+      padding: 1.3rem 1.6rem;
+      margin: 1.5rem 0;
+    }
+
+    .retenir-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bleu-nsi);
+      margin-bottom: 0.5rem;
+    }
+
+    .retenir p { font-size: 0.95rem; color: var(--noir); }
+
+    /* =============================================
+       PIED DE PAGE
+    ============================================= */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      color: var(--gris-texte);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--gris-moyen);
+      margin-top: 1rem;
+    }
+
+    /* =============================================
+       BOUTON RETOUR EN HAUT
+    ============================================= */
+    #retour-haut {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--bleu-nsi);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: var(--ombre-forte);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+      z-index: 100;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    #retour-haut:hover { background: #1443a0; transform: translateY(-2px); }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 780px) {
+      h1 { font-size: 1.9rem; }
+      section { padding: 1.5rem 1.2rem; }
+      .grille-2, .grille-3, .comparatif { grid-template-columns: 1fr; }
+      .sommaire-grille { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      header { background: #1a3a6b !important; -webkit-print-color-adjust: exact; }
+      section { box-shadow: none; break-inside: avoid; }
+      #retour-haut { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================================================
+     EN-TÊTE
+========================================================= -->
+<header id="haut">
+  <div class="header-inner">
+    <div class="header-label">Ingénierie des prompts — Guide professionnel NSI</div>
+    <h1>Anatomie d'un prompt expert</h1>
+    <p class="header-subtitle">
+      Décryptage des techniques de conception avancées appliquées à la création
+      d'un travail pratique de Terminale NSI — à destination des enseignants.
+    </p>
+    <div class="header-meta">
+      <div class="meta-item"><div class="meta-dot"></div> Niveau : Enseignants NSI</div>
+      <div class="meta-item"><div class="meta-dot"></div> Discipline : Prompt engineering</div>
+      <div class="meta-item"><div class="meta-dot"></div> Cas d'étude : TP Démineur en Python</div>
+      <div class="meta-item"><div class="meta-dot"></div> Modèle cible : Claude (Anthropic)</div>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrapper">
+
+<!-- =========================================================
+     SOMMAIRE
+========================================================= -->
+<nav class="sommaire" aria-label="Sommaire">
+  <h2>Sommaire</h2>
+  <div class="sommaire-grille">
+    <a href="#intro"><span class="nav-num">00</span> Introduction — Pourquoi ce guide ?</a>
+    <a href="#principe"><span class="nav-num">01</span> Le principe fondateur : la hiérarchie des instructions</a>
+    <a href="#role"><span class="nav-num">02</span> Technique 1 — Assignation de rôle expert</a>
+    <a href="#structure"><span class="nav-num">03</span> Technique 2 — Structuration formelle par sections</a>
+    <a href="#contraintes"><span class="nav-num">04</span> Technique 3 — Contraintes explicites et redondantes</a>
+    <a href="#progression"><span class="nav-num">05</span> Technique 4 — Décomposition progressive des tâches</a>
+    <a href="#ancrage"><span class="nav-num">06</span> Technique 5 — Ancrage contextuel et spécification technique</a>
+    <a href="#negatif"><span class="nav-num">07</span> Technique 6 — Prompting négatif et interdictions</a>
+    <a href="#checklist"><span class="nav-num">08</span> Technique 7 — La liste de vérification finale</a>
+    <a href="#langue"><span class="nav-num">09</span> Technique 8 — Exigences linguistiques en tête de prompt</a>
+    <a href="#evolution"><span class="nav-num">10</span> L'évolution itérative du prompt</a>
+    <a href="#synthese"><span class="nav-num">11</span> Synthèse et tableau de bord des techniques</a>
+    <a href="#transposition"><span class="nav-num">12</span> Transposer ces techniques à vos propres TPs</a>
+  </div>
+</nav>
+
+<!-- =========================================================
+     SECTION 00 — INTRODUCTION
+========================================================= -->
+<section id="intro">
+  <div class="section-header">
+    <div class="section-num">00</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Introduction — Pourquoi ce guide ?</h2>
+      <p>Comprendre ce qui différencie un prompt amateur d'un prompt professionnel</p>
+    </div>
+  </div>
+
+  <p>
+    Un grand modèle de langage comme Claude produit des résultats radicalement différents selon
+    la façon dont on lui soumet une tâche. La différence entre une instruction vague et un prompt
+    bien conçu peut représenter plusieurs heures de travail d'édition manuelle. Pour un enseignant
+    de NSI, maîtriser cette compétence transforme l'IA en véritable assistant pédagogique.
+  </p>
+
+  <p>
+    Ce guide disséque, section par section, le prompt élaboré pour produire un TP complet sur
+    le jeu du Démineur en Python. Chaque technique est nommée, expliquée et illustrée par un
+    extrait du prompt réel. L'objectif est que vous puissiez reproduire ces techniques pour
+    concevoir vos propres ressources pédagogiques.
+  </p>
+
+  <div class="technique-card accent">
+    <div class="technique-label">Définition clé</div>
+    <p>
+      <strong>Le prompt engineering</strong> est l'art de formuler des instructions pour un modèle
+      de langage afin d'obtenir un résultat précis, fiable et reproductible. Ce n'est pas une
+      science exacte, mais un ensemble de techniques éprouvées qui augmentent significativement
+      la qualité des sorties.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 01 — PRINCIPE FONDATEUR
+========================================================= -->
+<section id="principe">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Le principe fondateur : la hiérarchie des instructions</h2>
+      <p>Organiser un prompt comme on organise un cahier des charges</p>
+    </div>
+  </div>
+
+  <p>
+    Un modèle de langage traite un prompt de manière séquentielle, mais accorde une importance
+    particulière à l'ordre et à la visibilité des instructions. Il existe une règle empirique
+    fondamentale : <strong>ce qui est dit en premier et ce qui est le plus visible guide
+    l'ensemble de la génération.</strong>
+  </p>
+
+  <p>
+    Le prompt du TP Démineur est structuré comme un cahier des charges professionnel, avec une
+    hiérarchie claire :
+  </p>
+
+  <div class="grille-2">
+    <div class="carte-mini">
+      <h4>Niveau 1 — Exigences absolues</h4>
+      <p>Qualité linguistique, interdiction d'emoji, respect de la charte graphique.
+         Placées en tête car ce sont des critères éliminatoires.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Niveau 2 — Contexte et objectif</h4>
+      <p>Qui est la cible ? Quel est le livrable ? Quel est le niveau scolaire ?
+         Donne au modèle son cadre de référence général.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Niveau 3 — Spécifications techniques</h4>
+      <p>Technologies, schéma de base de données, architecture logicielle.
+         Le modèle sait précisément ce qu'il doit produire.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Niveau 4 — Structure du livrable</h4>
+      <p>Plan détaillé section par section, avec les étapes pédagogiques
+         et la progression attendue.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Niveau 5 — Contraintes transversales</h4>
+      <p>Règles qui s'appliquent à l'ensemble du document : pédagogie,
+         différenciation, ton, langue.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Niveau 6 — Vérification finale</h4>
+      <p>Liste de contrôle que le modèle doit parcourir avant de produire
+         le fichier. Ferme la boucle qualité.</p>
+    </div>
+  </div>
+
+  <div class="retenir">
+    <div class="retenir-label">Principe à retenir</div>
+    <p>
+      Organisez votre prompt comme un cahier des charges : du général au particulier, des
+      exigences non négociables aux détails d'implémentation. Le modèle respectera mieux
+      une structure qu'il peut « voir » clairement.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 02 — ASSIGNATION DE RÔLE
+========================================================= -->
+<section id="role">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 1 — Assignation de rôle expert</h2>
+      <p>Donner au modèle une identité professionnelle précise</p>
+    </div>
+  </div>
+
+  <p>
+    La première phrase d'un prompt conditionne le registre et la compétence que le modèle va
+    mobiliser pour l'ensemble de sa réponse. C'est ce que l'on appelle le <strong>role prompting</strong>.
+  </p>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Extrait du prompt</span>
+    <span class="hl-bleu">Tu es un expert en ingénierie pédagogique et en développement Python,</span><br>
+    chargé de produire un TP HTML interactif de haute qualité destiné à des<br>
+    élèves de Terminale NSI.
+  </div>
+
+  <p>
+    Cette phrase fait plusieurs choses simultanément :
+  </p>
+
+  <ul class="liste-nsi">
+    <li><strong>Double expertise assignée</strong> : « ingénierie pédagogique » ET « développement Python » — le modèle ne peut pas se limiter à l'un ou l'autre.</li>
+    <li><strong>Qualité affirmée</strong> : « haute qualité » signale dès l'ouverture qu'un résultat approximatif est hors-cadre.</li>
+    <li><strong>Public cible ancré</strong> : « Terminale NSI » calibre immédiatement le niveau de langue, la complexité technique et le vocabulaire disciplinaire attendus.</li>
+    <li><strong>Nature du livrable annoncée</strong> : « TP HTML interactif » oriente la forme avant même d'aborder le fond.</li>
+  </ul>
+
+  <div class="comparatif">
+    <div class="comp-avant">
+      <div class="comp-label">Formulation faible</div>
+      <p>Crée un TP sur le Démineur en Python pour des lycéens.</p>
+    </div>
+    <div class="comp-apres">
+      <div class="comp-label">Formulation experte</div>
+      <p>Tu es un expert en ingénierie pédagogique et en développement Python, chargé de produire un TP HTML interactif de haute qualité destiné à des élèves de Terminale NSI.</p>
+    </div>
+  </div>
+
+  <div class="technique-card vert">
+    <div class="technique-label">Mécanisme sous-jacent</div>
+    <p>
+      Les modèles de langage sont entraînés sur d'immenses corpus de textes humains. Assigner
+      un rôle active les patterns linguistiques et conceptuels associés à ce rôle dans les données
+      d'entraînement. Demander à Claude d'être « expert en ingénierie pédagogique » déclenche
+      des comportements typiques de cette expertise : structuration progressive, rappels de cours,
+      différenciation, critères d'évaluation.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 03 — STRUCTURATION FORMELLE
+========================================================= -->
+<section id="structure">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 2 — Structuration formelle par sections</h2>
+      <p>Utiliser Markdown et des séparateurs visuels pour segmenter les instructions</p>
+    </div>
+  </div>
+
+  <p>
+    Un prompt long non structuré produit des résultats incohérents car le modèle peine à identifier
+    les priorités et les frontières entre les différentes instructions. La structuration formelle
+    résout ce problème en rendant le prompt <strong>parsable</strong> — c'est-à-dire lisible
+    de façon déterministe.
+  </p>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Structure du prompt</span>
+    <span class="hl-bleu">### EXIGENCE LINGUISTIQUE ABSOLUE — LIRE EN PREMIER</span><br>
+    <br>
+    [contenu de la section]<br>
+    <br>
+    <span class="hl-vert">---</span><br>
+    <br>
+    <span class="hl-bleu">### CHARTE GRAPHIQUE (OBLIGATOIRE — reproduire fidèlement)</span><br>
+    <br>
+    [contenu de la section]<br>
+    <br>
+    <span class="hl-vert">---</span><br>
+    <br>
+    <span class="hl-bleu">### TECHNOLOGIES</span>
+  </div>
+
+  <p>Les conventions adoptées dans ce prompt sont les suivantes :</p>
+
+  <div class="grille-3">
+    <div class="carte-mini">
+      <h4>Titres <code>###</code></h4>
+      <p>Délimitent les grandes sections thématiques. Le modèle les traite comme des chapitres distincts d'un cahier des charges.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Séparateurs <code>---</code></h4>
+      <p>Marquent visuellement les frontières entre sections, évitant que des règles d'une section contaminent la lecture d'une autre.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Majuscules dans les titres</h4>
+      <p>Signalent au modèle que ce titre est une catégorie d'instruction, pas un titre de document produit. Exemple : <code>OBLIGATOIRE</code>.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Indentation par tirets</h4>
+      <p>Crée une hiérarchie visuelle à l'intérieur des sections, permettant au modèle de distinguer les règles principales des sous-règles.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Listes numérotées</h4>
+      <p>Pour les séquences ordonnées (étapes du TP, phases du jeu), elles imposent une structure que le modèle reproduit fidèlement.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Guillemets et code inline</h4>
+      <p>Les backticks <code>`nom_méthode()`</code> signalent un identifiant à reproduire exactement, évitant les variations libres du modèle.</p>
+    </div>
+  </div>
+
+  <div class="retenir">
+    <div class="retenir-label">Principe à retenir</div>
+    <p>
+      Traitez votre prompt comme un document technique, pas comme un message. La lisibilité
+      pour l'humain et la lisibilité pour le modèle coïncident : un prompt bien formaté
+      pour vous sera mieux interprété par le modèle.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 04 — CONTRAINTES EXPLICITES
+========================================================= -->
+<section id="contraintes">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 3 — Contraintes explicites et redondantes</h2>
+      <p>Répéter les exigences critiques à plusieurs endroits stratégiques</p>
+    </div>
+  </div>
+
+  <p>
+    Les modèles de langage ont une fenêtre d'attention limitée. Une contrainte mentionnée une
+    seule fois en début de prompt peut être « oubliée » lors de la génération de sections
+    éloignées. La solution est la <strong>redondance stratégique</strong> : répéter les
+    exigences critiques à plusieurs endroits clés du prompt.
+  </p>
+
+  <p>
+    L'interdiction d'emoji en est l'exemple le plus frappant dans notre prompt :
+  </p>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Apparition 1 — Section dédiée en tête</span>
+    <span class="hl-rouge">### INTERDICTION ABSOLUE D'EMOJI</span><br>
+    Aucun caractère emoji ni symbole Unicode décoratif dans l'intégralité<br>
+    du fichier produit : ni dans le texte, ni dans le code, ni dans les<br>
+    commentaires, ni dans les titres, ni dans les boutons, ni dans les<br>
+    attributs HTML.
+  </div>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Apparition 2 — Dans la charte graphique</span>
+    Encadrés « Rappel de cours » : bordure gauche #8ca5b4, fond #1e2538,<br>
+    préfixe textuel « RAPPEL DE COURS » en petites majuscules CSS<br>
+    <span class="hl-rouge">— aucun emoji, aucune icône</span>
+  </div>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Apparition 3 — Dans les contraintes pédagogiques</span>
+    <span class="hl-rouge">AUCUN EMOJI dans quelque partie que ce soit du document produit</span>
+  </div>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Apparition 4 — Dans les contraintes techniques HTML</span>
+    Les indicateurs visuels sont tous rendus par CSS et texte,<br>
+    <span class="hl-rouge">sans recours à aucun caractère emoji ou symbole Unicode décoratif</span>
+  </div>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Apparition 5 — Dans les livrables attendus</span>
+    <span class="hl-rouge">Zéro emoji dans la totalité du fichier</span>
+  </div>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Apparition 6 — Dans la vérification finale</span>
+    [ ] Le fichier ne contient aucun emoji ni symbole Unicode décoratif,<br>
+    <span class="hl-rouge">dans aucune de ses parties.</span>
+  </div>
+
+  <div class="technique-card rouge">
+    <div class="technique-label">Pourquoi cette redondance est nécessaire</div>
+    <p>
+      Sans cette répétition, le modèle utilise des emoji dans les légendes de l'animation
+      (qui semblent « naturels » dans ce contexte), dans les encadrés pédagogiques, dans
+      les titres de boutons. Chaque rappel « réactive » la contrainte pour la section
+      en cours de génération.
+    </p>
+  </div>
+
+  <p>Cette technique s'applique à toutes les contraintes critiques :</p>
+
+  <ul class="liste-nsi">
+    <li>L'exigence de qualité linguistique apparaît dans la section dédiée, dans les contraintes pédagogiques, dans les livrables et dans la vérification finale.</li>
+    <li>L'exclusivité de SQLite3 est rappelée dans l'introduction de la section base de données, dans chaque étape concernée, et dans la vérification finale.</li>
+    <li>L'interdiction de donner des solutions directes est formulée dans les contraintes pédagogiques et redéclinée dans la structure de chaque étape.</li>
+  </ul>
+</section>
+
+<!-- =========================================================
+     SECTION 05 — DÉCOMPOSITION PROGRESSIVE
+========================================================= -->
+<section id="progression">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 4 — Décomposition progressive des tâches</h2>
+      <p>Structurer la tâche complexe en sous-tâches ordonnées et homogènes</p>
+    </div>
+  </div>
+
+  <p>
+    Face à une tâche complexe, un modèle livré à lui-même produit un résultat hétérogène :
+    certaines sections seront détaillées, d'autres expédiées. La décomposition explicite impose
+    une <strong>granularité uniforme</strong> sur l'ensemble du livrable.
+  </p>
+
+  <p>
+    Chaque étape pédagogique du TP est définie avec un patron fixe à cinq éléments :
+  </p>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Patron structurel de chaque étape</span>
+    Progression en 7 étapes cumulatives. Chaque étape est structurée ainsi :<br>
+    <span class="hl-bleu">  a) Rappel de cours ciblé</span> (encadré « RAPPEL DE COURS »)<br>
+    <span class="hl-vert">  b) Énoncé de la mission</span>, sans jamais fournir la solution<br>
+    <span class="hl-orange">  c) Trois niveaux d'indices masqués</span> par défaut, révélables<br>
+         par un bouton « Afficher l'indice »<br>
+    <span class="hl-violet">  d) Éditeur PyScript interactif</span> pré-rempli avec le squelette<br>
+    <span class="hl-rouge">  e) Critères de validation précis</span> (sorties attendues)
+  </div>
+
+  <p>
+    Ce patron garantit que les sept étapes du TP auront toutes la même structure. Sans lui,
+    certaines étapes n'auraient pas d'éditeur interactif, d'autres pas de critères de
+    validation. La cohérence du document final en dépend directement.
+  </p>
+
+  <div class="technique-card violet">
+    <div class="technique-label">Technique avancée — La structure gigogne</div>
+    <p>
+      Le TP est lui-même structuré en quatre parties (en-tête, phase console, Tkinter,
+      différenciation), chacune décomposée en étapes, chaque étape décomposée selon le
+      patron ci-dessus. Cette <strong>décomposition gigogne</strong> garantit que le modèle
+      conserve la même granularité à tous les niveaux hiérarchiques.
+    </p>
+  </div>
+
+  <div class="retenir">
+    <div class="retenir-label">Principe à retenir</div>
+    <p>
+      Ne demandez pas « crée un TP progressif ». Définissez explicitement ce que signifie
+      « progressif » dans votre contexte : quel patron, quels éléments, dans quel ordre.
+      Le modèle n'interprète pas — il applique.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 06 — ANCRAGE CONTEXTUEL
+========================================================= -->
+<section id="ancrage">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 5 — Ancrage contextuel et spécification technique</h2>
+      <p>Supprimer toute ambiguïté en fournissant des valeurs exactes</p>
+    </div>
+  </div>
+
+  <p>
+    Chaque fois qu'une décision technique est laissée au modèle, celui-ci fait un choix par défaut
+    qui peut ne pas correspondre à vos besoins. L'ancrage contextuel consiste à remplacer
+    chaque décision implicite par une <strong>valeur explicite et non ambiguë</strong>.
+  </p>
+
+  <p>
+    On retrouve cette technique à trois niveaux dans notre prompt :
+  </p>
+
+  <h3>Niveau 1 — Ancrage typographique</h3>
+  <div class="extrait-prompt">
+    <span class="label-extrait">Exemple : charte graphique</span>
+    - Palette : <span class="hl-bleu">fond #1a1f2e, panneaux #242b3d, accents #8ca5b4</span><br>
+    - Typographies Google Fonts :<br>
+        - Titres : <span class="hl-vert">Rubik Dirt</span><br>
+        - Corps : <span class="hl-vert">Source Serif 4</span><br>
+        - Code : <span class="hl-vert">JetBrains Mono</span>
+  </div>
+  <p>
+    Sans ces valeurs hexadécimales et ces noms de polices précis, le modèle choisit une palette
+    « sombre générique » et des polices courantes (Inter, Roboto...) qui ne correspondent pas
+    à la charte souhaitée.
+  </p>
+
+  <h3>Niveau 2 — Ancrage de schéma de données</h3>
+  <div class="extrait-prompt">
+    <span class="label-extrait">Exemple : schéma SQLite</span>
+    Table <span class="hl-bleu">`parties_sauvegardees`</span> :<br>
+      - id              INTEGER PRIMARY KEY AUTOINCREMENT<br>
+      - joueur_id       <span class="hl-orange">INTEGER REFERENCES joueurs(id)</span><br>
+      - date_sauvegarde TEXT<br>
+      - <span class="hl-vert">etat_grille     TEXT</span>  -- sérialisation JSON de la grille<br>
+    <br>
+    Contrainte : <span class="hl-rouge">un joueur ne peut avoir qu'une seule partie sauvegardée<br>
+    active par niveau de difficulté (INSERT OR REPLACE).</span>
+  </div>
+  <p>
+    Sans ce schéma, le modèle invente une structure de tables approximative, parfois
+    incohérente avec les fonctionnalités du jeu. Fournir le schéma exact garantit la
+    cohérence entre le modèle de données et toutes les références SQL dans le TP.
+  </p>
+
+  <h3>Niveau 3 — Ancrage technologique</h3>
+  <div class="extrait-prompt">
+    <span class="label-extrait">Exemple : versions précises</span>
+    - <span class="hl-bleu">PyScript 2025.3.1</span> (version du 1er mars 2026) avec py-editor et<br>
+      py-terminal pour les exercices interactifs dans le navigateur<br>
+    - <span class="hl-vert">Thonny</span> est l'éditeur de référence mentionné pour le travail local<br>
+    - <span class="hl-orange">SQLite3</span> : module standard Python (import sqlite3),<br>
+      aucune installation requise
+  </div>
+
+  <div class="technique-card or">
+    <div class="technique-label">Cas particulier — La contrainte memory vs fichier</div>
+    <p>
+      L'ancrage le plus subtil du prompt concerne SQLite3 dans le navigateur : sans instruction
+      explicite, le modèle écrit du code qui tente d'accéder au système de fichiers depuis
+      PyScript, ce qui échoue silencieusement. La mention explicite de <code>:memory:</code>
+      pour le navigateur et du fichier <code>.db</code> pour Thonny supprime cette ambiguïté
+      critique.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 07 — PROMPTING NÉGATIF
+========================================================= -->
+<section id="negatif">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 6 — Prompting négatif et interdictions explicites</h2>
+      <p>Délimiter le périmètre en interdisant les dérives connues</p>
+    </div>
+  </div>
+
+  <p>
+    Le prompting positif définit ce que le modèle doit faire. Le <strong>prompting négatif</strong>
+    définit ce qu'il ne doit pas faire. Cette technique est indispensable pour éviter les
+    comportements par défaut du modèle qui, bien qu'intentionnés, dégradent la qualité du
+    livrable.
+  </p>
+
+  <p>
+    Notre prompt contient plusieurs interdictions explicites soigneusement choisies :
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Interdiction formulée</th>
+        <th>Comportement par défaut évité</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>sans jamais fournir la solution</code></td>
+        <td>Le modèle complète spontanément les squelettes de code pour « aider » l'élève</td>
+        <td><span class="badge badge-rouge">Pédagogie</span></td>
+      </tr>
+      <tr>
+        <td><code>Aucun fichier JSON, CSV ou pickle</code></td>
+        <td>Le modèle choisit JSON comme format de persistance par habitude</td>
+        <td><span class="badge badge-bleu">Architecture</span></td>
+      </tr>
+      <tr>
+        <td><code>jamais de f-string SQL</code></td>
+        <td>Le modèle génère des requêtes avec f-strings, créant des failles d'injection SQL</td>
+        <td><span class="badge badge-rouge">Sécurité</span></td>
+      </tr>
+      <tr>
+        <td><code>Aucun framework JS autre que Bootstrap 5</code></td>
+        <td>Le modèle peut importer React, Vue ou jQuery de sa propre initiative</td>
+        <td><span class="badge badge-vert">Technique</span></td>
+      </tr>
+      <tr>
+        <td><code>Aucun emoji ni symbole Unicode décoratif</code></td>
+        <td>Le modèle utilise des emoji comme substituts aux icônes dans les encadrés</td>
+        <td><span class="badge badge-orange">Visuel</span></td>
+      </tr>
+      <tr>
+        <td><code>jamais condescendant</code></td>
+        <td>Le modèle sur-explique certains points de façon infantilisante</td>
+        <td><span class="badge badge-violet">Pédagogie</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="technique-card orange">
+    <div class="technique-label">Méthode de construction des interdictions</div>
+    <p>
+      Chaque interdiction du prompt est issue d'une dérive observée sur une version précédente.
+      C'est la valeur de l'<strong>approche itérative</strong> : chaque version du prompt
+      corrige les défauts de la version précédente en ajoutant une interdiction ciblée.
+      Ne cherchez pas à anticiper tous les cas — observez, identifiez, interdisez.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 08 — LISTE DE VÉRIFICATION
+========================================================= -->
+<section id="checklist">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 7 — La liste de vérification finale</h2>
+      <p>Forcer le modèle à s'auto-contrôler avant de produire le livrable</p>
+    </div>
+  </div>
+
+  <p>
+    Une des limites des modèles de langage est leur tendance à produire le livrable sans
+    vérifier sa cohérence globale. La <strong>liste de vérification finale</strong> est une
+    technique qui force le modèle à parcourir mentalement l'ensemble des exigences avant
+    de valider sa sortie.
+  </p>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Vérification finale du prompt</span>
+    ### VÉRIFICATION FINALE AVANT PRODUCTION<br>
+    <br>
+    Parcourir mentalement chaque section et valider chaque point :<br>
+    <br>
+    <span class="hl-bleu">[ ] L'animation de découverte est jouable et pédagogiquement claire.</span><br>
+    <span class="hl-bleu">[ ] Chaque étape est ambitieuse mais atteignable par un élève moyen.</span><br>
+    <span class="hl-vert">[ ] La charte graphique est rigoureusement respectée.</span><br>
+    <span class="hl-vert">[ ] Le fichier s'ouvre sans erreur dans un navigateur moderne.</span><br>
+    <span class="hl-orange">[ ] Aucune réponse n'est fournie directement à l'élève.</span><br>
+    <span class="hl-orange">[ ] Toute persistance passe exclusivement par SQLite3.</span><br>
+    <span class="hl-rouge">[ ] Toutes les requêtes SQL sont paramétrées (zéro f-string SQL).</span><br>
+    <span class="hl-rouge">[ ] Chaque mot du document est correctement orthographié et accentué.</span><br>
+    <span class="hl-violet">[ ] Le fichier ne contient aucun emoji ni symbole Unicode décoratif.</span>
+  </div>
+
+  <p>
+    Cette liste joue plusieurs rôles simultanés :
+  </p>
+
+  <ul class="liste-nsi">
+    <li><strong>Résumé des exigences</strong> : elle rappelle au modèle, juste avant la génération, toutes les contraintes dispersées dans le prompt.</li>
+    <li><strong>Priorisation implicite</strong> : les points listés en premier sont ceux auxquels le modèle accordera le plus d'attention.</li>
+    <li><strong>Signal de qualité</strong> : le modèle comprend qu'un livrable sera évalué selon ces critères précis, ce qui élève son niveau d'exigence.</li>
+    <li><strong>Cohérence transversale</strong> : certains critères (comme la cohérence du schéma SQL) ne peuvent être vérifiés qu'en considérant l'ensemble du document — la liste force cette vision globale.</li>
+  </ul>
+
+  <div class="technique-card vert">
+    <div class="technique-label">Variante avancée</div>
+    <p>
+      Pour les tâches très complexes, il est possible d'ajouter une instruction du type :
+      « Après avoir produit le fichier, affiche explicitement le résultat de chaque
+      vérification. » Cela rend le processus d'auto-contrôle visible et permet d'identifier
+      quels critères ont été difficiles à respecter.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 09 — EXIGENCES LINGUISTIQUES
+========================================================= -->
+<section id="langue">
+  <div class="section-header">
+    <div class="section-num">09</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Technique 8 — Exigences linguistiques en tête de prompt</h2>
+      <p>Corriger le biais d'encodage qui produit des textes non accentués</p>
+    </div>
+  </div>
+
+  <p>
+    Les versions initiales du prompt produisaient un document rempli de fautes d'accentuation
+    et d'orthographe. L'origine du problème était contre-intuitive : <strong>le prompt lui-même
+    était rédigé sans accents</strong>, ce qui induisait le modèle à reproduire ce style.
+  </p>
+
+  <div class="comparatif">
+    <div class="comp-avant">
+      <div class="comp-label">Prompt v1 — sans accents (par précaution d'encodage supposée)</div>
+      <p>Les identifiants Python sont en francais sauf conventions standard. Chaque nouvelle notion (POO, SQL, securite) est precedee d'un encadre de rappel de cours.</p>
+    </div>
+    <div class="comp-apres">
+      <div class="comp-label">Prompt v4 — accentué et explicite</div>
+      <p>Les identifiants Python sont en français sauf conventions standard. Chaque nouvelle notion (POO, SQL, sécurité) est précédée d'un encadré de rappel de cours.</p>
+    </div>
+  </div>
+
+  <p>
+    La correction a consisté en trois actions simultanées :
+  </p>
+
+  <ul class="liste-nsi">
+    <li><strong>Rédiger le prompt en français accentué</strong> : le modèle s'aligne sur le registre linguistique du prompt qu'il reçoit.</li>
+    <li><strong>Placer la section linguistique en tête</strong> : avant même la description du projet, le modèle lit les exigences de qualité de langue — ce qui en fait un filtre pour toute la génération suivante.</li>
+    <li><strong>Spécifier les cas limites</strong> : majuscules accentuées (É, È, Ê, À...), ponctuation française (espace insécable, guillemets « »), commentaires de code accentués.</li>
+  </ul>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Section linguistique — positionnement en tête</span>
+    <span class="hl-bleu">### EXIGENCE LINGUISTIQUE ABSOLUE — LIRE EN PREMIER</span><br>
+    <br>
+    Le document produit est destiné à des élèves de lycée. <span class="hl-orange">La qualité<br>
+    linguistique est un critère éliminatoire</span> au même titre que la qualité<br>
+    technique.<br>
+    <br>
+    Règles strictes :<br>
+    - Français irréprochable : orthographe, grammaire, conjugaison, accords<br>
+    - <span class="hl-vert">Accentuation complète et correcte sur toutes les lettres concernées,<br>
+      y compris les majuscules (É, È, Ê, À, Ù, Î, Ô, Û, Ç, Œ, Æ...)</span><br>
+    - Ponctuation française respectée : <span class="hl-violet">espace insécable avant « : »,<br>
+      « ; », « ! », « ? »</span> et à l'intérieur des guillemets français « ... »
+  </div>
+
+  <div class="technique-card accent">
+    <div class="technique-label">Principe général — L'effet miroir du prompt</div>
+    <p>
+      Le modèle tend à reproduire le registre, le soin et le style du prompt qu'il reçoit.
+      Un prompt bâclé produit un résultat bâclé. Un prompt soigné, précis et accentué
+      produit un résultat soigné, précis et accentué. C'est l'<strong>effet miroir</strong>
+      du prompt engineering : la qualité du livrable reflète la qualité du prompt.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 10 — ÉVOLUTION ITÉRATIVE
+========================================================= -->
+<section id="evolution">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; L'évolution itérative du prompt</h2>
+      <p>Comment le prompt s'est amélioré version après version</p>
+    </div>
+  </div>
+
+  <p>
+    Le prompt final n'a pas été écrit en une seule fois. Il est le résultat de quatre itérations
+    successives, chacune corrigeant des défauts observés dans la version précédente. Cette
+    approche est fondamentale : <strong>un bon prompt se révise, il ne s'improvise pas.</strong>
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Problème identifié</th>
+        <th>Correction apportée</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>v1</strong><br><em>Prompt initial</em></td>
+        <td>Résultat hétérogène, structure des étapes variable, charte graphique approximative</td>
+        <td>Ajout du plan numéroté, codification hexadécimale de la palette, patron structurel des étapes</td>
+      </tr>
+      <tr>
+        <td><strong>v2</strong><br><em>+ SQLite3</em></td>
+        <td>Persistance en JSON/CSV, schéma de base de données inventé au moment de la génération</td>
+        <td>Section architecture base de données avec schéma complet, classe <code>GestionnaireDB</code>, contrainte <code>:memory:</code></td>
+      </tr>
+      <tr>
+        <td><strong>v3</strong><br><em>Zéro emoji</em></td>
+        <td>Présence d'emoji dans les encadrés pédagogiques, la légende et les boutons</td>
+        <td>Interdiction explicite et redondante (6 occurrences), remplacement par préfixes CSS textuels</td>
+      </tr>
+      <tr>
+        <td><strong>v4</strong><br><em>Qualité langue</em></td>
+        <td>Fautes d'accentuation et d'orthographe, prompt lui-même rédigé sans accents</td>
+        <td>Section linguistique en tête, prompt rédigé en français accentué, cas limites spécifiés</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="retenir">
+    <div class="retenir-label">Principe à retenir</div>
+    <p>
+      Conservez l'historique de vos prompts et notez le défaut corrigé à chaque version.
+      Ce journal de bord devient rapidement une bibliothèque de patterns réutilisables
+      pour tous vos futurs documents pédagogiques.
+    </p>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 11 — SYNTHÈSE
+========================================================= -->
+<section id="synthese">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Synthèse — Tableau de bord des techniques</h2>
+      <p>Vue d'ensemble des huit techniques et de leur effet sur le livrable</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Technique</th>
+        <th>Mécanisme</th>
+        <th>Effet principal</th>
+        <th>Difficulté</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Assignation de rôle</strong></td>
+        <td>Activer les patterns d'une expertise dans les données d'entraînement</td>
+        <td>Calibrage du niveau, du registre et de la compétence mobilisée</td>
+        <td><span class="badge badge-vert">Facile</span></td>
+      </tr>
+      <tr>
+        <td><strong>2. Structuration formelle</strong></td>
+        <td>Rendre le prompt parsable par sections délimitées</td>
+        <td>Cohérence du plan, respect des frontières entre thèmes</td>
+        <td><span class="badge badge-vert">Facile</span></td>
+      </tr>
+      <tr>
+        <td><strong>3. Contraintes redondantes</strong></td>
+        <td>Répéter les exigences critiques à plusieurs endroits</td>
+        <td>Persistance des contraintes sur l'ensemble de la génération</td>
+        <td><span class="badge badge-bleu">Moyen</span></td>
+      </tr>
+      <tr>
+        <td><strong>4. Décomposition progressive</strong></td>
+        <td>Définir un patron structurel reproductible pour chaque sous-tâche</td>
+        <td>Homogénéité du livrable, granularité uniforme</td>
+        <td><span class="badge badge-bleu">Moyen</span></td>
+      </tr>
+      <tr>
+        <td><strong>5. Ancrage contextuel</strong></td>
+        <td>Remplacer chaque décision implicite par une valeur explicite</td>
+        <td>Suppression des choix par défaut indésirables</td>
+        <td><span class="badge badge-bleu">Moyen</span></td>
+      </tr>
+      <tr>
+        <td><strong>6. Prompting négatif</strong></td>
+        <td>Interdire les dérives comportementales connues</td>
+        <td>Délimitation précise du périmètre du livrable</td>
+        <td><span class="badge badge-orange">Avancé</span></td>
+      </tr>
+      <tr>
+        <td><strong>7. Liste de vérification</strong></td>
+        <td>Forcer une auto-révision avant la production du livrable</td>
+        <td>Cohérence globale, qualité finale du document</td>
+        <td><span class="badge badge-bleu">Moyen</span></td>
+      </tr>
+      <tr>
+        <td><strong>8. Exigences linguistiques en tête</strong></td>
+        <td>Utiliser l'effet miroir et placer la qualité de langue en priorité absolue</td>
+        <td>Orthographe, accentuation et ponctuation correctes</td>
+        <td><span class="badge badge-vert">Facile</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =========================================================
+     SECTION 12 — TRANSPOSITION
+========================================================= -->
+<section id="transposition">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <div class="section-titre-bloc">
+      <h2>  &nbsp; Transposer ces techniques à vos propres TPs</h2>
+      <p>Un modèle de prompt réutilisable pour tout document pédagogique NSI</p>
+    </div>
+  </div>
+
+  <p>
+    Les huit techniques présentées s'appliquent à tout document pédagogique, quelle que soit
+    la thématique. Voici un modèle générique que vous pouvez adapter :
+  </p>
+
+  <div class="extrait-prompt">
+    <span class="label-extrait">Modèle de prompt pédagogique NSI — à adapter</span>
+    <span class="hl-bleu">### EXIGENCE LINGUISTIQUE ABSOLUE — LIRE EN PREMIER</span><br>
+    [Qualité de langue, accents, ponctuation française]<br>
+    <br>
+    <span class="hl-bleu">### INTERDICTIONS ABSOLUES</span><br>
+    [Lister les comportements par défaut à éviter pour ce type de document]<br>
+    <br>
+    <span class="hl-bleu">### RÔLE ET CONTEXTE</span><br>
+    Tu es un expert en [domaine pédagogique] et en [domaine technique],<br>
+    chargé de produire [type de livrable] de haute qualité pour des élèves<br>
+    de [niveau] NSI.<br>
+    <br>
+    <span class="hl-bleu">### CHARTE GRAPHIQUE</span><br>
+    [Valeurs hexadécimales, polices, conventions visuelles — toujours explicites]<br>
+    <br>
+    <span class="hl-bleu">### SPÉCIFICATIONS TECHNIQUES</span><br>
+    [Technologies avec versions, contraintes d'architecture, schémas de données]<br>
+    <br>
+    <span class="hl-bleu">### STRUCTURE DU LIVRABLE</span><br>
+    [Plan numéroté, patron structurel de chaque section, contenu attendu]<br>
+    <br>
+    <span class="hl-bleu">### CONTRAINTES PÉDAGOGIQUES</span><br>
+    [Progression, différenciation, ton, langue — contraintes redondées ici]<br>
+    <br>
+    <span class="hl-bleu">### VÉRIFICATION FINALE</span><br>
+    [ ] [Critère 1 — pédagogique]<br>
+    [ ] [Critère 2 — technique]<br>
+    [ ] [Critère 3 — linguistique]<br>
+    [ ] [Critère 4 — cohérence]
+  </div>
+
+  <h3>Questions à se poser avant de rédiger un prompt</h3>
+
+  <div class="grille-2">
+    <div class="carte-mini">
+      <h4>Qui est le modèle ?</h4>
+      <p>Quel rôle lui assigner ? Quelle double expertise est nécessaire pour ce livrable ?</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Quels sont les comportements par défaut indésirables ?</h4>
+      <p>Que ferait le modèle sans instruction particulière ? Qu'est-ce qui serait problématique ?</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Quelles décisions ne dois-je pas laisser au modèle ?</h4>
+      <p>Technologies, schémas, noms d'identifiants, structure de sections — tout ce qui doit être exact.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Quel est le patron de chaque sous-tâche ?</h4>
+      <p>Si le livrable contient des éléments répétitifs (exercices, étapes, fiches), définir leur structure commune.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Quelles sont les exigences non négociables ?</h4>
+      <p>Identifier les 3 à 5 critères éliminatoires et les placer en tête du prompt, puis les répéter.</p>
+    </div>
+    <div class="carte-mini">
+      <h4>Comment vérifier la qualité du livrable ?</h4>
+      <p>Formuler les critères de vérification comme une liste de contrôle à la fin du prompt.</p>
+    </div>
+  </div>
+
+  <div class="retenir">
+    <div class="retenir-label">Conclusion</div>
+    <p>
+      Le prompt engineering n'est pas une compétence informatique — c'est une compétence
+      rédactionnelle et organisationnelle. Un enseignant habitué à rédiger des cahiers des
+      charges pédagogiques, des progressions ou des grilles d'évaluation possède déjà
+      l'essentiel des aptitudes nécessaires pour concevoir des prompts professionnels.
+      Il s'agit simplement de transférer cette rigueur vers un nouveau type de document.
+    </p>
+    <button type="button" class="btn btn-primary"><a href="prompt.txt" download="prompt_demineur.txt">Télécharger le prompt</a></button>
+<button type="button" class="btn btn-secondary"><a href="TP_demineur_NSI.html" target="_blank">Visualiser le résultat(après correction des imperfections sans IA)</a></button>
+
+  </div>
+</section>
+
+</div><!-- fin .page-wrapper -->
+
+<footer>
+  <p>Document produit à des fins pédagogiques pour les enseignants de la spécialité NSI.</p>
+  <p>Les techniques présentées sont applicables à Claude (Anthropic) et aux grands modèles de langage en général.</p>
+</footer>
+
+<button id="retour-haut" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Retour en haut de page" title="Retour en haut">&#8679;</button>
+
+<script>
+  const btn = document.getElementById('retour-haut');
+  window.addEventListener('scroll', () => {
+    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  });
+</script>
+
+</body>
+</html>

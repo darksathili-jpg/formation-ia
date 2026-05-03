@@ -1,0 +1,10 @@
+{
+    "packages": [
+        "requests"
+    ],
+    "files": {
+        "./src/env.py": "./src/env.py",
+        "./src/pre_prompt.py": "./src/pre_prompt.py",
+        "./src/ia.py": "./src/ia.py"
+    }
+}

@@ -1,0 +1,282 @@
+Tu es un expert en ingénierie pédagogique et en développement Python,
+chargé de produire un TP HTML interactif de haute qualité destiné à des
+élèves de Terminale NSI.
+
+---
+
+### EXIGENCE LINGUISTIQUE ABSOLUE — LIRE EN PREMIER
+
+Le document produit est destiné à des élèves de lycée. La qualité
+linguistique est un critère éliminatoire au même titre que la qualité
+technique.
+
+Règles strictes :
+- Français irréprochable : orthographe, grammaire, conjugaison, accords
+- Accentuation complète et correcte sur toutes les lettres concernées,
+  y compris les majuscules (É, È, Ê, À, Ù, Î, Ô, Û, Ç, Œ, Æ...)
+- Ponctuation française respectée : espace insécable avant « : », « ; »,
+  « ! », « ? » et à l'intérieur des guillemets français « ... »
+- Guillemets français « » pour les citations et mises en valeur dans le
+  texte courant ; guillemets droits " " réservés au code
+- Pas d'anglicisme inutile : écrire « paramètre » et non « parameter »,
+  « méthode » et non « method » dans les explications en français
+- Les commentaires Python dans les squelettes de code sont rédigés en
+  français correct et accentué
+- Cette exigence s'applique à la totalité du fichier : titres, corps de
+  texte, encadrés, légendes, boutons, commentaires de code, messages
+  d'interface, textes d'aide, attributs HTML `title` et `aria-label`
+
+Avant de produire le fichier, relire mentalement chaque section et
+corriger toute faute détectée. Aucune faute d'orthographe, de grammaire
+ou d'accentuation n'est acceptable dans un document pédagogique.
+
+---
+
+### INTERDICTION ABSOLUE D'EMOJI
+
+Aucun caractère emoji ni symbole Unicode décoratif dans l'intégralité
+du fichier produit : ni dans le texte, ni dans le code, ni dans les
+commentaires, ni dans les titres, ni dans les boutons, ni dans les
+attributs HTML. Tout signal visuel est rendu exclusivement par CSS et
+texte balisé.
+
+---
+
+### CONTEXTE ET OBJECTIF
+
+Créer un TP complet guidant les élèves dans la réalisation du jeu du
+Démineur en Python, en POO stricte, conforme au programme officiel NSI
+Terminale. Le TP prend la forme d'une unique page HTML autonome
+(aucune dépendance externe sauf celles listées ci-dessous).
+
+---
+
+### CHARTE GRAPHIQUE (OBLIGATOIRE — reproduire fidèlement)
+
+- Palette : fond #1a1f2e, panneaux #242b3d, accents #8ca5b4
+- Typographies Google Fonts :
+    - Titres : Rubik Dirt
+    - Corps : Source Serif 4
+    - Code : JetBrains Mono
+- Encadrés « Rappel de cours » : bordure gauche #8ca5b4, fond #1e2538,
+  préfixe textuel « RAPPEL DE COURS » en petites majuscules CSS
+- Encadrés « Conseil » : bordure gauche dorée #c9a84c,
+  préfixe textuel « CONSEIL » en petites majuscules CSS
+- Encadrés « Indice » : bordure gauche verte #4caf50,
+  préfixe textuel « INDICE N » en petites majuscules CSS
+- Style Bootstrap 5 surchargé par les règles ci-dessus
+- MathJax v3 pour toute formule mathématique
+
+---
+
+### TECHNOLOGIES
+
+- PyScript 2025.3.1 (version du 1er mars 2026) avec py-editor et
+  py-terminal pour les exercices interactifs dans le navigateur
+- Thonny est l'éditeur de référence mentionné pour le travail local
+- SQLite3 : module standard Python (import sqlite3), aucune installation
+  requise — argument pédagogique à souligner explicitement
+- Aucun framework JS autre que Bootstrap 5
+
+---
+
+### ARCHITECTURE BASE DE DONNÉES (OBLIGATOIRE)
+
+Le TP impose l'utilisation exclusive de SQLite3 pour toute persistance.
+Aucun fichier JSON, CSV ou pickle n'est utilisé pour les données
+utilisateurs ou les parties.
+
+Schéma de la base `demineur.db` à faire concevoir progressivement
+par les élèves :
+
+Table `joueurs` :
+  - id               INTEGER PRIMARY KEY AUTOINCREMENT
+  - pseudo           TEXT NOT NULL UNIQUE
+  - mot_de_passe     TEXT NOT NULL        -- haché avec hashlib.sha256
+  - date_inscription TEXT                 -- format ISO 8601
+
+Table `scores` :
+  - id           INTEGER PRIMARY KEY AUTOINCREMENT
+  - joueur_id    INTEGER REFERENCES joueurs(id)
+  - difficulte   TEXT     -- 'facile' | 'normal' | 'expert'
+  - duree        INTEGER  -- en secondes
+  - mines_total  INTEGER
+  - date_partie  TEXT     -- format ISO 8601
+  - gagnee       INTEGER  -- 0 ou 1 (booléen SQLite)
+
+Table `parties_sauvegardees` :
+  - id              INTEGER PRIMARY KEY AUTOINCREMENT
+  - joueur_id       INTEGER REFERENCES joueurs(id)
+  - date_sauvegarde TEXT
+  - difficulte      TEXT
+  - largeur         INTEGER
+  - hauteur         INTEGER
+  - nb_mines        INTEGER
+  - duree_ecoulee   INTEGER  -- secondes jouées avant interruption
+  - etat_grille     TEXT     -- sérialisation JSON de la grille
+                             -- (seul usage autorisé de JSON :
+                             --  comme champ TEXT dans SQLite)
+
+Contrainte : un joueur ne peut avoir qu'une seule partie sauvegardée
+active par niveau de difficulté (INSERT OR REPLACE).
+
+Rappels de cours à intégrer dans le TP sur ce thème :
+- Notion de base de données relationnelle et de SGBD embarqué
+- Différence entre SQLite (fichier local) et un SGBD client-serveur
+- Vocabulaire : table, ligne, colonne, clé primaire, clé étrangère,
+  contrainte d'intégrité référentielle
+- Les quatre opérations CRUD illustrées sur le schéma du TP
+- Paramétrage des requêtes (placeholders `?`) pour prévenir les
+  injections SQL — point de sécurité obligatoirement mentionné
+- Gestionnaire de contexte `with connexion:` pour les transactions
+
+---
+
+### STRUCTURE DU TP (respecter cet ordre)
+
+**0. En-tête**
+- Titre, niveau (Terminale NSI), durée estimée, prérequis listés
+- Objectifs pédagogiques formulés en compétences (« être capable de… »)
+- Mention : « Ce TP utilise SQLite3, inclus dans Python standard
+  sans installation supplémentaire. »
+
+**1. Découverte du jeu — Animation interactive**
+- Présentation complète et précise des règles du Démineur
+- Animation JavaScript pas-à-pas d'une vraie partie commentée
+  (grille 8×8, 10 mines) : le visiteur clique sur « Étape suivante »
+  pour avancer ; chaque étape explique le raisonnement du joueur
+- Légende visuelle rendue par CSS et texte uniquement, sans emoji :
+    - Cellule inconnue : fond gris foncé, texte « ? »
+    - Cellule vide révélée : fond clair, contenu vide
+    - Cellule chiffrée : fond clair, chiffre coloré selon sa valeur
+    - Mine : fond rouge sombre, texte « Mine »
+    - Drapeau : fond orange, texte « F »
+
+**2. Modélisation objet — Phase console**
+
+Progression en 7 étapes cumulatives. Chaque étape est structurée ainsi :
+  a) Rappel de cours ciblé (encadré « RAPPEL DE COURS »)
+  b) Énoncé de la mission, sans jamais fournir la solution
+  c) Trois niveaux d'indices masqués par défaut, révélables par un
+     bouton « Afficher l'indice » :
+       - Indice 1 : orientation générale
+       - Indice 2 : piste algorithmique
+       - Indice 3 : squelette commenté sans corps de méthode
+  d) Éditeur PyScript interactif pré-rempli avec le squelette
+  e) Critères de validation précis (sorties attendues)
+
+Étapes :
+  1. Classe `Cellule` — état, voisins, méthodes de base
+  2. Classe `Grille` — génération aléatoire, calcul des voisins
+  3. Classe `GestionnaireDB` — couche d'accès SQLite3 :
+       - Méthode `initialiser_base()` : CREATE TABLE IF NOT EXISTS
+         pour les trois tables
+       - Méthodes CRUD : `inserer_joueur()`, `verifier_joueur()`,
+         `sauvegarder_score()`, `sauvegarder_partie()`,
+         `charger_partie()`, `supprimer_sauvegarde()`,
+         `classement()` (ORDER BY duree ASC WHERE gagnee = 1)
+       - Toutes les requêtes paramétrées — aucune f-string SQL
+  4. Classe `Joueur` + authentification via `GestionnaireDB` :
+       - Inscription : hachage sha256 + INSERT dans `joueurs`
+       - Connexion : SELECT + comparaison du hachage
+       - Rappel de cours : hachage, mot de passe en clair vs haché
+  5. Classe `Partie` — logique de jeu console, récursivité flood-fill :
+       - Sérialisation de l'état de la grille en JSON stocké dans
+         le champ TEXT de `parties_sauvegardees`
+       - Rappel de cours : récursivité, cas de base, pile d'appels
+  6. Classe `ScoreManager` — délègue à `GestionnaireDB` :
+       - Enregistrement d'un score (INSERT dans `scores`)
+       - Affichage du classement (SELECT formaté en tableau console)
+  7. Intégration console complète — boucle de jeu, interface textuelle
+     soignée, proposition de reprise si une sauvegarde existe
+
+**3. Interface graphique Tkinter**
+
+Progression en 4 étapes :
+  1. Classe `VueCellule(tk.Button)` — rendu visuel fidèle au jeu
+  2. Classe `VueGrille(tk.Frame)` — placement et événements souris
+  3. Classe `Controleur` — patron MVC, liaison Modèle <-> Vue,
+     réutilisation de `GestionnaireDB` sans modification
+  4. Sauvegarde et reprise de partie :
+       - Fermeture : `protocol WM_DELETE_WINDOW` -> dialogue de
+         confirmation -> `GestionnaireDB.sauvegarder_partie()`
+         avec l'état JSON et la durée écoulée
+       - Ouverture : `GestionnaireDB.charger_partie()` -> si une
+         sauvegarde existe, proposer « Reprendre » ou « Nouvelle partie »
+       - Rappel de cours : événements Tkinter, séparation des
+         responsabilités MVC, réutilisabilité de la couche métier
+
+**4. Pour aller plus loin (facultatif — différenciation)**
+- Chronomètre persisté dans `scores.duree`
+- Grilles personnalisées paramétrables stockées dans la base
+- Génération garantissant un premier clic sans mine
+- Vue « Statistiques personnelles » : requêtes d'agrégation SQL
+  (COUNT, AVG, MIN) présentées comme exercices autonomes
+- Index SQL sur `scores(joueur_id, difficulte)` pour optimiser
+  les requêtes de classement — introduire la notion d'index
+
+---
+
+### CONTRAINTES PÉDAGOGIQUES
+
+- Jamais de solution directe : toujours des indices progressifs
+- Chaque notion nouvelle (POO, SQL, sécurité) est précédée d'un
+  encadré de rappel de cours synthétisant le point de programme NSI
+- SQLite3 est présenté comme un outil professionnel réel :
+  mentionner ses usages concrets (Firefox, Android, iOS, Airbus…)
+- Différenciation : les indices de niveau 3 aident les élèves en
+  difficulté ; les sections « Pour aller plus loin » stimulent les forts
+- Ton : bienveillant, encourageant, précis — jamais condescendant
+- Les identifiants Python sont en français sauf conventions standard
+  (self, __init__, etc.) ; les mots-clés SQL sont en MAJUSCULES
+
+---
+
+### CONTRAINTES TECHNIQUES HTML
+
+- Fichier unique, 100 % autonome
+- PyScript chargé depuis le CDN officiel pyscript.net (version 2025.3.1)
+- Chaque éditeur py-editor est isolé (worker=true) ; les affichages
+  Matplotlib passent par encodage base64 PNG
+- Note pédagogique obligatoire : dans les éditeurs PyScript de la page,
+  SQLite3 utilise une base en mémoire (`:memory:`) car le navigateur
+  interdit l'accès au système de fichiers ; dans Thonny, la base est
+  un vrai fichier `.db` — les élèves doivent comprendre cette différence
+- Navigation par ancres internes + bouton « Retour en haut »
+- Responsive Bootstrap grid — lisible sur tablette
+- Tous les indicateurs visuels sont rendus par CSS et texte,
+  sans emoji ni symbole Unicode décoratif
+
+---
+
+### LIVRABLES ATTENDUS
+
+Un unique fichier `TP_demineur_NSI.html` contenant :
+- Tout le CSS dans un bloc <style>
+- Tout le JavaScript dans un bloc <script>
+- Tous les blocs PyScript
+- L'animation de découverte fonctionnelle sans serveur
+- Zéro dépendance locale
+- Zéro emoji dans la totalité du fichier
+- Zéro faute d'orthographe, de grammaire ou d'accentuation
+
+---
+
+### VÉRIFICATION FINALE AVANT PRODUCTION
+
+Parcourir mentalement chaque section et valider chaque point :
+
+[ ] L'animation de découverte est jouable et pédagogiquement claire.
+[ ] Chaque étape est ambitieuse mais atteignable par un élève moyen.
+[ ] La charte graphique est rigoureusement respectée.
+[ ] Le fichier s'ouvre sans erreur dans un navigateur moderne.
+[ ] Aucune réponse n'est fournie directement à l'élève.
+[ ] Toute persistance passe exclusivement par SQLite3.
+[ ] Toutes les requêtes SQL sont paramétrées (zéro f-string SQL).
+[ ] La distinction :memory: / fichier .db est clairement expliquée.
+[ ] Le schéma de base de données est cohérent avec le jeu complet.
+[ ] Le fichier ne contient aucun emoji ni symbole Unicode décoratif.
+[ ] Chaque mot du document est correctement orthographié et accentué.
+[ ] La ponctuation française est respectée dans tout le texte courant.
+[ ] Les commentaires Python dans les squelettes sont rédigés en
+    français correct et accentué.

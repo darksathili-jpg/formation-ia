@@ -1,0 +1,501 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+/* ========================================
+   STYLES GÉNÉRAUX (identiques au style.css)
+======================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #8ca5b499;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* ========================================
+   TITRE PRINCIPAL (identique au style.css)
+======================================== */
+h1 {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 0 20px;
+    height: auto;
+    min-height: 5vw;
+    line-height: 1.2;
+    font-family: "Rubik Dirt", system-ui;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+h1 .version {
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: clamp(0.65rem, 1.3vw, 0.9rem);
+    font-weight: normal;
+    color: #e0e0e0;
+    margin-top: 6px;
+    letter-spacing: 1px;
+}
+
+/* ========================================
+   CONTENEUR PRINCIPAL (identique)
+======================================== */
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+/* ========================================
+   CARTE (identique + variantes)
+======================================== */
+.card {
+    flex: 0 0 calc(40% - 10px);
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-full {
+    flex: 0 0 100%;
+}
+
+.card-half {
+    flex: 0 0 calc(50% - 10px);
+}
+
+.card-third {
+    flex: 0 0 calc(33.33% - 14px);
+}
+
+/* ========================================
+   TITRES DE CARTES (identique)
+======================================== */
+.card-title {
+    color: white;
+    text-align: center;
+    font-family: "Rubik Dirt", system-ui;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.card-title span {
+    display: block;
+    font-size: 13px;
+    color: #e0e0e0;
+    margin-top: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ========================================
+   SÉPARATEUR
+======================================== */
+.sep {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.25);
+    margin: 4px 0 14px;
+}
+
+/* ========================================
+   TEXTE
+======================================== */
+.card p,
+.card li {
+    color: white;
+    font-size: 13.5px;
+    line-height: 1.65;
+    margin-bottom: 8px;
+}
+
+.card ul,
+.card ol {
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+.card strong {
+    color: #fff9e0;
+}
+
+.card em {
+    color: #e0f0ff;
+    font-style: italic;
+}
+
+/* ========================================
+   BADGES/TAGS
+======================================== */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 12px;
+}
+
+.tag {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.tag-warn {
+    background-color: rgba(255, 193, 7, 0.25);
+    border-color: #ffc107;
+    color: #fff9e0;
+}
+
+.tag-ok {
+    background-color: rgba(40, 167, 69, 0.25);
+    border-color: #28a745;
+    color: #d4f5dd;
+}
+
+/* ========================================
+   BLOCS CODE
+======================================== */
+.code-block {
+    background-color: #1e1e2e;
+    border-radius: 5px;
+    padding: 14px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11.5px;
+    line-height: 1.75;
+    color: #cdd6f4;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    margin-bottom: 12px;
+    white-space: pre;
+}
+
+.code-block::before {
+    content: '● ● ●';
+    display: block;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.kw {
+    color: #cba6f7;
+}
+
+.fn {
+    color: #89dceb;
+}
+
+.str {
+    color: #a6e3a1;
+}
+
+.cm {
+    color: #6c7086;
+    font-style: italic;
+}
+
+.num {
+    color: #fab387;
+}
+
+.arr {
+    color: #f38ba8;
+}
+
+.ok {
+    color: #a6e3a1;
+    font-weight: bold;
+}
+
+/* ========================================
+   DIAGRAMME ASCII
+======================================== */
+.ascii-box {
+    background-color: #12121f;
+    border-radius: 5px;
+    padding: 14px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #89dceb;
+    border: 1px solid rgba(137, 220, 235, 0.3);
+    overflow-x: auto;
+    margin-bottom: 12px;
+    white-space: pre;
+}
+
+/* ========================================
+   TABLEAU
+======================================== */
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 12px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    color: white;
+}
+
+th {
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff9e0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    vertical-align: top;
+    line-height: 1.5;
+}
+
+tr:hover td {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+td:first-child {
+    font-size: 1.1em;
+}
+
+/* ========================================
+   ALERTE / INFO / WARN (style bootstrap-like)
+======================================== */
+.alert {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: white;
+}
+
+.alert-info {
+    background: rgba(0, 123, 255, 0.2);
+    border-left: 4px solid #007bff;
+}
+
+.alert-warn {
+    background: rgba(255, 193, 7, 0.2);
+    border-left: 4px solid #ffc107;
+}
+
+.alert-ok {
+    background: rgba(40, 167, 69, 0.2);
+    border-left: 4px solid #28a745;
+}
+
+/* ========================================
+   CHECKLIST
+======================================== */
+.checklist {
+    list-style: none;
+    padding: 0;
+}
+
+.checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 13px;
+    color: white;
+}
+
+.checklist li::before {
+    content: '☐';
+    flex-shrink: 0;
+    font-size: 16px;
+    color: #ffc107;
+    line-height: 1.2;
+}
+
+/* ========================================
+   BOUTON (identique)
+======================================== */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #ffb300;
+}
+
+/* ========================================
+   NUMÉROS DE PARTIE
+======================================== */
+.partie-num {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #e0e0e0;
+    margin-bottom: 4px;
+}
+
+/* ========================================
+   ÉTAPES
+======================================== */
+.step-title {
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 1rem;
+    color: white;
+    margin: 14px 0 8px;
+    padding-left: 8px;
+    border-left: 3px solid #ffc107;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+.footer-card {
+    flex: 0 0 100%;
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px 24px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-card p {
+    color: white;
+    font-size: 12.5px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.footer-card a {
+    color: #fff9e0;
+}
+
+.footer-badge {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.footer-badge .big {
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    line-height: 1;
+}
+
+.footer-badge .small {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #e0e0e0;
+    display: block;
+    margin-top: 3px;
+}
+
+/* ========================================
+   RESPONSIVE (identique au style.css)
+======================================== */
+@media screen and (max-width: 1080px) {
+    .card {
+        width: 100% !important;
+        max-width: 100%;
+        float: none !important;
+        clear: both !important;
+    }
+
+    .card-half {
+        flex: 0 0 100%;
+    }
+
+    .card-third {
+        flex: 0 0 100%;
+    }
+
+    .container {
+        flex-direction: column;
+        width: 100% !important;
+        height: auto !important;
+        padding-bottom: 30px !important;
+    }
+
+    h1 {
+        width: 100% !important;
+        height: auto;
+        line-height: 1.4;
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        padding: 10px 15px;
+        margin: 10px 0;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card {
+        padding: 15px;
+        margin: 0 0 20px 0;
+    }
+
+    h1 {
+        font-size: clamp(1.2rem, 4vw, 2rem);
+    }
+
+    .code-block,
+    .ascii-box {
+        font-size: 10px;
+    }
+}

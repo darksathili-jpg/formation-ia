@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="/mini-coi.js" scope="./"></script>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>IA NSI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <h1>NSI : Générateur de Code Python</h1>
+
+    <!-- Alerte clés API (disparaît après validation) -->
+    <div class="alert alert-warning alert-dismissible fade show" id="alert_info" role="alert">
+        Pour utiliser cette application, entrez au moins une clé API gratuite.<br>
+        <strong>Groq</strong> : <a rel="noopener" href="https://console.groq.com/home" target="_blank">console.groq.com</a> &nbsp;|&nbsp;
+        <strong>Cerebras</strong> : <a rel="noopener" href="https://inference.cerebras.ai" target="_blank">inference.cerebras.ai</a> &nbsp;|&nbsp;
+        <strong>Google AI Studio</strong> : <a rel="noopener" href="https://aistudio.google.com" target="_blank">aistudio.google.com</a><br>
+        Les clés sont sauvegardées localement (localStorage) et ne transitent pas par un serveur externe.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Alerte pédagogique permanente -->
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>L'IA est un point de départ, pas une réponse définitive.</strong><br>
+        En NSI, comprendre un algorithme compte plus qu'obtenir un résultat.
+        L'IA peut se tromper — sur la logique, sur les cas limites, sur l'efficacité.
+        <strong>Lire le code généré, repérer ses erreurs et les corriger, c'est précisément ce qui développe votre compétence de programmeur.</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="container mt-5">
+
+        <!--CARD-->
+        <div class="card mx-auto">
+            <img src="assets/images/image_card.png" class="card-img-top" alt="nsi">
+            <div class="card-body">
+                <h5 class="card-title">Mon code Python par IA
+                    <span>Fallback automatique multi-provider</span>
+                </h5>
+
+                <!-- Sélecteur de provider -->
+                <div class="mb-3">
+                    <label for="provider_select" class="form-label text-white fw-bold">Provider préféré :</label>
+                    <select id="provider_select" class="form-select">
+                        <option value="auto">Auto (fallback dans l'ordre)</option>
+                        <optgroup label="Groq (clé unique)">
+                            <option value="groq_deepseek">Groq - DeepSeek R1 70B (raisonnement)</option>
+                            <option value="groq_llama">Groq - Llama 3.3 70B (polyvalent)</option>
+                            <option value="groq_qwen">Groq - Qwen QwQ 32B (code)</option>
+                        </optgroup>
+                        <optgroup label="Autres providers">
+                            <option value="cerebras_llama">Cerebras - Llama 3.3 70B (ultra rapide)</option>
+                            <option value="google_gemini">Google - Gemini 2.0 Flash (contexte 1M)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Formulaire clés API (accordéon) -->
+                <div class="accordion mb-3" id="accordionCles">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseCles">
+                                Configurer les clés API
+                            </button>
+                        </h2>
+                        <div id="collapseCles" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+
+                                <!-- Groq -->
+                                <div class="mb-2">
+                                    <label class="form-label fw-bold">
+                                        Groq
+                                        <span id="badge_groq_deepseek" class="badge bg-danger ms-2">Pas de clé</span>
+                                        <small class="text-muted ms-1">(pour Groq DeepSeek R1, Llama, Qwen)</small>
+                                    </label>
+                                    <input type="password" id="cle_groq_api_key" class="form-control"
+                                        placeholder="gsk_...">
+                                </div>
+
+                                <!-- Cerebras -->
+                                <div class="mb-2">
+                                    <label class="form-label fw-bold">
+                                        Cerebras
+                                        <span id="badge_cerebras_llama" class="badge bg-danger ms-2">Pas de clé</span>
+                                    </label>
+                                    <input type="password" id="cle_cerebras_api_key" class="form-control"
+                                        placeholder="csk_...">
+                                </div>
+
+                                <!-- Google -->
+                                <div class="mb-2">
+                                    <label class="form-label fw-bold">
+                                        Google AI Studio
+                                        <span id="badge_google_gemini" class="badge bg-danger ms-2">Pas de clé</span>
+                                    </label>
+                                    <input type="password" id="cle_google_api_key" class="form-control"
+                                        placeholder="AIza...">
+                                </div>
+
+                                <button type="button" id="cle_btn" class="btn btn-warning mt-2">
+                                    Valider les clés
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Zone de question -->
+                <div class="form mb-2">
+                    <textarea class="form-control" id="question"
+                        placeholder="Décrivez le code Python souhaité : cette application génère uniquement du code Python exécutable directement dans l'éditeur."
+                        rows="5"></textarea>
+                </div>
+
+                <button type="button" id="reponse_btn" class="btn btn-success w-100">
+                    Générer le code
+                </button>
+
+                <!-- Bandeau permanent sous le bouton -->
+                <div id="bandeau_apprentissage" class="mt-2 p-2 rounded text-center">
+                    <em>L'IA fait des erreurs. Lisez, testez, corrigez — c'est là que l'apprentissage commence.</em>
+                </div>
+            </div>
+        </div>
+
+        <div id="editeur-nsi"></div>
+        <script type="py-editor" id="editeur" env="ia" target="editeur-nsi"></script>
+
+        <!-- Barre d'état modèle IA -->
+        <div id="barre_modele">
+            <span id="barre_modele_texte">—</span>
+        </div>
+    </div>
+
+    <script type="mpy" src="./main.py"></script>
+    <script type="py" worker name="ia" src="./src/ia.py" config="./config.json"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

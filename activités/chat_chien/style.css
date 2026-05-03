@@ -1,0 +1,1736 @@
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .controls {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        margin-bottom: 16px;
+    }
+
+    .ctrl-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .ctrl-label {
+        font-family: 'Courier New', monospace;
+        font-size: 0.75rem;
+        color: #e0e0e0;
+    }
+
+    .ctrl-label span {
+        color: #ffc107;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    input[type=range] {
+        width: 100%;
+        accent-color: #ffc107;
+        cursor: pointer;
+    }
+
+    .run-btn {
+        background: linear-gradient(135deg, #ffc107, #ff8800);
+        color: #1a1a1a;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 1rem;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .run-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 193, 7, 0.7);
+    }
+
+    .run-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .stat-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+    }
+
+    .stat-box {
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 6px;
+        padding: 10px 14px;
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .stat-box .stat-val {
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 1.4rem;
+        color: #ffc107;
+        display: block;
+    }
+
+    .stat-box .stat-lbl {
+        font-family: 'Courier New', monospace;
+        font-size: 0.65rem;
+        color: #e0e0e0;
+    }
+
+    #graphique {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        min-height: 240px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    #graphique img {
+        width: 100% !important;
+        border-radius: 8px;
+    }
+
+    .loading-msg {
+        color: #e0e0e0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.82rem;
+        text-align: center;
+        padding: 20px;
+    }
+
+    #pyscript-status {
+        font-family: 'Courier New', monospace;
+        font-size: 0.72rem;
+        color: #ffc107;
+        text-align: center;
+        margin-bottom: 12px;
+        animation: blink 1.2s ease-in-out infinite;
+    }
+
+    #pyscript-status.ready {
+        animation: none;
+        color: #7effc8;
+    }
+
+    @keyframes blink {
+
+        0%,
+        100% {
+            opacity: 1
+        }
+
+        50% {
+            opacity: 0.4
+        }
+    }
+
+    .alert-success {
+        background: rgba(40, 167, 69, 0.2);
+        border-left: 4px solid #28a745;
+        border-radius: 0 6px 6px 0;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    .lr-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 0.8rem;
+    }
+
+    .lr-table th {
+        background: rgba(0, 0, 0, 0.3);
+        color: #ffc107;
+        font-family: 'Courier New', monospace;
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+    }
+
+    .lr-table td {
+        padding: 7px 10px;
+        color: #e0e0e0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-family: 'Courier New', monospace;
+    }
+
+    .lr-table tr:hover td {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .lr-table .good {
+        color: #7effc8;
+        font-weight: bold;
+    }
+
+    .lr-table .bad {
+        color: #ff8080;
+    }
+
+    .lr-table .warn {
+        color: #ffc107;
+    }
+
+    .py-editor-input {
+        background-color: white !important;
+        border-radius: 5px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .py-editor-output {
+        display: block !important;
+        margin-top: 10px !important;
+        width: 100% !important;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        text-align: left !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .py-editor-run-button {
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .py-editor-run-button:hover {
+        background-color: #ffb300;
+        transform: scale(1.02);
+    }
+
+    .py-editor-run-button:active {
+        transform: scale(0.98);
+    }
+
+    #editeur-nsi {
+        flex: 1 1 calc(60% - 10px);
+        min-width: 300px;
+        display: block;
+    }
+
+    #editeur-nsi>* {
+        width: 100%;
+        height: 100%;
+    }
+
+    h1::before {
+        content: "";
+        display: block;
+        position: absolute;
+        left: -90px;
+        top: 50%;
+        transform: translateY(-50%) translateX(-80%);
+        width: 6vw;
+        height: 6vw;
+        background-image: url(../../assets/images/logoIA.png);
+        background-size: contain;
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(-50%) rotate(-5deg);
+        }
+
+        50% {
+            transform: translateY(calc(-50% - 6px)) rotate(5deg);
+        }
+    }
+
+
+    body {
+        background-color: #8ca5b499;
+        min-height: 100vh;
+        padding: 20px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    h1 {
+        display: block;
+        width: fit-content;
+        margin: 20px auto 6px;
+        padding: 0 20px;
+        height: auto;
+        min-height: clamp(44px, 6.5vw, 88px);
+        line-height: clamp(44px, 6.5vw, 88px);
+        font-family: "Rubik Dirt", system-ui;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        position: relative;
+        font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #e0e0e0;
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.04em;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .card {
+        background-color: #8ca5b4;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+        color: white;
+        font-family: "Rubik Dirt", system-ui;
+        margin-bottom: 12px;
+        font-size: 1.05rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title span {
+        display: block;
+        font-size: 0.8rem;
+        color: #e0e0e0;
+        font-family: 'Courier New', monospace;
+        font-weight: normal;
+        margin-top: 3px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #ffb300;
+        transform: scale(1.02);
+        text-decoration: none;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        transform: scale(1.02);
+        text-decoration: none;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+    }
+
+    .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.15);
+        text-decoration: none;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .section-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 2px;
+    }
+
+    .section-head h2 {
+        font-family: "Rubik Dirt", system-ui;
+        color: white;
+        font-size: 1.15rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+        white-space: nowrap;
+    }
+
+    .section-head .line {
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.4), transparent);
+        border-radius: 2px;
+    }
+
+    .niveau-card {
+        border-radius: 8px;
+        padding: 18px;
+        box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .niveau-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .niveau-card .badge-niveau {
+        display: inline-block;
+        font-family: 'Courier New', monospace;
+        font-size: 0.7rem;
+        font-weight: lighter;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+        letter-spacing: 0.08em;
+    }
+
+    .niveau-card h3 {
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 1rem;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        margin-bottom: 6px;
+    }
+
+    .niveau-card .meta {
+        font-family: 'Courier New', monospace;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 12px;
+    }
+
+    .niveau-card ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .niveau-card ul li {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.9);
+        padding-left: 1.1em;
+        position: relative;
+    }
+
+    .niveau-card ul li::before {
+        content: '›';
+        position: absolute;
+        left: 0;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .n1 {
+        background: linear-gradient(135deg, #1a6b4a, #25a06e);
+    }
+
+    .n1 .badge-niveau {
+        background: rgba(0, 0, 0, 0.25);
+        color: #7effc8;
+    }
+
+    .n2 {
+        background: linear-gradient(135deg, #b87b00, #e09a00);
+    }
+
+    .n2 .badge-niveau {
+        background: rgba(0, 0, 0, 0.25);
+        color: #ffe89e;
+    }
+
+    .n3 {
+        background: linear-gradient(135deg, #4a1a9a, #7040c0);
+    }
+
+    .n3 .badge-niveau {
+        background: rgba(0, 0, 0, 0.25);
+        color: #c9a9ff;
+    }
+
+    .code-box {
+        background: rgba(0, 0, 0, 0.35);
+        border-radius: 6px;
+        padding: 12px 14px;
+        margin-top: 10px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.78rem;
+        color: #a8ffa0;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .code-box .c-yellow {
+        color: #ffc107;
+    }
+
+    .code-box .c-white {
+        color: #ffffff;
+    }
+
+    .code-box .c-muted {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .code-box .c-blue {
+        color: #7dd3fc;
+    }
+
+    .code-box .c-pink {
+        color: #f9a8d4;
+    }
+
+    .code-box .c-orange {
+        color: #fdba74;
+    }
+
+    .alert-info {
+        background: rgba(255, 255, 255, 0.12);
+        border-left: 4px solid #ffc107;
+        border-radius: 0 6px 6px 0;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    .alert-info strong {
+        color: white;
+    }
+
+    .alert-success {
+        background: rgba(40, 167, 69, 0.2);
+        border-left: 4px solid #28a745;
+        border-radius: 0 6px 6px 0;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    .etape-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.12);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    .etape-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: #ffc107;
+        color: #1a2a35;
+        border-radius: 50%;
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 0.9rem;
+        font-weight:lighter;
+        flex-shrink: 0;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .etape-content {
+        flex: 1;
+    }
+
+    .etape-title {
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+
+    .etape-desc {
+        color: #e0e0e0;
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+
+    .etape-time {
+        font-family: 'Courier New', monospace;
+        font-size: 0.68rem;
+        color: #ffc107;
+        margin-top: 4px;
+    }
+
+    .question-block {
+        background: rgba(0, 0, 0, 0.18);
+        border-radius: 8px;
+        padding: 14px;
+        margin-top: 10px;
+    }
+
+    .question-block .q-label {
+        font-family: 'Courier New', monospace;
+        font-size: 0.68rem;
+        color: #ffc107;
+        font-weight: bold;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+    }
+
+    .question-block p {
+        color: #e0e0e0;
+        font-size: 0.82rem;
+        line-height: 1.5;
+    }
+
+    .question-block textarea {
+        width: 100%;
+        margin-top: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 6px;
+        padding: 8px 10px;
+        color: white;
+        font-family: 'Courier New', monospace;
+        font-size: 0.8rem;
+        resize: vertical;
+        min-height: 60px;
+        outline: none;
+        transition: border 0.2s;
+    }
+
+    .question-block textarea:focus {
+        border-color: #ffc107;
+    }
+
+    .question-block textarea::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ---- Visualisation interactive MSE ---- */
+    .viz-container {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 12px;
+    }
+
+    .viz-title {
+        font-family: 'Courier New', monospace;
+        font-size: 0.72rem;
+        color: #ffc107;
+        font-weight: bold;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+    }
+
+    canvas {
+        width: 100%;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.4);
+        display: block;
+    }
+
+    .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        align-items: center;
+    }
+
+    .ctrl-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .ctrl-label {
+        font-family: 'Courier New', monospace;
+        font-size: 0.72rem;
+        color: #e0e0e0;
+    }
+
+    .ctrl-label span {
+        color: #ffc107;
+        font-weight: bold;
+    }
+
+    input[type=range] {
+        width: 100%;
+        accent-color: #ffc107;
+    }
+
+    .stat-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .stat-box {
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 6px;
+        padding: 8px 12px;
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .stat-box .stat-val {
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 1.3rem;
+        color: #ffc107;
+        display: block;
+    }
+
+    .stat-box .stat-lbl {
+        font-family: 'Courier New', monospace;
+        font-size: 0.65rem;
+        color: #e0e0e0;
+    }
+
+    .run-btn {
+        background: linear-gradient(135deg, #ffc107, #ff8800);
+        color: #1a1a1a;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
+    }
+
+    .run-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 0 18px rgba(255, 193, 7, 0.6);
+    }
+
+    /* ---- Tableau comparatif learning rate ---- */
+    .lr-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 0.8rem;
+    }
+
+    .lr-table th {
+        background: rgba(0, 0, 0, 0.3);
+        color: #ffc107;
+        font-family: 'Courier New', monospace;
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+    }
+
+    .lr-table td {
+        padding: 7px 10px;
+        color: #e0e0e0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-family: 'Courier New', monospace;
+    }
+
+    .lr-table tr:hover td {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .lr-table .good {
+        color: #7effc8;
+        font-weight: bold;
+    }
+
+    .lr-table .bad {
+        color: #ff8080;
+    }
+
+    .lr-table .warn {
+        color: #ffc107;
+    }
+
+    .rctf-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 4px;
+    }
+
+    .rctf-item {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .rctf-item .letter {
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 1.8rem;
+        color: #ffc107;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .rctf-item .label {
+        font-size: 0.8rem;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .rctf-item .example {
+        font-size: 0.7rem;
+        color: #e0e0e0;
+        font-family: 'Courier New', monospace;
+        line-height: 1.4;
+    }
+
+    footer {
+        margin-top: 10px;
+        text-align: center;
+        color: #e0e0e0;
+        font-size: 0.75rem;
+        font-family: 'Courier New', monospace;
+        padding: 10px 0;
+    }
+
+    footer a {
+        color: #ffc107;
+    }
+
+    @media (max-width: 750px) {
+        h1 {
+            width: 100%;
+            padding: 10px 15px;
+            line-height: 1.3;
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
+        }
+
+        .grid-2,
+        .grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .rctf-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    /* ── extensions spécifiques à ce TP ── */
+
+    /* Barre de progression des parties */
+    .nav-parts {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        margin: 10px 0 24px;
+        flex-wrap: wrap;
+    }
+
+    .progress-step {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 0.72rem;
+        font-family: 'Courier New', monospace;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .progress-step.active {
+        background: #ffc107;
+        border-color: #ffc107;
+        color: #1a2a35;
+        font-weight: 700;
+    }
+
+    .progress-step:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
+
+    /* Objectifs */
+    .objectif-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .objectif-item {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .objectif-item .obj-icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .objectif-item p {
+        font-size: 0.82rem;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.5;
+    }
+
+    .objectif-item strong {
+        color: #ffc107;
+        display: block;
+        margin-bottom: 2px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    /* Question badge */
+    .question-block {
+        background: rgba(255, 193, 7, 0.12);
+        border: 1px solid rgba(255, 193, 7, 0.35);
+        border-radius: 8px;
+        padding: 12px 14px;
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .question-block .q-num {
+        background: #ffc107;
+        color: #1a2a35;
+        font-family: "Rubik Dirt", system-ui;
+        font-size: 0.85rem;
+        font-weight: lighter;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .question-block p {
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.6;
+    }
+
+    .question-block p strong {
+        color: white;
+    }
+
+    /* Schéma neurone */
+    .schema-neurone {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 18px;
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        overflow-x: auto;
+    }
+
+    .schema-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .schema-box {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 0.72rem;
+        color: white;
+        font-family: 'Courier New', monospace;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .schema-box.highlight {
+        background: rgba(255, 193, 7, 0.25);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+
+    .schema-box.output {
+        background: rgba(40, 167, 69, 0.25);
+        border-color: #28a745;
+        color: #7effc8;
+    }
+
+    .schema-arrow {
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin: 0 6px;
+        align-self: center;
+    }
+
+    .schema-label {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: 'Courier New', monospace;
+        text-align: center;
+        margin-top: 3px;
+    }
+
+    /* Formule */
+    .formula-box {
+        background: rgba(0, 0, 0, 0.3);
+        border-left: 4px solid #7040c0;
+        border-radius: 0 8px 8px 0;
+        padding: 12px 16px;
+        margin-top: 10px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: #c9a9ff;
+        line-height: 2;
+    }
+
+    .formula-box .f-label {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.45);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .formula-box span.hi {
+        color: #ffc107;
+    }
+
+    .formula-box span.gr {
+        color: #7effc8;
+    }
+
+    .formula-box span.wh {
+        color: white;
+    }
+
+    /* Table résumé */
+    .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        margin-top: 10px;
+    }
+
+    .summary-table th {
+        background: rgba(0, 0, 0, 0.3);
+        color: #ffc107;
+        font-family: "Rubik Dirt", system-ui;
+        padding: 9px 12px;
+        text-align: left;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+    }
+
+    .summary-table td {
+        padding: 8px 12px;
+        color: #e0e0e0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        line-height: 1.5;
+    }
+
+    .summary-table tr:hover td {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Pipeline schéma */
+    .pipeline {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        justify-content: center;
+    }
+
+    .pipeline-step {
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        padding: 7px 12px;
+        font-size: 0.72rem;
+        color: white;
+        font-family: 'Courier New', monospace;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .pipeline-step.accent {
+        border-color: #ffc107;
+        color: #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+    }
+
+    .pipeline-arrow {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 1rem;
+    }
+
+    /* Tabs pour parties */
+    .tabs {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        margin-bottom: -1px;
+    }
+
+    .tab-btn {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        padding: 7px 14px;
+        font-size: 0.75rem;
+        font-family: 'Courier New', monospace;
+        color: rgba(255, 255, 255, 0.55);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+        background: #8ca5b4;
+        border-color: #ddd;
+        color: white;
+        font-weight: 700;
+    }
+
+    .tab-btn:hover:not(.active) {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .tab-panel {
+        display: none;
+    }
+
+    .tab-panel.active {
+        display: block;
+    }
+
+    /* Animated separator */
+    .animated-sep {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #ffc107, #ff6b00, transparent);
+        border-radius: 2px;
+        margin: 6px 0 18px;
+        animation: sep-shine 3s linear infinite;
+        background-size: 200% auto;
+    }
+
+    @keyframes sep-shine {
+        0% {
+            background-position: -200% center;
+        }
+
+        100% {
+            background-position: 200% center;
+        }
+    }
+
+    /* Blinking cursor */
+    .cursor::after {
+        content: '▌';
+        color: #ffc107;
+        animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+        0%,
+        100% {
+            opacity: 1
+        }
+
+        50% {
+            opacity: 0
+        }
+    }
+
+    /* Prérequis pill */
+    .prereq-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .pill {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 0.72rem;
+        font-family: 'Courier New', monospace;
+        color: rgba(255, 255, 255, 0.75);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .pill .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .pill .dot.g {
+        background: #28a745;
+    }
+
+    .pill .dot.y {
+        background: #ffc107;
+    }
+
+    .pill .dot.p {
+        background: #7040c0;
+    }
+
+    /* Diff warning */
+    .diff-banner {
+        background: linear-gradient(135deg, rgba(74, 26, 154, 0.4), rgba(112, 64, 192, 0.4));
+        border: 1px solid rgba(201, 169, 255, 0.3);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-top: 12px;
+        font-size: 0.8rem;
+        color: #c9a9ff;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .diff-banner .icon {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    @media (max-width: 650px) {
+        .objectif-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .schema-neurone {
+            flex-direction: column;
+        }
+
+        .schema-arrow {
+            transform: rotate(90deg);
+        }
+    }
+
+    .link-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .link-list li {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        padding: 9px 12px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 0.875rem;
+        color: white;
+        transition: background 0.2s;
+    }
+
+    .link-list li:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .link-list li .icon {
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .link-list li a {
+        color: white;
+        font-weight: 500;
+    }
+
+    .link-list li a:hover {
+        color: #ffc107;
+        text-decoration: none;
+    }
+
+    .link-list li .tag {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 0.67rem;
+        font-weight: 700;
+        background: #ffc107;
+        color: #1a2a35;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .link-list li .tag.green {
+        background: #28a745;
+        color: white;
+    }
+
+    .link-list li .tag.blue {
+        background: #2563eb;
+        color: white;
+    }
+
+    .link-list li .tag.grey {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+
+    #editeur-nsi_5 {
+        text-align: center;
+    }
+
+    #rappelfigure {
+        text-align: center;
+    }
+
+    #rappelfigure img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       Complément depuis style_save.css
+       Sélecteurs absents de style.css — propriétés non modifiées
+       ══════════════════════════════════════════════════════════════ */
+
+    /* ── Alertes ─────────────────────────────────────────────────── */
+
+    /* alert-warning : nouvelle variante orange (absente du fichier original) */
+    .alert-warning {
+        background: rgba(255, 140, 0, 0.15);
+        border-left: 4px solid #ff8800;
+        border-radius: 0 6px 6px 0;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    .alert-warning strong {
+        color: #ffc107;
+    }
+
+    /* Précision couleur du strong dans alert-success (cohérence palette) */
+    .alert-success strong {
+        color: #7effc8;
+    }
+
+    /* ── Bloc "À retenir" ────────────────────────────────────────── */
+
+    .retenir-block {
+        background: rgba(112, 64, 192, 0.2);
+        border: 1px solid rgba(201, 169, 255, 0.3);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-top: 12px;
+        font-size: 0.82rem;
+        color: #c9a9ff;
+        line-height: 1.6;
+    }
+
+    .retenir-block .retenir-title {
+        font-family: "Rubik Dirt", system-ui;
+        color: #c9a9ff;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+
+    .retenir-block ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .retenir-block ul li {
+        padding-left: 1.2em;
+        position: relative;
+        margin-bottom: 4px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .retenir-block ul li::before {
+        content: '★';
+        position: absolute;
+        left: 0;
+        color: #c9a9ff;
+        font-size: 0.7rem;
+        top: 2px;
+    }
+
+    /* ── Affichage de code statique (sans éditeur PyScript) ──────── */
+
+    .code-display {
+        background: #1e2a35;
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-top: 10px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.8rem;
+        color: #a8ffa0;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-x: auto;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Variantes schema-box ────────────────────────────────────── */
+
+    /* .hidden : couche cachée (violet — complète .highlight et .output) */
+    .schema-box.hidden {
+        background: rgba(112, 64, 192, 0.2);
+        border-color: #7040c0;
+        color: #c9a9ff;
+    }
+
+    /* ── Variante formule ────────────────────────────────────────── */
+
+    /* span.pu : texte violet dans formula-box (complète .hi .gr .wh) */
+    .formula-box span.pu {
+        color: #c9a9ff;
+    }
+
+    /* ── Variante tag liste de liens ─────────────────────────────── */
+
+    /* .tag.red : complète .tag.green .tag.blue .tag.grey */
+    .link-list li .tag.red {
+        background: #dc3545;
+        color: white;
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       Complément — éléments du prompt_tp_nsi.html absents de style.css
+       Aucune propriété existante modifiée
+       ══════════════════════════════════════════════════════════════ */
+
+    /* ── Alertes variantes (fix / ok) ───────────────────────────── */
+
+    .alert-fix {
+        background: rgba(220, 53, 69, 0.12);
+        border-left: 4px solid #dc3545;
+        border-radius: 0 6px 6px 0;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.65;
+        margin-top: 10px;
+    }
+
+    .alert-fix strong {
+        color: #ff8080;
+    }
+
+    .alert-ok {
+        background: rgba(40, 167, 69, 0.12);
+        border-left: 4px solid #28a745;
+        border-radius: 0 6px 6px 0;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.65;
+        margin-top: 10px;
+    }
+
+    .alert-ok strong {
+        color: #7effc8;
+    }
+
+    /* ── Pills colorées ─────────────────────────────────────────── */
+
+    .pill.yellow {
+        border-color: rgba(255, 193, 7, 0.5);
+        color: #ffc107;
+    }
+
+    .pill.green {
+        border-color: rgba(40, 167, 69, 0.5);
+        color: #7effc8;
+    }
+
+    .pill.purple {
+        border-color: rgba(112, 64, 192, 0.5);
+        color: #c9a9ff;
+    }
+
+    .pill.red {
+        border-color: rgba(220, 53, 69, 0.5);
+        color: #ff8080;
+    }
+
+    /* ── Étape badge variantes ──────────────────────────────────── */
+
+    .etape-badge.purple {
+        background: #7040c0;
+        color: white;
+    }
+
+    .etape-badge.green {
+        background: #28a745;
+        color: white;
+    }
+
+    /* ── Étape textes supplémentaires ───────────────────────────── */
+
+    .etape-fix {
+        color: #ff9999;
+        font-size: 0.76rem;
+        margin-top: 3px;
+        font-style: italic;
+    }
+
+    .etape-ok {
+        color: #7effc8;
+        font-size: 0.76rem;
+        margin-top: 3px;
+        font-style: italic;
+    }
+
+    /* ── Schéma réseau (alias de .schema-neurone) ───────────────── */
+
+    .schema-reseau {
+        background: rgba(0, 0, 0, 0.28);
+        border-radius: 10px;
+        padding: 16px;
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        overflow-x: auto;
+    }
+
+    /* ── Variantes schema-box couleur ───────────────────────────── */
+    /* .hi = jaune (entrée), .pu = violet (couche cachée), .gr = vert (sortie) */
+
+    .schema-box.hi {
+        background: rgba(255, 193, 7, 0.18);
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+
+    .schema-box.pu {
+        background: rgba(112, 64, 192, 0.18);
+        border-color: #7040c0;
+        color: #c9a9ff;
+    }
+
+    .schema-box.gr {
+        background: rgba(40, 167, 69, 0.18);
+        border-color: #28a745;
+        color: #7effc8;
+    }
+
+    /* ── Badge niveau (standalone, sans .niveau-card) ───────────── */
+
+    .badge-niveau {
+        display: inline-block;
+        font-family: 'Courier New', monospace;
+        font-size: 0.68rem;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-bottom: 9px;
+        letter-spacing: 0.07em;
+    }
+
+    /* ── Tags tableau (fix / ok) ────────────────────────────────── */
+
+    .tag-fix {
+        display: inline-block;
+        background: rgba(220, 53, 69, 0.25);
+        color: #ff8080;
+        border-radius: 4px;
+        padding: 1px 7px;
+        font-size: 0.68rem;
+        font-family: 'Courier New', monospace;
+        margin-left: 6px;
+    }
+
+    .tag-ok {
+        display: inline-block;
+        background: rgba(40, 167, 69, 0.25);
+        color: #7effc8;
+        border-radius: 4px;
+        padding: 1px 7px;
+        font-size: 0.68rem;
+        font-family: 'Courier New', monospace;
+        margin-left: 6px;
+    }
+
+    /* ── Code inline ────────────────────────────────────────────── */
+
+    code {
+        background: rgba(0, 0, 0, 0.3);
+        color: #ffc107;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+    }
+
+    /* ── Corps de texte structuré ───────────────────────────────── */
+
+    .body-text {
+        font-size: 0.83rem;
+        color: #c8d8e0;
+        line-height: 1.7;
+    }
+
+    .body-text strong {
+        color: white;
+    }
+
+    .body-text em {
+        color: #ffc107;
+        font-style: normal;
+    }
+
+    /* ── Blocs consigne ─────────────────────────────────────────── */
+
+    .consigne-item {
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        padding: 10px 12px;
+        background: rgba(0, 0, 0, 0.14);
+        border-radius: 7px;
+        margin-bottom: 7px;
+    }
+
+    .consigne-icon {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .consigne-text {
+        font-size: 0.82rem;
+        color: #e0e0e0;
+        line-height: 1.55;
+    }
+
+    .consigne-text strong {
+        color: white;
+    }
+
+#ReLU, #sigmoide{
+    display: inline-block !important;
+    width:45% !important;
+    float:right;
+    
+}
+    

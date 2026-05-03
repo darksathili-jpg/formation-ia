@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/style_fiche_technique_NSI.css">
+    <title>Fiche Technique NSI — Assistant de Code Intelligent v5.1</title>
+
+</head>
+
+<body>
+
+  <h1>
+    NSI : IA embarqués professionnels
+    <span class="version">
+      Version 5.1 &nbsp;·&nbsp; Lycée Watteau Valenciennes
+    </span>
+  </h1>
+
+  <div class="container">
+
+    <div class="card card-full">
+      <div class="card-title">
+        Architecture globale du projet
+        <span>Raspberry Pi 5 · Hailo-8 · Ollama · FastAPI · PyScript 2026</span>
+        <img src="../assets/images/ai_li.png" width="30%" alt="Architecture du projet NSI"/>
+      </div>
+      <div class="sep"></div>
+      <div class="ascii-box">
+        ┌───────────────────────────────────────────────────────────────┐
+        │ Raspberry Pi 5 (8 Go)                                         │
+        │                                                               │
+        │ Camera Module 3 · IMX708 · 12 MP · CSI/MIPI                   │
+        │             │                                                 │
+        │             ▼ libcamera / Picamera2                           │
+        │ ┌─────────────────────┐ ┌──────────────────────────────┐      │
+        │ │ HAILO-8 M.2         │ │ CPU ARM Cortex-A76           │      │
+        │ │ 26 TOPS             │ │ 4 cœurs @ 2.4 GHz            │      │
+        │ │ Vision temps réel   │ │ Ollama LLM                   │      │
+        │ │ YOLOv8s (~45 fps)   │ │ qwen2.5-coder:1.5b           │      │
+        │ │ 80 classes COCO     │ │ deepseek-r1:1.5b (~9 tok/s)  │      │
+        │ └─────────────────────┘ └──────────────────────────────┘      │
+        │           │                              │                    │
+        │           └───────────┬──────────────────┘                    │
+        │                       ▼                                       │
+        │                FastAPI (port 8000)                            │
+        │ · /api/generer → LLM Ollama                                   │
+        │ · /api/vision → frame + détections Hailo-8                    │
+        │ · /api/stream → flux MJPEG continu                            │
+        └───────────────────────┼───────────────────────────────────────┘
+                                │ Hotspot WiFi : NSI-Assistant
+                                ▼
+                 Appareils des élèves (smartphone - PC etc.)</div>
+      <div class="alert alert-info">
+        <strong>Pourquoi c'est pédagogiquement puissant ?</strong> Cette architecture est exactement celle utilisée dans
+        les systèmes d'IA embarqués professionnels (véhicules autonomes, robotique, caméras intelligentes). La Hailo-8
+        détecte les objets à 45 FPS, le LLM explique le code algorithmique — tout ça sur un Pi de la taille d'une carte
+        de crédit !
+      </div>
+    </div>
+
+    <div class="card card-third">
+      <div class="card-title">
+        Objectif du projet
+        <span>Assistant Web IA complet · 100 % hors-ligne</span>
+      </div>
+      <div class="sep"></div>
+      <ol>
+        <li><strong>Génère du code Python NSI</strong> via Ollama (CPU ARM)</li>
+        <li><strong>Détecte des objets en temps réel</strong> via Camera Module 3 + Hailo-8 (YOLOv8)</li>
+        <li><strong>Diffuse un flux vidéo annoté</strong> vers les navigateurs des élèves</li>
+        <li>Fonctionne <strong>100 % hors-ligne</strong> — sans Internet, sans box</li>
+      </ol>
+    </div>
+
+    <div class="card card-third">
+      <div class="card-title">
+        Niveau requis
+        <span>Terminale NSI · 5 à 7 séances de 2h</span>
+      </div>
+      <div class="sep"></div>
+      <div class="tags">
+        <span class="tag">Terminale NSI</span>
+        <span class="tag">Python</span>
+        <span class="tag">HTML de base</span>
+        <span class="tag">Linux CLI</span>
+      </div>
+      <p>Notions requises : Python, HTML de base, lignes de commande Linux.</p>
+      <p>Durée estimée : <strong>5 à 7 séances de 2 heures</strong>.</p>
+    </div>
+
+    <!-- Matériel : carte pleine largeur -->
+    <div class="card card-full">
+      <div class="card-title">
+        Matériel nécessaire
+        <span>Liste complète des composants</span>
+      </div>
+      <div class="sep"></div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Composant</th>
+              <th>Rôle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Raspberry Pi 5</strong></td>
+              <td><strong>8 Go RAM obligatoire</strong> — cerveau du système</td>
+            </tr>
+            <tr>
+              <td><strong>Camera Module 3</strong> (SC0872)</td>
+              <td>Sony IMX708 · 12 MP · Autofocus PDAF · CSI</td>
+            </tr>
+            <tr>
+              <td><strong>Hailo-8 M.2 26 TOPS</strong></td>
+              <td>Accélérateur vision — YOLOv8 à ~45 FPS</td>
+            </tr>
+            <tr>
+              <td>Pironman 5 Max</td>
+              <td>Boîtier + ventilation — fortement recommandé</td>
+            </tr>
+            <tr>
+              <td>SSD NVMe ou microSD</td>
+              <td><strong>64 Go minimum</strong> (modèles LLM ~3 Go)</td>
+            </tr>
+            <tr>
+              <td>Alimentation USB-C</td>
+              <td><strong>27 W officielle</strong></td>
+            </tr>
+            <tr>
+              <td>WiFi intégré</td>
+              <td>Interface WiFi du Pi 5 — hotspot autonome</td>
+            </tr>
+            <tr>
+              <td>Nappe CSI</td>
+              <td>Fournie avec le Camera Module 3 (15 cm)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert alert-warn">
+        <strong>Connexion Camera Module 3</strong> : le Pi 5 a <strong>deux ports CSI</strong> (CAM0 et CAM1). Utilisez
+        de préférence CAM0 (le plus proche de l'alimentation). La nappe fournie fait 15 cm — prévoyez une extension si
+        le Pi est dans le Pironman.
+      </div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Partie 1 — Installation du système
+        <span>01 · Raspberry Pi OS 64-bit</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Étape 1.1 — Flasher Raspberry Pi OS</div>
+      <ol>
+        <li>Télécharger <strong>Raspberry Pi Imager</strong> : <em>raspberrypi.com/software</em></li>
+        <li>Choisir <strong>Raspberry Pi OS (64-bit)</strong> OBLIGATOIRE</li>
+        <li>Préconfiguration : activer SSH, login <code style="color:#fff9e0">pi</code> / mdp <code
+            style="color:#fff9e0">nsi2026</code>, WiFi habituel</li>
+      </ol>
+
+      <div class="step-title">Étape 1.2 — Mise à jour et dépendances</div>
+      <div class="code-block"><span class="cm"># Connexion SSH</span>
+        ssh pi@&lt;IP_DU_PI&gt;
+
+        sudo apt update && sudo apt full-upgrade -y
+
+        <span class="cm"># Dépendances essentielles</span>
+        sudo apt install -y python3-pip python3-venv cmake build-essential \
+        python3-opencv python3-picamera2 python3-libcamera \
+        libcamera-tools v4l-utils
+
+        <span class="cm"># Node.js pour PyScript local</span>
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        sudo apt install -y nodejs
+
+        sudo reboot
+      </div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Partie 2 — Camera Module 3
+        <span>02 · IMX708 · Picamera2 · Autofocus</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Étape 2.1 — Connexion physique</div>
+      <div class="ascii-box">Pi 5 : [CAM0] ← insérer nappe (contacts dorés vers l'int.)
+        1. Éteindre le Pi
+        2. Soulever le verrou plastique du port CAM0
+        3. Insérer la nappe, contacts dorés vers l'intérieur
+        4. Refermer le verrou → Rallumer</div>
+
+      <div class="step-title">Étape 2.2 — Vérifier la détection</div>
+      <div class="code-block"><span class="cm"># Lister les caméras</span>
+        rpicam-hello --list-cameras
+        <span class="ok"># → 0 : imx708 [4608x2592 12bit RGGB]</span>
+      </div>
+
+      <div class="step-title">Étape 2.3 — Tests visuels</div>
+      <div class="code-block"><span class="cm"># Preview 5 secondes</span>
+        rpicam-hello -t 5000
+        <span class="cm"># Avec autofocus continu</span>
+        rpicam-hello -t 5000 --autofocus-mode continuous
+      </div>
+
+      <div class="step-title">Étape 2.4 — Test Python Picamera2</div>
+      <div class="code-block"><span class="kw">from</span> picamera2 <span class="kw">import</span> <span
+          class="fn">Picamera2</span>
+        picam2 = <span class="fn">Picamera2</span>()
+        config = picam2.<span class="fn">create_preview_configuration</span>(
+        main={<span class="str">"format"</span>: <span class="str">"RGB888"</span>, <span class="str">"size"</span>:
+        (<span class="num">640</span>, <span class="num">480</span>)}
+        )
+        picam2.<span class="fn">configure</span>(config)
+        picam2.<span class="fn">start</span>()
+        frame = picam2.<span class="fn">capture_array</span>()
+        <span class="fn">print</span>(<span class="str">f"shape: {frame.shape}"</span>)
+        <span class="ok"># → shape: (480, 640, 3)</span>
+      </div>
+    </div>
+
+    <div class="card card-third">
+      <div class="card-title">
+        Partie 3 — Hotspot WiFi
+        <span>03 · NSI-Assistant · 192.168.50.1</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Étape 3.1 — Installation</div>
+      <div class="code-block">sudo apt install -y hostapd dnsmasq
+        sudo systemctl stop hostapd dnsmasq
+
+        <span class="cm"># /etc/dhcpcd.conf — ajouter à la fin :</span>
+        interface wlan0
+        static ip_address=192.168.50.1/24
+        nohook wpa_supplicant
+      </div>
+
+      <div class="step-title">Étape 3.2 — DHCP (dnsmasq.conf)</div>
+      <div class="code-block">interface=wlan0
+        dhcp-range=192.168.50.10,192.168.50.50,255.255.255.0,24h
+        domain=local
+        address=/assistant.nsi/192.168.50.1</div>
+
+      <div class="step-title">Étape 3.3 — Point d'accès (hostapd.conf)</div>
+      <div class="code-block">ssid=NSI-Assistant
+        wpa_passphrase=nsi2026pi
+        hw_mode=g · channel=7 · wpa=2
+
+        <span class="cm"># Activer au démarrage</span>
+        sudo systemctl unmask hostapd
+        sudo systemctl enable hostapd dnsmasq
+        sudo reboot
+      </div>
+    </div>
+
+    <div class="card card-third">
+      <div class="card-title">
+        Partie 4 — Hailo-8
+        <span>04 · YOLOv8s · 26 TOPS · ~45 FPS</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Étape 4.1 — Pilotes</div>
+      <div class="code-block"><span class="cm"># PCIe Gen3 pour meilleures perfs</span>
+        sudo raspi-config
+        <span class="cm"># 6 Advanced → A8 PCIe Speed → Yes</span>
+
+        sudo apt install hailo-all -y
+        sudo reboot
+
+        hailortcli fw-control identify
+        <span class="ok"># → Hailo-8 [H8-26T], firmware X.X.X</span>
+      </div>
+
+      <div class="step-title">Étape 4.2 — Modèles disponibles</div>
+      <div class="code-block">ls /usr/share/hailo-models/ | grep h8
+        <span class="ok"># yolov8s_h8.hef ← Hailo-8 26T</span>
+        <span class="cm"># yolov8s_h8l.hef ← Hailo-8L 13T</span>
+        <span class="cm"># yolov5n_seg_h8.hef</span>
+      </div>
+
+      <div class="step-title">Étape 4.3 — Test rapide YOLOv8</div>
+      <div class="code-block">rpicam-hello -t 0 \
+        --post-process-file \
+        /usr/share/rpi-camera-assets/hailo_yolov8_inference.json</div>
+      <div class="alert alert-ok">Boîtes colorées visibles autour des objets → Stack Camera Module 3 + Hailo-8
+        opérationnelle !</div>
+    </div>
+
+    <div class="card card-third">
+      <div class="card-title">
+        Partie 5 — Ollama LLM
+        <span>05 · qwen2.5-coder · deepseek-r1</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Étape 5.1 — Installation réseau</div>
+      <div class="code-block">curl -fsSL https://ollama.com/install.sh | sh
+
+        <span class="cm"># Override systemd — écouter sur tout le réseau</span>
+        sudo mkdir -p /etc/systemd/system/ollama.service.d/
+        <span class="cm"># /etc/systemd/system/ollama.service.d/override.conf</span>
+        [Service]
+        Environment=<span class="str">"OLLAMA_HOST=0.0.0.0:11434"</span>
+        Environment=<span class="str">"OLLAMA_ORIGINS=*"</span>
+
+        sudo systemctl daemon-reload
+        sudo systemctl restart ollama
+      </div>
+
+      <div class="step-title">Étape 5.2 — Télécharger les modèles</div>
+      <div class="code-block"><span class="cm"># Code Python NSI — rapide et précis</span>
+        ollama pull qwen2.5-coder:1.5b
+
+        <span class="cm"># Raisonnement étape par étape</span>
+        ollama pull deepseek-r1:1.5b
+
+        ollama list
+        <span class="ok"># → qwen2.5-coder:1.5b deepseek-r1:1.5b</span>
+      </div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Partie 6 — PyScript 2026 local
+        <span>06 · Servie localement · Zéro Internet</span>
+      </div>
+      <div class="sep"></div>
+      <div class="code-block">mkdir -p ~/assistant_code/static/pyscript
+        cd ~/assistant_code/static/pyscript
+
+        wget https://pyscript.net/releases/2026.2.1/core.js -O core.js
+        wget https://pyscript.net/releases/2026.2.1/core.css -O core.css
+
+        ls -lh
+        <span class="ok"># core.js ~500 Ko core.css ~10 Ko</span>
+      </div>
+
+      <div class="sep"></div>
+      <div class="card-title" style="margin-top:8px">
+        Partie 7 — Backend FastAPI
+        <span>07 · Environnement Python · Routes API</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Étape 7.1 — Environnement Python</div>
+      <div class="code-block">python3 -m venv ~/assistant_env
+        source ~/assistant_env/bin/activate
+        pip install <span class="str">"fastapi[standard]"</span> pydantic httpx opencv-python
+        <span class="cm"># picamera2 → via apt (python3-picamera2)</span>
+      </div>
+
+      <div class="step-title">Routes principales — backend.py</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>Méthode</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code style="color:#fff9e0">/</code></td>
+              <td>GET</td>
+              <td>Sert index.html (PyScript)</td>
+            </tr>
+            <tr>
+              <td><code style="color:#fff9e0">/sante</code></td>
+              <td>GET</td>
+              <td>État Ollama / Hailo / Caméra</td>
+            </tr>
+            <tr>
+              <td><code style="color:#fff9e0">/api/generer</code></td>
+              <td>POST</td>
+              <td>LLM → code Python NSI</td>
+            </tr>
+            <tr>
+              <td><code style="color:#fff9e0">/api/vision</code></td>
+              <td>GET</td>
+              <td>Frame + détections JSON</td>
+            </tr>
+            <tr>
+              <td><code style="color:#fff9e0">/api/stream</code></td>
+              <td>GET</td>
+              <td>Flux MJPEG continu (img src)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="step-title">Extrait clé — Capture + Hailo-8</div>
+      <div class="code-block"><span class="kw">def</span> <span class="fn">capturer_frame_avec_detection</span>():
+        <span class="kw">with</span> _cam_lock:
+        request = picam2.<span class="fn">capture_request</span>()
+        frame_main = request.<span class="fn">make_array</span>(<span class="str">"main"</span>) <span class="cm">#
+          640×480</span>
+        frame_lores= request.<span class="fn">make_array</span>(<span class="str">"lores"</span>) <span class="cm">#
+          pour YOLO</span>
+        request.<span class="fn">release</span>()
+
+        resultats = hailo_dev.<span class="fn">run</span>(frame_lores)
+        <span class="cm"># → dessine boîtes sur frame_main</span>
+        <span class="kw">return</span> frame_bgr, detections_annotees
+      </div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Partie 8 — Frontend PyScript 2026
+        <span>08 · Python dans le navigateur des élèves</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Structure index.html</div>
+      <div class="code-block"><span class="cm">&lt;!-- PyScript 2026 — servi localement --&gt;</span>
+        &lt;link rel=<span class="str">"stylesheet"</span> href=<span class="str">"/static/pyscript/core.css"</span>
+        /&gt;
+        &lt;script type=<span class="str">"module"</span> src=<span
+          class="str">"/static/pyscript/core.js"</span>&gt;&lt;/script&gt;
+
+        <span class="cm">&lt;!-- Python exécuté dans le navigateur ! --&gt;</span>
+        &lt;script type=<span class="str">"py"</span> src=<span class="str">"/static/js/assistant.py"</span>
+        async&gt;&lt;/script&gt;
+      </div>
+
+      <div class="step-title">assistant.py — Logique PyScript</div>
+      <div class="code-block"><span class="kw">from</span> pyscript <span class="kw">import</span> when, fetch
+        <span class="kw">from</span> pyscript.web <span class="kw">import</span> document
+        <span class="kw">import</span> json, js
+
+        @when(<span class="str">"click"</span>, <span class="str">"#send-button"</span>)
+        <span class="kw">async def</span> <span class="fn">envoyer</span>(event):
+        question = inp.value.strip()
+        mode = js.window._mode <span class="cm"># "code" ou "raison"</span>
+
+        r = <span class="kw">await</span> <span class="fn">fetch</span>(API_URL, method=<span class="str">"POST"</span>,
+        body=json.<span class="fn">dumps</span>({<span class="str">"question"</span>: question,
+        <span class="str">"mode"</span>: mode}))
+        data = <span class="kw">await</span> r.<span class="fn">json</span>()
+        <span class="cm"># → affiche code + bouton Copier + perf_info</span>
+      </div>
+
+      <div class="step-title">Flux MJPEG — une seule ligne HTML</div>
+      <div class="code-block"><span class="cm">&lt;!-- Flux Camera Module 3 + Hailo-8 natif navigateur --&gt;</span>
+        &lt;img id=<span class="str">"stream-img"</span>
+        src=<span class="str">"http://192.168.50.1:8000/api/stream"</span> /&gt;</div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Partie 9 — Lancement et démarrage auto
+        <span>09 · demarrer.sh · rc.local boot</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">demarrer.sh</div>
+      <div class="code-block">source ~/assistant_env/bin/activate
+        cd ~/assistant_code
+        IP=$(ip -4 addr show wlan0 | grep -oP <span class="str">'(?&lt;=inet\s)\d+(\.\d+){3}'</span>)
+
+        <span class="cm"># Vérifier Ollama</span>
+        <span class="kw">if</span> ! systemctl is-active --quiet ollama; <span class="kw">then</span>
+        sudo systemctl start ollama; sleep 3
+        <span class="kw">fi</span>
+
+        <span class="cm"># Lancer FastAPI</span>
+        python3 -m uvicorn backend:app --host 0.0.0.0 --port 8000
+
+        <span class="ok">
+          # ╔══════════════════════════════════════╗
+          # ║ Assistant NSI v5.1 démarré ! ║
+          # ║ http://192.168.50.1:8000 ║
+          # ║ http://assistant.nsi ║
+          # ║ WiFi : NSI-Assistant ║
+          # ╚══════════════════════════════════════╝</span>
+      </div>
+
+      <div class="step-title">Démarrage automatique au boot</div>
+      <div class="code-block">sudo nano /etc/rc.local
+        <span class="cm"># Avant exit 0 :</span>
+        su pi -c <span class="str">"cd /home/pi/assistant_code && \
+          bash demarrer.sh >> /tmp/assistant.log 2>&amp;1 &amp;"</span>
+      </div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Partie 10 — Utilisation en classe
+        <span>10 · Panneau élèves · Connexion WiFi</span>
+      </div>
+      <div class="sep"></div>
+      <div class="ascii-box">
+        ┌──────────────────────────────────────────────────────────┐
+        │ 1. WiFi → NSI-Assistant · Mot de passe : nsi2026pi │
+        │ 2. Navigateur → http://assistant.nsi │
+        │ ou : http://192.168.50.1:8000 │
+        │ 3. Attendre ~5 s (chargement PyScript) │
+        │ │
+        │ Mode Code → génération Python rapide (~10-20 s) │
+        │ Mode Raison → explication étape par étape + code │
+        │ Flux vidéo → cliquer "Démarrer le flux" │
+        │ → Hailo-8 détecte les objets en temps réel ! │
+        └──────────────────────────────────────────────────────────┘</div>
+
+      <div class="sep"></div>
+      <div class="card-title" style="margin-top:6px">
+        Dépannage rapide
+        <span>Problèmes courants et solutions</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Caméra non détectée</div>
+      <div class="code-block">rpicam-hello --list-cameras
+        <span class="cm"># Si absent → vérifier nappe CSI (contacts orientés)</span>
+        sudo apt install --reinstall rpicam-dev python3-rpicam
+      </div>
+
+      <div class="step-title">Hailo-8 non détectée</div>
+      <div class="code-block">lspci | grep Hailo
+        sudo apt install --reinstall hailo-all && sudo reboot
+        hailortcli fw-control identify</div>
+
+      <div class="step-title">Ollama lent ou timeout</div>
+      <div class="code-block"><span class="cm"># backend.py — réduire les tokens</span>
+        <span class="str">"num_predict"</span>: <span class="num">256</span> <span class="cm"># au lieu de 512</span>
+        <span class="cm"># Ou modèle plus léger</span>
+        ollama pull qwen2:1.5b
+      </div>
+    </div>
+
+    <div class="card card-full">
+      <div class="card-title">
+        Checklist finale
+        <span>Validation complète avant utilisation en classe</span>
+      </div>
+      <div class="sep"></div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <div>
+          <p
+            style="color:#ffc107; font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">
+            Réseau WiFi</p>
+          <ul class="checklist">
+            <li><code>NSI-Assistant</code> visible depuis un autre appareil</li>
+            <li>Connexion avec <code>nsi2026pi</code> OK</li>
+            <li>Ping <code>192.168.50.1</code> OK</li>
+          </ul>
+
+          <p
+            style="color:#ffc107; font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin: 14px 0 8px;">
+            Camera Module 3</p>
+          <ul class="checklist">
+            <li><code>rpicam-hello --list-cameras</code> → imx708 détectée</li>
+            <li><code>rpicam-hello -t 3000</code> → preview s'affiche</li>
+            <li><code>rpicam-hello --post-process-file hailo_yolov8...</code> → détection visible</li>
+          </ul>
+        </div>
+
+        <div>
+          <p
+            style="color:#ffc107; font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">
+            Hailo-8</p>
+          <ul class="checklist">
+            <li><code>lspci | grep Hailo</code> → carte détectée</li>
+            <li><code>hailortcli fw-control identify</code> → firmware OK</li>
+            <li><code>yolov8s_h8.hef</code> présent dans /usr/share/hailo-models/</li>
+          </ul>
+
+          <p
+            style="color:#ffc107; font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin: 14px 0 8px;">
+            Ollama</p>
+          <ul class="checklist">
+            <li><code>ollama list</code> → qwen2.5-coder:1.5b présent</li>
+            <li><code>ollama list</code> → deepseek-r1:1.5b présent</li>
+            <li>Ollama configuré sur <code>0.0.0.0:11434</code></li>
+          </ul>
+        </div>
+
+        <div>
+          <p
+            style="color:#ffc107; font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">
+            PyScript 2026</p>
+          <ul class="checklist">
+            <li><code>static/pyscript/core.js</code> présent (~500 Ko)</li>
+            <li><code>static/pyscript/core.css</code> présent (~10 Ko)</li>
+          </ul>
+
+          <p
+            style="color:#ffc107; font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin: 14px 0 8px;">
+            Application complète</p>
+          <ul class="checklist">
+            <li><code>./demarrer.sh</code> démarre sans erreur</li>
+            <li><code>/sante</code> → ollama, hailo et camera à true</li>
+            <li>PyScript se charge sur téléphone (~5 s)</li>
+            <li>Mode Code génère du Python correct &lt; 30 s</li>
+            <li>Mode Raisonnement explique + code</li>
+            <li>Flux vidéo avec boîtes YOLOv8 en temps réel</li>
+            <li>Bouton Copier fonctionne</li>
+            <li><strong>Tout fonctionne sans Internet</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-half">
+      <div class="card-title">
+        Évolutions possibles
+        <span>Vision avancée · LLM · Réseau</span>
+      </div>
+      <div class="sep"></div>
+
+      <div class="step-title">Vision avancée (Camera Module 3)</div>
+      <ul>
+        <li>Mode <strong>HDR</strong> de l'IMX708 (nuit / fort contraste)</li>
+        <li>Résolution native <strong>4608×2592</strong> pour détails fins</li>
+        <li><strong>Pose estimation</strong> (YOLOv8-pose_h8) : squelettes</li>
+        <li><strong>Segmentation</strong> (YOLOv5n_seg_h8) : masques d'objets</li>
+        <li>Photo 12 MP déclenchée par détection</li>
+      </ul>
+
+      <div class="step-title">LLM et pédagogie</div>
+      <ul>
+        <li>Streaming token par token (SSE) — voir l'IA écrire en direct</li>
+        <li>RAG : injecter le cours de NSI comme contexte</li>
+        <li>Mode quiz : l'élève écrit du code, le LLM le corrige</li>
+        <li>Exécution du code dans Pyodide (PyScript) directement</li>
+      </ul>
+
+      <div class="step-title">Réseau</div>
+      <ul>
+        <li>Passer en <strong>5 GHz</strong> pour plus de débit (canal 36)</li>
+        <li>hailo-ollama si ajout d'un <strong>Hailo-10H</strong></li>
+      </ul>
+    </div>
+
+    <!-- Ressources -->
+    <div class="card card-half">
+      <div class="card-title">
+        Ressources
+        <span>Documentation officielle</span>
+      </div>
+      <div class="sep"></div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Ressource</th>
+              <th>URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Camera Module 3</td>
+              <td><em>raspberrypi.com/products/camera-module-3</em></td>
+            </tr>
+            <tr>
+              <td>Picamera2 + Hailo</td>
+              <td><em>github.com/raspberrypi/picamera2/examples/hailo</em></td>
+            </tr>
+            <tr>
+              <td>Hailo-RPi5 examples</td>
+              <td><em>github.com/hailo-ai/hailo-rpi5-examples</em></td>
+            </tr>
+            <tr>
+              <td>Ollama</td>
+              <td><em>ollama.com</em></td>
+            </tr>
+            <tr>
+              <td>PyScript 2026</td>
+              <td><em>docs.pyscript.net/2026.2.1</em></td>
+            </tr>
+            <tr>
+              <td>FastAPI</td>
+              <td><em>fastapi.tiangolo.com</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer-card">
+      <div>
+        <p>
+          <strong>Fiche Technique NSI — Assistant de Code Intelligent</strong><br>
+          Version 5.1 · Camera Module 3 (IMX708) · Picamera2 · Hailo-8 YOLOv8 · Ollama LLM · PyScript 2026 · Hotspot
+          WiFi<br>
+          Document pédagogique — Spécialité NSI — Terminale/Première
+        </p>
+      </div>
+      <div class="footer-badge">
+        <div class="big">NSI v5.1</div>
+        <span class="small">Raspberry Pi 5</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

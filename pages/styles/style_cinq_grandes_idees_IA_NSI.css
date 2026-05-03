@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #8ca5b499;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+  }
+
+  /* ========================================
+     TITRE PRINCIPAL
+  ======================================== */
+  h1 {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 0 20px;
+    height: auto;
+    line-height: 1.3;
+    font-family: "Rubik Dirt", system-ui;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+
+  h1 .subtitle-h1 {
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+    font-weight: normal;
+    color: #e0e0e0;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* Badge NSI */
+  .badge-nsi {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 24px auto;
+    background-color: #ffc107;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+  }
+
+  /* ========================================
+     CONTENEUR PRINCIPAL
+  ======================================== */
+  .container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  /* ========================================
+     CARTES
+  ======================================== */
+  .card {
+    flex: 0 0 calc(33.33% - 14px);
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 8px 8px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
+  }
+
+  /* Carte pleine largeur */
+  .card.card-full {
+    flex: 0 0 100%;
+  }
+
+  .card.card-full .card-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* ========================================
+     TITRE DE CARTE
+  ======================================== */
+  .card-title {
+    color: white;
+    text-align: center;
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .card-title .num {
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    color: #e0e0e0;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .card-icon {
+    font-size: 2.4rem;
+    text-align: center;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* ========================================
+     TEXTE
+  ======================================== */
+  .card p {
+    color: white;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+
+  .card p strong { color: #fff9e0; }
+  .card p em     { color: #e0f0ff; font-style: italic; }
+
+  /* ========================================
+     SÉPARATEUR
+  ======================================== */
+  .sep {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+    margin: 4px 0 16px;
+  }
+
+  /* ========================================
+     TAGS
+  ======================================== */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background-color: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+  }
+
+  /* ========================================
+     BLOC CODE
+  ======================================== */
+  .code-block {
+    background-color: #1e1e2e;
+    border-radius: 5px;
+    padding: 14px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #cdd6f4;
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow-x: auto;
+  }
+
+  .code-block::before {
+    content: '● ● ●';
+    display: block;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  .kw  { color: #cba6f7; }
+  .fn  { color: #89dceb; }
+  .str { color: #a6e3a1; }
+  .cm  { color: #6c7086; font-style: italic; }
+  .num { color: #fab387; }
+  .arr { color: #f38ba8; }
+
+  /* ========================================
+     FOOTER
+  ======================================== */
+  .footer-card {
+    flex: 0 0 100%;
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px 24px;
+    box-shadow: 8px 8px 15px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-card p {
+    color: white;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .footer-card a {
+    color: #fff9e0;
+    text-decoration: underline;
+  }
+
+  .footer-badge {
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .footer-badge .big {
+    font-family: "Rubik Dirt", system-ui;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    line-height: 1;
+  }
+
+  .footer-badge .small {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #e0e0e0;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ========================================
+     RESPONSIVE
+  ======================================== */
+  @media screen and (max-width: 1080px) {
+    .card { flex: 0 0 calc(50% - 10px); }
+    .card.card-full { flex: 0 0 100%; }
+    .card.card-full .card-body-grid { grid-template-columns: 1fr; }
+  }
+
+  @media screen and (max-width: 640px) {
+    .card, .card.card-full { flex: 0 0 100%; }
+    h1 { width: 100% !important; padding: 10px 15px; }
+    .footer-card { flex-direction: column; text-align: center; }
+
+    .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .card { padding: 15px; }
+    h1 { font-size: clamp(1.2rem, 4vw, 2rem); }
+  }

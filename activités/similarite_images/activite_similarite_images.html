@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSI — Similarite d'images par vecteurs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>Similarité d'images par vecteurs</h1>
+  <p class="subtitle">// Activite NSI · Première · Vision par ordinateur · Python + Thonny · 2h //</p>
+
+  <div class="container">
+
+    <!-- ===== PROMPT ===== -->
+    <div class="section-head">
+      <h2>Le travail préparatoire qui a permis de construire cette activité</h2>
+      <div class="line"></div>
+    </div>
+    <div class="accordion accordium-flush">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+            Le travail préparatoire de prompt engineering : comment j'ai construit le prompt pour faire générer cette
+            activité par une IA (Claude + DarkSATHI Li).
+          </button>
+        </h2>
+        <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            <pre><code class="language-text fs-20">
+• Je me suis appuyé sur mon activité <a rel="noopener" href="https://gitlab.com/darksathiisn/traitement-image/-/blob/master/TraitementImage.md" target="_blank">Traitement d'images</a> pour construire une activité pédagogique complète et détaillée sur la similarité d'images par vecteurs, adaptée à des élèves de première en NSI.         
+• J'ai utilisé les ouvrages Les Maths Derrière l'IA | Les Matrices et les Images de Jean Pierre Deffo Fotso pour m'assurer que les concepts clés de l'IA étaient bien couverts dans l'activité, notamment le prétraitement des données, la vectorisation, la normalisation et la similarité cosinus.
+• J'ai d'abord défini le ROLE de l'IA : un expert en IA et apprentissage automatique.
+• J'ai ensuite donné le CONTEXTE : une description d'activité sur la similarité d'images par vecteurs pour des élèves de première en NSI.
+• J'ai précisé la TACHE : construire une activité pédagogique complète et détaillée, avec une structure claire, des explications, des exemples, des exercices et des questions de réflexion.
+• J'ai listé les concepts CENTRAUX à inclure, directement présents dans l'activité, avec des explications et des applications réelles.
+• J'ai listé les concepts CONNEXES que cette activité préfigure, pour montrer la richesse pédagogique et les liens avec l'IA moderne.
+• J'ai donné des instructions de FORMAT : structurer l'activité en parties claires, utiliser Bootstrap pour la mise en page, des blocs de code syntaxés pour les exemples Python, et une section de questions à la fin de chaque partie.
+• J'ai veillé à ce que le prompt soit suffisamment détaillé pour guider l'IA dans la construction d'une activité engageante, pédagogique et adaptée à des élèves de première en NSI, tout en lui laissant la liberté de créativité nécessaire pour produire un contenu riche et structuré.
+• J'ai itéré plusieurs fois, en affinant le prompt à chaque fois pour obtenir une activité complète et bien structurée, avec des explications claires, des exemples concrets et des exercices pratiques.
+• Le résultat final est cette activité pédagogique sur la similarité d'images par vecteurs, qui couvre tous les concepts clés de manière claire et engageante pour les élèves.
+• Ce travail de prompt engineering est essentiel pour obtenir un résultat de qualité d'une IA générative, en lui fournissant des instructions claires, détaillées et structurées, tout en lui laissant la liberté de créativité nécessaire pour produire un contenu riche et adapté à son audience.
+• J'ai mis en place une structure d'accordéon pour présenter le prompt de manière claire et organisée, permettant aux lecteurs de comprendre le processus de construction de l'activité pédagogique à partir du prompt.
+• <strong>FACULTATIF :</strong> J'ai modifié l'activité pour y inclure l'utilisation de pyscript, afin de permettre aux élèves d'exécuter le code Python directement dans le navigateur, rendant l'activité plus interactive et accessible, sans nécessiter l'installation de logiciels supplémentaires.
+• J'ai veillé à ce que le code Python fourni dans l'activité soit clair, bien commenté et adapté au niveau des élèves de première en NSI, tout en couvrant les concepts clés de la similarité d'images par vecteurs de manière pédagogique et engageante.
+• J'ai mis en place une feuille de style personnalisée pour le design de l'activité, en utilisant des couleurs, des typographies et une mise en page attrayante pour rendre l'activité plus engageante et agréable à lire pour les élèves.
+• Temps de préparation totale : environ 3-4 heures, incluant la rédaction du prompt, les itérations pour affiner le contenu généré par l'IA, corriger les erreurs et la mise en forme finale de l'activité pédagogique.
+            </code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+            Le prompt qui a permis la construction de cette activité (prompt engineering).
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+          data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <pre><code class="language-text fs-20">
+<strong>Prompt RCTF</strong> — Reconstruction d'une activité pédagogique à partir d'un prompt. 
+Tu enseignes en NSI et tu souhaites construire une activité pédagogique complète et détaillée pour des élèves de première sur le thème de la similarité d'images par vecteurs.
+
+<strong>ROLE : </strong> Tu es un expert en intelligence artificielle et en apprentissage automatique. 
+<strong>CONTEXTE : </strong> Lis attentivement la description d'activité suivante, pour parvenir à la construction d'une activité pédagogique complète et détaillée destinée à des élèves de première en NSI, sur le thème de la similarité d'images par vecteurs.
+
+<strong>TACHE : </strong> En te basant sur les concepts d'IA que tu connais, construis une activité pédagogique complète et détaillée pour des élèves de première en NSI, sur le thème de la similarité d'images par vecteurs.
+Suivre cette structure :
+
+<strong>Activité : </strong> On dispose de deux images carrées. On redimensionne la plus grande à la taille de la plus petite. 
+• On convertit ensuite les deux images en niveaux de gris avec la formule : gris = 0,2125 &times;  R + 0,7154 &times;  G + 0,0721 &times;  B (encodage digital de couleur). 
+• On vectorise les images en utilisant la valeur de gris de chaque pixel comme composante d'un vecteur. On normalise ces vecteurs en divisant chaque composante par 255, ce qui ramène toutes les valeurs dans l'intervalle [0, 1]. 
+• Enfin, on calcule l'angle entre les deux vecteurs ainsi que leurs normes respectives.
+
+<strong>Concepts CENTRAUX</strong> — directement présents dans l'activité
+
+<strong>1. </strong> Prétraitement des données (Data Preprocessing) Toute l'activité est du prétraitement. 
+En IA, les données brutes sont rarement utilisables directement — on les nettoie, redimensionne, transforme avant tout apprentissage. 
+C'est souvent 80% du travail réel d'un data scientist. Application réelle : avant d'entraîner un CNN sur ImageNet, toutes les images sont redimensionnées à 224&times; 224 et normalisées.
+
+<strong>2. </strong> Redimensionnement (Resizing / Rescaling) Ramener deux images à la même taille pour les rendre comparables. 
+En IA, un réseau de neurones attend une entrée de dimension fixe — on ne peut pas comparer ou traiter des vecteurs de tailles différentes. 
+Application réelle : YOLO, ResNet et tous les modèles de vision imposent une taille d'entrée fixe.
+
+<strong>3. </strong> Espace de représentation / Changement de représentation Passer de RGB (3 canaux) à un seul canal (niveaux de gris) est un choix de représentation. 
+La formule pondérée n'est pas arbitraire : elle modélise la sensibilité de l'œil humain (le vert pèse 71%). 
+En IA, choisir la bonne représentation des données conditionne la qualité du modèle. Application réelle : les premiers réseaux de reconnaissance de chiffres (LeNet) travaillaient en niveaux de gris.
+
+<strong>4. </strong> Vectorisation (Feature Extraction / Flattening) Transformer une image 2D en un vecteur 1D. 
+C'est l'opération qui permet de passer du monde des images au monde des mathématiques vectorielles sur lesquelles repose toute l'IA. 
+Application réelle : couche Flatten() dans Keras/TensorFlow avant une couche Dense.
+
+<strong>5. </strong> Normalisation (Normalization / Feature Scaling) Diviser par 255 pour ramener les valeurs dans [0, 1]. 
+Sans normalisation, les gradients exploseraient ou disparaîtraient pendant l'entraînement, et les distances seraient dominées par les grandes valeurs. 
+Application réelle : normalisation standard avant tout entraînement — BatchNormalization dans les CNN modernes.
+
+<strong>6. </strong> Similarité cosinus (Cosine Similarity) L'angle entre deux vecteurs mesure leur similarité indépendamment de leur magnitude. 
+C'est l'une des métriques de similarité les plus utilisées en IA : deux vecteurs parallèles (angle = 0°) sont identiques, deux vecteurs orthogonaux (angle = 90°) sont totalement dissimilaires. 
+Application réelle : moteurs de recherche sémantique, word embeddings (Word2Vec, BERT), systèmes de recommandation.
+
+<strong>7. </strong> Norme d'un vecteur (Vector Norm / L2 Norm) La norme mesure la "magnitude" d'un vecteur — ici, elle capture l'intensité lumineuse globale d'une image. 
+En IA, la norme L2 est omniprésente : régularisation L2 (weight decay), normalisation de vecteurs d'embedding, calcul de distances euclidiennes. 
+Application réelle : régularisation dans les réseaux de neurones pour éviter le surapprentissage.
+
+<strong>Concepts CONNEXES</strong> — ce que cette activité préfigure
+• Représentation vectorielle dense → c'est exactement le principe des embeddings (Word2Vec, embeddings d'images) : transformer un objet complexe en vecteur de nombres pour pouvoir calculer des similarités.
+• Métrique de similarité → cette activité implémente manuellement ce que font les Siamese Networks et les modèles de metric learning : apprendre à mesurer si deux entrées se ressemblent.
+• Vision par ordinateur (Computer Vision) → le pipeline complet redimensionnement → niveaux de gris → vectorisation → comparaison est la base des premiers systèmes de reconnaissance d'images avant le deep learning.
+• Recherche d'images par contenu (CBIR) → comparer des vecteurs d'images par similarité cosinus est exactement le principe des moteurs de recherche d'images (Google Images, Pinterest Visual Search).
+• Réduction de dimensionnalité → passer de RGB à niveaux de gris est une forme simple de réduction dimensionnelle (3N → N dimensions), concept central en IA avec PCA, t-SNE, autoencodeurs.
+
+L'activité entière est donc un pipeline de similarité d'images — un problème fondamental de l'IA moderne.
+
+<strong>FORMAT : </strong> L'activité doit être structurée en parties claires, avec des titres, des explications détaillées, des exemples concrets, des exercices pratiques et des questions de réflexion.
+utilisation de bootstrap pour la mise en page, de blocs de code syntaxés pour les exemples de code Python, et d'une section de questions à la fin de chaque partie pour encourager la réflexion critique.
+Tu utiliseras la feuille de style fournie pour le design, et tu veilleras à ce que l'activité soit engageante, pédagogique et adaptée à des élèves de première en NSI.
+
+            </code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Phase d'amélioration de l'activité : histogramme de similarité, comparaison Python pur vs numpy, utilisation
+            de pyscript pour exécuter le code dans le navigateur.
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <pre><code class="language-text fs-20">
+<strong>Partie 1 — Préparer les images</strong> 
+(redimensionnement — inchangée)
+
+<strong>Partie 2 — Niveaux de gris</strong>
+(formule — inchangée)
+
+<strong>Partie 3 — Vectorisation pixel par pixel + normalisation</strong>
+(inchangée)
+
+<strong>Partie 4 — Angle et norme</strong>
+(inchangée)
+
+<strong>Partie 5 — NOUVEAU : La limite de la méthode</strong>
+→ Les deux Vador : 56° malgré la ressemblance
+→ Pourquoi ? Sensibilité à la position
+→ Conclusion : il faut une meilleure représentation
+
+<strong>Partie 6 — NOUVEAU : L'histogramme comme feature</strong>
+→ Construire l'histogramme (boucle + liste de 256 cases)
+→ Normaliser par le nombre de pixels
+→ Recalculer l'angle sur les histogrammes
+→ Comparer les résultats : pixel brut vs histogramme
+
+<strong>Partie 7 — Les concepts IA</strong>
+(enrichie avec feature engineering et invariance)
+
+<strong>Partie 8 — Defis</strong>
+(enrichis)
+
+<strong>Bilan</strong>
+</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MISE EN SITUATION ===== -->
+    <div class="section-head">
+      <h2>Mise en situation</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Le problème : comment une machine compare-t-elle deux images ?
+        <span>// Un pipeline de traitement du signal au coeur de l'IA moderne</span>
+      </div>
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:14px;">
+        Quand Google Images trouve des photos similaires, quand Spotify reconnait une chanson ou quand une IA
+        détecte un visage, elle fait toujours la même chose : elle transforme des données complexes en
+        <strong style="color:white">vecteurs de nombres</strong>, puis elle mesure la
+        <strong style="color:white">distance ou l'angle</strong> entre ces vecteurs.
+        Dans cette activité, tu vas reconstruire ce mécanisme de A a Z sur des images.
+      </p>
+
+      <div class="pipeline-visuel">
+        <div class="pipe-step">
+          <div class="pipe-num">01</div>
+          <div class="pipe-label">Images RGB</div>
+          <div class="pipe-sub">données brutes</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-num">02</div>
+          <div class="pipe-label">Redimensionner</div>
+          <div class="pipe-sub">même taille</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-num">03</div>
+          <div class="pipe-label">Niveaux de gris</div>
+          <div class="pipe-sub">1 canal</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-num">04</div>
+          <div class="pipe-label">Vectorisation</div>
+          <div class="pipe-sub">tableau 1D</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-num">05</div>
+          <div class="pipe-label">Normalisation</div>
+          <div class="pipe-sub">[0, 1]</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step">
+          <div class="pipe-num">06</div>
+          <div class="pipe-label">Angle + norme</div>
+          <div class="pipe-sub">similarité</div>
+        </div>
+      </div>
+
+      <div class="rctf-grid">
+        <div class="rctf-item">
+          <div class="label">Preprocessing</div>
+          <div class="example">Preparer les données avant tout calcul</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Feature extraction</div>
+          <div class="example">Transformer une image en vecteur numerique</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Normalisation</div>
+          <div class="example">Ramener les valeurs dans un intervalle uniforme</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Similarité cosinus</div>
+          <div class="example">Mesurer la ressemblance par l'angle entre vecteurs</div>
+        </div>
+      </div>
+
+      <div class="alert-info">
+        <strong>Prerequis :</strong> tu sais utiliser les listes Python, les boucles <code>for</code> et tu connais
+        la notion de vecteur en maths (ou tu es prêt à la decouvrir ici).
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 1 ===== -->
+    <div class="section-head">
+      <h2>Partie 1 — Préparer les images</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Redimensionnement : même taille obligatoire
+        <span>// On ne peut pas comparer des vecteurs de tailles différentes</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        Pour comparer deux images pixel par pixel, elles doivent avoir
+        <strong style="color:white">exactement le même nombre de pixels</strong>.
+        On redimensionne toujours la plus grande à la taille de la plus petite — on ne veut pas inventer
+        d'information en agrandissant.
+      </p>
+
+      <div class="etape-row">
+        <div class="etape-badge">1</div>
+        <div class="etape-content">
+          <div class="etape-title">Identifier la plus petite image</div>
+          <div class="etape-desc">On compare les dimensions et on garde la plus petite comme référence.</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">EXERCICE 1 — Logique de redimensionnement</div>
+        <p>Image A : 400&times; 400 pixels. Image B : 250&times; 250 pixels.<br>
+          Quelle image est redimensionnée ? A quelle taille ? Combien de pixels sont traités après ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">2</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder le redimensionnement dans Thonny si le processus est trop long dans le
+            navigateur.</div>
+          <div class="etape-desc">On utilise la bibliothèque Pillow (PIL) à installer si nécessaire.</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-content">
+          <div class="etape-title">Les images que tu vas manipuler.</div>
+          <div class="etape-desc">
+            <img src="images/dark1.png" alt="dark1" srcset="">
+            <img src="images/dark2.png" alt="dark2" srcset="">
+
+          </div>
+          <div class="etape-time">Je suis un vrai fan de Star-Wars.</div>
+        </div>
+      </div>
+
+
+      <script type="py-editor" id="editeur" env='ia' output="editeur-nsi" config="config.json">
+from PIL import Image
+
+# Charger les deux images
+img_a = Image.open("images/dark1.png")
+img_b = Image.open("images/dark2.png")
+
+# Déterminer la plus petite taille
+taille = (min(img_a.width, img_b.width), min(img_a.height, img_b.height))
+
+# Redimensionner les deux à la même taille
+img_a = img_a.resize(taille)
+img_b = img_b.resize(taille)
+
+print(f"Taille finale : {taille[0]} x {taille[1]} pixels")
+print(f"Nombre de pixels : {taille[0] * taille[1]}")
+        </script>
+      <div id="editeur-nsi"></div>
+      <div class="question-block">
+        <div class="q-label">QUESTION 1</div>
+        <p>Pourquoi choisit-on de réduire la grande plutôt que d'agrandir la petite ?
+          Qu'est-ce qu'on risque à inventer des pixels ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 2 ===== -->
+    <div class="section-head">
+      <h2>Partie 2 — Convertir en niveaux de gris</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">De RGB à un seul nombre par pixel
+        <span>// Chaque pixel passe de 3 valeurs (R, G, B) à 1 seule valeur</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        Un pixel couleur est représenté par trois composantes : Rouge, Vert, Bleu (RGB).
+        Pour simplifier le calcul, on fusionne ces 3 valeurs en une seule —
+        le <strong style="color:white">niveau de gris</strong>.
+        La formule n'est <em>pas</em> une simple moyenne : elle tient compte de la
+        <strong style="color:#ffc107">sensibilité de l'oeil humain</strong>,
+        plus sensible au vert qu'au rouge ou au bleu.
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-label">FORMULE — Encodage digital de couleur (ITU-R BT.709)</div>
+        gris = 0,2125 x R + 0,7154 x G + 0,0721 x B
+      </div>
+
+      <div class="alert-info">
+        <strong>Pourquoi ces coefficients ?</strong> L'oeil humain est beaucoup plus sensible au vert (71,54%)
+        qu'au rouge (21,25%) ou au bleu (7,21%). Une simple moyenne des trois canaux donnerait un gris perçu
+        comme faux — trop sombre ou trop clair selon les couleurs.
+      </div>
+
+      <div class="etape-row" style="margin-top:14px;">
+        <div class="etape-badge">3</div>
+        <div class="etape-content">
+          <div class="etape-title">Calculer un niveau de gris à la main</div>
+          <div class="etape-desc">Applique la formule sur ces pixels avant de coder.</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">EXERCICE 2 — Calcul de niveaux de gris</div>
+        <p>Calcule le niveau de gris pour chaque pixel avec la formule gris = 0,2125&times; R + 0,7154&times; G +
+          0,0721&times; B :</p>
+        <p style="margin-top:8px; font-family:'Courier New',monospace; font-size:0.78rem; line-height:2;">
+          → Pixel rouge pur : R=255, G=0, B=0 → gris = &#8230;&#8230;&#8230;<br>
+          → Pixel vert pur : R=0, G=255, B=0 → gris = &#8230;&#8230;&#8230;<br>
+          → Pixel bleu pur : R=0, G=0, B=255 → gris = &#8230;&#8230;&#8230;<br>
+          → Pixel blanc : R=255, G=255, B=255 → gris = &#8230;&#8230;&#8230;<br>
+          → Pixel gris moyen : R=128, G=128, B=128 → gris = &#8230;&#8230;&#8230;
+        </p>
+        <textarea placeholder="Montre tes calculs..."></textarea>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 2</div>
+        <p>Avec une simple moyenne (R+G+B)/3, quel serait le gris du rouge pur ? Et avec la formule pondérée ?
+          Explique pourquoi la formule pondérée est plus fidèle à la perception humaine.</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">4</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder la conversion en niveaux de gris</div>
+          <div class="etape-desc">On itère sur tous les pixels et on applique la formule.</div>
+          <div class="etape-time">15 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_2" env='ia' output="editeur-nsi_2">
+# Convertir une image en niveaux de gris
+def vers_niveaux_de_gris(image):
+    """Retourne une liste 2D des niveaux de gris de l'image."""
+    image = image.convert("RGB")      # <-- ligne a ajouter
+    pixels = image.load()
+    largeur, hauteur = image.size
+    gris = []
+
+    for y in range(hauteur):
+        ligne = []
+        for x in range(largeur):
+            r, g, b = pixels[x, y]    # plus besoin de [:3]
+            valeur = 0.2125 * r + 0.7154 * g + 0.0721 * b
+            ligne.append(valeur)
+        gris.append(ligne)
+
+    return gris
+
+gris_a = vers_niveaux_de_gris(img_a)
+gris_b = vers_niveaux_de_gris(img_b)
+print(f"Valeur du pixel (0,0) image A : {gris_a[0][0]:.2f}")
+print(f"Valeur du pixel (0,0) image B : {gris_b[0][0]:.2f}")
+        </script>
+      <div id="editeur-nsi_2"></div>
+    </div>
+
+    <!-- ===== PARTIE 3 ===== -->
+    <div class="section-head">
+      <h2>Partie 3 — Vectoriser et normaliser</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Transformer l'image en un grand vecteur
+        <span>// Aplatir la grille 2D en une liste 1D de nombres entre 0 et 1</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        Une image 250&times; 250 devient un vecteur de <strong style="color:#ffc107">62 500 composantes</strong>.
+        Chaque composante est un niveau de gris, normalise entre 0 et 1 en divisant par 255.
+        C'est ce vecteur que l'on comparera.
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-label">NORMALISATION — ramener [0, 255] dans [0, 1]</div>
+        valeur_normalisee = valeur_gris / 255
+      </div>
+
+      <div class="alert-info">
+        <strong>Pourquoi normaliser ?</strong> Sans normalisation, un pixel à 200 "pèse" 200 fois plus
+        qu'un pixel à 1 dans le calcul. Après normalisation, toutes les composantes sont sur la même échelle
+        et contribuent équitablement à la mesure de similarité.
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">5</div>
+        <div class="etape-content">
+          <div class="etape-title">Vectorisation et normalisation</div>
+          <div class="etape-desc">Aplatir la grille 2D en liste 1D et diviser par 255.</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_3" env='ia' output="editeur-nsi_3">
+def vectoriser(gris_2d):
+    """Aplatit la grille 2D en vecteur 1D normalise dans [0, 1]."""
+    vecteur = []
+    for ligne in gris_2d:
+        for valeur in ligne:
+            vecteur.append(valeur / 255)
+    return vecteur
+
+vec_a = vectoriser(gris_a)
+vec_b = vectoriser(gris_b)
+
+print(f"Taille du vecteur : {len(vec_a)} composantes")
+print(f"Premiere composante : {vec_a[0]:.4f}")
+print(f"Min : {min(vec_a):.4f} | Max :  {max(vec_a):.4f}")
+        </script>
+      <div id="editeur-nsi_3"></div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 3</div>
+        <p>Si ton image fait 100&times; 100 pixels, quelle est la taille du vecteur produit ?
+          Que signifie une composante à 0.0 ? Une composante à 1.0 ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 4 ===== -->
+    <div class="section-head">
+      <h2>Partie 4 — Mesurer la similarité</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Norme et angle entre deux vecteurs
+        <span>// La similarité cosinus : le coeur des moteurs de recherche modernes</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        On dispose de deux vecteurs. On calcule deux choses :
+        la <strong style="color:white">norme</strong> de chaque vecteur (sa "longueur"),
+        et l'<strong style="color:white">angle</strong> entre les deux vecteurs.
+        Un angle proche de 0 signifie que les images se ressemblent.
+        Un angle proche de 90° signifie qu'elles n'ont rien en commun.
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-label">NORME L2 d'un vecteur v de n composantes</div>
+        ||v|| = racine( v[0]² + v[1]² + ... + v[n-1]² )
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-label">SIMILARITE COSINUS — angle entre les vecteurs a et b</div>
+        cos(angle) = (a · b) / (||a|| x ||b||)
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">6</div>
+        <div class="etape-content">
+          <div class="etape-title">Calculer la norme à la main</div>
+          <div class="etape-desc">Sur un petit exemple avant de coder.</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">EXERCICE 3 — Calcul sur petit vecteur</div>
+        <p>Soit a = [0.5, 0.8, 0.2] et b = [0.4, 0.9, 0.1]</p>
+        <p style="margin-top:8px; font-family:'Courier New',monospace; font-size:0.78rem; line-height:2;">
+          → Produit scalaire a · b = 0.5&times; 0.4 + 0.8&times; 0.9 + 0.2&times; 0.1 = &#8230;&#8230;&#8230;<br>
+          → ||a|| = racine(0.5² + 0.8² + 0.2²) = &#8230;&#8230;&#8230;<br>
+          → ||b|| = racine(0.4² + 0.9² + 0.1²) = &#8230;&#8230;&#8230;<br>
+          → cos(angle) = (a · b) / (||a|| &times; ||b||) = &#8230;&#8230;&#8230;<br>
+          → Ces vecteurs se ressemblent-ils ? (cos proche de 1 = oui, proche de 0 = non)
+        </p>
+        <textarea placeholder="Montre tes calculs..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">7</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder le calcul de norme et d'angle</div>
+          <div class="etape-desc">Sans importer numpy — uniquement avec les outils Python vus en cours.</div>
+          <div class="etape-time">20 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_4" env='ia' output="editeur-nsi_4">
+import math
+
+def norme(vecteur):
+    """Calcule la norme L2 d'un vecteur."""
+    somme = 0
+    for v in vecteur:
+        somme += v ** 2
+    return math.sqrt(somme)
+
+def produit_scalaire(vec_a, vec_b):
+    """Calcule le produit scalaire de deux vecteurs de même taille."""
+    somme = 0
+    for i in range(len(vec_a)):
+        somme += vec_a[i] * vec_b[i]
+    return somme
+
+def angle_entre(vec_a, vec_b):
+    """Retourne l'angle en degrés entre deux vecteurs."""
+    ps = produit_scalaire(vec_a, vec_b)
+    norme_a = norme(vec_a)
+    norme_b = norme(vec_b)
+    cosinus = ps / (norme_a * norme_b)
+    cosinus = max(-1, min(1, cosinus)) # sécurité arrondi
+    return math.degrees(math.acos(cosinus))
+
+# Calcul final
+norme_a = norme(vec_a)
+norme_b = norme(vec_b)
+angle = angle_entre(vec_a, vec_b)
+
+print(f"Norme image A : {norme_a:.4f}")
+print(f"Norme image B : {norme_b:.4f}")
+print(f"Angle entre A et B : {angle:.2f} degrés")
+        </script>
+      <div id="editeur-nsi_4"></div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 4</div>
+        <p>Si tu obtiens un angle de 3,2 degrés. Les images sont-elles similaires ?
+          Et si tu obtenais 78 degrés ? Recherche un seuil de décision pour dire "similaire" ou "pas similaire".</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <div class="sep">· · ·</div>
+
+    <!-- ===== PARTIE 5 : LIMITE ===== -->
+    <div class="section-head">
+      <h2>Partie 5 — La limite de la méthode 1</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Un cas qui met en échec la comparaison pixel par pixel
+        <span>// Deux images visuellement similaires — mais un grand angle</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        Teste la méthode 1 avec deux images du même objet mais avec un
+        <strong style="color:white">cadrage ou une taille différents</strong>
+        (par exemple : le même personnage en petit format et en grand format,
+        ou la même photo recadrée différemment).
+      </p>
+
+      <div class="alert-info">
+        <strong>Exemple à tester :</strong> utilise deux images du même sujet avec des cadrages différents.
+        Le même personnage photographié de loin puis de pres, ou deux versions d'une même illustration
+        avec des marges différentes.
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">OBSERVATION</div>
+        <p>Lance le calcul sur tes deux images similaires mais avec cadrage différent.
+          Note l'angle obtenu :</p>
+        <p style="margin-top:8px; font-family:'Courier New',monospace; font-size:0.78rem; line-height:2;">
+          Angle méthode 1 (pixels bruts) = &#8230;&#8230;&#8230; degrés<br>
+          Les images semblent-elles similaires visuellement ? &#8230;&#8230;&#8230;<br>
+          La méthode dit-elle qu'elles sont similaires ? &#8230;&#8230;&#8230;
+        </p>
+        <textarea placeholder="Decris ce que tu observes et explique l'ecart..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">8</div>
+        <div class="etape-content">
+          <div class="etape-title">Comprendre pourquoi ca échoue</div>
+          <div class="etape-desc">La méthode 1 compare les pixels à la même position — un décalage change tout.</div>
+        </div>
+      </div>
+
+      <div class="alert-echec">
+        <strong>Problème fondamental de la méthode 1 :</strong> elle compare les pixels
+        <em>position par position</em>. Si le même objet est décalé, agrandi ou recadré,
+        les pixels ne se correspondent plus — l'angle explose même si les images montrent
+        la même chose. La méthode est <strong>sensible à la position</strong>.
+      </div>
+
+      <div class="question-block" style="margin-top:12px;">
+        <div class="q-label">QUESTION 5</div>
+        <p>Imagine deux images entièrement noires sauf un point blanc : l'une en haut à gauche,
+          l'autre en bas à droite. Quel angle obtiendrait-on avec la méthode 1 ?
+          Ces images sont-elles vraiment différentes selon toi ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 6 : HISTOGRAMME ===== -->
+    <div class="section-head">
+      <h2>Partie 6 — L'histogramme comme nouvelle représentation</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Compter plutôt que positionner
+        <span>// Une représentation invariante au cadrage</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        L'idée : au lieu de dire "le pixel en position (x, y) vaut 128",
+        on dit <strong style="color:white">"l'image contient 3 428 pixels de valeur 128"</strong>.
+        On ne s'interesse plus à <em>ou</em> se trouve chaque pixel, mais à
+        <em>combien</em> de pixels ont chaque niveau de gris.
+        C'est l'<strong style="color:#ffc107">histogramme</strong> — et il ne change pas
+        si on deplace l'objet dans l'image.
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-label">HISTOGRAMME — tableau de 256 cases</div>
+        histo[k] = nombre de pixels ayant le niveau de gris k (k de 0 a 255)
+      </div>
+
+      <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; margin:14px 0;">
+        <div style="flex:1; min-width:180px;">
+          <div style="font-family:'Courier New',monospace; font-size:0.7rem; color:#e0e0e0; margin-bottom:6px;">
+            Image très sombre (beaucoup de 0)
+          </div>
+          <div class="histo-demo">
+            <div class="histo-bar" style="height:95%"></div>
+            <div class="histo-bar" style="height:80%"></div>
+            <div class="histo-bar" style="height:60%"></div>
+            <div class="histo-bar" style="height:30%"></div>
+            <div class="histo-bar" style="height:15%"></div>
+            <div class="histo-bar" style="height:8%"></div>
+            <div class="histo-bar" style="height:5%"></div>
+            <div class="histo-bar" style="height:3%"></div>
+          </div>
+        </div>
+        <div style="flex:1; min-width:180px;">
+          <div style="font-family:'Courier New',monospace; font-size:0.7rem; color:#e0e0e0; margin-bottom:6px;">
+            Image équilibrée (valeurs réparties)
+          </div>
+          <div class="histo-demo">
+            <div class="histo-bar" style="height:30%"></div>
+            <div class="histo-bar" style="height:45%"></div>
+            <div class="histo-bar" style="height:60%"></div>
+            <div class="histo-bar" style="height:70%"></div>
+            <div class="histo-bar" style="height:65%"></div>
+            <div class="histo-bar" style="height:50%"></div>
+            <div class="histo-bar" style="height:35%"></div>
+            <div class="histo-bar" style="height:20%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etape-row">
+        <div class="etape-badge">9</div>
+        <div class="etape-content">
+          <div class="etape-title">Construire l'histogramme à la main</div>
+          <div class="etape-desc">Remplir un tableau de 256 cases — juste du comptage.</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">EXERCICE 4 — Histogramme à la main</div>
+        <p>Image 3x3 pixels avec les niveaux de gris suivants :</p>
+        <p style="font-family:'Courier New',monospace; font-size:0.82rem; color:#ffc107; margin:8px 0;">
+          [100, 200, 100]<br>
+          [50, 100, 200]<br>
+          [100, 50, 100]
+        </p>
+        <p>Combien de pixels ont la valeur 100 ? 200 ? 50 ?<br>
+          Que vaut histo[100] ? histo[200] ? histo[50] ? histo[128] ?</p>
+        <textarea placeholder="Montre ton comptage..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">10</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder l'histogramme</div>
+          <div class="etape-desc">Une liste de 256 cases — on incrémente la case correspondante à chaque pixel.</div>
+          <div class="etape-time">15 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_5" env='ia' output="editeur-nsi_5">
+def histogramme(gris_2d):
+    """Compte le nombre de pixels pour chaque niveau de gris (0 a 255).
+      Retourne une liste de 256 entiers."""
+    histo = [0] * 256 # 256 cases initialisées à 0
+    for ligne in gris_2d:
+        for valeur in ligne:
+          case = int(valeur) # arrondir a l'entier
+          case = min(case, 255) # sécurité :ne pas dépasser 255
+          histo[case] += 1
+    return histo
+
+histo_a = histogramme(gris_a)
+histo_b = histogramme(gris_b)
+
+print(f"Pixels noirs (valeur 0) : {histo_a[0]}")
+print(f"Pixels blancs (valeur 255): {histo_a[255]}")
+print(f"Total pixels : {sum(histo_a)}")
+        </script>
+      <div id="editeur-nsi_5"></div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 6</div>
+        <p>Le total <code>sum(histo_a)</code> doit être égal à quoi exactement ?
+          Verifie avec ton code. Que se passe-t-il si ce n'est pas le cas ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:0">
+      <div class="card-title">Normaliser l'histogramme et calculer l'angle
+        <span>// Methode 2 — invariante au cadrage</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        On normalise l'histogramme en divisant par le <strong style="color:white">nombre total de pixels</strong>
+        (et non par 255 comme avant). Chaque case devient une
+        <strong style="color:#ffc107">proportion</strong> — indépendante de la taille de l'image.
+        Puis on calcule l'angle entre les deux histogrammes avec les mêmes fonctions qu'avant.
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-label">NORMALISATION DE L'HISTOGRAMME</div>
+        histo_norm[k] = histo[k] / nombre_total_de_pixels
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">11</div>
+        <div class="etape-content">
+          <div class="etape-title">Normaliser et comparer les histogrammes</div>
+          <div class="etape-desc">On réutilise les fonctions norme() et angle_entre() deja codées.</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+                  <script type="py-editor" id="editeur_6" env='ia' output="editeur-nsi_6">
+def normaliser_histo(histo):
+    """Divise chaque case par le total pour obtenir des proportions."""
+    total = sum(histo)
+    return [case / total for case in histo]
+
+hn_a = normaliser_histo(histo_a)
+hn_b = normaliser_histo(histo_b)
+
+# Calcul méthode 2 — histogrammes
+# On réutilise exactement les mêmes fonctions !
+angle_m2 = angle_entre(hn_a, hn_b)
+
+print(f"[M1] Angle pixels : {angle:.2f} degrés")
+print(f"[M2] Angle histogrammes : {angle_m2:.2f} degrés")
+        </script>
+      <div id="editeur-nsi_6"></div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 7</div>
+        <p>Compare les deux angles obtenus sur tes images similaires mais mal cadrées.
+          La methode 2 donne-t-elle un angle plus petit ? Pourquoi l'histogramme est-il
+          insensible au cadrage ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+
+      <div class="alert-success" style="margin-top:12px;">
+        <strong>Ce que tu viens de faire s'appelle du feature engineering :</strong>
+        tu as <em>choisi</em> une meilleure représentation des données (l'histogramme
+        plutôt que les pixels bruts) pour rendre ton algorithme plus robuste.
+        C'est exactement ce que faisaient les ingénieurs en vision par ordinateur
+        avant l'avènement des reseaux de neurones.
+      </div>
+    </div>
+
+    <div class="sep">· · ·</div>
+
+    <!-- ===== PARTIE 7 : CONCEPTS IA ===== -->
+    <div class="section-head">
+      <h2>Partie 7 — Les concepts IA dans cette activité</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ce que tu viens de construire existe en vrai dans l'IA
+        <span>// Du feature engineering manuel vers l'apprentissage automatique de features</span>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-item">
+          <div class="concept-name">PREPROCESSING — CENTRAL</div>
+          <div class="concept-desc">Toute la partie 1-3 est du preprocessing. En IA, les données brutes
+            sont rarement utilisables directement. C'est souvent 80% du travail réel.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-name">FEATURE EXTRACTION — CENTRAL</div>
+          <div class="concept-desc">La vectorisation (image → vecteur) et l'histogramme sont deux
+            facons d'extraire des "caractéristiques". Choisir la bonne représentation, c'est le
+            coeur du métier.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-name">FEATURE ENGINEERING — CENTRAL</div>
+          <div class="concept-desc">Passer des pixels bruts a l'histogramme, c'est choisir manuellement
+            une meilleure representation. C'est ce que faisaient les ingenieurs avant le deep learning,
+            qui l'a automatisé.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-name">INVARIANCE — CENTRAL</div>
+          <div class="concept-desc">L'histogramme est invariant à la position et au cadrage.
+            Les CNN modernes apprennent à être invariants à la rotation, l'échelle et la translation
+            — c'est leur principale force.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-name">SIMILARITE COSINUS — CENTRAL</div>
+          <div class="concept-desc">L'angle entre deux vecteurs est la métrique de similarité
+            de l'IA moderne : moteurs de recherche, word embeddings (Word2Vec, BERT),
+            systèmes de recommandation.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-name">NORMALISATION — CENTRAL</div>
+          <div class="concept-desc">Diviser par 255 (pixels) ou par le total (histogramme) pour
+            que les valeurs soient comparables. Sans normalisation, les grandes valeurs dominent
+            artificiellement le calcul.</div>
+        </div>
+        <div class="concept-item connexe">
+          <div class="concept-name">EMBEDDING — CONNEXE</div>
+          <div class="concept-desc">Ce que tu as construit à la main, les reseaux de neurones
+            l'apprennent automatiquement : une représentation vectorielle qui capture la sémantique
+            de l'image, pas seulement ses pixels.</div>
+        </div>
+        <div class="concept-item connexe">
+          <div class="concept-name">CNN — CONNEXE</div>
+          <div class="concept-desc">Les réseaux convolutifs apprennent automatiquement quels
+            "filtres" appliquer à l'image pour obtenir la meilleure représentation.
+            Ils ont remplacé le feature engineering manuel vers 2012.</div>
+        </div>
+      </div>
+
+      <div class="question-block" style="margin-top:14px;">
+        <div class="q-label">QUESTION 8 — Comparaison des deux méthodes</div>
+        <p>Complète ce tableau a partir de tes observations :</p>
+        <table class="table-methodes" style="margin-top:8px;text-align: center;">
+          <thead>
+            <tr>
+              <th>Critere</th>
+              <th>Methode 1 — pixels bruts</th>
+              <th>Methode 2 — histogramme</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Taille du vecteur (image 250x250)</td>
+              <td>62 500</td>
+              <td>256</td>
+            </tr>
+            <tr>
+              <td>Sensible au cadrage ?</td>
+              <td class="nok">Oui</td>
+              <td class="ok">Non</td>
+            </tr>
+            <tr>
+              <td>Sensible à la luminosité globale ?</td>
+              <td style="color:#e0e0e0">&#8230;&#8230;&#8230;</td>
+              <td style="color:#e0e0e0">&#8230;&#8230;&#8230;</td>
+            </tr>
+            <tr>
+              <td>Distingue deux images symétriques ?</td>
+              <td style="color:#e0e0e0">&#8230;&#8230;&#8230;</td>
+              <td style="color:#e0e0e0">&#8230;&#8230;&#8230;</td>
+            </tr>
+            <tr>
+              <td>Vitesse de calcul</td>
+              <td class="nok">Lente (beaucoup de composantes)</td>
+              <td class="ok">Rapide (256 composantes)</td>
+            </tr>
+          </tbody>
+        </table>
+        <textarea placeholder="Tes observations sur les lignes a completer..."></textarea>
+      </div>
+
+      <div class="question-block" style="margin-top:10px;">
+        <div class="q-label">QUESTION 9 — Vers les vraies IA</div>
+        <p>Tu as choisi manuellement de compter les niveaux de gris.
+          On aurait aussi pu compter les contours, les textures, les formes.
+          Comment choisir la meilleure representation ?
+          Qu'est-ce qu'un reseau de neurones fait que tu n'as pas fait ici ?</p>
+        <textarea style="min-height:80px;" placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== DEFIS ===== -->
+    <div class="section-head">
+      <h2>Partie 8 — Defis</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="niveau-card n2">
+        <span class="badge-niveau"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"> DEFI niveau 2</span>
+        <h3>Comparer avec numpy</h3>
+        <div class="meta">numpy · 15 min</div>
+        <ul>
+          <li>Réimplémenter norme() avec <code>np.linalg.norm()</code></li>
+          <li>Réimplémenter produit_scalaire() avec <code>np.dot()</code></li>
+          <li>Mesurer la différence de vitesse avec <code>time.time()</code></li>
+          <li>Tester sur les deux methodes — laquelle bénéficie le plus de numpy ?</li>
+        </ul>
+      </div>
+      <div class="niveau-card n3">
+        <span class="badge-niveau"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"> DEFI niveau 3</span>
+        <h3>Seuil de décision</h3>
+        <div class="meta">Classifieur · 25 min</div>
+        <ul>
+          <li>Tester 5 paires similaires et 5 paires différentes</li>
+          <li>Relever les angles M1 et M2 pour chaque paire</li>
+          <li>Proposer un seuil pour chaque méthode</li>
+          <li>Quelle méthode a le seuil le plus fiable ?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Code de depart pour le defi niveau 2
+        <span>A compléter dans Thonny</span>
+      </div>
+
+                  <script type="py-editor" id="editeur_6" env='ia' output="editeur-nsi_6">
+import numpy as np
+import time, math
+
+# Convertir en tableaux numpy
+np_vec_a = np.array(vec_a)
+np_vec_b = np.array(vec_b)
+np_hn_a = np.array(hn_a)
+np_hn_b = np.array(hn_b)
+
+def angle_numpy(a, b):
+    cosinus = np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+    cosinus = float(np.clip(cosinus, -1, 1))
+    return math.degrees(math.acos(cosinus))
+
+# Mesure de temps — pixels bruts
+t0 = time.time()
+angle_m1_py = angle_entre(vec_a, vec_b)
+print(f"M1 Python pur : {time.time()-t0:.4f}s | angle={angle_m1_py:.2f}")
+
+t0 = time.time()
+angle_m1_np = angle_numpy(np_vec_a, np_vec_b)
+print(f"M1 numpy : {time.time()-t0:.4f}s | angle={angle_m1_np:.2f}")
+
+# A toi : faire la même chose pour les histogrammes (M2)
+        </script>
+      <div id="editeur-nsi_6"></div>      
+
+    </div>
+
+    <!-- ===== BILAN ===== -->
+    <div class="section-head">
+      <h2>Bilan</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ce que tu as compris aujourd'hui</div>
+      <div class="rctf-grid">
+        <div class="rctf-item">
+          <div class="label">Preprocessing</div>
+          <div class="example">Préparer les données avant tout traitement</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Feature engineering</div>
+          <div class="example">Choisir la bonne représentation des données</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Invariance</div>
+          <div class="example">Une bonne feature ne change pas si l'objet bouge</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Similarite cosinus</div>
+          <div class="example">Mesurer la ressemblance par l'angle entre vecteurs</div>
+        </div>
+      </div>
+
+      <div class="question-block" style="margin-top:14px;">
+        <div class="q-label">SYNTHESE FINALE</div>
+        <p>En 4 phrases, explique la différence entre la méthode 1 et la methode 2,
+          pourquoi l'une échoue quand l'autre réussit, et ce qu'un réseau de neurones
+          ferait de mieux que les deux.</p>
+        <textarea style="min-height:100px;" placeholder="Ma synthese..."></textarea>
+      </div>
+
+      <div class="alert-info" style="margin-top:14px;">
+        <strong>Connexion avec la vraie IA :</strong>
+        tu as fait du <em>feature engineering</em> — choisir manuellement une représentation
+        pertinente. Les reseaux de neurones convolutifs (CNN) ont revolutionné la vision par ordinateur
+        en 2012 en <em>apprenant automatiquement</em> les meilleures features directement depuis
+        les pixels. Ils sont aujourd'hui au coeur de FaceID, Google Lens et des voitures autonomes.
+      </div>
+
+    </div><!-- /.card bilan -->
+
+  </div><!-- /container -->
+
+  <footer>
+    Activite NSI · Similarité d'images · Première &nbsp;—&nbsp;
+    <a href="#">Retour au cours</a>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

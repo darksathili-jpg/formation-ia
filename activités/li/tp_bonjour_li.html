@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TP NSI — Entraîner « Bonjour Li » · Mot-clé personnalisé · openWakeWord</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Fira+Code:wght@400;500;700&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css" />
+<script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+  <style>
+    :root {
+      --bg: #080d14;
+      --bg2: #0e1623;
+      --bg3: #141f30;
+      --bg4: #1a2840;
+      --surface: #111827;
+      --surface2: #162033;
+      --border: #1e3050;
+      --border2: #2a4570;
+      --text: #dde8f5;
+      --text2: #8aa8cc;
+      --text3: #4a6888;
+      --accent: #38bdf8;
+      --gold: #fbbf24;
+      --green: #34d399;
+      --pink: #f472b6;
+      --purple: #a78bfa;
+      --orange: #fb923c;
+      --red: #f87171;
+      --teal: #2dd4bf;
+      --code-bg: #060b14;
+      --code-border: #182840;
+      --shadow: 0 4px 32px rgba(0, 0, 0, .7);
+      --shadow-sm: 0 2px 12px rgba(0, 0, 0, .4);
+      --r: 10px;
+      --r-sm: 6px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f0f4fa;
+      --bg2: #e4ecf7;
+      --bg3: #d8e4f0;
+      --bg4: #ccdaec;
+      --surface: #fff;
+      --surface2: #f4f8ff;
+      --border: #c0d0e8;
+      --border2: #a0bcd8;
+      --text: #0e1a30;
+      --text2: #2a4870;
+      --text3: #6888a8;
+      --accent: #0284c7;
+      --gold: #b45309;
+      --green: #047857;
+      --pink: #be185d;
+      --purple: #6d28d9;
+      --orange: #c2410c;
+      --red: #b91c1c;
+      --teal: #0f766e;
+      --code-bg: #0e1623;
+      --code-border: #1e3050;
+      --shadow: 0 4px 24px rgba(40, 80, 140, .10);
+      --shadow-sm: 0 2px 8px rgba(40, 80, 140, .06);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+      transition: background .3s, color .3s
+    }
+
+    .py-editor-box{
+      background-color: white;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    p {
+      margin-bottom: 8px
+    }
+
+    p:last-child {
+      margin-bottom: 0
+    }
+
+    ul,
+    ol {
+      padding-left: 20px
+    }
+
+    li {
+      margin-bottom: 4px;
+      font-size: .86rem
+    }
+
+    strong {
+      font-weight: 700
+    }
+
+    em {
+      color: var(--text2);
+      font-style: italic
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: .82em;
+      background: rgba(56, 189, 248, .10);
+      color: var(--accent);
+      border-radius: 3px;
+      padding: 1px 5px
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 20px 0
+    }
+
+    /* TOPBAR */
+    #topbar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      height: 50px;
+      box-shadow: var(--shadow-sm)
+    }
+
+    #topbar .logo {
+      font-family: 'Rubik Dirt', cursive;
+      font-size: .95rem;
+      color: var(--gold);
+      margin-right: 16px;
+      white-space: nowrap
+    }
+
+    .nav-tabs {
+      display: flex;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none
+    }
+
+    .nav-tab {
+      padding: 0 13px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--text2);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      transition: color .2s, border-color .2s;
+      user-select: none;
+      font-family: 'Fira Code', monospace;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none
+    }
+
+    .nav-tab:hover {
+      color: var(--text)
+    }
+
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent)
+    }
+
+    .theme-btn {
+      margin-left: auto;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: .71rem;
+      color: var(--text2);
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background .2s
+    }
+
+    .theme-btn:hover {
+      background: var(--bg4);
+      color: var(--text)
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(140deg, var(--bg2) 0%, var(--bg3) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 38px 40px 26px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 30px;
+      align-items: center
+    }
+
+    .hero-icon {
+      width: 72px;
+      height: 72px
+    }
+
+    .hero-text h1 {
+      font-family: 'Rubik Dirt', cursive;
+      font-size: 1.55rem;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 4px;
+      font-weight: lighter;
+    }
+
+    .hero-text h1 span {
+      color: var(--gold)
+    }
+
+    .hero-subtitle {
+      font-size: .83rem;
+      color: var(--text2);
+      font-weight: 300;
+      margin-top: 2px
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px
+    }
+
+    .hero-badge {
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 9px;
+      font-size: .69rem;
+      color: var(--text2);
+      font-family: 'Fira Code', monospace
+    }
+
+    .hero-badge.gold {
+      background: rgba(251, 191, 36, .10);
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .hero-badge.green {
+      background: rgba(52, 211, 153, .10);
+      border-color: var(--green);
+      color: var(--green)
+    }
+
+    .hero-badge.purple {
+      background: rgba(167, 139, 250, .10);
+      border-color: var(--purple);
+      color: var(--purple)
+    }
+
+    .hero-badge.accent {
+      background: rgba(56, 189, 248, .10);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    /* LAYOUT */
+    .page-section {
+      display: none;
+      padding: 26px 34px 68px;
+      max-width: 1080px;
+      margin: 0 auto
+    }
+
+    .page-section.active {
+      display: block
+    }
+
+    @media(max-width:800px) {
+      .hero {
+        grid-template-columns: 1fr
+      }
+
+      .page-section {
+        padding: 16px 13px 52px
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* TITRES */
+    .section-title {
+      font-family: 'Rubik Dirt', cursive;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .section-title .num {
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .num-01 {
+      background: var(--accent)
+    }
+
+    .num-02 {
+      background: var(--purple)
+    }
+
+    .num-03 {
+      background: var(--green);
+      color: #000
+    }
+
+    .num-04 {
+      background: var(--orange)
+    }
+
+    .num-05 {
+      background: var(--pink)
+    }
+
+    .num-06 {
+      background: var(--gold);
+      color: #000
+    }
+
+    .section-rule {
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, transparent 80%);
+      margin-bottom: 20px;
+      border-radius: 2px
+    }
+
+    .subsection-title {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      font-weight: 700;
+      color: var(--text2);
+      margin: 20px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    /* CARTES */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 17px 21px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .2s
+    }
+
+    .card:hover {
+      border-color: var(--border2)
+    }
+
+    .card-header {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .card-header .sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: .69rem;
+      color: var(--text3);
+      font-weight: 300
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+      margin-bottom: 13px
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 13px;
+      margin-bottom: 13px
+    }
+
+    /* ALERTES */
+    .alert {
+      border-radius: var(--r-sm);
+      padding: 10px 14px;
+      font-size: .82rem;
+      line-height: 1.65;
+      margin: 10px 0;
+      border-left: 4px solid
+    }
+
+    .alert-info {
+      background: rgba(56, 189, 248, .07);
+      border-color: var(--accent)
+    }
+
+    .alert-warn {
+      background: rgba(251, 191, 36, .07);
+      border-color: var(--gold)
+    }
+
+    .alert-success {
+      background: rgba(52, 211, 153, .07);
+      border-color: var(--green)
+    }
+
+    .alert-error {
+      background: rgba(248, 113, 113, .07);
+      border-color: var(--red)
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 3px;
+      font-weight: 600
+    }
+
+    /* CODE */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: var(--r-sm);
+      padding: 13px 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      line-height: 1.82;
+      overflow-x: auto;
+      margin: 9px 0;
+      color: #c4d8f0;
+      white-space: pre
+    }
+
+    .code-block .c-kw {
+      color: #7dd3fc
+    }
+
+    .code-block .c-fn {
+      color: #fbbf24
+    }
+
+    .code-block .c-str {
+      color: #86efac
+    }
+
+    .code-block .c-num {
+      color: #fb923c
+    }
+
+    .code-block .c-cmt {
+      color: #3a5a7a;
+      font-style: italic
+    }
+
+    .code-block .c-cls {
+      color: #f472b6
+    }
+
+    .code-block .c-var {
+      color: #c4d8f0
+    }
+
+    .code-label {
+      font-family: 'Fira Code', monospace;
+      font-size: .65rem;
+      color: var(--text3);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--r-sm) var(--r-sm) 0 0;
+      padding: 4px 11px;
+      display: inline-block
+    }
+
+    .code-label+.code-block {
+      border-top-left-radius: 0;
+      margin-top: 0
+    }
+
+    /* PYSCRIPT */
+    .pyscript-wrapper {
+      background: var(--code-bg);
+      border: 1px solid var(--accent);
+      border-radius: var(--r-sm);
+      margin: 11px 0;
+      overflow: hidden
+    }
+
+    .pyscript-label {
+      background: rgba(56, 189, 248, .10);
+      border-bottom: 1px solid var(--accent);
+      padding: 5px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .pyscript-label::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pg 2s ease-in-out infinite
+    }
+
+    @keyframes pg {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    /* QUESTIONS */
+    .question {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+      margin: 13px 0;
+      font-size: .84rem
+    }
+
+    .question .q-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 5px;
+      flex-wrap: wrap
+    }
+
+    .q-num {
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      flex-shrink: 0
+    }
+
+    .q-label {
+      font-weight: 600;
+      font-size: .75rem;
+      color: var(--text2);
+      font-family: 'Fira Code', monospace;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    .question p {
+      font-size: .84rem;
+      color: var(--text);
+      line-height: 1.65
+    }
+
+    .question ol,
+    .question ul {
+      margin-top: 6px
+    }
+
+    .question code {
+      background: rgba(56, 189, 248, .12);
+      color: var(--accent);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: .80em
+    }
+
+    /* EXERCICES */
+    .exercise {
+      border: 1px solid var(--border2);
+      border-left: 4px solid var(--purple);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+      margin: 13px 0;
+      background: rgba(167, 139, 250, .05);
+      font-size: .84rem
+    }
+
+    .exercise .ex-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap
+    }
+
+    .ex-badge {
+      background: var(--purple);
+      color: #fff;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap
+    }
+
+    .exercise p {
+      font-size: .84rem;
+      line-height: 1.65;
+      margin-bottom: 4px
+    }
+
+    .exercise ol,
+    .exercise ul {
+      padding-left: 17px;
+      margin-top: 4px
+    }
+
+    .exercise li {
+      font-size: .82rem;
+      margin-bottom: 3px
+    }
+
+    .exercise code {
+      background: rgba(167, 139, 250, .12);
+      color: var(--purple);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: .80em
+    }
+
+    /* TABLEAUX */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .79rem;
+      margin: 9px 0
+    }
+
+    .data-table th {
+      background: var(--bg3);
+      color: var(--text2);
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 6px 10px;
+      text-align: left;
+      border-bottom: 2px solid var(--border)
+    }
+
+    .data-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .data-table tr:hover td {
+      background: rgba(56, 189, 248, .04)
+    }
+
+    /* STEPS */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin: 13px 0
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 13px;
+      align-items: start
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Fira Code', monospace;
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .step-title {
+      font-weight: 600;
+      font-size: .86rem;
+      color: var(--text);
+      margin-bottom: 6px
+    }
+
+    .step-time {
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      color: var(--text3);
+      margin-top: 4px
+    }
+
+    /* DIAGRAMME ARCHITECTURE */
+    .arch-diagram {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px;
+      margin: 12px 0
+    }
+
+    .arch-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 6px 0
+    }
+
+    .arch-box {
+      border-radius: 7px;
+      padding: 9px 14px;
+      text-align: center;
+      min-width: 110px;
+      border: 1px solid
+    }
+
+    .arch-box .ab-label {
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 3px
+    }
+
+    .arch-box .ab-detail {
+      font-size: .63rem;
+      color: var(--text3);
+      font-family: 'Fira Code', monospace
+    }
+
+    .arch-arrow {
+      color: var(--border2);
+      font-size: 1.1rem;
+      padding: 0 2px
+    }
+
+    .ab-audio {
+      background: rgba(45, 212, 191, .08);
+      border-color: var(--teal)
+    }
+
+    .ab-audio .ab-label {
+      color: var(--teal)
+    }
+
+    .ab-feat {
+      background: rgba(167, 139, 250, .08);
+      border-color: var(--purple)
+    }
+
+    .ab-feat .ab-label {
+      color: var(--purple)
+    }
+
+    .ab-model {
+      background: rgba(251, 191, 36, .08);
+      border-color: var(--gold)
+    }
+
+    .ab-model .ab-label {
+      color: var(--gold)
+    }
+
+    .ab-score {
+      background: rgba(52, 211, 153, .08);
+      border-color: var(--green)
+    }
+
+    .ab-score .ab-label {
+      color: var(--green)
+    }
+
+    .ab-pretrain {
+      background: rgba(56, 189, 248, .06);
+      border-color: var(--accent)
+    }
+
+    .ab-pretrain .ab-label {
+      color: var(--accent)
+    }
+
+    /* FORMULE */
+    .formula {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .88rem;
+      color: var(--accent);
+      text-align: center;
+      margin: 10px 0
+    }
+
+    .formula small {
+      display: block;
+      color: var(--text3);
+      font-size: .68rem;
+      margin-top: 5px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300
+    }
+
+    /* MÉTRIQUE CARDS */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 12px 0
+    }
+
+    .metric-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 13px 15px;
+      text-align: center
+    }
+
+    .metric-card .mc-name {
+      font-family: 'Fira Code', monospace;
+      font-size: .70rem;
+      font-weight: 700;
+      margin-bottom: 5px
+    }
+
+    .metric-card .mc-formula {
+      font-family: 'Fira Code', monospace;
+      font-size: .72rem;
+      color: var(--text2);
+      margin-bottom: 5px
+    }
+
+    .metric-card .mc-desc {
+      font-size: .75rem;
+      color: var(--text3);
+      line-height: 1.5
+    }
+
+    .mc-precision .mc-name {
+      color: var(--green)
+    }
+
+    .mc-recall .mc-name {
+      color: var(--orange)
+    }
+
+    .mc-f1 .mc-name {
+      color: var(--pink)
+    }
+
+    /* CONFUSION MATRIX */
+    .cm-table {
+      border-collapse: collapse;
+      margin: 12px auto;
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem
+    }
+
+    .cm-table th,
+    .cm-table td {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      text-align: center
+    }
+
+    .cm-table th {
+      background: var(--bg3);
+      color: var(--text2);
+      font-size: .68rem
+    }
+
+    .cm-tp {
+      background: rgba(52, 211, 153, .15);
+      color: var(--green);
+      font-weight: 700
+    }
+
+    .cm-tn {
+      background: rgba(52, 211, 153, .08);
+      color: var(--green)
+    }
+
+    .cm-fp {
+      background: rgba(251, 191, 36, .15);
+      color: var(--gold);
+      font-weight: 700
+    }
+
+    .cm-fn {
+      background: rgba(248, 113, 113, .15);
+      color: var(--red);
+      font-weight: 700
+    }
+
+    /* PIPELINE CHIP */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 12px 0;
+      justify-content: center
+    }
+
+    .pipe-step {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 13px;
+      text-align: center;
+      min-width: 96px
+    }
+
+    .pipe-step .ps-label {
+      font-family: 'Fira Code', monospace;
+      font-size: .66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 2px
+    }
+
+    .pipe-step .ps-tech {
+      font-family: 'Fira Code', monospace;
+      font-size: .61rem;
+      color: var(--text3)
+    }
+
+    .pipe-arrow {
+      color: var(--border2);
+      font-size: .9rem;
+      padding: 0 2px
+    }
+
+    /* PILL */
+    .pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: .64rem;
+      font-weight: 700;
+      background: var(--bg3);
+      color: var(--text2);
+      border: 1px solid var(--border)
+    }
+
+    .pill.gold {
+      background: rgba(251, 191, 36, .12);
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .pill.green {
+      background: rgba(52, 211, 153, .12);
+      border-color: var(--green);
+      color: var(--green)
+    }
+
+    .pill.purple {
+      background: rgba(167, 139, 250, .12);
+      border-color: var(--purple);
+      color: var(--purple)
+    }
+
+    .pill.accent {
+      background: rgba(56, 189, 248, .12);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 20px 34px;
+      font-size: .71rem;
+      color: var(--text3);
+      border-top: 1px solid var(--border);
+      font-family: 'Fira Code', monospace;
+      margin-top: 34px
+    }
+
+    footer a {
+      color: var(--accent)
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div class="logo">Li — Mot-clé</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showSection(0,this)">01 Pourquoi ?</button>
+      <button class="nav-tab" onclick="showSection(1,this)">02 Architecture ML</button>
+      <button class="nav-tab" onclick="showSection(2,this)">03 Données</button>
+      <button class="nav-tab" onclick="showSection(3,this)">04 Entraînement</button>
+      <button class="nav-tab" onclick="showSection(4,this)">05 Évaluation</button>
+      <button class="nav-tab" onclick="showSection(5,this)">06 Intégration</button>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">Mode clair</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <svg class="hero-icon" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <rect width="72" height="72" rx="13" fill="#060b14" />
+      <!-- Onde sonore stylisée -->
+      <circle cx="36" cy="36" r="30" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.15">
+        <animate attributeName="r" values="22;30;22" dur="1.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.08;0.25;0.08" dur="1.8s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="36" cy="36" r="20" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.3">
+        <animate attributeName="r" values="14;20;14" dur="1.8s" repeatCount="indefinite" begin="0.3s" />
+      </circle>
+      <!-- Micro -->
+      <rect x="29" y="14" width="14" height="22" rx="7" fill="#fbbf24" />
+      <path d="M20 34 Q20 50 36 50 Q52 50 52 34" fill="none" stroke="#fbbf24" stroke-width="2.5"
+        stroke-linecap="round" />
+      <line x1="36" y1="50" x2="36" y2="58" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" />
+      <line x1="28" y1="58" x2="44" y2="58" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" />
+    </svg>
+    <div class="hero-text">
+      <h1>Entraîner <span>« Bonjour Li »</span></h1>
+      <p class="hero-subtitle">Travaux Pratiques · Terminale NSI · Apprentissage automatique embarqué</p>
+      <div class="hero-meta">
+        <span class="hero-badge gold">openWakeWord · ONNX</span>
+        <span class="hero-badge green">PC de salle · CPU · sans GPU</span>
+        <span class="hero-badge purple">PyScript 2026 · simulateurs interactifs</span>
+        <span class="hero-badge accent">Prérequis : TP Li principal</span>
+        <span class="hero-badge">Durée : 3 h 30</span>
+        <span class="hero-badge">18 questions · 4 exercices</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 01 — POURQUOI ENTRAÎNER SON PROPRE MOT-CLÉ ?
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section active" id="sec-0">
+    <div class="section-title"><span class="num num-01">01</span> Pourquoi entraîner son propre mot-clé ?</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Le problème du mot-clé anglais <span class="sub">Limite des modèles pré-entraînés</span>
+      </div>
+      <p>Dans le TP principal, Li se déclenche sur « hey jarvis », un mot-clé anglais. Cette solution fonctionne, mais
+        elle présente deux limitations majeures pour un assistant vocal francophone.</p>
+      <div class="grid-2" style="margin-top:12px;">
+        <div
+          style="background:rgba(248,113,113,.06);border:1px solid var(--red);border-radius:var(--r-sm);padding:13px 15px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.73rem;font-weight:700;color:var(--red);margin-bottom:6px;">
+            Problème 1 — Expérience utilisateur</div>
+          <p style="font-size:.82rem;margin:0;color:var(--text2);">Un assistant vocal français qui répond au nom anglais
+            « hey jarvis » manque de cohérence. L'utilisateur doit adopter une prononciation étrangère peu naturelle.
+          </p>
+        </div>
+        <div
+          style="background:rgba(248,113,113,.06);border:1px solid var(--red);border-radius:var(--r-sm);padding:13px 15px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.73rem;font-weight:700;color:var(--red);margin-bottom:6px;">
+            Problème 2 — Faux positifs</div>
+          <p style="font-size:.82rem;margin:0;color:var(--text2);">Le modèle <code>hey_jarvis</code> a été entraîné sur
+            des voix anglophones. Avec une voix française, le taux de faux positifs (déclenchements non voulus)
+            augmente.</p>
+        </div>
+      </div>
+      <div class="alert alert-success" style="margin-top:12px;">
+        <strong>La solution — entraîner un modèle personnalisé</strong>
+        openWakeWord permet d'entraîner un modèle ONNX léger (~400 Ko) pour n'importe quel mot-clé, en utilisant de la
+        synthèse vocale TTS pour générer automatiquement les données d'entraînement. Piper (déjà installé sur le RPi)
+        produit ces données.
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 1</span><span class="q-label">Vocabulaire ML</span></div>
+        <p>Définissez les termes suivants dans le contexte de la détection de mot-clé : <strong>modèle
+            pré-entraîné</strong>, <strong>fine-tuning</strong>, <strong>inférence</strong>. Expliquez pourquoi on dit
+          qu'openWakeWord utilise du <em>transfer learning</em> plutôt qu'un entraînement complet de zéro.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Vue d'ensemble du pipeline d'entraînement <span class="sub">De la voix au modèle ONNX —
+          quatre étapes</span></div>
+      <div class="pipeline">
+        <div class="pipe-step" style="border-color:var(--teal);">
+          <div class="ps-label" style="color:var(--teal);">Données</div>
+          <div class="ps-tech">Piper TTS · RPi</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step" style="border-color:var(--purple);">
+          <div class="ps-label" style="color:var(--purple);">Features</div>
+          <div class="ps-tech">Mel spectrogram</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step" style="border-color:var(--gold);">
+          <div class="ps-label" style="color:var(--gold);">Entraîn.</div>
+          <div class="ps-tech">PC salle · CPU</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step" style="border-color:var(--green);">
+          <div class="ps-label" style="color:var(--green);">Export</div>
+          <div class="ps-tech">ONNX · .onnx</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step" style="border-color:var(--pink);">
+          <div class="ps-label" style="color:var(--pink);">Intégr.</div>
+          <div class="ps-tech">li_wake.py · RPi</div>
+        </div>
+      </div>
+      <table class="data-table" style="margin-top:8px;">
+        <thead>
+          <tr>
+            <th>Étape</th>
+            <th>Où ?</th>
+            <th>Durée estimée</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 — Génération des données</strong></td>
+            <td>Raspberry Pi 5</td>
+            <td>10 à 15 min</td>
+            <td>~1 200 fichiers WAV</td>
+          </tr>
+          <tr>
+            <td><strong>2 — Extraction des features</strong></td>
+            <td>PC de salle</td>
+            <td>2 min</td>
+            <td>Tableaux NumPy .npy</td>
+          </tr>
+          <tr>
+            <td><strong>3 — Entraînement du modèle</strong></td>
+            <td>PC de salle</td>
+            <td>5 à 10 min</td>
+            <td>Fichier <code>.pt</code> PyTorch</td>
+          </tr>
+          <tr>
+            <td><strong>4 — Export ONNX et intégration</strong></td>
+            <td>PC puis RPi</td>
+            <td>2 min</td>
+            <td><code>bonjour_li.onnx</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 2</span><span class="q-label">Répartition des tâches</span></div>
+        <p>Pourquoi les étapes 1 et 4 s'effectuent-elles sur le Raspberry Pi alors que les étapes 2 et 3 se déroulent
+          sur le PC de salle ? Quelles caractéristiques matérielles justifient cette répartition ? Citez au moins deux
+          facteurs liés à l'architecture matérielle.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Le format ONNX <span class="sub">Open Neural Network Exchange — standard
+          d'interopérabilité</span></div>
+      <p style="font-size:.85rem;">ONNX est un format ouvert de représentation des modèles de réseaux de neurones, créé
+        par Microsoft et Facebook en 2017. Il permet d'entraîner un modèle dans un framework (PyTorch, TensorFlow,
+        scikit-learn) et de l'exécuter dans un autre.</p>
+      <div class="grid-2" style="margin-top:10px;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:5px;">
+            Entraînement → PyTorch</div>
+          <p style="font-size:.81rem;margin:0;color:var(--text2);">Framework riche, flexible, adapté à la recherche.
+            Tourne bien sur PC avec ou sans GPU. Syntaxe Python naturelle.</p>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.72rem;font-weight:700;color:var(--gold);margin-bottom:5px;">
+            Inférence → ONNX Runtime</div>
+          <p style="font-size:.81rem;margin:0;color:var(--text2);">Moteur d'exécution optimisé, léger (~5 Mo).
+            Fonctionne sur ARM64 sans PyTorch. Idéal pour le RPi embarqué.</p>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 3</span><span class="q-label">Interopérabilité</span></div>
+        <p>Expliquez l'analogie suivante : « Le format ONNX est aux modèles de ML ce que le format PDF est aux documents
+          bureautiques. » En quoi cette analogie est-elle pertinente ? En quoi est-elle incomplète ?</p>
+      </div>
+    </div>
+  </div><!-- /sec-0 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 02 — ARCHITECTURE DU MODÈLE
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-1">
+    <div class="section-title"><span class="num num-02">02</span> Architecture du modèle openWakeWord</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Du signal audio au score de détection <span class="sub">Trois étages — features · modèle
+          de base · tête de classification</span></div>
+
+      <div class="arch-diagram">
+        <!-- Étage 1 : signal brut -->
+        <div class="arch-row">
+          <div class="arch-box ab-audio" style="min-width:160px;">
+            <div class="ab-label">Signal audio brut</div>
+            <div class="ab-detail">int16 · 16 kHz · fenêtre 80 ms</div>
+          </div>
+          <div class="arch-arrow">&#8594;</div>
+          <div class="arch-box ab-feat" style="min-width:200px;">
+            <div class="ab-label">Mel Spectrogram</div>
+            <div class="ab-detail">32 bandes · STFT · énergie par fréquence</div>
+          </div>
+          <div class="arch-arrow">&#8594;</div>
+          <div class="arch-box ab-pretrain" style="min-width:220px;">
+            <div class="ab-label">Embeddings audio</div>
+            <div class="ab-detail">Google Audio Embedding · pré-entraîné · gelé</div>
+          </div>
+        </div>
+        <div
+          style="text-align:center;font-family:'Fira Code',monospace;font-size:.66rem;color:var(--text3);padding:4px 0;">
+          &#8595; vecteur de 96 dimensions par fenêtre</div>
+        <!-- Étage 2 : tête entraînable -->
+        <div class="arch-row">
+          <div class="arch-box ab-model" style="min-width:320px;">
+            <div class="ab-label">Tête de classification (entraînable)</div>
+            <div class="ab-detail">Dense(96→32, ReLU) &#8594; Dense(32→16, ReLU) &#8594; Dense(16→1, Sigmoid)</div>
+          </div>
+          <div class="arch-arrow">&#8594;</div>
+          <div class="arch-box ab-score" style="min-width:140px;">
+            <div class="ab-label">Score [0 ; 1]</div>
+            <div class="ab-detail">&#8805; 0.70 &#8594; déclenchement</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:12px;">
+        <strong>Ce qu'on entraîne réellement</strong>
+        Les embeddings audio (étage 1) sont <strong>figés</strong> : ce sont des poids pré-entraînés par Google sur des
+        millions d'heures de son. On n'y touche pas. On entraîne uniquement la <strong>tête de classification</strong>
+        (étage 2) : trois couches denses qui apprennent à reconnaître les embeddings spécifiques à « Bonjour Li ». C'est
+        le principe du <em>transfer learning</em>.
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 4</span><span class="q-label">Transfer learning</span></div>
+        <p>Expliquez avec vos propres mots pourquoi il est plus efficace d'entraîner uniquement la tête de
+          classification plutôt que l'ensemble du réseau depuis zéro. Comparez le nombre de paramètres entraînables dans
+          les deux cas (tête seule ≈ 3 500 paramètres ; réseau complet ≈ plusieurs millions).</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 5</span><span class="q-label">Mel Spectrogram</span></div>
+        <p>Un spectrogramme de Mel représente l'énergie d'un signal audio en fonction du temps et de la fréquence, sur
+          une échelle de fréquences non linéaire (échelle de Mel). Expliquez pourquoi cette représentation est plus
+          adaptée à la perception humaine qu'un spectre de fréquences linéaire. Quel lien avec le fait que les humains
+          distinguent mieux les différences de fréquence dans les basses que dans les aiguës ?</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Fonction de perte et entraînement <span class="sub">BCE · gradient · epoch · batch</span>
+      </div>
+
+      <p style="font-size:.85rem;margin-bottom:12px;">L'entraînement consiste à ajuster les poids de la tête de
+        classification pour minimiser une <strong>fonction de perte</strong> (<em>loss</em>). Pour un problème de
+        classification binaire (présence ou absence du mot-clé), on utilise la <strong>Binary Cross-Entropy</strong>.
+      </p>
+
+      <div class="formula">
+        BCE = &minus; [ y &middot; log(&#375;) + (1&minus;y) &middot; log(1&minus;&#375;) ]
+        <small>y : étiquette réelle (0 ou 1) &nbsp;·&nbsp; &#375; : score prédit par le modèle (0.0 à 1.0)</small>
+      </div>
+
+      <div class="grid-3" style="margin-top:12px;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.70rem;font-weight:700;color:var(--gold);margin-bottom:4px;">
+            Epoch</div>
+          <p style="font-size:.80rem;margin:0;color:var(--text2);">Un passage complet sur l'ensemble des données
+            d'entraînement. Après chaque epoch, la loss devrait diminuer.</p>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.70rem;font-weight:700;color:var(--purple);margin-bottom:4px;">
+            Batch</div>
+          <p style="font-size:.80rem;margin:0;color:var(--text2);">Sous-ensemble des données traité à chaque mise à jour
+            des poids. Compromis entre précision du gradient et vitesse.</p>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;">
+          <div
+            style="font-family:'Fira Code',monospace;font-size:.70rem;font-weight:700;color:var(--accent);margin-bottom:4px;">
+            Taux d'apprentissage</div>
+          <p style="font-size:.80rem;margin:0;color:var(--text2);">Amplitude du pas lors de la descente de gradient.
+            Trop grand : oscillations. Trop petit : convergence lente.</p>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 6</span><span class="q-label">Fonction de perte BCE</span></div>
+        <p>Calculez la BCE pour les deux cas suivants :</p>
+        <ol style="font-size:.83rem;margin-top:6px;">
+          <li>Le modèle prédit &#375; = 0,95 et l'étiquette réelle est y = 1 (c'est bien « Bonjour Li »)</li>
+          <li>Le modèle prédit &#375; = 0,70 et l'étiquette réelle est y = 0 (c'est du bruit)</li>
+        </ol>
+        <p style="margin-top:6px;">Dans quel cas la pénalité est-elle plus forte ? Interprétez le résultat.</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 7</span><span class="q-label">Surapprentissage</span></div>
+        <p>Le <strong>surapprentissage</strong> (<em>overfitting</em>) se produit quand le modèle apprend « par cœur »
+          les données d'entraînement sans généraliser. Comment se manifeste-t-il sur la courbe de loss ? Quelle
+          différence observe-t-on entre la <em>training loss</em> et la <em>validation loss</em> ? Citez une technique
+          pour le prévenir.</p>
+      </div>
+    </div>
+
+    <!-- Exercice A — simulateur courbe de loss -->
+    <div class="exercise">
+      <div class="ex-head"><span class="ex-badge">Exercice A</span><span
+          style="font-size:.82rem;color:var(--text2);">Simuler une courbe de loss et détecter le surapprentissage</span>
+      </div>
+      <p>Le code ci-dessous simule l'évolution de la training loss et de la validation loss au fil des epochs.
+        Exécutez-le, observez les valeurs, puis répondez :</p>
+      <ol>
+        <li>À partir de quel epoch le surapprentissage commence-t-il à apparaître ?</li>
+        <li>Quel serait le nombre optimal d'epochs pour cet entraînement ?</li>
+        <li>Modifiez <code>BRUIT</code> à 0.05 puis 0.30 et observez l'impact sur la validation loss.</li>
+      </ol>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice A — simulateur de courbe de loss interactif</div>
+      <script type="py-editor" env="ml" id="exo_a">
+import math, random
+
+# Paramètres de simulation — modifiez et ré-exécutez
+EPOCHS       = 40       # nombre d'epochs
+LR           = 0.08     # taux d'apprentissage (learning rate)
+BRUIT        = 0.12     # variabilité aléatoire (0.0 = parfait, 0.3 = bruité)
+OVERFIT_EP   = 20       # epoch à partir duquel le surapprentissage commence
+
+random.seed(42)
+
+print(f"{'Epoch':>5} | {'Train loss':>11} | {'Val loss':>10} | {'Diff':>8} | État")
+print("-" * 58)
+
+train_loss = 1.0
+best_val   = 999
+best_epoch = 0
+
+for ep in range(1, EPOCHS + 1):
+    # Training loss — décroissance exponentielle régulière
+    train_loss = 0.05 + 0.95 * math.exp(-LR * ep)
+    train_loss += random.uniform(-BRUIT * 0.3, BRUIT * 0.3)
+    train_loss = max(0.01, train_loss)
+
+    # Validation loss — suit la training jusqu'à OVERFIT_EP, puis remonte
+    if ep <= OVERFIT_EP:
+        val_loss = train_loss + random.uniform(0, BRUIT * 0.5) + 0.02
+    else:
+        overfit_factor = 1.0 + 0.04 * (ep - OVERFIT_EP)
+        val_loss = (train_loss + 0.02) * overfit_factor + random.uniform(0, BRUIT)
+    val_loss = max(0.01, val_loss)
+
+    diff = val_loss - train_loss
+    if val_loss < best_val:
+        best_val   = val_loss
+        best_epoch = ep
+
+    etat = ""
+    if ep == best_epoch:
+        etat = " <-- meilleur modèle"
+    elif diff > 0.15:
+        etat = " !! surapprentissage"
+
+    print(f"{ep:>5} | {train_loss:>11.5f} | {val_loss:>10.5f} | {diff:>+8.5f} |{etat}")
+
+print(f"\nMeilleur epoch      : {best_epoch}")
+print(f"Meilleure val loss  : {best_val:.5f}")
+print(f"Conseil             : arrêter l'entraînement à l'epoch {best_epoch} (early stopping)")
+    </script>
+    </div>
+  </div><!-- /sec-1 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 03 — GÉNÉRATION DES DONNÉES
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-2">
+    <div class="section-title"><span class="num num-03">03</span> Génération des données d'entraînement</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Principe — apprentissage par synthèse <span class="sub">Piper TTS · augmentation ·
+          étiquetage automatique</span></div>
+      <p style="font-size:.85rem;">openWakeWord adopte une approche originale : plutôt que d'enregistrer des centaines
+        de personnes différentes, on utilise la synthèse vocale TTS pour générer automatiquement des milliers de
+        variations du mot-clé. Piper, déjà installé sur le RPi, produit ces fichiers.</p>
+      <div class="alert alert-warn">
+        <strong>Composition du jeu de données</strong>
+        Un bon jeu d'entraînement contient <strong>deux types d'exemples</strong> équilibrés : les <em>positifs</em>
+        (occurrences du mot-clé « Bonjour Li ») et les <em>négatifs</em> (tout le reste : parole ordinaire, bruits, mots
+        phonétiquement proches). Sans négatifs, le modèle prédit toujours 1.
+      </div>
+      <table class="data-table" style="margin-top:10px;">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Contenu</th>
+            <th>Quantité cible</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--green);">Positifs</strong></td>
+            <td>« Bonjour Li » — variations vitesse, pitch, silence</td>
+            <td>1 000 à 2 000</td>
+            <td>Piper TTS (RPi)</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--red);">Négatifs — parole</strong></td>
+            <td>Phrases françaises quelconques</td>
+            <td>2 000 à 4 000</td>
+            <td>Piper TTS (RPi)</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">Négatifs — bruit</strong></td>
+            <td>Silence, bruit blanc, fond sonore</td>
+            <td>500 à 1 000</td>
+            <td>Génération NumPy</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--gold);">Négatifs — phonétiques</strong></td>
+            <td>« Bonjour Lou », « Bonsoir Li », « Au revoir Li »</td>
+            <td>300 à 500</td>
+            <td>Piper TTS (RPi)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 8</span><span class="q-label">Équilibre des classes</span></div>
+        <p>Si on entraîne un modèle avec 1 000 positifs et 10 000 négatifs, quel problème prévisible va surgir ? Comment
+          le modèle peut-il atteindre 91 % de précision en ne faisant que prédire systématiquement 0 (négatif) ? Ce
+          modèle serait-il utile ? Expliquez le concept de <strong>déséquilibre des classes</strong>.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Script de génération — à exécuter sur le Raspberry Pi <span class="sub">Durée : 10 à 15
+          min · produit ~1 500 fichiers WAV</span></div>
+      <div class="alert alert-info">
+        <strong>Prérequis</strong>
+        Ce script s'exécute dans l'environnement virtuel du projet Li :
+        <code>source ~/li-project/venv/bin/activate</code>. Il utilise Piper TTS et NumPy, tous deux déjà installés.
+        Placez-le dans <code>~/li-project/src/generer_donnees.py</code>.
+      </div>
+      <div class="code-label">~/li-project/src/generer_donnees.py</div>
+      <div class="code-block">
+        <span class="c-cmt">#!/usr/bin/env python3</span>
+        <span class="c-cmt"># generer_donnees.py — Génération du jeu de données pour "Bonjour Li"</span>
+        <span class="c-cmt"># À exécuter sur le Raspberry Pi 5 dans ~/li-project/src/</span>
+
+        <span class="c-kw">import</span> subprocess, os, random, struct, wave
+        <span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+        <span class="c-kw">from</span> pathlib <span class="c-kw">import</span> Path
+
+        <span class="c-cmt"># ── Configuration ────────────────────────────────────────────────────────</span>
+        PIPER_BIN = Path(<span class="c-str">"../models/piper/piper/piper"</span>)
+        PIPER_MODEL = Path(<span class="c-str">"../models/piper/fr_FR-upmc-medium.onnx"</span>)
+        DATA_DIR = Path(<span class="c-str">"../data"</span>)
+        SR = <span class="c-num">16000</span> <span class="c-cmt"># Hz — fréquence imposée par openWakeWord</span>
+
+        <span class="c-cmt"># Phrases positives — variations linguistiques de "Bonjour Li"</span>
+        POSITIFS = [
+        <span class="c-str">"Bonjour Li"</span>,
+        <span class="c-str">"Bonjour Li."</span>,
+        <span class="c-str">"Bonjour, Li."</span>,
+        <span class="c-str">"Bonjour Li !"</span>,
+        ]
+
+        <span class="c-cmt"># Phrases négatives — parole ordinaire et distracteurs phonétiques</span>
+        NEGATIFS_PAROLE = [
+        <span class="c-str">"Bonjour tout le monde"</span>, <span class="c-str">"Bonsoir Li"</span>, <span
+          class="c-str">"Au revoir Li"</span>,
+        <span class="c-str">"Bonjour Lou"</span>, <span class="c-str">"Bonjour Lili"</span>, <span class="c-str">"Allô
+          Li"</span>,
+        <span class="c-str">"Quelle heure est-il"</span>, <span class="c-str">"Quel temps fait-il aujourd'hui"</span>,
+        <span class="c-str">"Dis-moi une blague"</span>, <span class="c-str">"Merci beaucoup"</span>,
+        <span class="c-str">"Python est un langage de programmation"</span>,
+        <span class="c-str">"Le Raspberry Pi 5 dispose de quatre cœurs"</span>,
+        <span class="c-str">"L'intelligence artificielle transforme notre quotidien"</span>,
+        <span class="c-str">"Ouvre la porte"</span>, <span class="c-str">"Éteins la lumière"</span>,
+        <span class="c-str">"Je voudrais commander une pizza"</span>, <span class="c-str">"Raconte-moi une
+          histoire"</span>,
+        ]
+
+        <span class="c-kw">def</span> <span class="c-fn">synthese_wav</span>(texte: str, chemin_sortie: Path,
+        speed: float = <span class="c-num">1.0</span>, pitch_offset: int = <span class="c-num">0</span>):
+        <span class="c-str">"""Génère un fichier WAV 16 kHz mono via Piper TTS."""</span>
+        cmd = [
+        str(PIPER_BIN.expanduser()),
+        <span class="c-str">"--model"</span>, str(PIPER_MODEL.expanduser()),
+        <span class="c-str">"--output_file"</span>, str(chemin_sortie),
+        <span class="c-str">"--length_scale"</span>, str(<span class="c-num">1.0</span> / max(speed, <span
+          class="c-num">0.1</span>)),
+        ]
+        subprocess.run(cmd, input=texte.encode(<span class="c-str">"utf-8"</span>),
+        capture_output=<span class="c-kw">True</span>, timeout=<span class="c-num">20</span>)
+
+        <span class="c-kw">def</span> <span class="c-fn">bruit_blanc_wav</span>(chemin_sortie: Path, duree_s: float =
+        <span class="c-num">1.0</span>,
+        amplitude: float = <span class="c-num">0.05</span>):
+        <span class="c-str">"""Génère un fichier WAV de bruit blanc gaussien."""</span>
+        n = int(SR * duree_s)
+        samples = (np.random.randn(n) * amplitude * <span class="c-num">32767</span>).astype(np.int16)
+        <span class="c-kw">with</span> wave.open(str(chemin_sortie), <span class="c-str">"wb"</span>) <span
+          class="c-kw">as</span> wf:
+        wf.setnchannels(<span class="c-num">1</span>)
+        wf.setsampwidth(<span class="c-num">2</span>)
+        wf.setframerate(SR)
+        wf.writeframes(samples.tobytes())
+
+        <span class="c-kw">def</span> <span class="c-fn">generer</span>():
+        <span class="c-cmt"># Créer l'arborescence</span>
+        (DATA_DIR / <span class="c-str">"positifs"</span>).mkdir(parents=<span class="c-kw">True</span>, exist_ok=<span
+          class="c-kw">True</span>)
+        (DATA_DIR / <span class="c-str">"negatifs"</span>).mkdir(parents=<span class="c-kw">True</span>, exist_ok=<span
+          class="c-kw">True</span>)
+
+        total_pos = <span class="c-num">0</span>
+        total_neg = <span class="c-num">0</span>
+
+        <span class="c-cmt"># ── Positifs : 250 variations par phrase × 4 phrases = 1 000 ─────────</span>
+        print(<span class="c-str">"[1/3] Génération des positifs..."</span>)
+        speeds = [<span class="c-num">0.80</span>, <span class="c-num">0.90</span>, <span class="c-num">1.00</span>,
+        <span class="c-num">1.05</span>, <span class="c-num">1.10</span>]
+        <span class="c-kw">for</span> idx_phrase, phrase <span class="c-kw">in</span> enumerate(POSITIFS):
+        <span class="c-kw">for</span> rep <span class="c-kw">in</span> range(<span class="c-num">250</span>):
+        speed = random.choice(speeds) + random.uniform(-<span class="c-num">0.05</span>, <span
+          class="c-num">0.05</span>)
+        nom = DATA_DIR / <span class="c-str">"positifs"</span> / <span
+          class="c-str">f"pos_{idx_phrase:02d}_{rep:04d}.wav"</span>
+        synthese_wav(phrase, nom, speed=speed)
+        total_pos += <span class="c-num">1</span>
+        print(<span class="c-str">f" '{phrase}' : {total_pos} fichiers générés"</span>)
+
+        <span class="c-cmt"># ── Négatifs parole : 100 répétitions × 17 phrases = 1 700 ──────────</span>
+        print(<span class="c-str">"[2/3] Génération des négatifs (parole)..."</span>)
+        <span class="c-kw">for</span> idx_phrase, phrase <span class="c-kw">in</span> enumerate(NEGATIFS_PAROLE):
+        <span class="c-kw">for</span> rep <span class="c-kw">in</span> range(<span class="c-num">100</span>):
+        speed = random.uniform(<span class="c-num">0.85</span>, <span class="c-num">1.15</span>)
+        nom = DATA_DIR / <span class="c-str">"negatifs"</span> / <span
+          class="c-str">f"neg_p_{idx_phrase:02d}_{rep:04d}.wav"</span>
+        synthese_wav(phrase, nom, speed=speed)
+        total_neg += <span class="c-num">1</span>
+        print(<span class="c-str">f" {total_neg} fichiers négatifs (parole) générés"</span>)
+
+        <span class="c-cmt"># ── Négatifs bruit : 500 fichiers de bruit blanc ─────────────────────</span>
+        print(<span class="c-str">"[3/3] Génération des négatifs (bruit)..."</span>)
+        <span class="c-kw">for</span> i <span class="c-kw">in</span> range(<span class="c-num">500</span>):
+        amplitude = random.uniform(<span class="c-num">0.01</span>, <span class="c-num">0.15</span>)
+        duree = random.uniform(<span class="c-num">0.5</span>, <span class="c-num">2.0</span>)
+        nom = DATA_DIR / <span class="c-str">"negatifs"</span> / <span class="c-str">f"neg_b_{i:04d}.wav"</span>
+        bruit_blanc_wav(nom, duree_s=duree, amplitude=amplitude)
+        total_neg += <span class="c-num">1</span>
+
+        print(<span class="c-str">f"\n[OK] Génération terminée."</span>)
+        print(<span class="c-str">f" Positifs : {total_pos}"</span>)
+        print(<span class="c-str">f" Négatifs : {total_neg}"</span>)
+        print(<span class="c-str">f" Total : {total_pos + total_neg}"</span>)
+        print(<span class="c-str">f" Dossier : {DATA_DIR.resolve()}"</span>)
+
+        <span class="c-kw">if</span> __name__ == <span class="c-str">"__main__"</span>:
+        generer()
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 9</span><span class="q-label">Augmentation de données</span></div>
+        <p>Le script génère des variations de vitesse entre 0,80 et 1,15. Expliquez ce qu'est l'<strong>augmentation de
+            données</strong> et pourquoi cette technique améliore la robustesse du modèle. Citez deux autres types
+          d'augmentation que l'on pourrait appliquer à des données audio (en dehors de la vitesse).</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 10</span><span class="q-label">Calcul de volume</span></div>
+        <p>Le script génère environ 3 200 fichiers WAV. Chaque fichier dure environ 1 seconde, à 16 000 Hz, en 16 bits.
+          Estimez l'espace disque total nécessaire en mégaoctets. Le SSD NVMe de 128 Go du FNK0100 absorbe-t-il
+          facilement ce volume ?</p>
+      </div>
+    </div>
+  </div><!-- /sec-2 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 04 — ENTRAÎNEMENT SUR PC DE SALLE
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-3">
+    <div class="section-title"><span class="num num-04">04</span> Entraînement sur PC de salle</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Préparation de l'environnement sur PC <span class="sub">Windows ou Linux · Python 3.10+ ·
+          sans GPU</span></div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Créer l'environnement virtuel sur le PC de salle</div>
+            <div class="code-block">
+              <span class="c-cmt"># Windows PowerShell</span>
+              python -m venv li-train-env
+              li-train-env\Scripts\activate
+
+              <span class="c-cmt"># Linux / macOS</span>
+              python3 -m venv li-train-env
+              source li-train-env/bin/activate
+            </div>
+            <div class="step-time">Durée : 1 min</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Installer les dépendances d'entraînement</div>
+            <div class="code-block">
+              pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+              pip install openwakeword onnx onnxruntime numpy librosa tqdm</div>
+            <div class="step-time">Durée : 5 à 8 min selon la connexion</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Transférer les données du RPi vers le PC</div>
+            <div class="code-block">
+              <span class="c-cmt"># Depuis le PC — remplacez [IP_DU_RPI] par l'adresse IP du Raspberry Pi</span>
+              <span class="c-cmt"># Récupérer le dossier data/ entier via SCP</span>
+              scp -r pi@[IP_DU_RPI]:~/li-project/data ./
+
+              <span class="c-cmt"># Vérifier la structure attendue</span>
+              <span class="c-cmt"># data/</span>
+              <span class="c-cmt"># ├── positifs/ (pos_00_0000.wav ... ~1 000 fichiers)</span>
+              <span class="c-cmt"># └── negatifs/ (neg_p_*.wav + neg_b_*.wav ... ~2 200 fichiers)</span>
+            </div>
+            <div class="step-time">Durée : 3 à 5 min selon le réseau local</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Script d'entraînement — à exécuter sur le PC <span class="sub">Durée : 5 à 10 min sur CPU
+          moderne</span></div>
+      <div class="code-label">train_bonjour_li.py</div>
+      <div class="code-block">
+        <span class="c-cmt">#!/usr/bin/env python3</span>
+        <span class="c-cmt"># train_bonjour_li.py — Entraîne la tête de classification openWakeWord</span>
+        <span class="c-cmt"># À exécuter sur le PC de salle dans li-train-env</span>
+
+        <span class="c-kw">import</span> os, random, time
+        <span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+        <span class="c-kw">import</span> torch
+        <span class="c-kw">import</span> torch.nn <span class="c-kw">as</span> nn
+        <span class="c-kw">from</span> torch.utils.data <span class="c-kw">import</span> DataLoader, TensorDataset
+        <span class="c-kw">from</span> pathlib <span class="c-kw">import</span> Path
+        <span class="c-kw">import</span> librosa
+        <span class="c-kw">from</span> tqdm <span class="c-kw">import</span> tqdm
+        <span class="c-kw">import</span> torch.onnx
+
+        <span class="c-cmt"># ── Hyperparamètres ───────────────────────────────────────────────────────</span>
+        EPOCHS = <span class="c-num">30</span>
+        BATCH_SIZE = <span class="c-num">64</span>
+        LR = <span class="c-num">1e-3</span>
+        VAL_SPLIT = <span class="c-num">0.15</span> <span class="c-cmt"># 15 % des données réservées à la
+          validation</span>
+        DATA_DIR = Path(<span class="c-str">"data"</span>)
+        SR = <span class="c-num">16000</span>
+        N_MELS = <span class="c-num">32</span> <span class="c-cmt"># bandes du spectrogramme de Mel</span>
+        EMBED_DIM = <span class="c-num">96</span> <span class="c-cmt"># dimension des embeddings openWakeWord</span>
+
+        <span class="c-cmt"># ── Extraction des features ───────────────────────────────────────────────</span>
+        <span class="c-kw">def</span> <span class="c-fn">wav_vers_embedding</span>(chemin: Path) -> np.ndarray:
+        <span class="c-str">"""
+          Charge un WAV, calcule son spectrogramme de Mel,
+          et produit un embedding simplifié de dimension EMBED_DIM.
+          Note : en production, openWakeWord utilise le modèle Google Audio Embedding
+          pré-entraîné. Ici, on utilise une approximation par Mel + statistiques.
+          """</span>
+        <span class="c-kw">try</span>:
+        y, _ = librosa.load(str(chemin), sr=SR, mono=<span class="c-kw">True</span>, duration=<span
+          class="c-num">1.5</span>)
+        <span class="c-kw">if</span> len(y) < SR // <span class="c-num">4</span>:
+          <span class="c-kw">return</span> <span class="c-kw">None</span>
+          mel = librosa.feature.melspectrogram(y=y, sr=SR, n_mels=N_MELS)
+          mel_db = librosa.power_to_db(mel, ref=np.max)
+          <span class="c-cmt"># Statistiques sur le spectrogramme → vecteur EMBED_DIM</span>
+          mu = np.mean(mel_db, axis=<span class="c-num">1</span>) <span class="c-cmt"># 32 valeurs</span>
+          sigma = np.std(mel_db, axis=<span class="c-num">1</span>) <span class="c-cmt"># 32 valeurs</span>
+          dyn = np.percentile(mel_db, [<span class="c-num">25</span>, <span class="c-num">50</span>, <span
+            class="c-num">75</span>], axis=<span class="c-num">1</span>).mean(axis=<span class="c-num">1</span>)
+          feat = np.concatenate([mu, sigma, dyn])[:EMBED_DIM]
+          <span class="c-kw">return</span> feat.astype(np.float32)
+          <span class="c-kw">except</span>:
+          <span class="c-kw">return</span> <span class="c-kw">None</span>
+
+          <span class="c-kw">def</span> <span class="c-fn">charger_donnees</span>():
+          X, y = [], []
+          print(<span class="c-str">"Chargement et extraction des features..."</span>)
+          <span class="c-kw">for</span> fichier <span class="c-kw">in</span> tqdm(list((DATA_DIR / <span
+            class="c-str">"positifs"</span>).glob(<span class="c-str">"*.wav"</span>))):
+          emb = wav_vers_embedding(fichier)
+          <span class="c-kw">if</span> emb <span class="c-kw">is not</span> <span class="c-kw">None</span>:
+          X.append(emb); y.append(<span class="c-num">1.0</span>)
+          <span class="c-kw">for</span> fichier <span class="c-kw">in</span> tqdm(list((DATA_DIR / <span
+            class="c-str">"negatifs"</span>).glob(<span class="c-str">"*.wav"</span>))):
+          emb = wav_vers_embedding(fichier)
+          <span class="c-kw">if</span> emb <span class="c-kw">is not</span> <span class="c-kw">None</span>:
+          X.append(emb); y.append(<span class="c-num">0.0</span>)
+          X = np.array(X, dtype=np.float32)
+          y = np.array(y, dtype=np.float32)
+          <span class="c-cmt"># Mélanger</span>
+          idx = np.random.permutation(len(X))
+          <span class="c-kw">return</span> X[idx], y[idx]
+
+          <span class="c-cmt"># ── Architecture de la tête de classification ─────────────────────────────</span>
+          <span class="c-kw">class</span> <span class="c-cls">TeteClassification</span>(nn.Module):
+          <span class="c-str">"""
+            Réseau dense léger entraînable.
+            96 → Dense(32, ReLU) → Dense(16, ReLU) → Dense(1, Sigmoid)
+            """</span>
+          <span class="c-kw">def</span> <span class="c-fn">__init__</span>(<span class="c-var">self</span>):
+          super().__init__()
+          <span class="c-var">self</span>.reseau = nn.Sequential(
+          nn.Linear(EMBED_DIM, <span class="c-num">32</span>),
+          nn.ReLU(),
+          nn.Dropout(<span class="c-num">0.3</span>), <span class="c-cmt"># regularisation contre le
+            surapprentissage</span>
+          nn.Linear(<span class="c-num">32</span>, <span class="c-num">16</span>),
+          nn.ReLU(),
+          nn.Linear(<span class="c-num">16</span>, <span class="c-num">1</span>),
+          nn.Sigmoid()
+          )
+          <span class="c-kw">def</span> <span class="c-fn">forward</span>(<span class="c-var">self</span>, x):
+          <span class="c-kw">return</span> <span class="c-var">self</span>.reseau(x).squeeze(<span
+            class="c-num">1</span>)
+
+          <span class="c-cmt"># ── Boucle d'entraînement ─────────────────────────────────────────────────</span>
+          <span class="c-kw">def</span> <span class="c-fn">entrainer</span>():
+          X, y = charger_donnees()
+          n_val = int(len(X) * VAL_SPLIT)
+          X_tr, X_va = X[n_val:], X[:n_val]
+          y_tr, y_va = y[n_val:], y[:n_val]
+
+          ds_train = DataLoader(TensorDataset(torch.tensor(X_tr), torch.tensor(y_tr)),
+          batch_size=BATCH_SIZE, shuffle=<span class="c-kw">True</span>)
+          ds_val = DataLoader(TensorDataset(torch.tensor(X_va), torch.tensor(y_va)),
+          batch_size=BATCH_SIZE)
+
+          modele = TeteClassification()
+          criterion = nn.BCELoss()
+          optimizer = torch.optim.Adam(modele.parameters(), lr=LR)
+          scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=<span class="c-num">10</span>, gamma=<span
+            class="c-num">0.5</span>)
+
+          meilleure_val_loss = float(<span class="c-str">"inf"</span>)
+          meilleur_epoch = <span class="c-num">0</span>
+
+          print(<span class="c-str">f"\n{'Epoch':>5} | {'Train loss':>11} | {'Val loss':>10} | {'Val acc':>8}"</span>)
+          print(<span class="c-str">"-"</span> * <span class="c-num">46</span>)
+
+          <span class="c-kw">for</span> ep <span class="c-kw">in</span> range(<span class="c-num">1</span>, EPOCHS +
+          <span class="c-num">1</span>):
+          <span class="c-cmt"># Phase d'entraînement</span>
+          modele.train()
+          loss_train = <span class="c-num">0.0</span>
+          <span class="c-kw">for</span> xb, yb <span class="c-kw">in</span> ds_train:
+          optimizer.zero_grad()
+          pred = modele(xb)
+          loss = criterion(pred, yb)
+          loss.backward()
+          optimizer.step()
+          loss_train += loss.item() * len(xb)
+          loss_train /= len(X_tr)
+
+          <span class="c-cmt"># Phase de validation</span>
+          modele.eval()
+          loss_val = <span class="c-num">0.0</span>; correct = <span class="c-num">0</span>
+          <span class="c-kw">with</span> torch.no_grad():
+          <span class="c-kw">for</span> xb, yb <span class="c-kw">in</span> ds_val:
+          pred = modele(xb)
+          loss_val += criterion(pred, yb).item() * len(xb)
+          correct += ((pred >= <span class="c-num">0.5</span>) == (yb >= <span class="c-num">0.5</span>)).sum().item()
+          loss_val /= len(X_va)
+          acc_val = correct / len(X_va) * <span class="c-num">100</span>
+          scheduler.step()
+
+          etoile = <span class="c-str">" *"</span> <span class="c-kw">if</span> loss_val < meilleure_val_loss <span
+            class="c-kw">else</span> <span class="c-str">""</span>
+            <span class="c-kw">if</span> loss_val < meilleure_val_loss: meilleure_val_loss=loss_val meilleur_epoch=ep
+              torch.save(modele.state_dict(), <span class="c-str">"meilleur_modele.pt"</span>)
+              print(<span class="c-str">f"{ep:>5} | {loss_train:>11.5f} | {loss_val:>10.5f} |
+                {acc_val:>7.2f}%{etoile}"</span>)
+
+              print(<span class="c-str">f"\nMeilleur modèle : epoch {meilleur_epoch} · val loss
+                {meilleure_val_loss:.5f}"</span>)
+              <span class="c-kw">return</span> modele
+
+              <span class="c-cmt"># ── Export ONNX ───────────────────────────────────────────────────────────</span>
+              <span class="c-kw">def</span> <span class="c-fn">exporter_onnx</span>(modele):
+              modele.load_state_dict(torch.load(<span class="c-str">"meilleur_modele.pt"</span>))
+              modele.eval()
+              dummy = torch.zeros(<span class="c-num">1</span>, EMBED_DIM)
+              torch.onnx.export(
+              modele, dummy, <span class="c-str">"bonjour_li.onnx"</span>,
+              input_names=[<span class="c-str">"embedding"</span>], output_names=[<span class="c-str">"score"</span>],
+              dynamic_axes={<span class="c-str">"embedding"</span>: {<span class="c-num">0</span>: <span
+                class="c-str">"batch"</span>}},
+              opset_version=<span class="c-num">11</span>
+              )
+              print(<span class="c-str">"Export ONNX : bonjour_li.onnx"</span>)
+
+              <span class="c-kw">if</span> __name__ == <span class="c-str">"__main__"</span>:
+              modele = entrainer()
+              exporter_onnx(modele)
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 11</span><span class="q-label">Dropout et régularisation</span></div>
+        <p>La couche <code>nn.Dropout(0.3)</code> désactive aléatoirement 30 % des neurones à chaque passage pendant
+          l'entraînement. Expliquez pourquoi cette technique réduit le surapprentissage. Pourquoi le Dropout est-il
+          désactivé pendant la phase de validation (<code>modele.eval()</code>) ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 12</span><span class="q-label">Learning rate scheduler</span></div>
+        <p>Le script utilise un <code>StepLR</code> qui divise le taux d'apprentissage par 2 tous les 10 epochs.
+          Expliquez pourquoi réduire le taux d'apprentissage au fil de l'entraînement améliore la convergence. Tracez
+          schématiquement l'évolution du taux d'apprentissage sur 30 epochs si le taux initial est 0,001.</p>
+      </div>
+    </div>
+  </div><!-- /sec-3 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 05 — ÉVALUATION DU MODÈLE
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-4">
+    <div class="section-title"><span class="num num-05">05</span> Évaluation du modèle</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">La matrice de confusion <span class="sub">Quatre cas possibles pour un classifieur
+          binaire</span></div>
+      <p style="font-size:.85rem;margin-bottom:12px;">Pour évaluer un détecteur de mot-clé, il ne suffit pas de compter
+        les bonnes réponses. Il faut distinguer les quatre cas possibles selon la réalité et la prédiction.</p>
+      <table class="cm-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Prédit : MOT-CLÉ (1)</th>
+            <th>Prédit : NÉGATIF (0)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Réel : MOT-CLÉ (1)</th>
+            <td class="cm-tp">Vrai Positif (VP)<br><small>Li se déclenche correctement</small></td>
+            <td class="cm-fn">Faux Négatif (FN)<br><small>Li ne répond pas — raté</small></td>
+          </tr>
+          <tr>
+            <th>Réel : NÉGATIF (0)</th>
+            <td class="cm-fp">Faux Positif (FP)<br><small>Li se déclenche sans raison</small></td>
+            <td class="cm-tn">Vrai Négatif (VN)<br><small>Li reste silencieux — correct</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Métriques d'évaluation <span class="sub">Précision · Rappel · F1-score</span></div>
+      <div class="metric-grid">
+        <div class="metric-card mc-precision">
+          <div class="mc-name">Précision</div>
+          <div class="mc-formula">VP / (VP + FP)</div>
+          <div class="mc-desc">Parmi tous les déclenchements, combien étaient justifiés ?<br>Haute précision = peu de
+            faux positifs.</div>
+        </div>
+        <div class="metric-card mc-recall">
+          <div class="mc-name">Rappel</div>
+          <div class="mc-formula">VP / (VP + FN)</div>
+          <div class="mc-desc">Parmi tous les vrais mots-clés, combien ont été détectés ?<br>Haut rappel = peu de ratés.
+          </div>
+        </div>
+        <div class="metric-card mc-f1">
+          <div class="mc-name">F1-score</div>
+          <div class="mc-formula">2 · P · R / (P + R)</div>
+          <div class="mc-desc">Moyenne harmonique entre précision et rappel.<br>Équilibre les deux objectifs.</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 13</span><span class="q-label">Calcul des métriques</span></div>
+        <p>Un modèle évalué sur 200 échantillons de test (100 positifs, 100 négatifs) obtient les résultats suivants :
+          VP = 88, FN = 12, FP = 7, VN = 93. Calculez la précision, le rappel et le F1-score. Quel est le « coût »
+          relatif des faux positifs et des faux négatifs pour Li dans un usage quotidien ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 14</span><span class="q-label">Impact du seuil</span></div>
+        <p>Le seuil de déclenchement est fixé à 0,70 dans <code>li_wake.py</code>. Si on l'abaisse à 0,40, quelle
+          métrique s'améliore et laquelle se dégrade ? Si on le monte à 0,90, quel est l'effet inverse ? Décrivez ce
+          compromis en utilisant les termes précision et rappel.</p>
+      </div>
+    </div>
+
+    <!-- Exercice B — matrice de confusion interactive -->
+    <div class="exercise">
+      <div class="ex-head"><span class="ex-badge">Exercice B</span><span
+          style="font-size:.82rem;color:var(--text2);">Matrice de confusion interactive — impact du seuil</span></div>
+      <p>Modifiez <code>SEUIL</code> entre 0,30 et 0,95 et observez comment les quatre valeurs de la matrice et les
+        trois métriques évoluent. Répondez : quel seuil maximise le F1-score dans cette simulation ?</p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice B — matrice de confusion interactive</div>
+      <script type="py-editor" env="ml" id="exo_b">
+import random, math
+
+# Modifiez SEUIL entre 0.30 et 0.95 et ré-exécutez
+SEUIL = 0.70
+
+random.seed(2024)
+N_TEST = 200   # 100 positifs + 100 négatifs
+
+# Simulation de scores prédits par le modèle
+# Les positifs ont des scores en moyenne élevés (distribution normale centrée sur 0.78)
+# Les négatifs ont des scores en moyenne faibles (distribution normale centrée sur 0.22)
+def score_gaussien(mu, sigma):
+    # Box-Muller transform pour générer une distribution normale sans numpy
+    u1 = random.random() + 1e-10
+    u2 = random.random()
+    z  = math.sqrt(-2 * math.log(u1)) * math.cos(2 * math.pi * u2)
+    return max(0.0, min(1.0, mu + sigma * z))
+
+scores_positifs = [score_gaussien(0.78, 0.12) for _ in range(N_TEST // 2)]
+scores_negatifs = [score_gaussien(0.22, 0.14) for _ in range(N_TEST // 2)]
+
+VP = sum(1 for s in scores_positifs if s >= SEUIL)
+FN = sum(1 for s in scores_positifs if s <  SEUIL)
+FP = sum(1 for s in scores_negatifs if s >= SEUIL)
+VN = sum(1 for s in scores_negatifs if s <  SEUIL)
+
+precision = VP / (VP + FP) if (VP + FP) > 0 else 0.0
+rappel    = VP / (VP + FN) if (VP + FN) > 0 else 0.0
+f1        = 2 * precision * rappel / (precision + rappel) if (precision + rappel) > 0 else 0.0
+
+print(f"Seuil de déclenchement : {SEUIL:.2f}")
+print()
+print("  Matrice de confusion")
+print("  ┌─────────────────────┬─────────────────────┐")
+print(f"  │  VP = {VP:>3}  (détectés) │  FN = {FN:>3}  (ratés)   │")
+print("  ├─────────────────────┼─────────────────────┤")
+print(f"  │  FP = {FP:>3}  (faux déc) │  VN = {VN:>3}  (corrects)│")
+print("  └─────────────────────┴─────────────────────┘")
+print()
+print(f"  Précision  : {precision:.3f}  ({precision*100:.1f}%)")
+print(f"  Rappel     : {rappel:.3f}  ({rappel*100:.1f}%)")
+print(f"  F1-score   : {f1:.3f}  ({f1*100:.1f}%)")
+print()
+if f1 >= 0.90:
+    print("  Excellent ! Ce modèle est prêt pour une intégration dans Li.")
+elif f1 >= 0.75:
+    print("  Correct. Quelques faux positifs ou ratés subsistent.")
+else:
+    print("  Insuffisant. Ajustez le seuil ou entraînez plus longtemps.")
+    </script>
+    </div>
+
+    <!-- Exercice C — calcul F1 sans bibliothèque -->
+    <div class="exercise" style="margin-top:18px;">
+      <div class="ex-head"><span class="ex-badge">Exercice C</span><span
+          style="font-size:.82rem;color:var(--text2);">Implémenter les métriques sans bibliothèque</span></div>
+      <p>Complétez les fonctions <code>calculer_precision</code>, <code>calculer_rappel</code> et
+        <code>calculer_f1</code>. Testez sur le jeu de données de la Q 13 (VP=88, FN=12, FP=7, VN=93).</p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice C — métriques de classification à implémenter</div>
+      <script type="py-editor" env="ml" id="exo_c">
+def calculer_precision(VP: int, FP: int) -> float:
+    """Précision = VP / (VP + FP). Retourne 0.0 si VP + FP == 0."""
+    ...  # À COMPLÉTER
+
+def calculer_rappel(VP: int, FN: int) -> float:
+    """Rappel = VP / (VP + FN). Retourne 0.0 si VP + FN == 0."""
+    ...  # À COMPLÉTER
+
+def calculer_f1(precision: float, rappel: float) -> float:
+    """F1 = 2 * P * R / (P + R). Retourne 0.0 si P + R == 0."""
+    ...  # À COMPLÉTER
+
+# Tests — résultats attendus tirés de la Q 13
+VP, FN, FP, VN = 88, 12, 7, 93
+
+p  = calculer_precision(VP, FP)
+r  = calculer_rappel(VP, FN)
+f1 = calculer_f1(p, r)
+
+print(f"Précision : {p:.4f}  (attendu ≈ 0.9263)")
+print(f"Rappel    : {r:.4f}  (attendu = 0.8800)")
+print(f"F1-score  : {f1:.4f}  (attendu ≈ 0.9026)")
+
+# Cas limites
+print(f"\nCas limite VP=0, FP=5  → précision = {calculer_precision(0, 5):.4f}  (attendu 0.0)")
+print(f"Cas limite VP=5, FP=0  → précision = {calculer_precision(5, 0):.4f}  (attendu 1.0)")
+    </script>
+    </div>
+  </div><!-- /sec-4 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 06 — INTÉGRATION DANS LI
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-5">
+    <div class="section-title"><span class="num num-06">06</span> Intégration dans Li &amp; synthèse</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Déployer bonjour_li.onnx sur le Raspberry Pi <span class="sub">Deux lignes à modifier
+          dans li_wake.py</span></div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Copier le modèle ONNX vers le Raspberry Pi</div>
+            <div class="code-block">
+              <span class="c-cmt"># Depuis le PC, envoyer le fichier bonjour_li.onnx vers le RPi</span>
+              scp bonjour_li.onnx pi@[IP_DU_RPI]:~/li-project/models/
+
+              <span class="c-cmt"># Vérifier la taille (attendu : environ 20 à 50 Ko)</span>
+              <span class="c-cmt"># ls -lh ~/li-project/models/bonjour_li.onnx</span>
+            </div>
+            <div class="step-time">Durée : 30 secondes</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Modifier li_wake.py — changer le modèle chargé</div>
+            <div class="code-block">
+              <span class="c-cmt"># Dans li_wake.py, dans la méthode __init__ de LiWakeWord,</span>
+              <span class="c-cmt"># remplacez les deux lignes suivantes :</span>
+
+              <span class="c-cmt"># AVANT (modèle anglais pré-entraîné)</span>
+              <span class="c-var">self</span>.model = Model(
+              wakeword_models=[<span class="c-str">"hey_jarvis"</span>],
+              inference_framework=<span class="c-str">"onnx"</span>
+              )
+
+              <span class="c-cmt"># APRÈS (votre modèle personnalisé)</span>
+              <span class="c-var">self</span>.model = Model(
+              wakeword_models=[<span class="c-str">"../models/bonjour_li.onnx"</span>],
+              inference_framework=<span class="c-str">"onnx"</span>
+              )
+
+              <span class="c-cmt"># Mettre également à jour le print de confirmation :</span>
+              print(<span class="c-str">"[Li] openWakeWord prêt — modèle : bonjour_li (personnalisé)"</span>)
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Tester et ajuster le seuil</div>
+            <div class="code-block">
+              <span class="c-cmt"># Lancer Li et observer les scores en temps réel</span>
+              <span class="c-cmt"># Ajouter temporairement dans _listen_loop de li_wake.py :</span>
+              <span class="c-kw">if</span> score > <span class="c-num">0.1</span>:
+              print(<span class="c-str">f"[Wake] score={score:.3f}"</span>, end=<span class="c-str">"\r"</span>,
+              flush=<span class="c-kw">True</span>)
+
+              <span class="c-cmt"># Observer les scores pendant qu'on parle :</span>
+              <span class="c-cmt"># - Silence : score ≈ 0.05 à 0.15</span>
+              <span class="c-cmt"># - Parole ordinaire : score ≈ 0.10 à 0.40</span>
+              <span class="c-cmt"># - "Bonjour Li" bien prononcé : score ≈ 0.65 à 0.90</span>
+              <span class="c-cmt"># Ajuster THRESHOLD dans li_wake.py selon les valeurs observées</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 15</span><span class="q-label">Déploiement et validation
+            terrain</span></div>
+        <p>Expliquez pourquoi les performances mesurées lors de l'évaluation (section 05) peuvent différer des
+          performances réelles une fois Li déployé dans la salle de classe. Citez trois facteurs environnementaux qui
+          peuvent dégrader les résultats. Comment adapter le seuil pour compenser ?</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Comparaison hey_jarvis vs Bonjour Li <span class="sub">Tableau de synthèse
+          expérimental</span></div>
+      <p style="font-size:.85rem;margin-bottom:10px;">Après avoir intégré votre modèle, complétez le tableau ci-dessous
+        en testant les deux configurations avec <strong>20 essais par condition</strong>. Notez le nombre de
+        déclenchements corrects, ratés et indésirables.</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>Modèle</th>
+            <th>Déclenchements corrects (/20)</th>
+            <th>Ratés</th>
+            <th>Faux positifs / 5 min</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Voix normale, salle calme</td>
+            <td><code>hey_jarvis</code></td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+          </tr>
+          <tr>
+            <td>Voix normale, salle calme</td>
+            <td><code>bonjour_li</code></td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+          </tr>
+          <tr>
+            <td>Voix faible, bruit de fond</td>
+            <td><code>hey_jarvis</code></td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+          </tr>
+          <tr>
+            <td>Voix faible, bruit de fond</td>
+            <td><code>bonjour_li</code></td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+            <td style="color:var(--text3);">à compléter</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 16</span><span class="q-label">Protocole expérimental</span></div>
+        <p>Pour que la comparaison entre <code>hey_jarvis</code> et <code>bonjour_li</code> soit scientifiquement
+          valide, quelles conditions expérimentales faut-il contrôler ? Définissez la notion de <strong>variable
+            contrôlée</strong>, <strong>variable indépendante</strong> et <strong>variable dépendante</strong> dans ce
+          contexte.</p>
+      </div>
+    </div>
+
+    <!-- Exercice D — simulation complète du pipeline -->
+    <div class="exercise">
+      <div class="ex-head"><span class="ex-badge">Exercice D</span><span
+          style="font-size:.82rem;color:var(--text2);">Simuler le pipeline complet — de l'audio au déclenchement</span>
+      </div>
+      <p>Ce dernier exercice simule l'intégralité du pipeline de détection, de la fenêtre audio brute jusqu'à la
+        décision de déclenchement. Complétez les fonctions manquantes et vérifiez que la simulation se comporte comme
+        attendu.</p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice D — pipeline complet à compléter</div>
+      <script type="py-editor" env="ml" id="exo_d">
+import math, random
+
+# Simulation simplifiée du pipeline de détection
+# Chaque fonction représente une étape du traitement réel
+
+SR    = 16000
+CHUNK = 1280   # = 80 ms à 16 kHz
+
+def simuler_audio(type_son: str) -> list:
+    """Génère un chunk audio simulé selon le type de son."""
+    random.seed(hash(type_son) % 1000)
+    if type_son == "silence":
+        return [int(random.gauss(0, 200)) for _ in range(CHUNK)]
+    elif type_son == "parole":
+        return [int(random.gauss(0, 3000) * math.sin(i * 0.1)) for i in range(CHUNK)]
+    elif type_son == "bonjour_li":
+        return [int(random.gauss(0, 8000) * abs(math.sin(i * 0.05))) for i in range(CHUNK)]
+    return [0] * CHUNK
+
+def calculer_energie(samples: list) -> float:
+    """Calcule le niveau RMS normalisé entre 0.0 et 1.0."""
+    ...  # À COMPLÉTER : formule RMS (voir section audio du TP principal)
+
+def extraire_feature(samples: list) -> float:
+    """
+    Feature simplifiée : combinaison énergie + variabilité.
+    Retourne une valeur entre 0.0 et 1.0 corrélée au mot-clé.
+    """
+    ...  # À COMPLÉTER : énergie * 0.6 + (écart-type normalisé) * 0.4
+
+def modele_classification(feature: float) -> float:
+    """
+    Simule le score du modèle entraîné.
+    Un bon modèle donne score élevé pour bonjour_li, bas pour le reste.
+    """
+    bruit = random.gauss(0, 0.06)
+    score = feature * 0.85 + bruit
+    return max(0.0, min(1.0, score))
+
+def decider(score: float, seuil: float = 0.70) -> bool:
+    """Décide si le mot-clé est détecté."""
+    ...  # À COMPLÉTER
+
+# Tests du pipeline complet
+print(f"{'Type son':<15} | {'Énergie':>8} | {'Feature':>9} | {'Score':>7} | {'Déclenchement'}")
+print("-" * 62)
+
+random.seed(42)
+for type_son in ["silence", "parole", "parole", "bonjour_li", "bonjour_li", "bonjour_li"]:
+    samples  = simuler_audio(type_son)
+    energie  = calculer_energie(samples)
+    feature  = extraire_feature(samples)
+    score    = modele_classification(feature)
+    decision = decider(score, seuil=0.70)
+    declench = "OUI !" if decision else "non"
+    print(f"{type_son:<15} | {energie:>8.4f} | {feature:>9.4f} | {score:>7.4f} | {declench}")
+    </script>
+    </div>
+
+    <!-- Synthèse finale -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-header">Bilan des notions acquises <span class="sub">Ce que ce TP vous a appris</span></div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Notion NSI</th>
+            <th>Concept ML appris</th>
+            <th>Mis en oeuvre dans</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Structures de données</strong></td>
+            <td>Tableau NumPy, tensor PyTorch, format ONNX</td>
+            <td>Embeddings, export du modèle</td>
+          </tr>
+          <tr>
+            <td><strong>Algorithmique</strong></td>
+            <td>Descente de gradient, fonction de perte BCE</td>
+            <td>Boucle d'entraînement</td>
+          </tr>
+          <tr>
+            <td><strong>Traitement du signal</strong></td>
+            <td>Mel Spectrogram, RMS, fenêtres glissantes</td>
+            <td>Extraction de features</td>
+          </tr>
+          <tr>
+            <td><strong>Modélisation</strong></td>
+            <td>Transfer learning, surapprentissage, Dropout</td>
+            <td>Architecture TeteClassification</td>
+          </tr>
+          <tr>
+            <td><strong>Évaluation</strong></td>
+            <td>Précision, Rappel, F1, matrice de confusion</td>
+            <td>Script d'évaluation</td>
+          </tr>
+          <tr>
+            <td><strong>Systèmes embarqués</strong></td>
+            <td>Inférence ONNX légère sur ARM64</td>
+            <td>li_wake.py sur RPi 5</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 17</span><span class="q-label">Synthèse critique</span></div>
+        <p>Vous venez d'entraîner un modèle de détection de mot-clé à partir de données synthétiques (générées par TTS).
+          Identifiez <strong>deux limites</strong> de cette approche par rapport à un entraînement sur de vraies voix
+          humaines enregistrées. Comment pourrait-on améliorer le jeu de données sans matériel supplémentaire ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 18</span><span class="q-label">Vie privée et IA embarquée</span></div>
+        <p>Un assistant vocal qui écoute en permanence soulève des questions éthiques. Expliquez en quoi le fait que le
+          modèle de détection soit <strong>local et open source</strong> constitue une garantie supplémentaire par
+          rapport à un service commercial comme Alexa ou Google Home. Quelles données sont traitées localement et
+          lesquelles pourraient être envoyées vers des serveurs distants dans un système commercial ?</p>
+      </div>
+    </div>
+  </div><!-- /sec-5 -->
+
+
+  <footer>
+    TP Intelligence Artificielle Embarquée — Terminale NSI &nbsp;&middot;&nbsp;
+    Entraîner « Bonjour Li » · openWakeWord · ONNX &nbsp;&middot;&nbsp;
+    Prérequis : <a href="tp_li_nsi_v3.html">TP Li Principal</a> &nbsp;&middot;&nbsp;
+    <a href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt"
+      target="_blank">Programme NSI — Éduscol</a>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const h = document.documentElement, b = document.getElementById('themeBtn');
+      if (h.dataset.theme === 'dark') { h.dataset.theme = 'light'; b.textContent = 'Mode sombre'; }
+      else { h.dataset.theme = 'dark'; b.textContent = 'Mode clair'; }
+    }
+    function showSection(idx, btn) {
+      const ids = ['sec-0', 'sec-1', 'sec-2', 'sec-3', 'sec-4', 'sec-5'];
+      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(ids[idx]);
+      if (el) { el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      document.querySelectorAll('#topbar .nav-tab').forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+        b.style.borderBottomColor = i === idx ? 'var(--accent)' : 'transparent';
+      });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      showSection(0, document.querySelector('#topbar .nav-tab'));
+    });
+  </script>
+</body>
+
+</html>

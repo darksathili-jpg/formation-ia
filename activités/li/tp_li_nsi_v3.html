@@ -1,0 +1,3138 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TP NSI — Agent Vocal IA Li · Raspberry Pi 5 · Freenove FNK0100</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Fira+Code:wght@400;500;700&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css" />
+<script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+  <style>
+    /* ══ TOKENS MODE SOMBRE ════════════════════════════════════════════════════ */
+    :root {
+      --bg: #080d14;
+      --bg2: #0e1623;
+      --bg3: #141f30;
+      --bg4: #1a2840;
+      --surface: #111827;
+      --surface2: #162033;
+      --border: #1e3050;
+      --border2: #2a4570;
+      --text: #dde8f5;
+      --text2: #8aa8cc;
+      --text3: #4a6888;
+      --accent: #38bdf8;
+      --gold: #fbbf24;
+      --green: #34d399;
+      --pink: #f472b6;
+      --purple: #a78bfa;
+      --orange: #fb923c;
+      --red: #f87171;
+      --teal: #2dd4bf;
+      --code-bg: #060b14;
+      --code-border: #182840;
+      --shadow: 0 4px 32px rgba(0, 0, 0, .7);
+      --shadow-sm: 0 2px 12px rgba(0, 0, 0, .4);
+      --r: 10px;
+      --r-sm: 6px;
+    }
+
+    /* ══ TOKENS MODE CLAIR ═════════════════════════════════════════════════════ */
+    [data-theme="light"] {
+      --bg: #f0f4fa;
+      --bg2: #e4ecf7;
+      --bg3: #d8e4f0;
+      --bg4: #ccdaec;
+      --surface: #fff;
+      --surface2: #f4f8ff;
+      --border: #c0d0e8;
+      --border2: #a0bcd8;
+      --text: #0e1a30;
+      --text2: #2a4870;
+      --text3: #6888a8;
+      --accent: #0284c7;
+      --gold: #b45309;
+      --green: #047857;
+      --pink: #be185d;
+      --purple: #6d28d9;
+      --orange: #c2410c;
+      --red: #b91c1c;
+      --teal: #0f766e;
+      --code-bg: #0e1623;
+      --code-border: #1e3050;
+      --shadow: 0 4px 24px rgba(40, 80, 140, .10);
+      --shadow-sm: 0 2px 8px rgba(40, 80, 140, .06);
+    }
+
+    /* ══ RESET ═════════════════════════════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+      transition: background .3s, color .3s
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    p {
+      margin-bottom: 8px
+    }
+
+    p:last-child {
+      margin-bottom: 0
+    }
+
+    ul,
+    ol {
+      padding-left: 20px
+    }
+
+    li {
+      margin-bottom: 4px;
+      font-size: .86rem
+    }
+
+    strong {
+      font-weight: 700
+    }
+
+    em {
+      color: var(--text2);
+      font-style: italic
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: .82em;
+      background: rgba(56, 189, 248, .10);
+      color: var(--accent);
+      border-radius: 3px;
+      padding: 1px 5px
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 20px 0
+    }
+
+    /* ══ TOPBAR ════════════════════════════════════════════════════════════════ */
+    #topbar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      height: 50px;
+      box-shadow: var(--shadow-sm);
+      gap: 0
+    }
+
+    #topbar .logo {
+      font-family: 'Rubik Dirt', cursive;
+      font-size: 1rem;
+      color: var(--accent);
+      margin-right: 16px;
+      white-space: nowrap
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none
+    }
+
+    .nav-tab {
+      padding: 0 13px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      font-size: .73rem;
+      font-weight: 600;
+      color: var(--text2);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      transition: color .2s, border-color .2s;
+      user-select: none;
+      font-family: 'Fira Code', monospace;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      letter-spacing: .02em
+    }
+
+    .nav-tab:hover {
+      color: var(--text)
+    }
+
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent)
+    }
+
+    .theme-btn {
+      margin-left: auto;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: .72rem;
+      color: var(--text2);
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background .2s, color .2s
+    }
+
+    .theme-btn:hover {
+      background: var(--bg4);
+      color: var(--text)
+    }
+
+    /* ══ HERO ══════════════════════════════════════════════════════════════════ */
+    .hero {
+      background: linear-gradient(140deg, var(--bg2) 0%, var(--bg3) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 40px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: center
+    }
+
+    .hero-face {
+      width: 82px;
+      height: 82px
+    }
+
+    .hero-text h1 {
+      font-family: 'Rubik Dirt', cursive;
+      font-size: 1.65rem;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 4px;
+      font-weight: lighter;
+    }
+
+    .hero-text h1 span {
+      color: var(--accent)
+    }
+
+    .hero-subtitle {
+      font-size: .84rem;
+      color: var(--text2);
+      font-weight: 300;
+      margin-top: 2px
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px
+    }
+
+    .hero-badge {
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 9px;
+      font-size: .70rem;
+      color: var(--text2);
+      font-family: 'Fira Code', monospace
+    }
+
+    .hero-badge.accent {
+      background: rgba(56, 189, 248, .10);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .hero-badge.gold {
+      background: rgba(251, 191, 36, .10);
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .hero-badge.green {
+      background: rgba(52, 211, 153, .10);
+      border-color: var(--green);
+      color: var(--green)
+    }
+
+    .hero-badge.purple {
+      background: rgba(167, 139, 250, .10);
+      border-color: var(--purple);
+      color: var(--purple)
+    }
+
+    /* ══ LAYOUT ════════════════════════════════════════════════════════════════ */
+    .page-section {
+      display: none;
+      padding: 28px 36px 72px;
+      max-width: 1080px;
+      margin: 0 auto
+    }
+
+    .page-section.active {
+      display: block
+    }
+
+    @media(max-width:800px) {
+      .hero {
+        grid-template-columns: 1fr
+      }
+
+      .page-section {
+        padding: 18px 14px 56px
+      }
+
+      #topbar {
+        padding: 0 10px
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* ══ TITRES ════════════════════════════════════════════════════════════════ */
+    .section-title {
+      font-family: 'Rubik Dirt', cursive;
+      font-size: 1.02rem;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .section-title .num {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      font-weight: 700
+    }
+
+    .section-title .num.gold {
+      background: var(--gold);
+      color: #000
+    }
+
+    .section-title .num.green {
+      background: var(--green);
+      color: #000
+    }
+
+    .section-title .num.purple {
+      background: var(--purple);
+      color: #fff
+    }
+
+    .section-title .num.orange {
+      background: var(--orange);
+      color: #fff
+    }
+
+    .section-title .num.pink {
+      background: var(--pink);
+      color: #fff
+    }
+
+    .section-title .num.red {
+      background: var(--red);
+      color: #fff
+    }
+
+    .section-rule {
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent) 0%, transparent 80%);
+      margin-bottom: 22px;
+      border-radius: 2px
+    }
+
+    .subsection-title {
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--text2);
+      margin: 22px 0 9px;
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    /* ══ CARTES ════════════════════════════════════════════════════════════════ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .2s
+    }
+
+    .card:hover {
+      border-color: var(--border2)
+    }
+
+    .card-header {
+      font-family: 'Fira Code', monospace;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .card-header .sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: .70rem;
+      color: var(--text3);
+      font-weight: 300
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px
+    }
+
+    /* ══ ALERTES ═══════════════════════════════════════════════════════════════ */
+    .alert {
+      border-radius: var(--r-sm);
+      padding: 11px 15px;
+      font-size: .83rem;
+      line-height: 1.65;
+      margin: 11px 0;
+      border-left: 4px solid
+    }
+
+    .alert-info {
+      background: rgba(56, 189, 248, .07);
+      border-color: var(--accent)
+    }
+
+    .alert-warn {
+      background: rgba(251, 191, 36, .07);
+      border-color: var(--gold)
+    }
+
+    .alert-success {
+      background: rgba(52, 211, 153, .07);
+      border-color: var(--green)
+    }
+
+    .alert-error {
+      background: rgba(248, 113, 113, .07);
+      border-color: var(--red)
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600
+    }
+
+    .py-editor-box{
+      background-color: white;
+    }
+
+    /* ══ CODE (lecture seule) ══════════════════════════════════════════════════ */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: var(--r-sm);
+      padding: 14px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: .76rem;
+      line-height: 1.82;
+      overflow-x: auto;
+      margin: 10px 0;
+      position: relative;
+      color: #c4d8f0;
+      white-space: pre
+    }
+
+    .code-block .c-kw {
+      color: #7dd3fc
+    }
+
+    .code-block .c-fn {
+      color: #fbbf24
+    }
+
+    .code-block .c-str {
+      color: #86efac
+    }
+
+    .code-block .c-num {
+      color: #fb923c
+    }
+
+    .code-block .c-cmt {
+      color: #3a5a7a;
+      font-style: italic
+    }
+
+    .code-block .c-cls {
+      color: #f472b6
+    }
+
+    .code-block .c-var {
+      color: #c4d8f0
+    }
+
+    .code-label {
+      font-family: 'Fira Code', monospace;
+      font-size: .66rem;
+      color: var(--text3);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--r-sm) var(--r-sm) 0 0;
+      padding: 4px 11px;
+      display: inline-block
+    }
+
+    .code-label+.code-block {
+      border-top-left-radius: 0;
+      margin-top: 0
+    }
+
+    /* ══ PYSCRIPT ══════════════════════════════════════════════════════════════ */
+    .pyscript-wrapper {
+      background: var(--code-bg);
+      border: 1px solid var(--accent);
+      border-radius: var(--r-sm);
+      margin: 12px 0;
+      overflow: hidden
+    }
+
+    .pyscript-label {
+      background: rgba(56, 189, 248, .10);
+      border-bottom: 1px solid var(--accent);
+      padding: 5px 13px;
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .04em;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .pyscript-label::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-g 2s ease-in-out infinite
+    }
+
+    @keyframes pulse-g {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    /* ══ QUESTIONS ══════════════════════════════════════════════════════════════ */
+    .question {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: var(--r-sm);
+      padding: 13px 17px;
+      margin: 14px 0;
+      font-size: .85rem
+    }
+
+    .question .q-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      flex-wrap: wrap
+    }
+
+    .q-num {
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      flex-shrink: 0
+    }
+
+    .q-label {
+      font-weight: 600;
+      font-size: .76rem;
+      color: var(--text2);
+      font-family: 'Fira Code', monospace;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    .question p {
+      font-size: .85rem;
+      color: var(--text);
+      line-height: 1.65
+    }
+
+    .question ol,
+    .question ul {
+      margin-top: 7px
+    }
+
+    .question code {
+      background: rgba(56, 189, 248, .12);
+      color: var(--accent);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: .80em
+    }
+
+    /* ══ EXERCICES ══════════════════════════════════════════════════════════════ */
+    .exercise {
+      border: 1px solid var(--border2);
+      border-left: 4px solid var(--purple);
+      border-radius: var(--r-sm);
+      padding: 13px 17px;
+      margin: 14px 0;
+      background: rgba(167, 139, 250, .05);
+      font-size: .85rem
+    }
+
+    .exercise .ex-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 7px;
+      flex-wrap: wrap
+    }
+
+    .ex-badge {
+      background: var(--purple);
+      color: #fff;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap
+    }
+
+    .exercise p {
+      font-size: .85rem;
+      line-height: 1.65;
+      margin-bottom: 5px
+    }
+
+    .exercise ol,
+    .exercise ul {
+      padding-left: 18px;
+      margin-top: 5px
+    }
+
+    .exercise li {
+      font-size: .83rem;
+      margin-bottom: 3px
+    }
+
+    .exercise code {
+      background: rgba(167, 139, 250, .12);
+      color: var(--purple);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: .80em
+    }
+
+    /* ══ TABLEAUX ══════════════════════════════════════════════════════════════ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .80rem;
+      margin: 10px 0
+    }
+
+    .data-table th {
+      background: var(--bg3);
+      color: var(--text2);
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 7px 11px;
+      text-align: left;
+      border-bottom: 2px solid var(--border)
+    }
+
+    .data-table td {
+      padding: 7px 11px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .data-table tr:hover td {
+      background: rgba(56, 189, 248, .04)
+    }
+
+    .data-table a {
+      color: var(--accent);
+      font-size: .77rem
+    }
+
+    .perf {
+      font-family: 'Fira Code', monospace;
+      font-size: .72rem;
+      color: var(--text3)
+    }
+
+    /* ══ ÉTAPES INSTALLATION ═══════════════════════════════════════════════════ */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 14px 0
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start
+    }
+
+    .step-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 2px solid var(--green);
+      color: var(--green);
+      font-family: 'Fira Code', monospace;
+      font-size: .83rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .step-title {
+      font-weight: 600;
+      font-size: .87rem;
+      color: var(--text);
+      margin-bottom: 7px
+    }
+
+    .step-time {
+      font-family: 'Fira Code', monospace;
+      font-size: .68rem;
+      color: var(--text3);
+      margin-top: 5px
+    }
+
+    /* ══ ONGLETS INTERNES ══════════════════════════════════════════════════════ */
+    .inner-tabs {
+      display: flex;
+      gap: 2px;
+      border-bottom: 2px solid var(--border);
+      flex-wrap: wrap
+    }
+
+    .tab-panel {
+      display: none
+    }
+
+    .tab-panel.active {
+      display: block
+    }
+
+    /* ══ PIPELINE ══════════════════════════════════════════════════════════════ */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 14px 0;
+      justify-content: center
+    }
+
+    .pipe-step {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 14px;
+      text-align: center;
+      min-width: 100px
+    }
+
+    .pipe-step .ps-label {
+      font-family: 'Fira Code', monospace;
+      font-size: .67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 3px
+    }
+
+    .pipe-step .ps-tech {
+      font-family: 'Fira Code', monospace;
+      font-size: .62rem;
+      color: var(--text3)
+    }
+
+    .pipe-arrow {
+      color: var(--border2);
+      font-size: .95rem;
+      padding: 0 3px
+    }
+
+    .ps-mic .ps-label {
+      color: var(--teal)
+    }
+
+    .ps-wake .ps-label {
+      color: var(--gold)
+    }
+
+    .ps-stt .ps-label {
+      color: var(--green)
+    }
+
+    .ps-llm .ps-label {
+      color: var(--purple)
+    }
+
+    .ps-tts .ps-label {
+      color: var(--orange)
+    }
+
+    .ps-face .ps-label {
+      color: var(--pink)
+    }
+
+    .ps-mic {
+      border-color: var(--teal)
+    }
+
+    .ps-wake {
+      border-color: var(--gold)
+    }
+
+    .ps-stt {
+      border-color: var(--green)
+    }
+
+    .ps-llm {
+      border-color: var(--purple)
+    }
+
+    .ps-tts {
+      border-color: var(--orange)
+    }
+
+    .ps-face {
+      border-color: var(--pink)
+    }
+
+    /* ══ PILULES ═══════════════════════════════════════════════════════════════ */
+    .pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: .65rem;
+      font-weight: 700;
+      background: var(--bg3);
+      color: var(--text2);
+      border: 1px solid var(--border)
+    }
+
+    .pill.accent {
+      background: rgba(56, 189, 248, .12);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .pill.green {
+      background: rgba(52, 211, 153, .12);
+      border-color: var(--green);
+      color: var(--green)
+    }
+
+    .pill.gold {
+      background: rgba(251, 191, 36, .12);
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .pill.purple {
+      background: rgba(167, 139, 250, .12);
+      border-color: var(--purple);
+      color: var(--purple)
+    }
+
+    .pill.orange {
+      background: rgba(251, 146, 60, .12);
+      border-color: var(--orange);
+      color: var(--orange)
+    }
+
+    /* ══ NIVEAU CARDS ══════════════════════════════════════════════════════════ */
+    .niveau-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .niveau-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px
+    }
+
+    .niveau-card.n1::before {
+      background: var(--green)
+    }
+
+    .niveau-card.n2::before {
+      background: var(--gold)
+    }
+
+    .niveau-card.n3::before {
+      background: var(--pink)
+    }
+
+    .niveau-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: .65rem;
+      font-weight: 700;
+      margin-bottom: 7px
+    }
+
+    .niveau-card.n1 .niveau-badge {
+      color: var(--green)
+    }
+
+    .niveau-card.n2 .niveau-badge {
+      color: var(--gold)
+    }
+
+    .niveau-card.n3 .niveau-badge {
+      color: var(--pink)
+    }
+
+    .niveau-card h3 {
+      font-size: .86rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px
+    }
+
+    .niveau-card .meta {
+      font-size: .70rem;
+      color: var(--text3);
+      margin-bottom: 9px;
+      font-family: 'Fira Code', monospace
+    }
+
+    .niveau-card ul {
+      list-style: none;
+      padding: 0
+    }
+
+    .niveau-card ul li {
+      font-size: .79rem;
+      color: var(--text2);
+      padding: 3px 0 3px 15px;
+      position: relative
+    }
+
+    .niveau-card ul li::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      color: var(--text3);
+      font-family: 'Fira Code', monospace
+    }
+
+    /* ══ FORMULE ═══════════════════════════════════════════════════════════════ */
+    .formula {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 13px 17px;
+      font-family: 'Fira Code', monospace;
+      font-size: .90rem;
+      color: var(--accent);
+      text-align: center;
+      margin: 11px 0
+    }
+
+    .formula small {
+      display: block;
+      color: var(--text3);
+      font-size: .69rem;
+      margin-top: 5px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300
+    }
+
+    /* ══ MODULES CARDS ═════════════════════════════════════════════════════════ */
+    .module-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 13px 15px
+    }
+
+    .module-name {
+      font-family: 'Fira Code', monospace;
+      font-size: .77rem;
+      font-weight: 700;
+      margin-bottom: 5px
+    }
+
+    .module-card p {
+      font-size: .81rem;
+      margin: 0;
+      color: var(--text2)
+    }
+
+    /* ══ FOOTER ════════════════════════════════════════════════════════════════ */
+    footer {
+      text-align: center;
+      padding: 22px 36px;
+      font-size: .72rem;
+      color: var(--text3);
+      border-top: 1px solid var(--border);
+      font-family: 'Fira Code', monospace;
+      margin-top: 36px
+    }
+
+    footer a {
+      color: var(--accent)
+    }
+
+    /* ══ ANIMATION VISAGE ══════════════════════════════════════════════════════ */
+    @keyframes liIrisWander {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      25% {
+        transform: translate(4px, -3px)
+      }
+
+      50% {
+        transform: translate(-3px, 4px)
+      }
+
+      75% {
+        transform: translate(3px, 3px)
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ BARRE DE NAVIGATION ══════════════════════════════════════════════════ -->
+  <div id="topbar">
+    <div class="logo">Li — NSI</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showSection(0,this)">01 Présentation</button>
+      <button class="nav-tab" onclick="showSection(1,this)">02 Architecture</button>
+      <button class="nav-tab" onclick="showSection(2,this)">03 Matériel</button>
+      <button class="nav-tab" onclick="showSection(3,this)">04 Installation</button>
+      <button class="nav-tab" onclick="showSection(4,this)">05 Code source</button>
+      <button class="nav-tab" onclick="showSection(5,this)">06 Exercices</button>
+      <button class="nav-tab" onclick="showSection(6,this)">07 Dépannage</button>
+      <button class="nav-tab" onclick="showSection(7,this)">08 Synthèse</button>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">Mode clair</button>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="hero">
+    <svg class="hero-face" viewBox="0 0 84 84" xmlns="http://www.w3.org/2000/svg">
+      <rect width="84" height="84" rx="14" fill="#060b14" />
+      <circle cx="42" cy="42" r="38" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.15">
+        <animate attributeName="r" values="32;38;32" dur="1.4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.08;0.22;0.08" dur="1.4s" repeatCount="indefinite" />
+      </circle>
+      <ellipse cx="26" cy="34" rx="12" ry="12" fill="#e8f0ff" />
+      <g style="animation:liIrisWander 7s ease-in-out infinite">
+        <ellipse cx="26" cy="34" rx="7.5" ry="7.5" fill="#38bdf8" />
+        <ellipse cx="26" cy="34" rx="3.8" ry="3.8" fill="#060b14" />
+        <ellipse cx="22" cy="30" rx="2.2" ry="2.2" fill="white" />
+      </g>
+      <rect x="14" y="22" width="24" height="24" fill="#060b14" style="transform-origin:26px 34px;transform:scaleY(0)">
+        <animate attributeName="transform" attributeType="CSS" values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)"
+          keyTimes="0;0.88;0.93;1" dur="5.5s" repeatCount="indefinite" />
+      </rect>
+      <path d="M15 22 Q26 15 37 22" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" />
+      <ellipse cx="58" cy="34" rx="12" ry="12" fill="#e8f0ff" />
+      <g style="animation:liIrisWander 7s ease-in-out infinite 0.5s">
+        <ellipse cx="58" cy="34" rx="7.5" ry="7.5" fill="#38bdf8" />
+        <ellipse cx="58" cy="34" rx="3.8" ry="3.8" fill="#060b14" />
+        <ellipse cx="54" cy="30" rx="2.2" ry="2.2" fill="white" />
+      </g>
+      <rect x="46" y="22" width="24" height="24" fill="#060b14" style="transform-origin:58px 34px;transform:scaleY(0)">
+        <animate attributeName="transform" attributeType="CSS" values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)"
+          keyTimes="0;0.88;0.93;1" dur="5.5s" repeatCount="indefinite" />
+      </rect>
+      <path d="M47 22 Q58 15 69 22" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" />
+      <ellipse cx="42" cy="63" rx="15" ry="7" fill="#f472b6">
+        <animate attributeName="ry" values="3;9;5;10;4;8;3" dur="0.95s" repeatCount="indefinite" />
+      </ellipse>
+      <rect x="29" y="59" width="26" height="3" rx="1.5" fill="#e8f0ff" opacity="0.85">
+        <animate attributeName="opacity" values="0.85;0.85;0;0;0.85" dur="0.95s" repeatCount="indefinite" />
+      </rect>
+    </svg>
+    <div class="hero-text">
+      <h1>Li — <span>Agent Vocal IA Autonome</span></h1>
+      <p class="hero-subtitle">Travaux Pratiques · Terminale NSI · Intelligence Artificielle Embarquée</p>
+      <div class="hero-meta">
+        <span class="hero-badge accent">Raspberry Pi 5 · 16 Go RAM</span>
+        <span class="hero-badge gold">Freenove FNK0100</span>
+        <span class="hero-badge green">100 % hors ligne · open source</span>
+        <span class="hero-badge purple">PyScript 2026 · code interactif</span>
+        <span class="hero-badge">Durée : 4 h</span>
+        <span class="hero-badge">20 questions · 4 exercices · 4 fichiers Python complets</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 01 — PRÉSENTATION
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section active" id="sec-0">
+    <div class="section-title"><span class="num">01</span> Présentation du projet Li</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Qu'est-ce que Li ? <span class="sub">Un assistant vocal entièrement autonome</span></div>
+      <p><strong>Li</strong> est un agent vocal à intelligence artificielle qui fonctionne entièrement sur un
+        <strong>Raspberry Pi 5</strong>, sans aucune connexion à internet. Il écoute votre voix, comprend vos questions,
+        génère une réponse grâce à un modèle de langage exécuté localement et vous répond à voix haute, avec un visage
+        animé qui exprime ses émotions en temps réel.</p>
+      <p style="margin-top:9px;">Ce projet couvre six domaines du programme de Terminale NSI : la <strong>programmation
+          orientée objet</strong>, le <strong>traitement du signal audio</strong>, la <strong>concurrence et le
+          parallélisme</strong>, les <strong>architectures matérielles</strong>, les <strong>API REST</strong> et les
+        <strong>systèmes d'exploitation</strong>.</p>
+      <div class="alert alert-success" style="margin-top:13px;">
+        <strong>Objectif du TP</strong>
+        Construire Li de zéro en suivant ce document. À la fin, votre Raspberry Pi 5 dans son boîtier Freenove répondra
+        vocalement à vos questions, en français, hors ligne, avec une latence totale inférieure à 12 secondes.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Pipeline de traitement vocal <span class="sub">De la parole à la réponse — six
+          étapes</span></div>
+      <div class="pipeline">
+        <div class="pipe-step ps-mic">
+          <div class="ps-label">Micro</div>
+          <div class="ps-tech">PyAudio · 16 kHz</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step ps-wake">
+          <div class="ps-label">Mot-clé</div>
+          <div class="ps-tech">openWakeWord · ONNX</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step ps-stt">
+          <div class="ps-label">STT</div>
+          <div class="ps-tech">faster-whisper · small</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step ps-llm">
+          <div class="ps-label">LLM</div>
+          <div class="ps-tech">Ollama · llama3.2:3b</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step ps-tts">
+          <div class="ps-label">TTS</div>
+          <div class="ps-tech">Piper · fr_FR-upmc</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step ps-face">
+          <div class="ps-label">Visage</div>
+          <div class="ps-tech">pygame · 30 FPS</div>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 1</span><span class="q-label">Lecture du pipeline</span></div>
+        <p>Pour chacune des six étapes du pipeline, précisez : la bibliothèque Python utilisée, la nature de la donnée
+          en entrée et la nature de la donnée en sortie. Répondez sous forme d'un tableau à quatre colonnes (étape,
+          bibliothèque, entrée, sortie).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Notions du programme NSI mobilisées <span class="sub">Terminale · programme officiel
+          Éduscol</span></div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Thème du programme</th>
+            <th>Notion précise</th>
+            <th>Où dans Li ?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Langages et programmation</strong></td>
+            <td>Classes, encapsulation, Enum</td>
+            <td><code>LiFace</code>, <code>LiAssistant</code>, <code>Emotion</code></td>
+          </tr>
+          <tr>
+            <td><strong>Langages et programmation</strong></td>
+            <td>Callback, lambda, fonctions d'ordre supérieur</td>
+            <td><code>_on_wake</code>, <code>face_cb</code> dans <code>play_wav</code></td>
+          </tr>
+          <tr>
+            <td><strong>Algorithmique</strong></td>
+            <td>Traitement de signal, fenêtres glissantes, RMS</td>
+            <td>openWakeWord · <code>calculer_rms</code></td>
+          </tr>
+          <tr>
+            <td><strong>Systèmes d'exploitation</strong></td>
+            <td>Threads, sections critiques, mutex, daemon</td>
+            <td><code>threading.Thread</code>, <code>threading.Lock</code></td>
+          </tr>
+          <tr>
+            <td><strong>Architectures matérielles</strong></td>
+            <td>SoC, mémoire unifiée, bus PCIe, NVMe</td>
+            <td>BCM2712 · Cortex-A76 · M.2 HAT</td>
+          </tr>
+          <tr>
+            <td><strong>Réseaux et web</strong></td>
+            <td>API REST locale, requête HTTP, JSON</td>
+            <td>API Ollama sur <code>localhost:11434</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question">
+      <div class="q-head"><span class="q-num">Q 2</span><span class="q-label">Enjeux éthiques</span></div>
+      <p>Li fonctionne entièrement hors ligne. Citez <strong>deux avantages</strong> et <strong>un inconvénient</strong>
+        de ce choix par rapport à un assistant vocal basé sur le nuage (<em>cloud</em>), en distinguant les aspects de
+        vie privée, de disponibilité et de performances.</p>
+    </div>
+  </div><!-- /sec-0 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 02 — ARCHITECTURE LOGICIELLE
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-1">
+    <div class="section-title"><span class="num gold">02</span> Architecture logicielle</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Décomposition modulaire <span class="sub">Quatre fichiers Python · un rôle par
+          module</span></div>
+      <div class="grid-2">
+        <div class="module-card">
+          <div class="module-name" style="color:var(--purple);">li_main.py</div>
+          <p>Orchestrateur principal. Initialise tous les sous-systèmes, gère la mémoire conversationnelle, coordonne
+            les appels à Whisper, Ollama et Piper. Contient les méthodes <code>_record()</code> et
+            <code>_synthese()</code>.</p>
+        </div>
+        <div class="module-card">
+          <div class="module-name" style="color:var(--pink);">li_face.py</div>
+          <p>Rendu pygame à 30 FPS. Gère les sept états émotionnels et l'animation de la bouche synchronisée sur le
+            niveau RMS du signal audio.</p>
+        </div>
+        <div class="module-card">
+          <div class="module-name" style="color:var(--gold);">li_wake.py</div>
+          <p>Écoute continue du microphone. Détecte le mot-clé par fenêtres glissantes de 80 ms via openWakeWord. Lance
+            le callback <code>_on_wake</code> dans un thread séparé.</p>
+        </div>
+        <div class="module-card">
+          <div class="module-name" style="color:var(--orange);">li_audio.py</div>
+          <p>Lecture du fichier WAV produit par Piper. Calcule le niveau RMS par tranches de 50 ms et le transmet au
+            visage pour animer la bouche.</p>
+        </div>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 3</span><span class="q-label">Conception modulaire</span></div>
+        <p>Expliquez pourquoi la séparation du code en quatre fichiers distincts est préférable à un fichier unique de
+          600 lignes. Votre réponse mobilisera les notions de <strong>cohésion</strong>, de <strong>couplage</strong> et
+          de <strong>maintenabilité</strong>.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Modèle de threads <span class="sub">Trois threads permanents · concurrence · sections
+          critiques</span></div>
+      <p style="font-size:.85rem;margin-bottom:11px;">Li exécute trois threads en parallèle, ce qui permet au visage de
+        rester toujours animé pendant les traitements lourds (transcription, inférence LLM).</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Thread</th>
+            <th>Rôle</th>
+            <th>Cadence</th>
+            <th>Ressource partagée</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code style="color:var(--teal);">T-Wake</code></td>
+            <td>Écoute du micro, détection mot-clé, lancement T-Pipeline</td>
+            <td>Continu</td>
+            <td>Aucune</td>
+          </tr>
+          <tr>
+            <td><code style="color:var(--purple);">T-Pipeline</code></td>
+            <td>Transcription &#8594; LLM &#8594; synthèse &#8594; lecture audio</td>
+            <td>À la demande</td>
+            <td>Écriture sur <code>_emotion</code>, <code>_mouth_open</code></td>
+          </tr>
+          <tr>
+            <td><code style="color:var(--pink);">T-Face</code></td>
+            <td>Rendu pygame à 30 images par seconde</td>
+            <td>30 Hz</td>
+            <td>Lecture de <code>_emotion</code>, <code>_mouth_open</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-warn" style="margin-top:11px;">
+        <strong>Conception importante — T-Wake ne bloque pas</strong>
+        Dans la version correcte du code, lorsque le mot-clé est détecté, T-Wake lance T-Pipeline dans un
+        <strong>nouveau thread</strong> (<code>threading.Thread(target=self._on_wake).start()</code>) et reprend
+        immédiatement son écoute. Si T-Wake appelait directement <code>_on_wake()</code>, il serait bloqué pendant 10
+        secondes et ne pourrait pas détecter un second appel. Cette distinction est architecturalement critique.
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 4</span><span class="q-label">Concurrence — condition de course</span>
+        </div>
+        <p>Définissez la notion de <strong>condition de course</strong> (<em>race condition</em>). Donnez un exemple
+          concret dans Li : que pourrait-on observer à l'écran si le <code>threading.Lock()</code> de
+          <code>LiFace</code> était retiré et que T-Pipeline écrivait <code>_emotion</code> exactement pendant que
+          T-Face le lisait ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 5</span><span class="q-label">Daemon thread</span></div>
+        <p>T-Wake est créé avec <code>daemon=True</code>. Qu'est-ce qu'un <em>daemon thread</em> en Python ? Que se
+          passerait-il si ce paramètre valait <code>False</code> et que l'utilisateur fermait la fenêtre pygame de Li ?
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Mémoire conversationnelle <span class="sub">Contexte glissant · format messages
+          Ollama</span></div>
+      <div class="alert alert-info">
+        <strong>Comment Li se souvient de la conversation</strong>
+        Li maintient une liste <code>self.history</code> contenant le <em>system prompt</em> en première position, suivi
+        des messages alternés <code>user</code> / <code>assistant</code>. Cette liste est transmise intégralement à
+        Ollama à chaque requête. Pour éviter de dépasser la fenêtre de contexte du LLM (128 000 tokens pour llama3.2),
+        la liste est tronquée pour ne conserver que les 20 derniers messages.
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 6</span><span class="q-label">Analyse de code</span></div>
+        <p>Analysez l'instruction <code>self.history = [self.history[0]] + self.history[-20:]</code> :</p>
+        <ol style="font-size:.84rem;margin-top:7px;">
+          <li>Que contient <code>self.history[0]</code> ? Pourquoi est-il conservé séparément ?</li>
+          <li>Que se passerait-il si on transmettait l'intégralité de l'historique sans tronquer, après 100 échanges ?
+          </li>
+          <li>Proposez une alternative utilisant une <code>collections.deque</code> avec <code>maxlen=21</code>.</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /sec-1 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 03 — ARCHITECTURE MATÉRIELLE
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-2">
+    <div class="section-title"><span class="num green">03</span> Architecture matérielle</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Le boîtier Freenove FNK0100 <span class="sub">Kit complet pour Raspberry Pi 5</span>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Composant</th>
+            <th>Spécification</th>
+            <th>Rôle dans Li</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--accent);">SoC</strong></td>
+            <td>BCM2712 · 4 × Cortex-A76 · 2,4 GHz Turbo</td>
+            <td>Exécution de tous les modèles IA</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--teal);">RAM</strong></td>
+            <td>LPDDR4X 16 Go · mémoire unifiée CPU/GPU</td>
+            <td>Chargement Whisper (~500 Mo) + Ollama (~2,1 Go) + système</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent);">Écran</strong></td>
+            <td>5 pouces HDMI · 800 × 480 px · tactile</td>
+            <td>Affichage du visage animé via pygame</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--green);">Stockage</strong></td>
+            <td>SSD NVMe 128 Go · M.2 HAT · PCIe Gen 2</td>
+            <td>OS, modèles (Whisper, Ollama, Piper), fichiers WAV</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--gold);">Refroidissement</strong></td>
+            <td>Ventilateur actif + radiateur aluminium</td>
+            <td>Maintien de la fréquence Turbo sous charge LLM</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">Alimentation</strong></td>
+            <td>USB-C 5 V · 5 A (25 W)</td>
+            <td>Alimentation stable sous charge combinée CPU + SSD</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-warn" style="margin-top:10px;">
+        <strong>Microphone non fourni</strong>
+        Le FNK0100 n'intègre pas de microphone. Branchez un microphone USB (recommandé : Blue Yeti Nano, FIFINE K669 ou
+        tout micro USB à 16 kHz) ou un micro-casque sur la prise Jack 3,5 mm de l'écran. La commande
+        <code>arecord -l</code> liste les périphériques reconnus par ALSA.
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 7</span><span class="q-label">Architecture SoC et mémoire
+            unifiée</span></div>
+        <p>Le Raspberry Pi 5 utilise une <strong>mémoire unifiée</strong> : CPU et GPU partagent le même espace
+          physique. Expliquez pourquoi cette architecture est avantageuse pour Li, qui exécute simultanément un modèle
+          de langage (LLM, ~2,1 Go de poids), un modèle de transcription (Whisper, ~500 Mo) et un rendu graphique
+          pygame. Comparez avec une architecture à mémoires séparées.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Chaîne audio numérique <span class="sub">Microphone &#8594; PyAudio &#8594; openWakeWord
+          &#8594; Whisper &#8594; ALSA</span></div>
+      <p style="font-size:.85rem;margin-bottom:10px;">openWakeWord impose une fréquence d'échantillonnage de <strong>16
+          000 Hz</strong> et traite des fenêtres de <strong>1 280 échantillons</strong>, soit 80 ms par fenêtre
+        d'analyse. Whisper attend un tableau NumPy de valeurs flottantes 32 bits normalisées entre −1 et 1, enregistrées
+        au même taux de 16 kHz.</p>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 8</span><span class="q-label">Traitement du signal numérique</span>
+        </div>
+        <p>Vérifiez par le calcul que 1 280 échantillons à 16 000 Hz correspondent à une fenêtre de 80 ms. Expliquez le
+          compromis entre fenêtre courte et fenêtre longue pour la détection du mot-clé (latence <em>vs</em> charge
+          CPU). Quel est l'impact sur le taux de faux positifs ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 9</span><span class="q-label">Calcul de capacité mémoire</span></div>
+        <p>L'enregistrement vocal dure 6 secondes, à 16 000 Hz, en 16 bits. Calculez : (1) le nombre d'échantillons
+          total, (2) la taille en octets du tableau <code>int16</code>, (3) la taille en octets après conversion en
+          <code>float32</code> normalisé. Comment la mémoire LPDDR4X 16 Go absorbe-t-elle facilement ce volume ?</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Démarrage depuis le SSD NVMe <span class="sub">Bootloader · PCIe · ordre de boot</span>
+      </div>
+      <p style="font-size:.85rem;margin-bottom:10px;">Par défaut, le Raspberry Pi 5 démarre depuis la carte microSD. Le
+        M.2 HAT du FNK0100 connecte le SSD NVMe via le bus <strong>PCIe Gen 2</strong> interne. Pour démarrer depuis le
+        SSD (lectures ~900 Mo/s contre ~45 Mo/s pour la microSD), il faut modifier l'ordre de boot dans l'EEPROM.</p>
+      <div class="alert alert-info">
+        <strong>Procédure de configuration du bootloader</strong>
+        Depuis un terminal sur le RPi (avec microSD en cours d'utilisation) :
+      </div>
+      <div class="code-block">
+        <span class="c-cmt"># Éditer la configuration du bootloader EEPROM</span>
+        sudo rpi-eeprom-config --edit
+
+        <span class="c-cmt"># Dans l'éditeur, modifier ou ajouter la ligne :</span>
+        BOOT_ORDER=0xf416
+        <span class="c-cmt"># 6 = NVMe · 1 = SD · 4 = USB · f = fin de liste</span>
+        <span class="c-cmt"># L'ordre de lecture est de droite à gauche : NVMe en premier</span>
+
+        <span class="c-cmt"># Appliquer et redémarrer</span>
+        sudo reboot
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 10</span><span class="q-label">Bus PCIe et performances</span></div>
+        <p>Expliquez ce qu'est le bus <strong>PCIe</strong> (<em>Peripheral Component Interconnect Express</em>) et
+          pourquoi PCIe Gen 2 permet un débit supérieur à celui d'une carte microSD. Quel bénéfice concret cela
+          apporte-t-il au chargement du modèle Whisper au démarrage de Li ?</p>
+      </div>
+    </div>
+  </div><!-- /sec-2 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 04 — GUIDE D'INSTALLATION
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-3">
+    <div class="section-title"><span class="num purple">04</span> Guide d'installation complet</div>
+    <div class="section-rule"></div>
+
+    <div class="alert alert-warn">
+      <strong>Avant de commencer</strong>
+      Raspberry Pi OS 64 bits (Bookworm) doit être installé sur le SSD NVMe. Utilisez le <strong>Raspberry Pi
+        Imager</strong> depuis un PC ou Mac, sélectionnez « Raspberry Pi OS (64-bit) » et ciblez le SSD NVMe (connecté
+      via adaptateur USB-C ou directement via le M.2 HAT). Configurez le Wi-Fi et activez SSH dans les options avancées
+      de l'Imager.
+    </div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Mise à jour complète du système</div>
+          <div class="code-block">
+            sudo apt update && sudo apt full-upgrade -y
+            sudo apt install -y python3-pip python3-venv portaudio19-dev \
+            alsa-utils ffmpeg git build-essential libssl-dev \
+            libasound2-dev
+            <span class="c-cmt"># Vérifier que la mise à jour de l'EEPROM est disponible</span>
+            sudo rpi-eeprom-update
+            sudo reboot
+          </div>
+          <div class="step-time">Durée : 10 à 15 min selon la connexion</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Vérification du microphone USB</div>
+          <div class="code-block">
+            <span class="c-cmt"># Lister les périphériques audio d'entrée reconnus par ALSA</span>
+            arecord -l
+            <span class="c-cmt"># La sortie doit afficher votre micro USB (ex: card 1: Device [USB Audio Device])</span>
+
+            <span class="c-cmt"># Test d'enregistrement de 3 secondes</span>
+            arecord -D hw:1,0 -f S16_LE -r 16000 -d 3 test.wav
+            aplay test.wav
+            <span class="c-cmt"># Si vous vous entendez, le micro est opérationnel</span>
+          </div>
+          <div class="step-time">Durée : 2 min</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Création de la structure de projet et de l'environnement virtuel</div>
+          <div class="code-block">
+            <span class="c-cmt"># Créer la structure de répertoires du projet</span>
+            mkdir -p ~/li-project/{src,models/piper,logs}
+            cd ~/li-project
+
+            <span class="c-cmt"># Créer l'environnement virtuel Python</span>
+            python3 -m venv venv
+            source venv/bin/activate
+            <span class="c-cmt"># Le prompt devient (venv) — c'est normal</span>
+
+            <span class="c-cmt"># Installer toutes les dépendances Python</span>
+            pip install --upgrade pip
+            pip install faster-whisper pyaudio numpy ollama \
+            pygame openwakeword
+          </div>
+          <div class="step-time">Durée : 15 à 20 min (compilation de PyAudio)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Téléchargement des modèles openWakeWord</div>
+          <div class="code-block">
+            <span class="c-cmt"># Les modèles ONNX ne sont PAS inclus dans le paquet pip</span>
+            <span class="c-cmt"># Il faut les télécharger explicitement avec la commande suivante :</span>
+            python3 -c "from openwakeword.utils import download_models; download_models()"
+
+            <span class="c-cmt"># Vérifier que les modèles sont présents</span>
+            ls ~/.local/lib/python3.*/site-packages/openwakeword/resources/models/*.onnx
+            <span class="c-cmt"># Vous devez voir : hey_jarvis_v0.1.onnx, hey_mycroft_v0.1.onnx, etc.</span>
+          </div>
+          <div class="step-time">Durée : 3 à 5 min</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Installation d'Ollama et téléchargement du modèle LLM</div>
+          <div class="code-block">
+            <span class="c-cmt"># Installer Ollama (script officiel, fonctionne sur ARM64)</span>
+            curl -fsSL https://ollama.com/install.sh | sh
+
+            <span class="c-cmt"># S'assurer que le service Ollama est démarré</span>
+            sudo systemctl enable ollama
+            sudo systemctl start ollama
+
+            <span class="c-cmt"># Télécharger llama3.2:3b (environ 2,0 Go)</span>
+            ollama pull llama3.2:3b
+
+            <span class="c-cmt"># Vérification rapide</span>
+            ollama run llama3.2:3b "Réponds en une phrase : qu'est-ce que Python ?"
+            <span class="c-cmt"># Attendu : une phrase en anglais (le modèle répond en anglais par défaut)</span>
+            <span class="c-cmt"># Le system prompt de Li lui demandera de répondre en français</span>
+          </div>
+          <div class="step-time">Durée : 10 à 15 min</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Installation de Piper TTS — voix française</div>
+          <div class="code-block">
+            cd ~/li-project/models/piper
+
+            <span class="c-cmt"># Binaire Piper compilé pour Linux ARM64</span>
+            wget https://github.com/rhasspy/piper/releases/latest/download/piper_linux_aarch64.tar.gz
+            tar -xzf piper_linux_aarch64.tar.gz
+            <span class="c-cmt"># Le binaire est maintenant dans ~/li-project/models/piper/piper/piper</span>
+
+            <span class="c-cmt"># Modèle de voix française (qualité medium, ~60 Mo)</span>
+            wget -O fr_FR-upmc-medium.onnx \
+            "https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx"
+            wget -O fr_FR-upmc-medium.onnx.json \
+            "https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx.json"
+
+            <span class="c-cmt"># Test de synthèse vocale</span>
+            echo "Bonjour, je suis Li, votre assistant vocal." | \
+            ./piper/piper --model fr_FR-upmc-medium.onnx --output_file test_li.wav
+            aplay test_li.wav
+            <span class="c-cmt"># Vous devez entendre la voix française synthétisée</span>
+          </div>
+          <div class="step-time">Durée : 5 à 8 min</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">Test du pipeline minimal — LLM seul (sans micro ni audio)</div>
+          <div class="code-block">
+            <span class="c-cmt"># Depuis ~/li-project, avec le venv activé :</span>
+            source venv/bin/activate
+            python3 - &lt;&lt;'EOF'
+            import ollama
+            reponse = ollama.chat(
+            model="llama3.2:3b",
+            messages=[
+            {"role": "system", "content": "Tu es Li. Réponds en français, en 1 phrase."},
+            {"role": "user", "content": "Quelle est la capitale de la France ?"}
+            ]
+            )
+            print(reponse["message"]["content"])
+            EOF
+            <span class="c-cmt"># Attendu : "La capitale de la France est Paris." (ou formulation équivalente)</span>
+          </div>
+          <div class="step-time">Durée : 30 s (premier appel — chargement du modèle)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <div class="step-title">Déploiement des fichiers source et lancement de Li</div>
+          <div class="code-block">
+            <span class="c-cmt"># Copier les quatre fichiers Python (section 05 de ce TP) dans ~/li-project/src/</span>
+            <span class="c-cmt"># li_main.py · li_face.py · li_wake.py · li_audio.py</span>
+
+            cd ~/li-project/src
+            source ../venv/bin/activate
+
+            <span class="c-cmt"># Lancement de Li</span>
+            python3 li_main.py
+
+            <span class="c-cmt"># === Sortie attendue dans le terminal ===</span>
+            <span class="c-cmt"># [Li] Chargement de Whisper (small, int8)...</span>
+            <span class="c-cmt"># [Li] Whisper prêt — 18.2 s</span>
+            <span class="c-cmt"># [Li] openWakeWord prêt — modèle : hey_jarvis</span>
+            <span class="c-cmt"># [Li] Ollama prêt — modèle : llama3.2:3b</span>
+            <span class="c-cmt"># [Li] Pret. Dites "Bonjour Li" pour commencer.</span>
+          </div>
+          <div class="step-time">Premier démarrage : 20 à 30 s (chargement de Whisper)</div>
+        </div>
+      </div>
+
+    </div><!-- /steps -->
+
+    <div class="question">
+      <div class="q-head"><span class="q-num">Q 11</span><span class="q-label">Environnement virtuel Python</span></div>
+      <p>Pourquoi crée-t-on un environnement virtuel Python (<code>python3 -m venv venv</code>) plutôt que d'installer
+        les bibliothèques avec <code>sudo pip install</code> directement sur le système ? Citez <strong>deux raisons
+          concrètes</strong> liées au contexte du Raspberry Pi OS Bookworm, qui interdit depuis 2024 les installations
+        <code>pip</code> système sans l'option <code>--break-system-packages</code>.</p>
+    </div>
+  </div><!-- /sec-3 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 05 — CODE SOURCE COMPLET
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-4">
+    <div class="section-title"><span class="num orange">05</span> Code source complet</div>
+    <div class="section-rule"></div>
+
+    <div class="alert alert-success">
+      <strong>Code prêt à l'emploi</strong>
+      Les quatre fichiers ci-dessous constituent l'intégralité du code source de Li. Copiez-les dans
+      <code>~/li-project/src/</code>. Ils sont entièrement commentés pour être lisibles et modifiables par un élève de
+      Terminale NSI.
+    </div>
+
+    <div class="inner-tabs">
+      <button class="nav-tab active" onclick="switchTab(this,'tab-main')"
+        style="border-bottom:3px solid var(--accent);">li_main.py</button>
+      <button class="nav-tab" onclick="switchTab(this,'tab-face')">li_face.py</button>
+      <button class="nav-tab" onclick="switchTab(this,'tab-wake')">li_wake.py</button>
+      <button class="nav-tab" onclick="switchTab(this,'tab-audio')">li_audio.py</button>
+    </div>
+
+    <!-- ── li_main.py ────────────────────────────────────────────────────── -->
+    <div class="tab-panel active card" id="tab-main" style="border-radius:0 var(--r) var(--r) var(--r);">
+      <div class="card-header">li_main.py <span class="sub">Orchestrateur · pipeline complet · _record ·
+          _synthese</span></div>
+      <div class="code-label">~/li-project/src/li_main.py</div>
+      <div class="code-block">
+        <span class="c-cmt">#!/usr/bin/env python3</span>
+        <span class="c-cmt"># li_main.py — Orchestrateur principal de Li</span>
+        <span class="c-cmt"># Terminale NSI · Projet IA Embarquée · Raspberry Pi 5</span>
+
+        <span class="c-kw">import</span> threading
+        <span class="c-kw">import</span> time
+        <span class="c-kw">import</span> tempfile
+        <span class="c-kw">import</span> subprocess
+        <span class="c-kw">import</span> os
+        <span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+        <span class="c-kw">import</span> pyaudio
+        <span class="c-kw">import</span> ollama
+        <span class="c-kw">from</span> faster_whisper <span class="c-kw">import</span> WhisperModel
+        <span class="c-kw">from</span> li_face <span class="c-kw">import</span> LiFace, Emotion
+        <span class="c-kw">from</span> li_wake <span class="c-kw">import</span> LiWakeWord
+        <span class="c-kw">from</span> li_audio <span class="c-kw">import</span> LiAudio
+
+        <span class="c-cmt"># ── Configuration centralisée ─────────────────────────────────────────────</span>
+        CONFIG = {
+        <span class="c-str">"model"</span> : <span class="c-str">"llama3.2:3b"</span>, <span class="c-cmt"># modèle
+          Ollama</span>
+        <span class="c-str">"whisper_model"</span> : <span class="c-str">"small"</span>, <span class="c-cmt"># taille du
+          modèle Whisper</span>
+        <span class="c-str">"lang"</span> : <span class="c-str">"fr"</span>, <span class="c-cmt"># langue de
+          transcription</span>
+        <span class="c-str">"samplerate"</span> : <span class="c-num">16000</span>, <span class="c-cmt"># Hz — imposé
+          par openWakeWord</span>
+        <span class="c-str">"listen_secs"</span> : <span class="c-num">6</span>, <span class="c-cmt"># durée
+          d'enregistrement après wake</span>
+        <span class="c-str">"piper_bin"</span> : <span class="c-str">"../models/piper/piper/piper"</span>,
+        <span class="c-str">"piper_model"</span> : <span class="c-str">"../models/piper/fr_FR-upmc-medium.onnx"</span>,
+        <span class="c-str">"system_prompt"</span> : (
+        <span class="c-str">"Tu es Li, un assistant vocal bienveillant, concis et précis. "</span>
+        <span class="c-str">"Réponds TOUJOURS en français. Limite chaque réponse à 2 phrases "</span>
+        <span class="c-str">"maximum pour rester adapté à la synthèse vocale."</span>
+        ),
+        }
+
+        <span class="c-kw">class</span> <span class="c-cls">LiAssistant</span>:
+        <span class="c-str">"""Orchestrateur principal de Li — gère le pipeline complet."""</span>
+
+        <span class="c-kw">def</span> <span class="c-fn">__init__</span>(<span class="c-var">self</span>):
+        print(<span class="c-str">"[Li] Chargement de Whisper ({}, int8)..."</span>.format(CONFIG[<span
+          class="c-str">"whisper_model"</span>]))
+        t0 = time.time()
+        <span class="c-var">self</span>.whisper = WhisperModel(
+        CONFIG[<span class="c-str">"whisper_model"</span>], compute_type=<span class="c-str">"int8"</span>
+        )
+        print(<span class="c-str">"[Li] Whisper prêt — {:.1f} s"</span>.format(time.time() - t0))
+
+        <span class="c-var">self</span>.face = LiFace(width=<span class="c-num">800</span>, height=<span
+          class="c-num">480</span>) <span class="c-cmt"># résolution écran FNK0100</span>
+        <span class="c-var">self</span>.wake = LiWakeWord(callback=<span class="c-var">self</span>._on_wake_threaded)
+        <span class="c-var">self</span>.audio = LiAudio()
+
+        <span class="c-cmt"># Mémoire conversationnelle : system_prompt + max 20 derniers messages</span>
+        <span class="c-var">self</span>.history = [
+        {<span class="c-str">"role"</span>: <span class="c-str">"system"</span>, <span class="c-str">"content"</span>:
+        CONFIG[<span class="c-str">"system_prompt"</span>]}
+        ]
+
+        <span class="c-cmt"># Verrou pour éviter deux pipelines simultanés</span>
+        <span class="c-var">self</span>._pipeline_lock = threading.Lock()
+
+        print(<span class="c-str">"[Li] Prêt. Dites 'Bonjour Li' pour commencer."</span>)
+
+        <span class="c-cmt"># ── Callback appelé par T-Wake ────────────────────────────────────────</span>
+        <span class="c-kw">def</span> <span class="c-fn">_on_wake_threaded</span>(<span class="c-var">self</span>):
+        <span class="c-str">"""Lance le pipeline dans un thread séparé pour ne pas bloquer T-Wake."""</span>
+        <span class="c-kw">if</span> <span class="c-var">self</span>._pipeline_lock.locked():
+        <span class="c-cmt"># Li est déjà en train de traiter une requête — ignorer</span>
+        <span class="c-kw">return</span>
+        threading.Thread(target=<span class="c-var">self</span>._pipeline, daemon=<span
+          class="c-kw">True</span>).start()
+
+        <span class="c-cmt"># ── Pipeline principal ────────────────────────────────────────────────</span>
+        <span class="c-kw">def</span> <span class="c-fn">_pipeline</span>(<span class="c-var">self</span>):
+        <span class="c-str">"""Étapes : écoute → STT → LLM → TTS → lecture."""</span>
+        <span class="c-kw">with</span> <span class="c-var">self</span>._pipeline_lock:
+        <span class="c-cmt"># Étape 1 — Enregistrement</span>
+        <span class="c-var">self</span>.face.set_emotion(Emotion.LISTENING)
+        audio_np = <span class="c-var">self</span>._record(CONFIG[<span class="c-str">"listen_secs"</span>])
+
+        <span class="c-cmt"># Étape 2 — Transcription Whisper (STT)</span>
+        <span class="c-var">self</span>.face.set_emotion(Emotion.THINKING)
+        segments, _ = <span class="c-var">self</span>.whisper.transcribe(
+        audio_np,
+        language=CONFIG[<span class="c-str">"lang"</span>],
+        vad_filter=<span class="c-kw">True</span> <span class="c-cmt"># supprime les silences</span>
+        )
+        texte = <span class="c-str">" "</span>.join(s.text <span class="c-kw">for</span> s <span class="c-kw">in</span>
+        segments).strip()
+        <span class="c-kw">if not</span> texte:
+        print(<span class="c-str">"[Li] Rien entendu."</span>)
+        <span class="c-var">self</span>.face.set_emotion(Emotion.IDLE)
+        <span class="c-kw">return</span>
+        print(<span class="c-str">"[Li] Transcription : {}"</span>.format(texte))
+
+        <span class="c-cmt"># Étape 3 — Requête LLM (Ollama)</span>
+        <span class="c-var">self</span>.history.append({<span class="c-str">"role"</span>: <span
+          class="c-str">"user"</span>, <span class="c-str">"content"</span>: texte})
+        <span class="c-kw">try</span>:
+        resp = ollama.chat(
+        model=CONFIG[<span class="c-str">"model"</span>], messages=<span class="c-var">self</span>.history
+        )
+        reponse = resp[<span class="c-str">"message"</span>][<span class="c-str">"content"</span>].strip()
+        <span class="c-kw">except</span> Exception <span class="c-kw">as</span> e:
+        reponse = <span class="c-str">"Désolé, je n'arrive pas à accéder au modèle."</span>
+        print(<span class="c-str">"[Li] Erreur Ollama :"</span>, e)
+
+        <span class="c-var">self</span>.history.append({<span class="c-str">"role"</span>: <span
+          class="c-str">"assistant"</span>, <span class="c-str">"content"</span>: reponse})
+        <span class="c-var">self</span>._tronquer_historique()
+        print(<span class="c-str">"[Li] Réponse : {}"</span>.format(reponse))
+
+        <span class="c-cmt"># Étape 4 — Synthèse vocale (TTS Piper)</span>
+        wav_path = <span class="c-var">self</span>._synthese(reponse)
+        <span class="c-kw">if</span> wav_path:
+        <span class="c-var">self</span>.audio.play_wav(
+        wav_path,
+        face_cb=<span class="c-kw">lambda</span> lvl: <span class="c-var">self</span>.face.set_speaking(<span
+          class="c-kw">True</span>, lvl)
+        )
+        os.unlink(wav_path) <span class="c-cmt"># supprimer le fichier temporaire</span>
+
+        <span class="c-var">self</span>.face.set_emotion(Emotion.IDLE)
+
+        <span class="c-cmt"># ── Enregistrement microphone ─────────────────────────────────────────</span>
+        <span class="c-kw">def</span> <span class="c-fn">_record</span>(<span class="c-var">self</span>, duree_s: float)
+        -> np.ndarray:
+        <span class="c-str">"""
+          Enregistre duree_s secondes depuis le microphone.
+          Retourne un tableau numpy float32 normalisé entre -1.0 et 1.0,
+          attendu par faster-whisper.transcribe().
+          """</span>
+        CHUNK = <span class="c-num">1024</span>
+        SR = CONFIG[<span class="c-str">"samplerate"</span>]
+        n_frames = int(SR * duree_s)
+
+        pa = pyaudio.PyAudio()
+        stream = pa.open(
+        rate=SR, channels=<span class="c-num">1</span>,
+        format=pyaudio.paInt16,
+        input=<span class="c-kw">True</span>,
+        frames_per_buffer=CHUNK
+        )
+        frames = []
+        collected = <span class="c-num">0</span>
+        <span class="c-kw">while</span> collected < n_frames: data=stream.read(CHUNK, exception_on_overflow=<span
+          class="c-kw">False</span>)
+          frames.append(data)
+          collected += CHUNK
+
+          stream.stop_stream()
+          stream.close()
+          pa.terminate()
+
+          <span class="c-cmt"># Convertir bytes → int16 → float32 normalisé</span>
+          raw = b<span class="c-str">""</span>.join(frames)
+          audio_int16 = np.frombuffer(raw, dtype=np.int16)
+          audio_float32 = audio_int16.astype(np.float32) / <span class="c-num">32768.0</span>
+          <span class="c-kw">return</span> audio_float32
+
+          <span class="c-cmt"># ── Synthèse vocale Piper TTS ─────────────────────────────────────────</span>
+          <span class="c-kw">def</span> <span class="c-fn">_synthese</span>(<span class="c-var">self</span>, texte: str)
+          -> str <span class="c-kw">or</span> None:
+          <span class="c-str">"""
+            Appelle le binaire Piper en sous-processus.
+            Retourne le chemin vers le fichier WAV généré,
+            ou None en cas d'erreur.
+            """</span>
+          <span class="c-kw">try</span>:
+          fd, wav_path = tempfile.mkstemp(suffix=<span class="c-str">".wav"</span>)
+          os.close(fd)
+          cmd = [
+          os.path.expanduser(CONFIG[<span class="c-str">"piper_bin"</span>]),
+          <span class="c-str">"--model"</span>, os.path.expanduser(CONFIG[<span class="c-str">"piper_model"</span>]),
+          <span class="c-str">"--output_file"</span>, wav_path,
+          ]
+          proc = subprocess.run(
+          cmd,
+          input=texte.encode(<span class="c-str">"utf-8"</span>),
+          capture_output=<span class="c-kw">True</span>,
+          timeout=<span class="c-num">15</span>
+          )
+          <span class="c-kw">if</span> proc.returncode != <span class="c-num">0</span>:
+          print(<span class="c-str">"[Li] Erreur Piper :"</span>, proc.stderr.decode())
+          <span class="c-kw">return</span> <span class="c-kw">None</span>
+          <span class="c-kw">return</span> wav_path
+          <span class="c-kw">except</span> Exception <span class="c-kw">as</span> e:
+          print(<span class="c-str">"[Li] Erreur synthèse :"</span>, e)
+          <span class="c-kw">return</span> <span class="c-kw">None</span>
+
+          <span class="c-cmt"># ── Gestion de l'historique ───────────────────────────────────────────</span>
+          <span class="c-kw">def</span> <span class="c-fn">_tronquer_historique</span>(<span class="c-var">self</span>):
+          <span class="c-kw">if</span> len(<span class="c-var">self</span>.history) > <span class="c-num">21</span>:
+          <span class="c-cmt"># 1 system + 20 messages</span>
+          <span class="c-var">self</span>.history = [<span class="c-var">self</span>.history[<span
+            class="c-num">0</span>]] + <span class="c-var">self</span>.history[-<span class="c-num">20</span>:]
+
+          <span class="c-cmt"># ── Démarrage ─────────────────────────────────────────────────────────</span>
+          <span class="c-kw">def</span> <span class="c-fn">run</span>(<span class="c-var">self</span>):
+          <span class="c-str">"""Lance le thread de rendu du visage et le détecteur de mot-clé."""</span>
+          face_thread = threading.Thread(target=<span class="c-var">self</span>.face.run, daemon=<span
+            class="c-kw">True</span>)
+          face_thread.start()
+          <span class="c-var">self</span>.wake.start()
+          <span class="c-kw">try</span>:
+          <span class="c-kw">while</span> <span class="c-kw">True</span>:
+          time.sleep(<span class="c-num">1</span>)
+          <span class="c-kw">except</span> KeyboardInterrupt:
+          print(<span class="c-str">"\n[Li] Arrêt demandé."</span>)
+
+          <span class="c-kw">if</span> __name__ == <span class="c-str">"__main__"</span>:
+          li = LiAssistant()
+          li.run()
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 12</span><span class="q-label">Analyse architecturale</span></div>
+        <p>Dans <code>_on_wake_threaded</code>, un verrou <code>_pipeline_lock</code> est testé avant de lancer le
+          pipeline. Expliquez ce qui se passerait sans cette vérification si l'utilisateur disait « Bonjour Li » deux
+          fois en moins de 10 secondes. Quel problème cela crée-t-il sur un système à ressources limitées comme le RPi 5
+          ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 13</span><span class="q-label">Méthode _record</span></div>
+        <p>La méthode <code>_record</code> retourne un tableau <code>numpy.ndarray</code> de type <code>float32</code>
+          normalisé entre −1,0 et 1,0. Expliquez les deux opérations de conversion effectuées (ligne
+          <code>audio_int16.astype(...) / 32768.0</code>) et justifiez pourquoi Whisper exige ce format plutôt que des
+          entiers 16 bits bruts.</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 14</span><span class="q-label">Méthode _synthese</span></div>
+        <p>La méthode <code>_synthese</code> utilise <code>subprocess.run</code> avec
+          <code>input=texte.encode("utf-8")</code>. Expliquez comment cela remplace la commande shell
+          <code>echo "texte" | ./piper ...</code>. Pourquoi utilise-t-on un fichier temporaire
+          (<code>tempfile.mkstemp</code>) plutôt qu'un nom de fichier fixe comme <code>/tmp/li.wav</code> ?</p>
+      </div>
+    </div><!-- /tab-main -->
+
+    <!-- ── li_face.py ────────────────────────────────────────────────────── -->
+    <div class="tab-panel card" id="tab-face" style="border-radius:0 var(--r) var(--r) var(--r);">
+      <div class="card-header">li_face.py <span class="sub">Rendu pygame · 7 émotions · thread-safe · 30 FPS</span>
+      </div>
+      <div class="code-label">~/li-project/src/li_face.py</div>
+      <div class="code-block">
+        <span class="c-cmt">#!/usr/bin/env python3</span>
+        <span class="c-cmt"># li_face.py — Rendu du visage animé de Li via pygame</span>
+
+        <span class="c-kw">import</span> pygame
+        <span class="c-kw">import</span> threading
+        <span class="c-kw">import</span> math
+        <span class="c-kw">from</span> enum <span class="c-kw">import</span> Enum, auto
+
+        <span class="c-kw">class</span> <span class="c-cls">Emotion</span>(Enum):
+        IDLE = auto() <span class="c-cmt"># repos — regard neutre</span>
+        LISTENING = auto() <span class="c-cmt"># écoute active</span>
+        THINKING = auto() <span class="c-cmt"># traitement en cours</span>
+        SPEAKING = auto() <span class="c-cmt"># synthèse vocale en cours</span>
+        HAPPY = auto() <span class="c-cmt"># réponse enthousiaste</span>
+        SURPRISED = auto() <span class="c-cmt"># question inattendue</span>
+        SLEEPING = auto() <span class="c-cmt"># veille (aucune activité prolongée)</span>
+
+        <span class="c-kw">class</span> <span class="c-cls">LiFace</span>:
+        <span class="c-str">"""
+          Rendu pygame du visage de Li.
+          Thread-safe : tous les attributs partagés sont protégés par _lock.
+          À exécuter dans un thread dédié via la méthode run().
+          """</span>
+
+        <span class="c-kw">def</span> <span class="c-fn">__init__</span>(<span class="c-var">self</span>, width: int =
+        <span class="c-num">320</span>, height: int = <span class="c-num">320</span>):
+        <span class="c-var">self</span>._emotion = Emotion.IDLE
+        <span class="c-var">self</span>._mouth_open = <span class="c-num">0.0</span> <span class="c-cmt"># 0.0 = fermée
+          · 1.0 = grande ouverte</span>
+        <span class="c-var">self</span>._running = <span class="c-kw">False</span>
+        <span class="c-var">self</span>._lock = threading.Lock()
+        <span class="c-var">self</span>.width = width
+        <span class="c-var">self</span>.height = height
+        <span class="c-cmt"># Iris wandering — interpolation vers position cible</span>
+        <span class="c-var">self</span>._iris_x = <span class="c-num">0.0</span> <span class="c-cmt"># position actuelle
+          (normalisée -1..1)</span>
+        <span class="c-var">self</span>._iris_y = <span class="c-num">0.0</span>
+        <span class="c-var">self</span>._iris_tx = <span class="c-num">0.0</span> <span class="c-cmt"># position
+          cible</span>
+        <span class="c-var">self</span>._iris_ty = <span class="c-num">0.0</span>
+        <span class="c-var">self</span>._next_wander = <span class="c-num">0.0</span>
+
+        <span class="c-cmt"># ── Interface publique (thread-safe) ──────────────────────────────────</span>
+        <span class="c-kw">def</span> <span class="c-fn">set_emotion</span>(<span class="c-var">self</span>, emotion:
+        Emotion):
+        <span class="c-kw">with</span> <span class="c-var">self</span>._lock:
+        <span class="c-var">self</span>._emotion = emotion
+        <span class="c-var">self</span>._mouth_open = <span class="c-num">0.0</span>
+
+        <span class="c-kw">def</span> <span class="c-fn">set_speaking</span>(<span class="c-var">self</span>, speaking:
+        bool, audio_level: float = <span class="c-num">0.0</span>):
+        <span class="c-kw">with</span> <span class="c-var">self</span>._lock:
+        <span class="c-var">self</span>._emotion = Emotion.SPEAKING <span class="c-kw">if</span> speaking <span
+          class="c-kw">else</span> Emotion.IDLE
+        <span class="c-var">self</span>._mouth_open = max(<span class="c-num">0.0</span>, min(<span
+          class="c-num">1.0</span>, audio_level))
+
+        <span class="c-cmt"># ── Dessin du visage ──────────────────────────────────────────────────</span>
+        <span class="c-kw">def</span> <span class="c-fn">_update_iris_wander</span>(<span class="c-var">self</span>,
+        now: float):
+        <span class="c-str">"""Met à jour la position du regard par interpolation exponentielle."""</span>
+        <span class="c-kw">import</span> random
+        <span class="c-kw">if</span> now >= <span class="c-var">self</span>._next_wander:
+        <span class="c-var">self</span>._iris_tx = random.uniform(-<span class="c-num">0.4</span>, <span
+          class="c-num">0.4</span>)
+        <span class="c-var">self</span>._iris_ty = random.uniform(-<span class="c-num">0.4</span>, <span
+          class="c-num">0.4</span>)
+        <span class="c-var">self</span>._next_wander = now + random.uniform(<span class="c-num">1.5</span>, <span
+          class="c-num">4.0</span>)
+        <span class="c-cmt"># Interpolation douce (easing exponentiel)</span>
+        <span class="c-var">self</span>._iris_x += (<span class="c-var">self</span>._iris_tx - <span
+          class="c-var">self</span>._iris_x) * <span class="c-num">0.08</span>
+        <span class="c-var">self</span>._iris_y += (<span class="c-var">self</span>._iris_ty - <span
+          class="c-var">self</span>._iris_y) * <span class="c-num">0.08</span>
+
+        <span class="c-kw">def</span> <span class="c-fn">_draw</span>(<span class="c-var">self</span>, surface, now:
+        float):
+        <span class="c-str">"""Dessine le visage complet selon l'état émotionnel actuel."""</span>
+        <span class="c-kw">with</span> <span class="c-var">self</span>._lock:
+        emotion = <span class="c-var">self</span>._emotion
+        mouth_open = <span class="c-var">self</span>._mouth_open
+
+        W, H = <span class="c-var">self</span>.width, <span class="c-var">self</span>.height
+        cx, cy = W // <span class="c-num">2</span>, H // <span class="c-num">2</span>
+        eye_y = cy - H // <span class="c-num">6</span>
+        eye_gap = W // <span class="c-num">5</span>
+
+        <span class="c-cmt"># Fond</span>
+        surface.fill((<span class="c-num">6</span>, <span class="c-num">11</span>, <span class="c-num">20</span>))
+
+        <span class="c-cmt"># ── Paramètres visuels par défaut ─────────────────────────────────</span>
+        iris_rgb = (<span class="c-num">56</span>, <span class="c-num">189</span>, <span class="c-num">248</span>) <span
+          class="c-cmt"># bleu</span>
+        eye_r = W // <span class="c-num">14</span>
+        iris_r = int(eye_r * <span class="c-num">0.62</span>)
+        pupil_r = int(eye_r * <span class="c-num">0.31</span>)
+        offx = int(<span class="c-var">self</span>._iris_x * eye_r * <span class="c-num">0.5</span>)
+        offy = int(<span class="c-var">self</span>._iris_y * eye_r * <span class="c-num">0.5</span>)
+        closed_eyes = <span class="c-kw">False</span>
+        show_sourcils = <span class="c-kw">False</span>
+        joues = <span class="c-kw">False</span>
+        mouth_color = (<span class="c-num">244</span>, <span class="c-num">114</span>, <span class="c-num">182</span>)
+
+        <span class="c-cmt"># ── Surcharge selon l'émotion ────────────────────────────────────</span>
+        <span class="c-kw">if</span> emotion == Emotion.IDLE:
+        mouth_open = <span class="c-num">0.05</span>
+        <span class="c-var">self</span>._update_iris_wander(now)
+        offx = int(<span class="c-var">self</span>._iris_x * eye_r * <span class="c-num">0.5</span>)
+        offy = int(<span class="c-var">self</span>._iris_y * eye_r * <span class="c-num">0.5</span>)
+
+        <span class="c-kw">elif</span> emotion == Emotion.LISTENING:
+        iris_rgb = (<span class="c-num">45</span>, <span class="c-num">212</span>, <span class="c-num">191</span>) <span
+          class="c-cmt"># teal</span>
+        eye_r = int(W // <span class="c-num">14</span> * <span class="c-num">1.15</span>)
+        iris_r = int(eye_r * <span class="c-num">0.65</span>)
+        mouth_open = <span class="c-num">0.12</span>
+        offx = offy = <span class="c-num">0</span>
+
+        <span class="c-kw">elif</span> emotion == Emotion.THINKING:
+        iris_rgb = (<span class="c-num">167</span>, <span class="c-num">139</span>, <span class="c-num">250</span>)
+        <span class="c-cmt"># violet</span>
+        offy = -int(eye_r * <span class="c-num">0.35</span>) <span class="c-cmt"># regard vers le haut</span>
+        offx = <span class="c-num">0</span>
+        show_sourcils = <span class="c-kw">True</span>
+        mouth_open = <span class="c-num">0.0</span>
+
+        <span class="c-kw">elif</span> emotion == Emotion.SPEAKING:
+        offx = offy = <span class="c-num">0</span> <span class="c-cmt"># mouth_open vient du RMS</span>
+
+        <span class="c-kw">elif</span> emotion == Emotion.HAPPY:
+        iris_rgb = (<span class="c-num">52</span>, <span class="c-num">211</span>, <span class="c-num">153</span>) <span
+          class="c-cmt"># vert</span>
+        eye_r = int(W // <span class="c-num">14</span>)
+        iris_r = int(eye_r * <span class="c-num">0.62</span>)
+        joues = <span class="c-kw">True</span>
+        mouth_open = <span class="c-num">0.85</span>
+
+        <span class="c-kw">elif</span> emotion == Emotion.SURPRISED:
+        eye_r = int(W // <span class="c-num">14</span> * <span class="c-num">1.3</span>)
+        iris_r = int(eye_r * <span class="c-num">0.68</span>)
+        pupil_r = int(eye_r * <span class="c-num">0.36</span>)
+        mouth_open = <span class="c-num">1.0</span>
+        offx = offy = <span class="c-num">0</span>
+
+        <span class="c-kw">elif</span> emotion == Emotion.SLEEPING:
+        closed_eyes = <span class="c-kw">True</span>
+        mouth_open = <span class="c-num">0.0</span>
+
+        <span class="c-cmt"># ── Rendu des yeux ───────────────────────────────────────────────</span>
+        <span class="c-kw">for</span> ex <span class="c-kw">in</span> [cx - eye_gap, cx + eye_gap]:
+        <span class="c-kw">if</span> closed_eyes:
+        pygame.draw.arc(
+        surface, (<span class="c-num">232</span>,<span class="c-num">240</span>,<span class="c-num">255</span>),
+        (ex - eye_r, eye_y - eye_r//2, eye_r*2, eye_r),
+        math.pi, math.pi*<span class="c-num">2</span>, <span class="c-num">4</span>
+        )
+        <span class="c-kw">else</span>:
+        pygame.draw.circle(surface, (<span class="c-num">232</span>,<span class="c-num">240</span>,<span
+          class="c-num">255</span>), (ex, eye_y), eye_r)
+        pygame.draw.circle(surface, iris_rgb, (ex+offx, eye_y+offy), iris_r)
+        pygame.draw.circle(surface, (<span class="c-num">6</span>,<span class="c-num">11</span>,<span
+          class="c-num">20</span>), (ex+offx, eye_y+offy), pupil_r)
+        pygame.draw.circle(surface, (<span class="c-num">255</span>,<span class="c-num">255</span>,<span
+          class="c-num">255</span>),
+        (ex+offx - pupil_r//2, eye_y+offy - pupil_r//2), max(<span class="c-num">2</span>, pupil_r//3))
+
+        <span class="c-kw">if</span> show_sourcils:
+        <span class="c-cmt"># Sourcils froncés (obliques vers l'intérieur)</span>
+        s = <span class="c-num">1</span> <span class="c-kw">if</span> ex < cx <span class="c-kw">else</span> -<span
+            class="c-num">1</span>
+          pygame.draw.line(
+          surface, iris_rgb,
+          (ex - eye_r, eye_y - eye_r - <span class="c-num">6</span>),
+          (ex + eye_r * s, eye_y - eye_r - <span class="c-num">14</span>), <span class="c-num">3</span>
+          )
+
+          <span class="c-kw">if</span> joues:
+          <span class="c-cmt"># Joues roses semi-transparentes</span>
+          s = pygame.Surface((eye_r*<span class="c-num">3</span>, eye_r), pygame.SRCALPHA)
+          pygame.draw.ellipse(s, (<span class="c-num">244</span>,<span class="c-num">114</span>,<span
+            class="c-num">182</span>,<span class="c-num">65</span>), (<span class="c-num">0</span>,<span
+            class="c-num">0</span>, eye_r*<span class="c-num">3</span>, eye_r))
+          surface.blit(s, (cx - eye_gap - eye_r*<span class="c-num">2</span>, eye_y + eye_r//2))
+          surface.blit(s, (cx + eye_gap - eye_r, eye_y + eye_r//2))
+
+          <span class="c-cmt"># ── Rendu de la bouche ───────────────────────────────────────────</span>
+          mouth_h = int(eye_r * <span class="c-num">0.5</span>) + int(mouth_open * eye_r * <span class="c-num">2</span>)
+          mouth_w = int(eye_r * <span class="c-num">2.2</span>)
+          mouth_y = cy + H // <span class="c-num">7</span>
+          pygame.draw.ellipse(surface, mouth_color,
+          (cx - mouth_w//2, mouth_y, mouth_w, max(<span class="c-num">4</span>, mouth_h)))
+          <span class="c-kw">if</span> mouth_open > <span class="c-num">0.08</span>:
+          pygame.draw.ellipse(surface, (<span class="c-num">232</span>,<span class="c-num">240</span>,<span
+            class="c-num">255</span>),
+          (cx - int(mouth_w*<span class="c-num">0.7</span>)//2, mouth_y,
+          int(mouth_w*<span class="c-num">0.7</span>), int(max(<span class="c-num">2</span>, mouth_h)*<span
+            class="c-num">0.4</span>)))
+
+          <span class="c-cmt"># ── Boucle principale 30 FPS ──────────────────────────────────────────</span>
+          <span class="c-kw">def</span> <span class="c-fn">run</span>(<span class="c-var">self</span>):
+          <span class="c-str">"""À lancer dans un thread dédié. Bloque jusqu'à fermeture de la fenêtre."""</span>
+          pygame.init()
+          <span class="c-cmt"># Plein écran sur le FNK0100 (800×480) ou fenêtré en développement</span>
+          flags = pygame.FULLSCREEN <span class="c-kw">if</span> (<span class="c-var">self</span>.width, <span
+            class="c-var">self</span>.height) == (<span class="c-num">800</span>,<span class="c-num">480</span>) <span
+            class="c-kw">else</span> <span class="c-num">0</span>
+          screen = pygame.display.set_mode((<span class="c-var">self</span>.width, <span
+            class="c-var">self</span>.height), flags)
+          pygame.display.set_caption(<span class="c-str">"Li — Agent Vocal IA"</span>)
+          pygame.mouse.set_visible(<span class="c-kw">False</span>)
+          clock = pygame.time.Clock()
+          <span class="c-var">self</span>._running = <span class="c-kw">True</span>
+
+          <span class="c-kw">while</span> <span class="c-var">self</span>._running:
+          now = pygame.time.get_ticks() / <span class="c-num">1000.0</span>
+          <span class="c-kw">for</span> event <span class="c-kw">in</span> pygame.event.get():
+          <span class="c-kw">if</span> event.type == pygame.QUIT:
+          <span class="c-var">self</span>._running = <span class="c-kw">False</span>
+          <span class="c-kw">if</span> event.type == pygame.KEYDOWN <span class="c-kw">and</span> event.key ==
+          pygame.K_ESCAPE:
+          <span class="c-var">self</span>._running = <span class="c-kw">False</span>
+          <span class="c-var">self</span>._draw(screen, now)
+          pygame.display.flip()
+          clock.tick(<span class="c-num">30</span>)
+
+          pygame.quit()
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 15</span><span class="q-label">Easing exponentiel</span></div>
+        <p>La méthode <code>_update_iris_wander</code> applique la formule <code>x += (cible - x) * 0.08</code>. Simulez
+          5 étapes en partant de <code>x = 0</code> et <code>cible = 1</code>. Quel type de mouvement cela produit-il ?
+          Pourquoi ce mouvement est-il plus naturel qu'une translation linéaire pour simuler le regard d'un être vivant
+          ?</p>
+      </div>
+
+      <!-- Galerie des 7 états émotionnels -->
+      <div class="card-header" style="margin-top:18px;">Galerie des 7 états émotionnels <span class="sub">Rendu pygame
+          simulé en SVG · correspondance avec le code</span></div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:10px 0 4px;">
+
+        <!-- IDLE -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <ellipse cx="19" cy="23" rx="9" ry="9" fill="#e8f0ff" />
+            <ellipse cx="19" cy="23" rx="5.8" ry="5.8" fill="#38bdf8" />
+            <ellipse cx="19" cy="23" rx="2.9" ry="2.9" fill="#060b14" />
+            <ellipse cx="16" cy="20" rx="1.6" ry="1.6" fill="white" />
+            <ellipse cx="41" cy="23" rx="9" ry="9" fill="#e8f0ff" />
+            <ellipse cx="41" cy="23" rx="5.8" ry="5.8" fill="#38bdf8" />
+            <ellipse cx="41" cy="23" rx="2.9" ry="2.9" fill="#060b14" />
+            <ellipse cx="38" cy="20" rx="1.6" ry="1.6" fill="white" />
+            <path d="M17 43 Q30 50 43 43" fill="none" stroke="#f472b6" stroke-width="2.2" stroke-linecap="round" />
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:var(--text3);margin-top:4px;">IDLE</div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">repos</div>
+        </div>
+
+        <!-- LISTENING -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <circle cx="30" cy="30" r="27" fill="none" stroke="#2dd4bf" stroke-width="1" opacity="0.5">
+              <animate attributeName="r" values="20;27;20" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+            <ellipse cx="19" cy="22" rx="10.5" ry="10.5" fill="#e8f0ff" />
+            <ellipse cx="19" cy="22" rx="7" ry="7" fill="#2dd4bf" />
+            <ellipse cx="19" cy="22" rx="3.5" ry="3.5" fill="#060b14" />
+            <ellipse cx="15.5" cy="18.5" rx="1.8" ry="1.8" fill="white" />
+            <ellipse cx="41" cy="22" rx="10.5" ry="10.5" fill="#e8f0ff" />
+            <ellipse cx="41" cy="22" rx="7" ry="7" fill="#2dd4bf" />
+            <ellipse cx="41" cy="22" rx="3.5" ry="3.5" fill="#060b14" />
+            <ellipse cx="37.5" cy="18.5" rx="1.8" ry="1.8" fill="white" />
+            <ellipse cx="30" cy="45" rx="9" ry="4" fill="#f472b6" opacity="0.55" />
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:var(--teal);margin-top:4px;">LISTENING
+          </div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">écoute</div>
+        </div>
+
+        <!-- THINKING -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <ellipse cx="19" cy="24" rx="9" ry="9" fill="#e8f0ff" />
+            <ellipse cx="17" cy="22" rx="5.8" ry="5.8" fill="#a78bfa" />
+            <ellipse cx="17" cy="22" rx="2.9" ry="2.9" fill="#060b14" />
+            <ellipse cx="41" cy="24" rx="9" ry="9" fill="#e8f0ff" />
+            <ellipse cx="39" cy="22" rx="5.8" ry="5.8" fill="#a78bfa" />
+            <ellipse cx="39" cy="22" rx="2.9" ry="2.9" fill="#060b14" />
+            <!-- sourcils froncés -->
+            <line x1="10" y1="14" x2="28" y2="18" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="32" y1="18" x2="50" y2="14" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M22 44 Q30 41 38 44" fill="none" stroke="#f472b6" stroke-width="1.8" stroke-linecap="round" />
+            <circle cx="46" cy="11" r="1.8" fill="#a78bfa">
+              <animate attributeName="opacity" values="0;1;0" dur="1.1s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="51" cy="5" r="2.5" fill="#a78bfa">
+              <animate attributeName="opacity" values="0;1;0" dur="1.1s" repeatCount="indefinite" begin="0.4s" />
+            </circle>
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:var(--purple);margin-top:4px;">THINKING
+          </div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">réflexion</div>
+        </div>
+
+        <!-- SPEAKING -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <ellipse cx="19" cy="22" rx="9" ry="9" fill="#e8f0ff" />
+            <ellipse cx="19" cy="22" rx="5.8" ry="5.8" fill="#38bdf8" />
+            <ellipse cx="19" cy="22" rx="2.9" ry="2.9" fill="#060b14" />
+            <ellipse cx="41" cy="22" rx="9" ry="9" fill="#e8f0ff" />
+            <ellipse cx="41" cy="22" rx="5.8" ry="5.8" fill="#38bdf8" />
+            <ellipse cx="41" cy="22" rx="2.9" ry="2.9" fill="#060b14" />
+            <ellipse cx="30" cy="44" rx="12" ry="7" fill="#f472b6">
+              <animate attributeName="ry" values="2;8;4;10;3;7;2" dur="0.85s" repeatCount="indefinite" />
+            </ellipse>
+            <rect x="21" y="40" width="18" height="3" rx="1.5" fill="#e8f0ff">
+              <animate attributeName="opacity" values="1;1;0;0;1" dur="0.85s" repeatCount="indefinite" />
+            </rect>
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:var(--orange);margin-top:4px;">SPEAKING
+          </div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">parole</div>
+        </div>
+
+        <!-- HAPPY -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <!-- yeux plissés -->
+            <ellipse cx="19" cy="22" rx="10" ry="7" fill="#e8f0ff" />
+            <ellipse cx="19" cy="22" rx="6.5" ry="4.5" fill="#34d399" />
+            <ellipse cx="41" cy="22" rx="10" ry="7" fill="#e8f0ff" />
+            <ellipse cx="41" cy="22" rx="6.5" ry="4.5" fill="#34d399" />
+            <!-- joues roses -->
+            <ellipse cx="8" cy="34" rx="6" ry="3.5" fill="#f472b6" opacity="0.28" />
+            <ellipse cx="52" cy="34" rx="6" ry="3.5" fill="#f472b6" opacity="0.28" />
+            <!-- grand sourire -->
+            <path d="M13 40 Q30 54 47 40" fill="#f472b6" stroke="#f472b6" stroke-width="1" />
+            <path d="M13 40 Q30 54 47 40" fill="none" stroke="#f472b6" stroke-width="1" />
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:var(--green);margin-top:4px;">HAPPY</div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">joie</div>
+        </div>
+
+        <!-- SURPRISED -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <ellipse cx="19" cy="22" rx="12" ry="12" fill="#e8f0ff" />
+            <ellipse cx="19" cy="22" rx="8.5" ry="8.5" fill="#38bdf8" />
+            <ellipse cx="19" cy="22" rx="4.2" ry="4.2" fill="#060b14" />
+            <ellipse cx="15.5" cy="18.5" rx="2" ry="2" fill="white" />
+            <ellipse cx="41" cy="22" rx="12" ry="12" fill="#e8f0ff" />
+            <ellipse cx="41" cy="22" rx="8.5" ry="8.5" fill="#38bdf8" />
+            <ellipse cx="41" cy="22" rx="4.2" ry="4.2" fill="#060b14" />
+            <ellipse cx="37.5" cy="18.5" rx="2" ry="2" fill="white" />
+            <!-- bouche grande ouverte (o) -->
+            <ellipse cx="30" cy="47" rx="9" ry="9" fill="#f472b6" />
+            <ellipse cx="30" cy="47" rx="6" ry="6" fill="#060b14" />
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:var(--pink);margin-top:4px;">SURPRISED
+          </div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">surprise</div>
+        </div>
+
+        <!-- SLEEPING -->
+        <div style="text-align:center;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+            <rect width="60" height="60" rx="8" fill="#060b14" />
+            <!-- yeux fermés : demi-arcs -->
+            <path d="M10 24 Q19 30 28 24" fill="none" stroke="#e8f0ff" stroke-width="2.8" stroke-linecap="round" />
+            <path d="M32 24 Q41 30 50 24" fill="none" stroke="#e8f0ff" stroke-width="2.8" stroke-linecap="round" />
+            <line x1="23" y1="42" x2="37" y2="42" stroke="#f472b6" stroke-width="2.2" stroke-linecap="round" />
+            <text x="41" y="18" font-size="9" fill="#304888" font-family="monospace">
+              <animate attributeName="opacity" values="0;0.9;0" dur="2.2s" repeatCount="indefinite" />z
+            </text>
+            <text x="47" y="10" font-size="12" fill="#304888" font-family="monospace">
+              <animate attributeName="opacity" values="0;0.7;0" dur="2.2s" repeatCount="indefinite" begin="0.6s" />Z
+            </text>
+          </svg>
+          <div style="font-size:.66rem;font-family:'Fira Code',monospace;color:#304888;margin-top:4px;">SLEEPING</div>
+          <div style="font-size:.60rem;font-family:'Fira Code',monospace;color:var(--text3);">veille</div>
+        </div>
+
+      </div><!-- fin galerie -->
+
+      <div class="alert alert-info" style="margin-top:10px;">
+        <strong>Correspondance code &#8594; rendu</strong>
+        Chaque état ci-dessus correspond à une branche <code>elif</code> dans la méthode <code>_draw</code> de
+        <code>LiFace</code>. Les paramètres visuels modifiés sont : couleur de l'iris (<code>iris_rgb</code>), rayon des
+        yeux (<code>eye_r</code>), décalage du regard (<code>offx</code>, <code>offy</code>), présence de sourcils
+        (<code>show_sourcils</code>), joues (<code>joues</code>), yeux fermés (<code>closed_eyes</code>) et ouverture de
+        la bouche (<code>mouth_open</code>).
+      </div>
+
+    </div><!-- /tab-face -->
+
+    <!-- ── li_wake.py ────────────────────────────────────────────────────── -->
+    <div class="tab-panel card" id="tab-wake" style="border-radius:0 var(--r) var(--r) var(--r);">
+      <div class="card-header">li_wake.py <span class="sub">Détection du mot-clé · openWakeWord · fenêtres
+          glissantes</span></div>
+      <div class="alert alert-warn">
+        <strong>Mot-clé utilisé : « hey_jarvis » &#8800; « Bonjour Li »</strong>
+        openWakeWord propose des modèles pré-entraînés pour des mots-clés anglais (<em>hey jarvis</em>, <em>hey
+          mycroft</em>…). Il n'existe pas de modèle pré-entraîné pour « Bonjour Li ». Deux options : (1) utiliser
+        <code>hey_jarvis</code> comme substitut fonctionnel, (2) entraîner un modèle personnalisé (voir section 08 —
+        Pour aller plus loin). Dans ce TP, nous utilisons <code>hey_jarvis</code> : dites « hey jarvis » pour déclencher
+        Li.
+      </div>
+      <div class="code-label">~/li-project/src/li_wake.py</div>
+      <div class="code-block">
+        <span class="c-cmt">#!/usr/bin/env python3</span>
+        <span class="c-cmt"># li_wake.py — Détection du mot-clé via openWakeWord</span>
+
+        <span class="c-kw">import</span> pyaudio
+        <span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+        <span class="c-kw">import</span> time
+        <span class="c-kw">import</span> threading
+        <span class="c-kw">from</span> openwakeword.model <span class="c-kw">import</span> Model
+
+        SAMPLERATE = <span class="c-num">16_000</span> <span class="c-cmt"># Hz — imposé par openWakeWord</span>
+        CHUNK = <span class="c-num">1_280</span> <span class="c-cmt"># = 80 ms par fenêtre (1280 / 16000)</span>
+        THRESHOLD = <span class="c-num">0.70</span> <span class="c-cmt"># score minimal pour un déclenchement</span>
+        COOLDOWN_S = <span class="c-num">2.0</span> <span class="c-cmt"># secondes d'attente après chaque
+          déclenchement</span>
+
+        <span class="c-kw">class</span> <span class="c-cls">LiWakeWord</span>:
+        <span class="c-str">"""
+          Écoute continue du microphone à 16 kHz.
+          Détecte le mot-clé par fenêtres glissantes de 80 ms.
+          Appelle callback() dans le thread de T-Wake lorsque détecté.
+          """</span>
+
+        <span class="c-kw">def</span> <span class="c-fn">__init__</span>(<span class="c-var">self</span>, callback):
+        <span class="c-var">self</span>.callback = callback
+        <span class="c-var">self</span>._last_trigger = <span class="c-num">0.0</span>
+        print(<span class="c-str">"[Li] Chargement du modèle openWakeWord..."</span>)
+        <span class="c-var">self</span>.model = Model(
+        wakeword_models=[<span class="c-str">"hey_jarvis"</span>],
+        inference_framework=<span class="c-str">"onnx"</span>
+        )
+        print(<span class="c-str">"[Li] openWakeWord prêt — modèle : hey_jarvis"</span>)
+
+        <span class="c-kw">def</span> <span class="c-fn">_listen_loop</span>(<span class="c-var">self</span>):
+        <span class="c-str">"""Boucle d'écoute continue — s'exécute dans T-Wake."""</span>
+        pa = pyaudio.PyAudio()
+        stream = pa.open(
+        rate=SAMPLERATE,
+        channels=<span class="c-num">1</span>,
+        format=pyaudio.paInt16,
+        input=<span class="c-kw">True</span>,
+        frames_per_buffer=CHUNK
+        )
+        <span class="c-kw">try</span>:
+        <span class="c-kw">while True</span>:
+        raw = stream.read(CHUNK, exception_on_overflow=<span class="c-kw">False</span>)
+        audio = np.frombuffer(raw, dtype=np.int16)
+        scores = <span class="c-var">self</span>.model.predict(audio)
+        score = max(scores.values(), default=<span class="c-num">0.0</span>)
+
+        maintenant = time.time()
+        <span class="c-kw">if</span> (score >= THRESHOLD and
+        (maintenant - <span class="c-var">self</span>._last_trigger) > COOLDOWN_S):
+        <span class="c-var">self</span>._last_trigger = maintenant
+        print(<span class="c-str">"[Li] Mot-clé détecté (score={:.2f})"</span>.format(score))
+        <span class="c-var">self</span>.callback() <span class="c-cmt"># appelle _on_wake_threaded</span>
+        <span class="c-kw">finally</span>:
+        stream.stop_stream()
+        stream.close()
+        pa.terminate()
+
+        <span class="c-kw">def</span> <span class="c-fn">start</span>(<span class="c-var">self</span>):
+        <span class="c-str">"""Démarre T-Wake en daemon thread."""</span>
+        t = threading.Thread(target=<span class="c-var">self</span>._listen_loop, daemon=<span class="c-kw">True</span>)
+        t.start()
+        print(<span class="c-str">"[Li] T-Wake démarré. Dites 'hey jarvis'."</span>)
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 16</span><span class="q-label">Faux positifs et faux négatifs</span>
+        </div>
+        <p>Si vous abaissez <code>THRESHOLD</code> de 0,70 à 0,30, quelles sont les conséquences sur le comportement de
+          Li ? Définissez précisément les notions de <strong>faux positif</strong> et de <strong>faux négatif</strong>
+          dans ce contexte. Quel est le seuil optimal et comment le déterminer empiriquement ?</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 17</span><span class="q-label">Fenêtres glissantes</span></div>
+        <p>openWakeWord analyse des fenêtres de 1 280 échantillons à 16 000 Hz, sans chevauchement. Expliquez le
+          principe d'une <strong>fenêtre glissante</strong>. Si un locuteur prononce « hey jarvis » en 0,6 secondes,
+          combien de fenêtres d'analyse couvrent ce mot-clé ? Cela est-il suffisant pour une détection fiable ?</p>
+      </div>
+    </div><!-- /tab-wake -->
+
+    <!-- ── li_audio.py ───────────────────────────────────────────────────── -->
+    <div class="tab-panel card" id="tab-audio" style="border-radius:0 var(--r) var(--r) var(--r);">
+      <div class="card-header">li_audio.py <span class="sub">Lecture WAV · calcul RMS · synchronisation labiale</span>
+      </div>
+      <div class="formula">
+        RMS = &#8730;( (1/N) &#8901; &#8721; x&#7522;&#178; )
+        <small>x&#7522; : échantillon normalisé entre &minus;1 et 1 &nbsp;·&nbsp; N : nombre d'échantillons dans la
+          fenêtre</small>
+      </div>
+      <div class="code-label">~/li-project/src/li_audio.py</div>
+      <div class="code-block">
+        <span class="c-cmt">#!/usr/bin/env python3</span>
+        <span class="c-cmt"># li_audio.py — Lecture du WAV et calcul RMS pour la synchronisation labiale</span>
+
+        <span class="c-kw">import</span> wave
+        <span class="c-kw">import</span> subprocess
+        <span class="c-kw">import</span> time
+        <span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+
+        CHUNK_MS = <span class="c-num">50</span> <span class="c-cmt"># taille de la fenêtre d'analyse RMS
+          (millisecondes)</span>
+
+        <span class="c-kw">class</span> <span class="c-cls">LiAudio</span>:
+        <span class="c-str">"""
+          Gère la lecture audio et la synchronisation labiale de Li.
+          play_wav() lit un fichier WAV par tranches de CHUNK_MS ms,
+          calcule le niveau RMS de chaque tranche et le transmet au visage
+          via un callback pour animer la bouche en synchronisation avec la voix.
+          """</span>
+
+        <span class="c-kw">def</span> <span class="c-fn">calculer_rms</span>(<span class="c-var">self</span>,
+        samples_int16: np.ndarray) -> float:
+        <span class="c-str">"""
+          Calcule le niveau RMS normalisé entre 0.0 et 1.0.
+          Le facteur ×4 amplifie le signal (la voix TTS est relativement douce).
+          """</span>
+        <span class="c-kw">if</span> len(samples_int16) == <span class="c-num">0</span>:
+        <span class="c-kw">return</span> <span class="c-num">0.0</span>
+        MAX_VAL = <span class="c-num">32768.0</span>
+        samples = samples_int16.astype(np.float32) / MAX_VAL
+        rms = np.sqrt(np.mean(samples ** <span class="c-num">2</span>))
+        <span class="c-kw">return</span> float(np.clip(rms * <span class="c-num">4.0</span>, <span
+          class="c-num">0.0</span>, <span class="c-num">1.0</span>))
+
+        <span class="c-kw">def</span> <span class="c-fn">play_wav</span>(<span class="c-var">self</span>, path: str,
+        face_cb):
+        <span class="c-str">"""
+          Lit path via aplay (sortie ALSA) et analyse le RMS en parallèle.
+          face_cb(niveau) est appelé toutes les CHUNK_MS ms pour piloter la bouche.
+
+          Synchronisation : aplay et la boucle WAV démarrent simultanément.
+          La boucle lit les mêmes frames que aplay joue, avec un délai CHUNK_MS.
+          """</span>
+        <span class="c-kw">with</span> wave.open(path, <span class="c-str">"rb"</span>) <span class="c-kw">as</span> wf:
+        sr = wf.getframerate()
+        chunk_size = sr * CHUNK_MS // <span class="c-num">1000</span> <span class="c-cmt"># en nombre
+          d'échantillons</span>
+
+        <span class="c-cmt"># Lancer aplay en arrière-plan</span>
+        proc = subprocess.Popen(
+        [<span class="c-str">"aplay"</span>, <span class="c-str">"-q"</span>, path],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        <span class="c-cmt"># Analyser le fichier WAV tranche par tranche</span>
+        <span class="c-kw">while True</span>:
+        raw = wf.readframes(chunk_size)
+        <span class="c-kw">if not</span> raw:
+        <span class="c-kw">break</span>
+        samples = np.frombuffer(raw, dtype=np.int16)
+        niveau = <span class="c-var">self</span>.calculer_rms(samples)
+        face_cb(niveau)
+        time.sleep(CHUNK_MS / <span class="c-num">1000.0</span>)
+
+        proc.wait() <span class="c-cmt"># attendre la fin de aplay</span>
+        face_cb(<span class="c-num">0.0</span>) <span class="c-cmt"># fermer la bouche</span>
+      </div>
+
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 18</span><span class="q-label">Calcul RMS — traitement du
+            signal</span></div>
+        <p>Pourquoi utilise-t-on le RMS et non simplement la valeur maximale (<code>np.max</code>) ou la moyenne des
+          valeurs absolues (<code>np.mean(np.abs(…))</code>) pour mesurer l'énergie d'une tranche audio ? Justifiez
+          mathématiquement en vous appuyant sur la définition du RMS.</p>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 19</span><span class="q-label">Calcul numérique</span></div>
+        <p>Un fichier WAV 16 bits enregistré à 16 000 Hz pendant 4 secondes : calculez (1) le nombre d'octets de données
+          audio brutes, (2) le nombre de tranches de 50 ms, (3) la fréquence d'appel à <code>face_cb</code>. Combien de
+          fois par seconde la bouche de Li est-elle mise à jour pendant la lecture ?</p>
+      </div>
+    </div><!-- /tab-audio -->
+
+  </div><!-- /sec-4 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 06 — EXERCICES INTERACTIFS
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-5">
+    <div class="section-title"><span class="num pink">06</span> Exercices interactifs</div>
+    <div class="section-rule"></div>
+
+    <div class="alert alert-info">
+      <strong>Éditeurs PyScript — code exécutable dans le navigateur</strong>
+      Chaque éditeur ci-dessous s'exécute en Python pur dans votre navigateur, sans installation. Modifiez le code,
+      cliquez sur le triangle d'exécution et lisez la sortie.
+    </div>
+
+    <!-- Exercice A -->
+    <div class="exercise">
+      <div class="ex-head"><span class="ex-badge">Exercice A</span><span
+          style="font-size:.83rem;color:var(--text2);">Déboguer <code>LiFace.__init__</code> — <strong
+            style="color:var(--red);">3 erreurs</strong></span></div>
+      <p>Le code ci-dessous contient trois erreurs. Pour chacune, identifiez : (1) la nature de l'erreur, (2) le type
+        d'exception Python provoquée, (3) la correction. Corrigez dans l'éditeur et vérifiez par l'exécution.</p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice A — modifiable et exécutable</div>
+      <script type="py-editor" env="ia" id="exo_a">
+import threading
+from enum import Enum, auto
+
+class Emotion(Enum):
+    IDLE = auto(); LISTENING = auto(); SPEAKING = auto()
+
+class LiFace:
+    def __init__(self):
+        self._emotion    = Emotion.IDLE
+        self._mouth_open = 0.0
+        self._running    = True      # ERREUR 1
+        self._lock       = []        # ERREUR 2
+
+    def set_speaking(self, speaking, audio_level):
+        self._emotion    = Emotion.SPEAKING if speaking  # ERREUR 3
+        self._mouth_open = audio_level
+
+# Test — doit s'exécuter sans erreur
+face = LiFace()
+print(f"Emotion  : {face._emotion}")
+print(f"_running : {face._running}")
+print(f"Type lock: {type(face._lock).__name__}")
+face.set_speaking(True, 0.5)
+print(f"Après set_speaking(True, 0.5) : {face._emotion}, mouth={face._mouth_open}")
+    </script>
+    </div>
+
+    <!-- Exercice B -->
+    <div class="exercise" style="margin-top:20px;">
+      <div class="ex-head"><span class="ex-badge">Exercice B</span><span
+          style="font-size:.83rem;color:var(--text2);">Implémenter <code>calculer_rms</code> sans numpy</span></div>
+      <p>Complétez les trois lignes manquantes pour implémenter la formule RMS en Python pur. Le test doit afficher ≈
+        0,7071. Expliquez pourquoi ce résultat est ≈ 1/√2 et non 1,0.</p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice B — modifiable et exécutable</div>
+      <script type="py-editor" env="ia" id="exo_b">
+import math
+
+def calculer_rms(samples_int16: list) -> float:
+    """RMS normalisé entre 0.0 et 1.0. MAX int16 = 32768."""
+    MAX_VAL = 32768.0
+    n = len(samples_int16)
+    if n == 0:
+        return 0.0
+    samples_float = [x / MAX_VAL for x in samples_int16]
+    somme_carres  = ...  # À COMPLÉTER
+    moyenne       = ...  # À COMPLÉTER
+    return ...           # À COMPLÉTER
+
+# Tests
+print(f"Test 1 : {calculer_rms([0, 32767, 0, -32767]):.5f}  (attendu ≈ 0.70711)")
+print(f"Test 2 : {calculer_rms([32767]*4):.5f}               (attendu ≈ 1.00000)")
+print(f"Test 3 : {calculer_rms([0]*4):.5f}                   (attendu = 0.00000)")
+print(f"Test 4 : {calculer_rms([]):.5f}                      (attendu = 0.00000)")
+    </script>
+    </div>
+
+    <!-- Exercice C -->
+    <div class="exercise" style="margin-top:20px;">
+      <div class="ex-head"><span class="ex-badge">Exercice C</span><span
+          style="font-size:.83rem;color:var(--text2);">Simuler l'interpolation du regard — easing exponentiel</span>
+      </div>
+      <p>Complétez la ligne <code>x = ...</code> pour simuler 30 étapes de l'interpolation
+        <code>x += (cible - x) * 0.08</code>. Après exécution : (1) comment s'appelle ce type d'easing ? (2) Pourquoi
+        <code>x</code> n'atteint-il jamais exactement 1,0 ? (3) Après combien d'étapes <code>x</code> dépasse-t-il 0,9 ?
+      </p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice C — modifiable et exécutable</div>
+      <script type="py-editor" env="ia" id="exo_c">
+facteur = 0.08
+cible   = 1.0
+x       = 0.0
+
+print(f"{'Etape':>5} | {'x':>9} | {'cible-x':>10}")
+print("-" * 33)
+for etape in range(1, 31):
+    x = ...   # À COMPLÉTER : appliquer la formule d'interpolation
+    depasse = " < seuil 0.9 atteint" if abs(x - 0.9) < 0.001 else ""
+    print(f"{etape:>5} | {x:>9.6f} | {cible-x:>10.7f}{depasse}")
+
+print(f"\nValeur finale : {x:.8f}")
+print(f"Ecart avec 1.0: {abs(1.0 - x):.2e}")
+    </script>
+    </div>
+
+    <!-- Exercice D -->
+    <div class="exercise" style="margin-top:20px;">
+      <div class="ex-head"><span class="ex-badge">Exercice D</span><span
+          style="font-size:.83rem;color:var(--text2);">Simuler l'historique conversationnel — tronquer avec
+          <code>deque</code></span></div>
+      <p>La méthode <code>_tronquer_historique</code> utilise le découpage de liste. Réécrivez-la en utilisant une
+        <code>collections.deque(maxlen=21)</code>. Testez avec 30 ajouts et vérifiez que la longueur reste bornée à 21
+        et que le premier élément (system prompt) est toujours conservé.</p>
+    </div>
+    <div class="pyscript-wrapper">
+      <div class="pyscript-label">Exercice D — modifiable et exécutable</div>
+      <script type="py-editor" env="ia" id="exo_d">
+from collections import deque
+
+SYSTEM_PROMPT = {"role": "system", "content": "Tu es Li."}
+
+# Version originale (liste + découpage)
+def version_liste():
+    history = [SYSTEM_PROMPT]
+    for i in range(30):
+        role = "user" if i % 2 == 0 else "assistant"
+        history.append({"role": role, "content": f"message {i}"})
+        if len(history) > 21:
+            history = [history[0]] + history[-20:]
+    return history
+
+# Version deque — À COMPLÉTER
+def version_deque():
+    # Indice : utilisez deque(maxlen=21) et gérez le system prompt
+    history = ...  # À COMPLÉTER
+    for i in range(30):
+        role = "user" if i % 2 == 0 else "assistant"
+        # À COMPLÉTER : ajouter le message
+        ...
+    return list(history)
+
+h_liste = version_liste()
+h_deque = version_deque()
+
+print(f"Version liste  — longueur : {len(h_liste)} | premier : {h_liste[0]['role']}")
+print(f"Version deque  — longueur : {len(h_deque)} | premier : {h_deque[0]['role']}")
+print(f"Résultats identiques : {h_liste == h_deque}")
+    </script>
+    </div>
+
+  </div><!-- /sec-5 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 07 — GUIDE DE DÉPANNAGE
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-6">
+    <div class="section-title"><span class="num red">07</span> Guide de dépannage</div>
+    <div class="section-rule"></div>
+
+    <div class="alert alert-info">
+      <strong>Méthode de diagnostic recommandée</strong>
+      Avant de lancer <code>li_main.py</code>, testez chaque sous-système indépendamment dans l'ordre du pipeline :
+      micro &#8594; openWakeWord &#8594; Whisper &#8594; Ollama &#8594; Piper. Cela permet d'isoler le problème
+      rapidement.
+    </div>
+
+    <div class="subsection-title">Problèmes audio — microphone et ALSA</div>
+    <div class="card">
+      <div class="card-header">Symptôme : PyAudio lève <code>IOError: No Default Input Device Available</code> <span
+          class="sub">ou : le micro ne répond pas</span></div>
+      <div class="code-block">
+        <span class="c-cmt"># 1. Vérifier que le micro est reconnu par le noyau</span>
+        lsusb
+        <span class="c-cmt"># Attendu : une ligne mentionnant votre micro USB</span>
+
+        <span class="c-cmt"># 2. Lister les périphériques ALSA</span>
+        arecord -l
+        <span class="c-cmt"># Attendu : au moins "card 1: Device [USB Audio Device], ..."</span>
+
+        <span class="c-cmt"># 3. Forcer le périphérique dans PyAudio</span>
+        <span class="c-cmt"># Dans _record(), remplacez pa.open(...) par :</span>
+        stream = pa.open(
+        rate=16000, channels=1, format=pyaudio.paInt16,
+        input=True, input_device_index=1, <span class="c-cmt"># ← index du micro USB</span>
+        frames_per_buffer=1024
+        )
+
+        <span class="c-cmt"># 4. Tester l'index correct</span>
+        python3 -c "
+        import pyaudio
+        p = pyaudio.PyAudio()
+        for i in range(p.get_device_count()):
+        d = p.get_device_info_by_index(i)
+        if d['maxInputChannels'] > 0:
+        print(i, d['name'])
+        "
+      </div>
+    </div>
+
+    <div class="subsection-title">Problèmes openWakeWord</div>
+    <div class="card">
+      <div class="card-header">Symptôme : <code>FileNotFoundError</code> sur les modèles ONNX <span class="sub">ou : le
+          mot-clé n'est jamais détecté</span></div>
+      <div class="code-block">
+        <span class="c-cmt"># Les modèles ne sont pas dans le paquet pip — les télécharger :</span>
+        python3 -c "from openwakeword.utils import download_models; download_models()"
+
+        <span class="c-cmt"># Vérifier que le modèle hey_jarvis est présent :</span>
+        find ~/.local -name "hey_jarvis*.onnx" 2>/dev/null
+
+        <span class="c-cmt"># Si toujours absent, préciser le chemin manuellement dans li_wake.py :</span>
+        <span class="c-cmt"># Model(wakeword_models=["hey_jarvis"], custom_verifier_models={})</span>
+
+        <span class="c-cmt"># Pour diagnostiquer le score en temps réel, ajouter dans _listen_loop :</span>
+        <span class="c-cmt"># print(f"score={score:.3f}", end="\r", flush=True)</span>
+      </div>
+      <div class="question">
+        <div class="q-head"><span class="q-num">Q 20</span><span class="q-label">Débogage système</span></div>
+        <p>Un élève exécute <code>python3 li_main.py</code> et obtient le message
+          <code>OSError: [Errno -9996] Invalid input device (no default output device)</code>. (1) Identifiez la cause
+          probable. (2) Expliquez la commande de diagnostic à exécuter. (3) Proposez la modification à apporter au code.
+        </p>
+      </div>
+    </div>
+
+    <div class="subsection-title">Problèmes Ollama</div>
+    <div class="card">
+      <div class="card-header">Symptôme : <code>ConnectionRefusedError</code> lors de l'appel à
+        <code>ollama.chat()</code></div>
+      <div class="code-block">
+        <span class="c-cmt"># Vérifier que le service Ollama est actif</span>
+        sudo systemctl status ollama
+
+        <span class="c-cmt"># S'il est inactif, le démarrer</span>
+        sudo systemctl start ollama
+
+        <span class="c-cmt"># Vérifier que le modèle est présent</span>
+        ollama list
+        <span class="c-cmt"># Attendu : llama3.2:3b dans la liste</span>
+
+        <span class="c-cmt"># Tester l'API directement via curl</span>
+        curl http://localhost:11434/api/generate \
+        -d '{"model":"llama3.2:3b","prompt":"Bonjour","stream":false}'
+      </div>
+    </div>
+
+    <div class="subsection-title">Problèmes Piper TTS</div>
+    <div class="card">
+      <div class="card-header">Symptôme : <code>FileNotFoundError</code> ou absence de son</div>
+      <div class="code-block">
+        <span class="c-cmt"># Vérifier que le binaire Piper est exécutable</span>
+        ls -la ~/li-project/models/piper/piper/piper
+        <span class="c-cmt"># Attendu : -rwxr-xr-x (bit exécutable présent)</span>
+
+        <span class="c-cmt"># Si non exécutable :</span>
+        chmod +x ~/li-project/models/piper/piper/piper
+
+        <span class="c-cmt"># Tester manuellement</span>
+        echo "Test de la voix Li." | \
+        ~/li-project/models/piper/piper/piper \
+        --model ~/li-project/models/piper/fr_FR-upmc-medium.onnx \
+        --output_file /tmp/test.wav
+        aplay /tmp/test.wav
+
+        <span class="c-cmt"># Vérifier les chemins dans CONFIG de li_main.py :</span>
+        <span class="c-cmt"># "piper_bin" : "../models/piper/piper/piper"</span>
+        <span class="c-cmt"># "piper_model": "../models/piper/fr_FR-upmc-medium.onnx"</span>
+        <span class="c-cmt"># Ces chemins sont relatifs à ~/li-project/src/</span>
+      </div>
+    </div>
+
+    <div class="subsection-title">pygame — affichage sur écran FNK0100</div>
+    <div class="card">
+      <div class="card-header">Symptôme : fenêtre pygame invisible ou erreur SDL2</div>
+      <div class="code-block">
+        <span class="c-cmt"># pygame nécessite un affichage. Sur le bureau Raspberry Pi OS :</span>
+        export DISPLAY=:0
+        python3 li_main.py
+
+        <span class="c-cmt"># En mode console (sans bureau), utiliser framebuffer SDL :</span>
+        export SDL_VIDEODRIVER=fbcon
+        export SDL_FBDEV=/dev/fb0
+        python3 li_main.py
+
+        <span class="c-cmt"># Résolution 800×480 correcte pour le FNK0100 :</span>
+        <span class="c-cmt"># LiFace(width=800, height=480) — déjà défini dans li_main.py</span>
+      </div>
+    </div>
+
+  </div><!-- /sec-6 -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 08 — SYNTHÈSE ET POUR ALLER PLUS LOIN
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page-section" id="sec-7">
+    <div class="section-title"><span class="num green">08</span> Synthèse &amp; Pour aller plus loin</div>
+    <div class="section-rule"></div>
+
+    <div class="card">
+      <div class="card-header">Tableau récapitulatif — technologies · rôles · performances</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Composant</th>
+            <th>Technologie</th>
+            <th>Rôle dans Li</th>
+            <th>Performance RPi 5 · 16 Go</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--gold);">Mot-clé</strong></td>
+            <td><code>openWakeWord</code> ONNX</td>
+            <td>Détecte « hey jarvis » en continu</td>
+            <td class="perf">&lt; 300 ms · 3 à 5 % CPU</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--green);">STT</strong></td>
+            <td><code>faster-whisper</code> small int8</td>
+            <td>Voix &#8594; texte</td>
+            <td class="perf">1 à 3 s · ~500 Mo RAM</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--purple);">LLM</strong></td>
+            <td><code>Ollama</code> llama3.2:3b</td>
+            <td>Génère la réponse</td>
+            <td class="perf">3 à 8 s · ~2,1 Go RAM</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">TTS</strong></td>
+            <td><code>Piper</code> fr_FR-upmc-medium</td>
+            <td>Texte &#8594; voix WAV</td>
+            <td class="perf">&lt; 1 s · ~100 Mo RAM</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--accent);">Visage</strong></td>
+            <td><code>pygame</code> · HDMI 800×480</td>
+            <td>Rendu 7 émotions · 30 FPS</td>
+            <td class="perf">~5 % CPU · T-Face</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--pink);">Threading</strong></td>
+            <td><code>threading</code> Python</td>
+            <td>3 threads · Lock mutex</td>
+            <td class="perf">T-Wake · T-Pipeline · T-Face</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--teal);">Latence totale</strong></td>
+            <td>Pipeline complet</td>
+            <td>Wake &#8594; réponse</td>
+            <td class="perf">5 à 12 secondes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection-title">Extensions — choisissez votre niveau</div>
+    <div class="grid-3">
+      <div class="niveau-card n1">
+        <div class="niveau-badge">NIVEAU 1 — Débutant</div>
+        <h3>Personnaliser Li</h3>
+        <div class="meta">prompt engineering · CONFIG</div>
+        <ul>
+          <li>Modifier <code>CONFIG["system_prompt"]</code></li>
+          <li>Li tuteur NSI ou Li comédien</li>
+          <li>Li qui répond toujours en rimes</li>
+          <li>Mesurer l'impact sur les réponses</li>
+        </ul>
+      </div>
+      <div class="niveau-card n2">
+        <div class="niveau-badge">NIVEAU 2 — Intermédiaire</div>
+        <h3>Ajouter une émotion</h3>
+        <div class="meta">POO · pygame · threading</div>
+        <ul>
+          <li>Ajouter <code>Emotion.EMBARRASSED</code></li>
+          <li>Joues roses + regard fuyant</li>
+          <li>Déclencher si Li répond « je ne sais pas »</li>
+          <li>Ajouter un son de cloche au démarrage</li>
+        </ul>
+      </div>
+      <div class="niveau-card n3">
+        <div class="niveau-badge">NIVEAU 3 — Expert</div>
+        <h3>Entraîner « Bonjour Li »</h3>
+        <div class="meta">ML · ONNX · openWakeWord training</div>
+        <ul>
+          <li>Générer ~3 000 fichiers WAV via Piper TTS</li>
+          <li>Entraîner la tête de classification (PC)</li>
+          <li>Exporter en ONNX et intégrer dans Li</li>
+          <li>Évaluer précision, rappel, F1-score</li>
+          <li>Comparer seuils 0,5 / 0,7 / 0,9</li>
+        </ul>
+        <a href="tp_bonjour_li.html"
+          style="display:inline-block;margin-top:10px;background:rgba(251,191,36,.15);border:1px solid var(--gold);color:var(--gold);border-radius:5px;padding:4px 12px;font-family:'Fira Code',monospace;font-size:.69rem;font-weight:700;text-decoration:none;">Ouvrir
+          le TP dédié &#8594;</a>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;">
+      <div class="card-header">Ressources officielles <span class="sub">Documentation et dépôts de référence</span>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ressource</th>
+            <th>URL</th>
+            <th>Domaine</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ollama — bibliothèque de modèles</td>
+            <td><a href="https://ollama.com/library" target="_blank">ollama.com/library</a></td>
+            <td><span class="pill purple">LLM</span></td>
+          </tr>
+          <tr>
+            <td>faster-whisper — GitHub</td>
+            <td><a href="https://github.com/SYSTRAN/faster-whisper"
+                target="_blank">github.com/SYSTRAN/faster-whisper</a></td>
+            <td><span class="pill green">STT</span></td>
+          </tr>
+          <tr>
+            <td>Piper TTS — GitHub</td>
+            <td><a href="https://github.com/rhasspy/piper" target="_blank">github.com/rhasspy/piper</a></td>
+            <td><span class="pill orange">TTS</span></td>
+          </tr>
+          <tr>
+            <td>openWakeWord — GitHub</td>
+            <td><a href="https://github.com/dscripka/openWakeWord" target="_blank">github.com/dscripka/openWakeWord</a>
+            </td>
+            <td><span class="pill gold">ML</span></td>
+          </tr>
+          <tr>
+            <td>pygame — documentation officielle</td>
+            <td><a href="https://www.pygame.org/docs/" target="_blank">pygame.org/docs</a></td>
+            <td><span class="pill accent">Rendu</span></td>
+          </tr>
+          <tr>
+            <td>Python threading — documentation fr</td>
+            <td><a href="https://docs.python.org/fr/3/library/threading.html"
+                target="_blank">docs.python.org/fr/3/library/threading</a></td>
+            <td><span class="pill">Python</span></td>
+          </tr>
+          <tr>
+            <td>Programme NSI Terminale — Éduscol</td>
+            <td><a
+                href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt"
+                target="_blank">eduscol.education.fr</a></td>
+            <td><span class="pill">Programme</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div><!-- /sec-7 -->
+
+
+  <!-- FOOTER -->
+  <footer>
+    TP Intelligence Artificielle Embarquée &nbsp;&middot;&nbsp; Terminale NSI &nbsp;&middot;&nbsp;
+    Agent Vocal Li · Raspberry Pi 5 · Freenove FNK0100 &nbsp;&middot;&nbsp;
+    <a href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt"
+      target="_blank">Programme NSI officiel — Éduscol</a>
+  </footer>
+
+
+  <script>
+    /* ── Thème ──────────────────────────────────── */
+    function toggleTheme() {
+      const h = document.documentElement, b = document.getElementById('themeBtn');
+      if (h.dataset.theme === 'dark') { h.dataset.theme = 'light'; b.textContent = 'Mode sombre'; }
+      else { h.dataset.theme = 'dark'; b.textContent = 'Mode clair'; }
+    }
+    /* ── Navigation principale ──────────────────── */
+    function showSection(idx, btn) {
+      const ids = ['sec-0', 'sec-1', 'sec-2', 'sec-3', 'sec-4', 'sec-5', 'sec-6', 'sec-7'];
+      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(ids[idx]);
+      if (el) { el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      document.querySelectorAll('#topbar .nav-tab').forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+        b.style.borderBottomColor = i === idx ? 'var(--accent)' : 'transparent';
+      });
+    }
+    /* ── Onglets internes ───────────────────────── */
+    function switchTab(btn, targetId) {
+      document.querySelectorAll('.tab-panel').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+      const t = document.getElementById(targetId);
+      if (t) { t.style.display = 'block'; t.classList.add('active'); }
+      const c = btn.closest('.inner-tabs');
+      if (c) { c.querySelectorAll('.nav-tab').forEach(b => { b.classList.remove('active'); b.style.borderBottomColor = 'transparent'; }); }
+      btn.classList.add('active'); btn.style.borderBottomColor = 'var(--accent)';
+    }
+    /* ── Init ───────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      showSection(0, document.querySelector('#topbar .nav-tab'));
+      document.querySelectorAll('.tab-panel').forEach((p, i) => {
+        p.style.display = i === 0 ? 'block' : 'none';
+        if (i === 0) p.classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>

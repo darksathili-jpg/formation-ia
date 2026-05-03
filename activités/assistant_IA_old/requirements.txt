@@ -1,0 +1,29 @@
+# ══════════════════════════════════════════════════
+#  Li Assistant — Dépendances Python
+#  Installation : pip install -r requirements.txt
+# ══════════════════════════════════════════════════
+
+# ── Audio & STT ──────────────────────────────────
+pyaudio>=0.2.13
+numpy>=1.24.0
+faster-whisper>=1.0.0
+
+# ── LLM ──────────────────────────────────────────
+ollama>=0.2.0
+
+# ── Wake Word ─────────────────────────────────────
+openwakeword>=0.6.0
+
+# ── Écran TFT SPI ST7735R 240x240 (Module 1.3" IPS RGB) ──────────────────────
+adafruit-circuitpython-st7735r>=1.3.0
+adafruit-blinka>=8.0.0
+Pillow>=10.0.0
+
+# ── Écran TFT SPI ST7789 240x240 (alternative) ───────────────────────────────
+# adafruit-circuitpython-st7789>=3.3.0
+
+# ── Écran OLED I2C (alternative) ─────────────────
+# luma.oled>=3.13.0
+
+# ── Simulation (développement sans écran) ────────
+pygame>=2.5.0

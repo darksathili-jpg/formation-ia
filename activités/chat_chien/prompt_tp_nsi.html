@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <title>Prompt — TP NSI Réseaux de Neurones</title>
+<link rel="stylesheet" href="style.css">
+   
+</head>
+
+<body>
+
+  <h1>Prompt — TP NSI Réseaux de Neurones</h1>
+  <p class="subtitle">DarkSATHI · Valenciennes, Hauts-de-France · 26 février 2026</p>
+
+  <!-- Navigation -->
+  <div class="nav-parts" id="navParts">
+    <div class="progress-step active"  onclick="showPart(0)">Contexte</div>
+    <div class="progress-step"         onclick="showPart(1)">Dataset</div>
+    <div class="progress-step"         onclick="showPart(2)">Phase 1</div>
+    <div class="progress-step"         onclick="showPart(3)">Phase 2</div>
+    <div class="progress-step"         onclick="showPart(4)">Phase 3</div>
+    <div class="progress-step"         onclick="showPart(5)">Phase 4 — CNN ✦</div>
+    <div class="progress-step"         onclick="showPart(6)">Lexique</div>
+    <div class="progress-step"         onclick="showPart(7)">Format &amp; Consignes</div>
+  </div>
+
+  <div class="container">
+
+    <!-- ══════════ CONTEXTE ══════════ -->
+    <div id="part-0">
+      <div class="section-head"><h2>Contexte &amp; Objectif général</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <p class="body-text" style="margin-bottom:14px;">
+          <strong>Tu es un expert en pédagogie informatique et en intelligence artificielle.</strong><br>
+          Ta mission est de concevoir un <em>Travail Pratique (TP) complet, clair et structuré</em> pour des élèves de
+          <strong>Terminale NSI</strong>, afin de leur faire construire et comprendre un mini réseau de neurones artificiel en Python.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <div class="section-head" style="margin-bottom:10px;">
+              <h2 style="font-size:0.88rem;">Objectif général</h2><div class="line"></div>
+            </div>
+            <p class="body-text">
+              Construire <strong>pas à pas</strong> un réseau de neurones capable de <em>classifier des images de chats et de chiens</em>,
+              en progressant depuis une implémentation en <strong>Python pur</strong> vers l'usage de <strong>bibliothèques professionnelles</strong>.
+            </p>
+            <div class="pipeline" style="margin-top:14px;flex-direction:column;align-items:stretch;gap:6px;">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div class="pipeline-step accent" style="min-width:80px;">Phase 1</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="flex:1;">Prétraitement NumPy + Pillow</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div class="pipeline-step accent" style="min-width:80px;">Phase 2</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="flex:1;">Réseau en Python pur</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div class="pipeline-step accent" style="min-width:80px;">Phase 3</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="flex:1;">TensorFlow/Keras + PyTorch</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div class="pipeline-step accent" style="min-width:80px;border-color:#7effc8;color:#7effc8;">Phase 4</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="flex:1;">CNN vs MLP — convolution, feature maps, visualisation</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div class="pipeline-step accent" style="min-width:80px;border-color:#c9a9ff;color:#c9a9ff;">Lexique</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="flex:1;">60 fiches bilingues (EN/FR) sur les termes IA essentiels</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head" style="margin-bottom:10px;">
+              <h2 style="font-size:0.88rem;">Cadre pédagogique</h2><div class="line"></div>
+            </div>
+            <div class="etape-row" style="margin-bottom:7px;">
+              <div class="etape-content">
+                <div class="etape-title">Niveau</div>
+                <div class="etape-desc">Terminale NSI — spécialité obligatoire</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:7px;">
+              <div class="etape-content">
+                <div class="etape-title">Durée</div>
+                <div class="etape-desc">4 à 5 séances de 2h (8 à 10h au total)</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-content">
+                <div class="etape-title">Notions supposées connues</div>
+                <div class="etape-desc">Classes, listes, boucles, fonctions, opérations mathématiques simples, lecture de fichiers</div>
+              </div>
+            </div>
+
+            <div class="prereq-pills" style="margin-top:12px;">
+              <div class="pill yellow">Python POO</div>
+              <div class="pill green">Math lycée</div>
+              <div class="pill purple">Listes / boucles</div>
+              <div class="pill">Fichiers JPEG</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ DATASET ══════════ -->
+    <div id="part-1">
+      <div class="section-head"><h2>Dataset</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="grid-2">
+          <div>
+            <div class="section-head" style="margin-bottom:10px;">
+              <h2 style="font-size:0.88rem;">Description</h2><div class="line"></div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-content">
+                <div class="etape-title">12 499 images de chats</div>
+                <div class="etape-desc">Dossier <code>PetImages/chats/</code> — label <code>0</code></div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-content">
+                <div class="etape-title">12 499 images de chiens</div>
+                <div class="etape-desc">Dossier <code>PetImages/chiens/</code> — label <code>1</code></div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-content">
+                <div class="etape-title">Format</div>
+                <div class="etape-desc">Images couleur JPEG, tailles variées — à normaliser en 28&times;28 px niveaux de gris</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head" style="margin-bottom:10px;">
+              <h2 style="font-size:0.88rem;">Source &amp; accès</h2><div class="line"></div>
+            </div>
+            <div class="alert-info">
+              <strong>Kaggle :</strong><br>
+              <a href="https://www.kaggle.com/datasets/bhavikjikadara/dog-and-cat-classification-dataset?resource=download" target="_blank">
+                dog-and-cat-classification-dataset
+              </a><br>
+              <span style="font-size:0.78rem;color:rgba(255,255,255,0.55);">Les élèves disposent déjà du dataset sur leur machine.</span>
+            </div>
+
+            <div class="alert-info" style="margin-top:10px;">
+              <strong>Accès depuis PyScript (navigateur) :</strong><br>
+              Le dataset étant local, il faut soit zipper le dossier et utiliser l'option
+              <code>"files": {"./PetImages.zip": "./PetImages/*"}</code> dans <code>config.json</code>,
+              soit utiliser <code>pyscript.fs.mount()</code> (Chrome uniquement, PyScript 2026),
+              soit charger via <code>pyodide.http.pyfetch</code> depuis le serveur local.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PHASE 1 ══════════ -->
+    <div id="part-2">
+      <div class="section-head"><h2>Phase 1 — Prétraitement avec NumPy et Pillow</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="prereq-pills" style="margin-bottom:14px;">
+          <div class="pill yellow">NumPy</div>
+          <div class="pill yellow">Pillow</div>
+          <div class="pill">Séance 1 — 2h</div>
+        </div>
+        <p class="body-text" style="margin-bottom:14px;">
+          <strong>Outils autorisés :</strong> Python + NumPy + Pillow <em>uniquement pour cette phase</em>.
+          À la fin, NumPy et Pillow ne sont plus utilisés — la suite est en Python pur.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.88rem;">Tâches</h2><div class="line"></div></div>
+
+            <div class="etape-row">
+              <div class="etape-badge">1</div>
+              <div class="etape-content">
+                <div class="etape-title">Charger les images</div>
+                <div class="etape-desc">Parcourir <code>chats/</code> et <code>chiens/</code> avec <code>os.listdir()</code></div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">2</div>
+              <div class="etape-content">
+                <div class="etape-title">Convertir en niveaux de gris</div>
+                <div class="etape-desc"><code>img.convert('L')</code> — passe de 3 canaux RGB à 1 seul canal</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">3</div>
+              <div class="etape-content">
+                <div class="etape-title">Redimensionner en 28&times;28</div>
+                <div class="etape-desc"><code>img.resize((28,28), Image.LANCZOS)</code> — taille uniforme</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">4</div>
+              <div class="etape-content">
+                <div class="etape-title">Aplatir + Normaliser</div>
+                <div class="etape-desc"><code>arr.flatten() / 255.0</code> → vecteur de 784 valeurs ∈ [0 ; 1]</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">5</div>
+              <div class="etape-content">
+                <div class="etape-title">Construire X et Y</div>
+                <div class="etape-desc"><strong>X</strong> : liste de vecteurs · <strong>Y</strong> : liste de labels (0 = chat, 1 = chien)</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">6</div>
+              <div class="etape-content">
+                <div class="etape-title">Mélanger + Split 80/20</div>
+                <div class="etape-desc"><code>random.shuffle()</code> sur les indices puis découpe</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-badge">7</div>
+              <div class="etape-content">
+                <div class="etape-title">Statistiques</div>
+                <div class="etape-desc">Taille, distribution des classes, temps de chargement</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.88rem;">Représentation des données</h2><div class="line"></div></div>
+            <div class="schema-reseau" style="flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:8px;justify-content:center;">
+                <div class="schema-box" style="padding:10px 16px;">Chat</div>
+                <div class="schema-arrow">→</div>
+                <div class="schema-box">JPEG<br><small style="opacity:0.6;">tailles variées</small></div>
+                <div class="schema-arrow">→</div>
+                <div class="schema-box pu">Gris 28&times;28<br><small style="opacity:0.7;">1 canal</small></div>
+                <div class="schema-arrow">→</div>
+                <div class="schema-box hi">784 valeurs<br><small style="opacity:0.7;">÷ 255</small></div>
+              </div>
+            </div>
+
+            <div class="formula-box" style="margin-top:10px;">
+              <span class="f-label">Vecteur final</span>
+              <span class="hi">X[i]</span> = [<span class="gr">x₁, x₂, …, x₇₈₄</span>] · chaque valeur ∈ <span class="wh">[0.0 ; 1.0]</span>
+            </div>
+            <div class="formula-box" style="margin-top:6px;">
+              <span class="f-label">Label</span>
+              <span class="hi">Y[i]</span> = <span class="wh">0</span> (chat) · ou · <span class="wh">1</span> (chien)
+            </div>
+
+            <div class="alert-ok" style="margin-top:10px;">
+              <strong>Résultat attendu :</strong> X et Y sont des listes Python pures (pas de tableaux NumPy) — prêtes pour la Phase 2 sans import.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PHASE 2 ══════════ -->
+    <div id="part-3">
+      <div class="section-head"><h2>Phase 2 — Réseau de neurones en Python pur</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="prereq-pills" style="margin-bottom:14px;">
+          <div class="pill red">Pas de NumPy</div>
+          <div class="pill red">Pas de TensorFlow</div>
+          <div class="pill green">import math uniquement</div>
+          <div class="pill">Séances 2 &amp; 3 — 4h</div>
+        </div>
+
+        <div class="grid-2">
+
+          <!-- Architecture -->
+          <div>
+            <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.88rem;">Architecture du réseau</h2><div class="line"></div></div>
+            <div class="schema-reseau">
+              <div class="schema-col">
+                <div class="schema-box hi" style="height:54px;display:flex;align-items:center;flex-direction:column;justify-content:center;">784<br><small style="opacity:0.7;">pixels</small></div>
+                <div class="schema-label">Entrée</div>
+              </div>
+              <div class="schema-arrow">→</div>
+              <div class="schema-col">
+                <div class="schema-box pu" style="height:54px;display:flex;align-items:center;flex-direction:column;justify-content:center;">64<br><small style="opacity:0.7;">ReLU</small></div>
+                <div class="schema-label">Cachée 1</div>
+              </div>
+              <div class="schema-arrow">→</div>
+              <div class="schema-col">
+                <div class="schema-box pu" style="height:54px;display:flex;align-items:center;flex-direction:column;justify-content:center;">64<br><small style="opacity:0.7;">ReLU</small></div>
+                <div class="schema-label">Cachée 2</div>
+              </div>
+              <div class="schema-arrow">→</div>
+              <div class="schema-col">
+                <div class="schema-box gr" style="height:54px;display:flex;align-items:center;flex-direction:column;justify-content:center;">1<br><small style="opacity:0.7;">Sigmoïde</small></div>
+                <div class="schema-label">Sortie</div>
+              </div>
+            </div>
+            <div class="diff-banner" style="margin-top:10px;">
+              La sortie à <strong>1 neurone Sigmoïde</strong> est plus naturelle pour une classification binaire que Softmax à 2 sorties : plus simple à implémenter et à interpréter mathématiquement.
+            </div>
+          </div>
+
+          <!-- Maths -->
+          <div>
+            <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.88rem;">Concepts mathématiques à expliquer</h2><div class="line"></div></div>
+
+            <div class="formula-box">
+              <span class="f-label">ReLU — couches cachées</span>
+              <span class="hi">ReLU</span>(<span class="gr">z</span>) = max(0, z) · dérivée = 1 si z &gt; 0 sinon 0
+            </div>
+            <div class="formula-box" style="margin-top:6px;">
+              <span class="f-label">Sigmoïde — couche de sortie</span>
+              <span class="hi">σ</span>(<span class="gr">z</span>) = 1 / (1 + e⁻ᶻ) · dérivée = <span class="gr">σ(z)</span> · (1 − <span class="gr">σ(z)</span>)
+            </div>
+            <div class="formula-box" style="margin-top:6px;">
+              <span class="f-label">Binary Cross-Entropy — fonction de perte</span>
+              <span class="hi">L</span> = −[<span class="wh">y</span> · log(<span class="gr">ŷ</span>) + (1−<span class="wh">y</span>) · log(1−<span class="gr">ŷ</span>)]
+            </div>
+            <div class="formula-box" style="margin-top:6px;">
+              <span class="f-label">Descente de gradient — mise à jour des poids</span>
+              <span class="gr">w</span> ← <span class="gr">w</span> − <span class="hi">α</span> · ∂L/∂<span class="gr">w</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Implémentation -->
+        <div class="section-head" style="margin-top:18px;margin-bottom:12px;"><h2 style="font-size:0.88rem;">Implémentation attendue</h2><div class="line"></div></div>
+        <div class="grid-2">
+          <div>
+            <div class="etape-row">
+              <div class="etape-badge">1</div>
+              <div class="etape-content">
+                <div class="etape-title">Classe <code>Neurone</code></div>
+                <div class="etape-desc">Poids (init. He), biais, calcul z et activation, mémorisation pour backprop</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">2</div>
+              <div class="etape-content">
+                <div class="etape-title">Classe <code>Couche</code></div>
+                <div class="etape-desc">Liste de neurones, méthode <code>feedforward(entrees)</code> → liste de sorties</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">3</div>
+              <div class="etape-content">
+                <div class="etape-title">Classe <code>ReseauNeuronal</code></div>
+                <div class="etape-desc">3 couches (784→64→64→1), méthode <code>feedforward</code> et <code>predire</code></div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">4</div>
+              <div class="etape-content">
+                <div class="etape-title">Fonctions d'activation</div>
+                <div class="etape-desc"><code>relu</code>, <code>derivee_relu</code>, <code>sigmoid</code>, <code>derivee_sigmoid</code>, <code>perte_bce</code></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="etape-row">
+              <div class="etape-badge">5</div>
+              <div class="etape-content">
+                <div class="etape-title">Propagation avant (feedforward)</div>
+                <div class="etape-desc">entrées → couche1 → couche2 → couche3 → prédiction</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">6</div>
+              <div class="etape-content">
+                <div class="etape-title">Rétropropagation</div>
+                <div class="etape-desc">Calcul des gradients couche par couche (règle de la chaîne), à coder manuellement</div>
+              </div>
+            </div>
+            <div class="etape-row">
+              <div class="etape-badge">7</div>
+              <div class="etape-content">
+                <div class="etape-title">Mise à jour des poids</div>
+                <div class="etape-desc">Descente de gradient : <code>w ← w − α · ∂L/∂w</code></div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-badge">8</div>
+              <div class="etape-content">
+                <div class="etape-title">Entraînement + Évaluation</div>
+                <div class="etape-desc">Boucle sur <strong>500 images max</strong> · précision sur jeu de test</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-fix" style="margin-top:14px;">
+          <strong>Avertissement pour les élèves :</strong> L'entraînement sur 500 images en Python pur sera lent (<strong>plusieurs minutes</strong>). C'est normal et voulu — cela illustre précisément pourquoi les bibliothèques optimisées (NumPy, TensorFlow) ont été créées.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PHASE 3 ══════════ -->
+    <div id="part-4">
+      <div class="section-head"><h2>Phase 3 — Extension avec bibliothèques professionnelles</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+        <div class="niveau-card n2">
+          <div class="badge-niveau">SOUS-PARTIE A</div>
+          <h3>TensorFlow / Keras</h3>
+          <div class="meta">keras.Sequential · Adam · BCELoss</div>
+          <ul>
+            <li>Même architecture : 784 → 64 → 64 → 1, Sigmoïde</li>
+            <li>Entraîner sur les 24 998 images complètes</li>
+            <li>Optimiseur Adam (lr=0.001), batch_size=32</li>
+            <li>Afficher courbes de perte et de précision</li>
+            <li>Comparer vitesse et lisibilité avec Python pur</li>
+          </ul>
+        </div>
+        <div class="niveau-card n3">
+          <div class="badge-niveau">SOUS-PARTIE B</div>
+          <h3>PyTorch</h3>
+          <div class="meta">nn.Module · DataLoader · .backward()</div>
+          <ul>
+            <li>Même architecture : 784 → 64 → 64 → 1, Sigmoïde</li>
+            <li>Entraîner sur les 24 998 images complètes</li>
+            <li>Optimiseur Adam · <code>BCELoss</code></li>
+            <li>Afficher courbes de perte et de précision</li>
+            <li>Comprendre <code>zero_grad()</code> et <code>perte.backward()</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tableau comparatif -->
+      <div class="card" style="margin-top:0;">
+        <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.88rem;">Tableau comparatif attendu en conclusion</h2><div class="line"></div></div>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Critère</th>
+              <th style="color:#c9a9ff;">Python pur</th>
+              <th style="color:#ff8800;">TensorFlow</th>
+              <th style="color:#7effc8;">PyTorch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Compréhension</strong></td>
+              <td>★★★ Maximale</td>
+              <td>★★ Masquée</td>
+              <td>★★ Plus transparente</td>
+            </tr>
+            <tr>
+              <td><strong>Vitesse</strong></td>
+              <td>Très lente</td>
+              <td>Très rapide</td>
+              <td>Très rapide</td>
+            </tr>
+            <tr>
+              <td><strong>Images traitées</strong></td>
+              <td>500 max</td>
+              <td>24 998</td>
+              <td>24 998</td>
+            </tr>
+            <tr>
+              <td><strong>Backprop</strong></td>
+              <td>Manuelle</td>
+              <td>Automatique</td>
+              <td><code>.backward()</code></td>
+            </tr>
+            <tr>
+              <td><strong>Précision typique</strong></td>
+              <td>~55–65%</td>
+              <td>~75–85%</td>
+              <td>~75–85%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════ PHASE 4 — CNN ══════════ -->
+    <div id="part-5">
+      <div class="section-head"><h2>Phase 4 — CNN vs MLP</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.88rem;">Objectif pédagogique</h2><div class="line"></div></div>
+        <p class="body-text" style="margin-bottom:12px;">
+          Cette phase amène les élèves à comprendre <strong>pourquoi le CNN est structurellement supérieur au MLP pour les images</strong>,
+          en repartant de la même tâche (chats vs chiens) avec le même dataset.
+          Elle est composée de <strong>5 étapes</strong> progressant du concept à l'implémentation puis à la visualisation.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <div class="section-head" style="margin-bottom:8px;"><h2 style="font-size:0.85rem;">Étapes à produire</h2><div class="line"></div></div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge">1</div>
+              <div class="etape-content">
+                <div class="etape-title">Comparatif MLP vs CNN</div>
+                <div class="etape-desc">Tableau visuel côte à côte : poids partagés, invariance translation, hiérarchie de features</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge">2</div>
+              <div class="etape-content">
+                <div class="etape-title">Comprendre la convolution</div>
+                <div class="etape-desc">Démo interactive canvas 14&times;14 — 4 filtres (Sobel V/H, Flou, Netteté) avec feature map en temps réel</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge">3</div>
+              <div class="etape-content">
+                <div class="etape-title">Architecture CNN</div>
+                <div class="etape-desc">Schéma <code>28&times;28&times;1 → Conv32 → Pool → Conv64 → Pool → Flatten → Dense64 → 1</code> avec comptage des paramètres par couche</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge">4</div>
+              <div class="etape-content">
+                <div class="etape-title">Implémentation TF + PyTorch</div>
+                <div class="etape-desc">Code en onglets (① Préparation ② Architecture ③ Entraînement ④ Feature maps) pour chaque bibliothèque</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-badge">5</div>
+              <div class="etape-content">
+                <div class="etape-title">Bilan comparatif complet</div>
+                <div class="etape-desc">Barres de précision animées + tableau 4 approches (Python pur / MLP / CNN TF / CNN PT) + 3 questions de synthèse (Q23–Q25)</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head" style="margin-bottom:8px;"><h2 style="font-size:0.85rem;">Spécifications techniques</h2><div class="line"></div></div>
+
+            <div class="alert-info" style="margin-top:0;">
+              <strong>Architecture attendue :</strong>
+              <div class="pipeline" style="margin-top:8px;justify-content:flex-start;flex-wrap:wrap;">
+                <div class="pipeline-step accent" style="font-size:0.65rem;">Conv2D(32, 3&times;3) ReLU</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="font-size:0.65rem;">MaxPool(2&times;2)</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step accent" style="font-size:0.65rem;">Conv2D(64, 3&times;3) ReLU</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="font-size:0.65rem;">MaxPool(2&times;2)</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step" style="font-size:0.65rem;">Flatten → Dense(64) → Dropout(0.5) → Dense(1) Sigmoid</div>
+              </div>
+            </div>
+
+            <div class="etape-row" style="margin-top:10px;margin-bottom:6px;">
+              <div class="etape-content">
+                <div class="etape-title">TensorFlow / Keras</div>
+                <div class="etape-desc"><code>keras.Sequential</code> — reshape en <code>(N, 28, 28, 1)</code> obligatoire depuis les vecteurs Phase 1</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-content">
+                <div class="etape-title">PyTorch</div>
+                <div class="etape-desc">Classe <code>CNNChatChien(nn.Module)</code> — format <code>(N, 1, 28, 28)</code> (canaux en 2ème position)</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-content">
+                <div class="etape-title">Visualisation des feature maps</div>
+                <div class="etape-desc">Code pour extraire et afficher les 32 feature maps de la 1ère couche Conv2D + les poids des filtres appris</div>
+              </div>
+            </div>
+
+            <div class="alert-ok" style="margin-top:10px;">
+              <strong>Précision attendue :</strong> CNN TensorFlow ~78–86% · CNN PyTorch ~76–84% · à comparer aux 60–68% du MLP
+            </div>
+          </div>
+        </div>
+
+        <!-- Points importants à expliquer -->
+        <div class="section-head" style="margin-top:16px;margin-bottom:10px;"><h2 style="font-size:0.85rem;">Concepts à expliquer dans cette phase</h2><div class="line"></div></div>
+        <div class="grid-2">
+          <div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge" style="background:#a040c0;color:white;">1</div>
+              <div class="etape-content">
+                <div class="etape-title">L'opération de convolution</div>
+                <div class="etape-desc">Formule S(i,j) = ΣΣ I(i+m, j+n) · K(m,n) — produit scalaire filtre &times; patch</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge" style="background:#a040c0;color:white;">2</div>
+              <div class="etape-content">
+                <div class="etape-title">Partage des poids</div>
+                <div class="etape-desc">9 poids pour tout détecter partout — vs 50 176 pour un Dense équivalent</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-badge" style="background:#a040c0;color:white;">3</div>
+              <div class="etape-content">
+                <div class="etape-title">MaxPooling</div>
+                <div class="etape-desc">Invariance translation + réduction dimensionnelle + régularisation implicite</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge" style="background:#a040c0;color:white;">4</div>
+              <div class="etape-content">
+                <div class="etape-title">Hiérarchie des features</div>
+                <div class="etape-desc">Couche 1 : bords → Couche 2 : formes → Dense : objet</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge" style="background:#a040c0;color:white;">5</div>
+              <div class="etape-content">
+                <div class="etape-title">Dropout(0.5)</div>
+                <div class="etape-desc">Désactive 50% des neurones aléatoirement — régularisation puissante contre l'overfitting</div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-badge" style="background:#a040c0;color:white;">6</div>
+              <div class="etape-content">
+                <div class="etape-title">Feature maps visualisables</div>
+                <div class="etape-desc">Contrairement au MLP, on peut <em>voir</em> ce que le CNN a appris à détecter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Questions Phase 4 -->
+        <div class="section-head" style="margin-top:16px;margin-bottom:10px"><h2 style="font-size:0.85rem;">Questions de réflexion à inclure (Q23–Q25)</h2><div class="line"></div></div>
+        <div class="question-block">
+          <div class="q-num">23</div>
+          <p>En appliquant le filtre "Bords V" sur une image contenant un trait vertical, que se passe-t-il sur la feature map ? Combien de paramètres ce filtre utilise-t-il contre combien pour un neurone MLP connecté à une image 14&times;14 ?</p>
+        </div>
+        <div class="question-block">
+          <div class="q-num">24</div>
+          <p>Le MLP avait ~55 000 paramètres, ce CNN en a ~121 000 — pourtant il généralise mieux. Comment l'expliquer ? Quel rôle joue le <code>Dropout(0.5)</code> ?</p>
+        </div>
+        <div class="question-block" style="margin-bottom:0;">
+          <div class="q-num">25</div>
+          <p>Synthèse : Que se passerait-il si on utilisait des images en <strong>couleur RGB (28&times;28&times;3)</strong> ? Quelle modification faudrait-il apporter à la première couche <code>Conv2D</code> ? La précision augmenterait-elle significativement ?</p>
+        </div>
+      </div>
+    </div><!-- /part-5 -->
+
+    <!-- ══════════ LEXIQUE ══════════ -->
+    <div id="part-6">
+      <div class="section-head"><h2>Lexique — 60 fiches bilingues EN/FR</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <p class="body-text" style="margin-bottom:14px;">
+          Le lexique est une section autonome, accessible depuis la barre de navigation, contenant <strong>60 fiches</strong>
+          couvrant la majorité des termes utilisés en IA et deep learning. Chaque fiche présente le terme anglais,
+          sa traduction française et une explication adaptée au niveau Terminale NSI.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.85rem;">Structure de chaque fiche</h2><div class="line"></div></div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge" style="background:#ffc107;color:#1a2a35;">EN</div>
+              <div class="etape-content">
+                <div class="etape-title">Terme anglais + tag catégorie</div>
+                <div class="etape-desc">Ex. : <strong>Dropout</strong> <span style="background:rgba(77,136,255,0.2);color:#8ab4ff;border-radius:4px;padding:1px 6px;font-size:0.68rem;">Architecture</span></div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:6px;">
+              <div class="etape-badge" style="background:#c9a9ff;color:#1a2a35;">FR</div>
+              <div class="etape-content">
+                <div class="etape-title">Traduction française</div>
+                <div class="etape-desc">Ex. : <em>→ Abandon (rarement traduit en pratique)</em></div>
+              </div>
+            </div>
+            <div class="etape-row" style="margin-bottom:0;">
+              <div class="etape-content">
+                <div class="etape-title">Explication claire + formule si utile</div>
+                <div class="etape-desc">Adaptée Terminale, avec exemples concrets du TP quand c'est pertinent</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:0.85rem;">Répartition des 60 fiches par catégorie</h2><div class="line"></div></div>
+            <table class="summary-table" style="margin-top:0;">
+              <thead><tr><th>Catégorie</th><th style="text-align:right;">Fiches</th><th>Exemples</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span style="background:rgba(77,136,255,0.15);color:#8ab4ff;border-radius:4px;padding:1px 8px;font-size:0.72rem;">Architecture</span></td>
+                  <td style="text-align:right;color:#ffc107;font-weight:700;">16</td>
+                  <td style="font-size:0.75rem;">Layer, Dense, ReLU, Sigmoid, Softmax, Tanh, Dropout, BatchNorm, Flatten, Embedding, ResNet, Attention…</td>
+                </tr>
+                <tr>
+                  <td><span style="background:rgba(126,255,200,0.12);color:#7effc8;border-radius:4px;padding:1px 8px;font-size:0.72rem;">CNN</span></td>
+                  <td style="text-align:right;color:#ffc107;font-weight:700;">10</td>
+                  <td style="font-size:0.75rem;">Convolution, Kernel, Feature map, MaxPooling, Weight sharing, Stride/Padding, Receptive field, GAP, Transfer learning, Data augmentation</td>
+                </tr>
+                <tr>
+                  <td><span style="background:rgba(255,193,7,0.15);color:#ffc107;border-radius:4px;padding:1px 8px;font-size:0.72rem;">Entraînement</span></td>
+                  <td style="text-align:right;color:#ffc107;font-weight:700;">10</td>
+                  <td style="font-size:0.75rem;">Epoch, Batch, Learning rate, Overfitting, Underfitting, Early stopping, Train/Val/Test split, Cross-validation, Régularisation L1/L2, Convergence</td>
+                </tr>
+                <tr>
+                  <td><span style="background:rgba(112,64,192,0.2);color:#c9a9ff;border-radius:4px;padding:1px 8px;font-size:0.72rem;">Mathématiques</span></td>
+                  <td style="text-align:right;color:#ffc107;font-weight:700;">10</td>
+                  <td style="font-size:0.75rem;">Backpropagation, Gradient descent, Loss function, Adam, Hyperparamètre, Accuracy, Precision/Recall/F1, Vanishing gradient, Init. poids, Tenseur</td>
+                </tr>
+                <tr>
+                  <td><span style="background:rgba(77,136,255,0.15);color:#8ab4ff;border-radius:4px;padding:1px 8px;font-size:0.72rem;">Données</span></td>
+                  <td style="text-align:right;color:#ffc107;font-weight:700;">4</td>
+                  <td style="font-size:0.75rem;">Dataset, Label/Ground truth, Normalisation, Class imbalance</td>
+                </tr>
+                <tr>
+                  <td><span style="background:rgba(255,128,128,0.12);color:#ff9999;border-radius:4px;padding:1px 8px;font-size:0.72rem;">IA générale</span></td>
+                  <td style="text-align:right;color:#ffc107;font-weight:700;">10</td>
+                  <td style="font-size:0.75rem;">Machine Learning, Deep Learning, Inférence, Classification/Régression, RNN/LSTM, Transformer/LLM, GAN, GPU vs CPU, Fine-tuning, Benchmark/ImageNet</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="alert-info" style="margin-top:12px;">
+              <strong>Fonctionnalités interactives :</strong> barre de recherche instantanée par texte libre +
+              filtres par catégorie (boutons pills). Les fiches se masquent/révèlent dynamiquement via JavaScript sans rechargement de page.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /part-6 -->
+
+    <!-- ══════════ FORMAT & CONSIGNES ══════════ -->
+    <div id="part-7">
+      <div class="section-head"><h2>Format de sortie &amp; Consignes finales</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+        <!-- Format -->
+        <div class="card">
+          <div class="section-head" style="margin-bottom:12px;"><h2 style="font-size:0.88rem;">Format de sortie attendu</h2><div class="line"></div></div>
+
+          <div class="consigne-item">
+            <div class="consigne-text"><strong>HTML unique</strong> + <code>style.css</code> externe — respecter strictement la charte graphique (dark theme #1a2a35, Rubik Dirt, couleurs d'accent jaune/vert/violet)</div>
+          </div>
+          <div class="consigne-item">
+            <div class="consigne-text"><strong>Navigation sticky 7 onglets</strong> : Introduction · Phase 1 · Phase 2 · Phase 3 · Conclusion · <strong>Phase 4 — CNN ✦</strong> · <strong>📖 Lexique</strong> — avec Intersection Observer pour synchroniser l'onglet actif au scroll</div>
+          </div>
+          <div class="consigne-item">
+            <div class="consigne-text"><strong>Introduction générale</strong> expliquant la progression en 4 phases + lexique, avec pipeline visuel et tableau des prérequis</div>
+          </div>
+          <div class="consigne-item">
+            <div class="consigne-text"><strong>Questions numérotées de 1 à 25</strong> avec format uniforme <code>question-block</code> / <code>q-num</code> dans tout le document — aucune variante de style</div>
+          </div>
+          <div class="consigne-item">
+            <div class="consigne-text">Pour chaque étape : <strong>explication théorique</strong> → <strong>code Python complet commenté ligne par ligne</strong> → bloc <strong>« À retenir »</strong> → <strong>1–2 questions</strong></div>
+          </div>
+          <div class="consigne-item">
+            <div class="consigne-text"><strong>Phase 4 CNN</strong> : comparatif MLP vs CNN, démo convolution interactive (canvas JS), architecture schématisée, code TF + PyTorch en onglets, visualisation feature maps, bilan avec barres animées</div>
+          </div>
+          <div class="consigne-item">
+            <div class="consigne-text"><strong>Lexique 60 fiches</strong> bilingues EN/FR, filtrables par catégorie (Architecture · CNN · Entraînement · Mathématiques · Données · IA générale) + barre de recherche instantanée</div>
+          </div>
+          <div class="consigne-item" style="margin-bottom:0;">
+             <div class="consigne-text"><strong>Conclusion générale</strong> comparant les 4 approches : Python pur · MLP · CNN TF · CNN PyTorch (précision, paramètres, vitesse, interprétabilité)</div>
+          </div>
+        </div>
+
+        <!-- Corrections apportées -->
+        <div class="card">
+          <div class="section-head" style="margin-bottom:12px;"><h2 style="font-size:0.88rem;">Corrections &amp; évolutions apportées</h2><div class="line"></div></div>
+          <p class="body-text" style="margin-bottom:12px;font-size:0.78rem;">Points ajustés suite à la réalisation effective du TP, puis aux extensions successives :</p>
+
+          <table class="summary-table" style="margin-top:0;">
+            <thead><tr><th>Point</th><th>Correction / Ajout</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Nom des dossiers</td>
+                <td><strong>→</strong> <code>PetImages/chats/</code> et <code>PetImages/chiens/</code> (arborescence Kaggle réelle)<span class="tag-fix">corrigé</span></td>
+              </tr>
+              <tr>
+                <td>Initialisation des poids</td>
+                <td><strong>→</strong> Initialisation de He (<code>√(2/n)</code>) adaptée à ReLU — pas <code>random.uniform</code><span class="tag-fix">ajouté</span></td>
+              </tr>
+              <tr>
+                <td>Overflow Sigmoïde</td>
+                <td><strong>→</strong> Protection <code>math.exp</code> pour z &lt; −500 ou z &gt; 500<span class="tag-fix">ajouté</span></td>
+              </tr>
+              <tr>
+                <td>Epsilon BCE</td>
+                <td><strong>→</strong> Clamp de ŷ avec <code>eps = 1e-12</code> pour éviter <code>log(0) = −∞</code><span class="tag-fix">ajouté</span></td>
+              </tr>
+              <tr>
+                <td>Accès dataset PyScript</td>
+                <td><strong>→</strong> 3 approches : ZIP extraction · <code>pyscript.fs.mount()</code> (Chrome) · <code>pyfetch</code><span class="tag-fix">ajouté</span></td>
+              </tr>
+              <tr>
+                <td>Libération mémoire</td>
+                <td><strong>→</strong> Convertir X/Y en listes Python pures + <code>gc.collect()</code> entre les phases<span class="tag-ok">précisé</span></td>
+              </tr>
+              <tr>
+                <td>Précision Python pur</td>
+                <td><strong>→</strong> ~55–65% réaliste avec 500 images / 5 epochs (pas 80%+)<span class="tag-ok">précisé</span></td>
+              </tr>
+              <tr>
+                <td>Questions — format uniforme</td>
+                <td><strong>→</strong> Toutes les questions (1–25) utilisent <code>question-block</code> / <code>q-num</code> — suppression du style <code>q4-block</code> spécifique à la Phase 4<span class="tag-fix">corrigé</span></td>
+              </tr>
+              <tr>
+                <td>Phase 4 CNN</td>
+                <td><strong>→</strong> Ajout complet : convolution interactive, architecture CNN, code TF + PyTorch, visualisation feature maps, bilan animé (Q23–Q25)<span class="tag-ok">ajouté</span></td>
+              </tr>
+              <tr>
+                <td>Lexique bilingue</td>
+                <td><strong>→</strong> 60 fiches EN/FR réparties en 6 catégories, recherche instantanée + filtres pills par catégorie<span class="tag-ok">ajouté</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Consignes finales -->
+      <div class="card">
+        <div class="section-head" style="margin-bottom:12px;"><h2 style="font-size:0.88rem;">Consignes finales pour l'IA</h2><div class="line"></div></div>
+        <div class="grid-2">
+          <div>
+            <div class="consigne-item">
+              <div class="consigne-text"><strong>Commence directement par le titre du TP</strong>, sans préambule ni explication de ce que tu vas faire.</div>
+            </div>
+            <div class="consigne-item">
+              <div class="consigne-text"><strong>Rédige dans l'ordre</strong> : Phase 1 → Phase 2 → Phase 3 → Conclusion → Phase 4 CNN → Lexique.</div>
+            </div>
+            <div class="consigne-item">
+              <div class="consigne-text">Toutes les questions utilisent <strong>le même format <code>question-block</code> / <code>q-num</code></strong> numérotées de 1 à 25 — aucune variante.</div>
+            </div>
+            <div class="consigne-item" style="margin-bottom:0;">
+              <div class="consigne-text"><strong>Explique chaque concept mathématique</strong> (ReLU, Sigmoïde, gradient, BCE, convolution) <em>avant</em> de le coder.</div>
+            </div>
+          </div>
+          <div>
+            <div class="consigne-item">
+              <div class="consigne-text">Le <strong>ton doit être pédagogique, encourageant et précis</strong> — adapté à des lycéens de Terminale NSI.</div>
+            </div>
+            <div class="consigne-item">
+              <div class="consigne-text">Utiliser des <strong>analogies concrètes</strong> (loupe pour le filtre CNN, montagne pour la descente de gradient…).</div>
+            </div>
+            <div class="consigne-item">
+              <div class="consigne-text">La <strong>démo convolution (canvas JS)</strong> doit être fonctionnelle : dessin sur 14&times;14 px, 4 filtres commutables, feature map temps réel, double-clic pour effacer.</div>
+            </div>
+            <div class="consigne-item" style="margin-bottom:0;">
+              <div class="consigne-text">Chaque étape de code : <strong>commentée ligne par ligne</strong> → bloc « À retenir » → questions. Le lexique doit être navigable et filtrable sans rechargement.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /part-7 -->
+
+    <footer>
+      Prompt TP NSI — Réseaux de Neurones &nbsp;·&nbsp; DarkSATHI, Valenciennes 2026 &nbsp;|&nbsp;
+      <a href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt" target="_blank">Programme NSI officiel</a>
+    </footer>
+
+  </div><!-- /container -->
+
+  <script>
+    function showPart(idx) {
+      const ids = ['part-0','part-1','part-2','part-3','part-4','part-5','part-6','part-7'];
+      const el = document.getElementById(ids[idx]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.progress-step').forEach((s,i) => {
+        s.classList.toggle('active', i === idx);
+      });
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const ids = ['part-0','part-1','part-2','part-3','part-4','part-5','part-6','part-7'];
+          const idx = ids.indexOf(entry.target.id);
+          if (idx >= 0) {
+            document.querySelectorAll('.progress-step').forEach((s,i) => {
+              s.classList.toggle('active', i === idx);
+            });
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+
+    ['part-0','part-1','part-2','part-3','part-4','part-5','part-6','part-7'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>

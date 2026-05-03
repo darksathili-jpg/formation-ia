@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formation IA — NSI · Niveau 2 · Intermédiaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
+
+  --bg-page:        #F3F0E8;
+  --bg-card:        #FDFBF5;
+  --bg-code:        #EAE5D8;
+  --bg-accent:      #2A1F0E;
+  --text-primary:   #1A1108;
+  --text-secondary: #4A3D28;
+  --text-muted:     #7A6E58;
+  --text-inverse:   #F3F0E8;
+  --accent-gold:    #B5803A;
+  --accent-gold-lt: #F2E2C0;
+  --accent-teal:    #0B6E64;
+  --accent-teal-lt: #C0E8E2;
+  --border:         rgba(26,17,8,0.12);
+  --border-strong:  rgba(26,17,8,0.25);
+  --shadow:         0 2px 16px rgba(26,17,8,0.07);
+  --shadow-lg:      0 8px 40px rgba(26,17,8,0.13);
+
+  --level-color:    #B5803A;
+  --level-bg:       #F2E2C0;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+[data-theme="dark"] {
+  --bg-page:        #120E07;
+  --bg-card:        #1E1608;
+  --bg-code:        #0A0800;
+  --bg-accent:      #2E2010;
+  --text-primary:   #EDE8DC;
+  --text-secondary: #B8A888;
+  --text-muted:     #7A6E58;
+  --text-inverse:   #120E07;
+  --accent-gold:    #D4A050;
+  --accent-gold-lt: #2A1A05;
+  --accent-teal:    #2AADA0;
+  --accent-teal-lt: #062020;
+  --border:         rgba(237,232,220,0.10);
+  --border-strong:  rgba(237,232,220,0.22);
+  --shadow:         0 2px 16px rgba(0,0,0,0.32);
+  --shadow-lg:      0 8px 40px rgba(0,0,0,0.48);
+  --level-color:    #D4A050;
+  --level-bg:       #2A1A05;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.65;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle {
+  position: fixed; top: 20px; right: 24px; z-index: 100;
+  background: var(--bg-card); border: 1px solid var(--border-strong);
+  border-radius: 40px; padding: 6px 14px; cursor: pointer;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.06em; color: var(--text-secondary); text-transform: uppercase;
+  box-shadow: var(--shadow); transition: all 0.2s ease; display: flex; align-items: center; gap: 8px;
+}
+.theme-toggle:hover { background: var(--bg-accent); color: var(--text-inverse); border-color: var(--bg-accent); }
+.theme-toggle .dot { width:8px;height:8px;border-radius:50%;background:var(--accent-gold);transition:background 0.3s; }
+
+.navbar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg-card); border-bottom: 1px solid var(--border);
+  padding: 0 48px; height: 52px; display: flex; align-items: center;
+  justify-content: space-between; backdrop-filter: blur(8px);
+}
+.navbar-brand { font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted); }
+.navbar-nav { display:flex;gap:0;list-style:none; }
+.navbar-nav a { font-size:12px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding:4px 14px;border-radius:20px;transition:all 0.2s; }
+.navbar-nav a:hover { background:var(--bg-accent);color:var(--text-inverse); }
+.navbar-nav a.active { color:var(--accent-gold);background:var(--accent-gold-lt); }
+.level-badge-nav { font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--level-color);background:var(--level-bg);padding:3px 12px;border-radius:20px; }
+
+.hero {
+  padding: 80px 48px 64px; max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 320px; gap: 64px; align-items: start;
+}
+.hero-eyebrow {
+  font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--accent-gold);margin-bottom:16px;display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before { content:'';display:inline-block;width:24px;height:1px;background:var(--accent-gold); }
+.hero h1 { font-family:var(--font-display);font-size:50px;line-height:1.10;letter-spacing:-0.02em;margin-bottom:24px; }
+.hero h1 em { font-style:italic;color:var(--accent-gold); }
+.hero-sub { font-size:18px;color:var(--text-secondary);line-height:1.6;font-weight:300;max-width:520px;margin-bottom:40px; }
+.hero-meta { display:flex;gap:24px;flex-wrap:wrap; }
+.meta-item { display:flex;flex-direction:column;gap:4px; }
+.meta-label { font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted); }
+.meta-value { font-size:15px;font-weight:600;color:var(--text-primary); }
+.hero-sidebar { background:var(--bg-accent);border-radius:var(--radius-xl);padding:32px; }
+.sidebar-title { font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:20px; }
+.obj-list { list-style:none;display:flex;flex-direction:column;gap:14px; }
+.obj-item { display:flex;align-items:flex-start;gap:12px;font-size:14px;line-height:1.5;color:#C8B080; }
+[data-theme="dark"] .obj-item { color:var(--text-secondary); }
+.obj-icon { width:20px;height:20px;min-width:20px;background:var(--accent-gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:2px; }
+.obj-icon svg { width:10px;height:10px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round; }
+
+.section { max-width:1100px;margin:0 auto;padding:0 48px 72px; }
+.section-header { display:flex;align-items:baseline;gap:16px;margin-bottom:40px;padding-bottom:16px;border-bottom:1px solid var(--border); }
+.section-num { font-family:var(--font-display);font-size:48px;color:var(--border-strong);line-height:1;font-style:italic; }
+.section-title { font-family:var(--font-display);font-size:28px;line-height:1.2; }
+.section-subtitle { font-size:13px;color:var(--text-muted);margin-top:4px; }
+
+.card { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;box-shadow:var(--shadow);transition:box-shadow 0.2s,transform 0.2s; }
+.card:hover { box-shadow:var(--shadow-lg);transform:translateY(-2px); }
+.card-accent { border-top:3px solid var(--accent-gold); }
+.card-accent-teal { border-top:3px solid var(--accent-teal); }
+.card-dark { background:var(--bg-accent);border-color:transparent; }
+.card-grid { display:grid;gap:20px; }
+.card-grid-2 { grid-template-columns:repeat(2,1fr); }
+.card-grid-3 { grid-template-columns:repeat(3,1fr); }
+
+.card-tag { display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:14px; }
+.tag-gold { background:var(--accent-gold-lt);color:var(--accent-gold); }
+.tag-teal { background:var(--accent-teal-lt);color:var(--accent-teal); }
+.tag-dark { background:var(--bg-page);color:var(--text-muted);border:1px solid var(--border); }
+.card-title { font-family:var(--font-display);font-size:19px;line-height:1.25;margin-bottom:10px; }
+.card-body { font-size:14px;line-height:1.65;color:var(--text-secondary); }
+.card-body strong { font-weight:600;color:var(--text-primary); }
+
+.code-block {
+  background:var(--bg-code);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:20px 22px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.75;
+  color:var(--text-secondary);overflow-x:auto;
+}
+.code-block .kw { color:var(--accent-teal);font-weight:600; }
+.code-block .str { color:var(--accent-gold); }
+.code-block .comment { color:var(--text-muted);font-style:italic; }
+.code-block .fn { color:var(--text-primary);font-weight:600; }
+
+/* Method cards */
+.method-grid { display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
+.method-cell { background:var(--bg-card);padding:28px 26px; }
+.method-cell.active { background:var(--bg-accent); }
+.method-num { font-family:var(--font-display);font-size:44px;color:var(--border-strong);font-style:italic;margin-bottom:8px; }
+.method-cell.active .method-num { color:rgba(181,128,58,0.3); }
+.method-name { font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:10px; }
+.method-def { font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border); }
+.method-cell.active .method-def { color:#C0A060;border-bottom-color:rgba(181,128,58,0.2); }
+[data-theme="dark"] .method-cell.active .method-def { color:var(--text-secondary); }
+
+/* Sequence steps */
+.seq-grid { display:grid;gap:2px; }
+.seq-row {
+  display:grid;grid-template-columns:80px 160px 1fr;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;
+}
+.seq-num { background:var(--bg-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:30px;color:var(--accent-gold);font-style:italic; }
+.seq-type { padding:18px 20px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;gap:6px; }
+.seq-type-name { font-weight:600;font-size:14px;color:var(--text-primary); }
+.seq-type-dur { font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-gold);background:var(--accent-gold-lt);padding:2px 8px;border-radius:20px;display:inline-block; }
+.seq-body { padding:18px 24px;font-size:13px;color:var(--text-secondary);line-height:1.6;display:flex;align-items:center; }
+.seq-body strong { font-weight:600;color:var(--text-primary); }
+
+/* Domain cards */
+.domain-col { display:flex;flex-direction:column;gap:16px; }
+.domain-header { font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);padding-bottom:10px;border-bottom:2px solid var(--accent-gold); }
+.domain-card { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px; }
+.domain-card-title { font-weight:600;font-size:14px;color:var(--text-primary);margin-bottom:8px; }
+.domain-prompt { background:var(--bg-code);border-radius:var(--radius-sm);padding:12px 14px;font-family:'Courier New',monospace;font-size:11.5px;line-height:1.6;color:var(--text-secondary);margin-bottom:12px;font-style:italic; }
+.domain-outputs { list-style:none;display:flex;flex-direction:column;gap:6px; }
+.domain-output { font-size:12px;color:var(--text-muted);padding-left:12px;position:relative; }
+.domain-output::before { content:'';position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--accent-teal); }
+
+/* Validation checklist */
+.checklist { display:flex;flex-direction:column;gap:2px; }
+.check-row {
+  display:grid;grid-template-columns:52px 1fr;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.check-row:hover { box-shadow:var(--shadow); }
+.check-icon { background:var(--bg-accent);display:flex;align-items:center;justify-content:center; }
+.check-icon svg { width:18px;height:18px;fill:none;stroke:var(--accent-gold);stroke-width:2;stroke-linecap:round; }
+.check-content { padding:16px 22px; }
+.check-title { font-weight:600;font-size:14px;color:var(--text-primary);margin-bottom:4px; }
+.check-body { font-size:13px;color:var(--text-secondary);line-height:1.6; }
+.check-body strong { font-weight:600;color:var(--text-primary); }
+
+/* Diff grid */
+.diff-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
+.diff-col { background:var(--bg-card);padding:24px 20px; }
+.diff-label { font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px; }
+.diff-A .diff-label { color:var(--accent-teal); }
+.diff-B .diff-label { color:var(--accent-gold); }
+.diff-C .diff-label { color:#8B4FB5; }
+.diff-title { font-family:var(--font-display);font-size:18px;margin-bottom:16px;color:var(--text-primary); }
+.diff-body { font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px; }
+.diff-outputs { list-style:none;display:flex;flex-direction:column;gap:8px; }
+.diff-output-item { font-size:12px;color:var(--text-muted);padding-left:12px;position:relative;line-height:1.5; }
+.diff-output-item::before { content:'';position:absolute;left:0;top:5px;width:5px;height:5px;border-radius:50%; }
+.diff-A .diff-output-item::before { background:var(--accent-teal); }
+.diff-B .diff-output-item::before { background:var(--accent-gold); }
+.diff-C .diff-output-item::before { background:#8B4FB5; }
+
+/* Callout */
+.callout { background:var(--accent-gold-lt);border-left:4px solid var(--accent-gold);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:18px 22px;margin:24px 0; }
+.callout.teal { background:var(--accent-teal-lt);border-left-color:var(--accent-teal); }
+.callout-body { font-size:14px;color:var(--text-primary);line-height:1.65; }
+.callout-body strong { font-weight:600;color:var(--accent-gold); }
+.callout.teal .callout-body strong { color:var(--accent-teal); }
+
+/* Atelier */
+.atelier-phases { display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
+.phase-cell { background:var(--bg-card);padding:22px 18px; }
+.phase-num { font-family:var(--font-display);font-size:36px;color:var(--border-strong);font-style:italic;line-height:1; }
+.phase-dur { font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-gold);background:var(--accent-gold-lt);padding:2px 8px;border-radius:20px;display:inline-block;margin:8px 0; }
+.phase-title { font-weight:600;font-size:14px;color:var(--text-primary);margin-bottom:8px; }
+.phase-body { font-size:12px;color:var(--text-secondary);line-height:1.6; }
+
+/* Resources */
+.res-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:16px; }
+.res-card { background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;text-decoration:none;color:inherit;transition:all 0.2s;display:block; }
+.res-card:hover { background:var(--accent-gold-lt);border-color:var(--accent-gold);box-shadow:var(--shadow); }
+.res-type { font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:6px; }
+.res-name { font-weight:600;font-size:13px;color:var(--text-primary);margin-bottom:4px; }
+.res-desc { font-size:12px;color:var(--text-muted);line-height:1.5; }
+
+.footer-bar { background:var(--bg-accent);padding:24px 48px;display:flex;align-items:center;justify-content:space-between;margin-top:32px; }
+.footer-left { font-size:13px;color:#C8A060; }
+[data-theme="dark"] .footer-left { color:var(--text-muted); }
+.footer-center { font-family:var(--font-display);font-size:15px;color:var(--text-inverse);font-style:italic; }
+[data-theme="dark"] .footer-center { color:var(--text-primary); }
+.footer-right { display:flex;gap:12px; }
+.footer-link { font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;color:var(--accent-gold);padding:6px 14px;border:1px solid var(--accent-gold);border-radius:20px;transition:all 0.2s; }
+.footer-link:hover { background:var(--accent-gold);color:#fff; }
+
+@media (max-width:900px) {
+  .hero { grid-template-columns:1fr;padding:48px 24px 40px; }
+  .hero h1 { font-size:36px; }
+  .section { padding:0 24px 48px; }
+  .card-grid-3,.card-grid-2 { grid-template-columns:1fr; }
+  .method-grid { grid-template-columns:1fr; }
+  .diff-grid { grid-template-columns:1fr; }
+  .atelier-phases { grid-template-columns:repeat(2,1fr); }
+  .seq-row { grid-template-columns:60px 1fr; }
+  .seq-type { display:none; }
+  .navbar { padding:0 24px; }
+  .footer-bar { flex-direction:column;gap:16px;text-align:center; }
+  .res-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Basculer thème">
+  <span class="dot"></span>
+  <span id="theme-label">Mode sombre</span>
+</button>
+
+<nav class="navbar">
+  <span class="navbar-brand">Formation IA — NSI · 2025–2026</span>
+  <ul class="navbar-nav">
+    <li><a href="niveau1.html">Niveau 1</a></li>
+    <li><a href="niveau2.html" class="active">Niveau 2</a></li>
+    <li><a href="niveau3.html">Niveau 3</a></li>
+  </ul>
+  <span class="level-badge-nav">Intermédiaire</span>
+</nav>
+
+<header class="hero">
+  <div>
+    <p class="hero-eyebrow">Niveau 2 · Intermédiaire · Prérequis : Niveau 1</p>
+    <h1>L'IA générative<br><em>appliquée</em> à la NSI</h1>
+    <p class="hero-sub">Construire des séquences pédagogiques complètes avec l'IA. Maîtriser les techniques avancées de prompting pour produire des ressources de qualité professionnelle sur l'ensemble du programme.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">2 × 3h30</span></div>
+      <div class="meta-item"><span class="meta-label">Format</span><span class="meta-value">Ateliers intensifs</span></div>
+      <div class="meta-item"><span class="meta-label">Prérequis</span><span class="meta-value">Niveau 1 validé</span></div>
+      <div class="meta-item"><span class="meta-label">Livrable</span><span class="meta-value">Séquence complète</span></div>
+    </div>
+  </div>
+  <aside class="hero-sidebar">
+    <p class="sidebar-title">Nouvelles compétences visées</p>
+    <ul class="obj-list">
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Maîtriser le few-shot prompting et le Chain-of-Thought
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Créer des séquences pédagogiques NSI complètes (cours, TP, éval)
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Différencier les parcours élèves A/B/C automatiquement
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Vérifier et corriger les sorties IA de façon systématique
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Intégrer l'IA dans son flux de travail d'enseignant NSI
+      </li>
+    </ul>
+  </aside>
+</header>
+
+<!-- ======== TECHNIQUES AVANCEES ======== -->
+<section class="section" id="techniques">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <div>
+      <h2 class="section-title">Techniques avancées de prompting</h2>
+      <p class="section-subtitle">Few-shot et Chain-of-Thought — les deux leviers fondamentaux du niveau 2</p>
+    </div>
+  </div>
+
+  <div class="method-grid" style="margin-bottom:28px;">
+    <div class="method-cell">
+      <div class="method-num">01</div>
+      <p class="method-name">Few-Shot Prompting</p>
+      <p class="method-def">Inclure directement dans le prompt plusieurs exemples de la sortie attendue avant de formuler la vraie demande. Le modèle «&nbsp;calibre&nbsp;» son format et son niveau de détail sur ces exemples.</p>
+      <div class="code-block">
+<span class="comment">-- Schéma few-shot :</span>
+
+<span class="str">"Voici 2 exercices modèles :
+
+[Ex 1] Contexte : algo BFS
+Énoncé : ...
+Corrigé Python : ...
+
+[Ex 2] Contexte : pile/file
+Énoncé : ...
+Corrigé Python : ...
+
+Génère un exercice identique
+sur les ARBRES BINAIRES."</span>
+      </div>
+      <p class="card-body"><strong>Quand l'utiliser :</strong> chaque fois que le format de sortie doit être très précis — barème, pseudo-code, structure de TP. Le few-shot réduit de 60 % les itérations nécessaires.</p>
+    </div>
+    <div class="method-cell active">
+      <div class="method-num">02</div>
+      <p class="method-name">Chain-of-Thought (CoT)</p>
+      <p class="method-def" style="color:#C0A060;border-bottom-color:rgba(181,128,58,0.2);">Demander au modèle de raisonner étape par étape avant de produire la sortie. Cette technique améliore significativement la cohérence des exercices et la rigueur algorithmique.</p>
+      <div class="code-block">
+<span class="comment">-- Schéma CoT :</span>
+
+<span class="str">"Avant de générer l'exercice,
+raisonne étape par étape :
+
+1. Identifie les prérequis
+   algorithmiques du thème
+2. Détermine le niveau adapté
+   Terminale (première vue ?)
+3. Prévois les erreurs classiques
+   des élèves sur ce sujet
+
+Puis génère l'exercice."</span>
+      </div>
+      <p style="font-size:13px;color:#C0A060;line-height:1.6;margin-top:12px;"><strong style="color:var(--accent-gold);">Quand l'utiliser :</strong> pour les sujets complexes — algorithmes récursifs, démonstrations de complexité, séquences où l'ordre des notions est critique.</p>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <p class="callout-body"><strong>Combinaison optimale :</strong> few-shot + CoT donne les meilleurs résultats pour les séquences pédagogiques complètes. Le CoT assure la rigueur conceptuelle, le few-shot garantit le format livrable immédiatement. Exemple : «&nbsp;Raisonne étape par étape [CoT], puis génère au format suivant [few-shot]&nbsp;».</p>
+  </div>
+</section>
+
+<!-- ======== SEQUENCE ALGO ======== -->
+<section class="section" id="sequence">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <div>
+      <h2 class="section-title">Cas pratique — Séquence algorithmique complète</h2>
+      <p class="section-subtitle">De l'introduction au TP évalué — Graphes et plus court chemin (Dijkstra)</p>
+    </div>
+  </div>
+
+  <div class="seq-grid" style="margin-bottom:28px;">
+    <div class="seq-row">
+      <div class="seq-num">1</div>
+      <div class="seq-type">
+        <span class="seq-type-name">Cours magistral</span>
+        <span class="seq-type-dur">1h</span>
+      </div>
+      <div class="seq-body">
+        <span class="code-block" style="width:100%;display:block;">"Génère un cours de 2 pages sur Dijkstra : définition, pseudo-code annoté, exemple graphe 5 nœuds, complexité <strong>O((V+E)logV)</strong> expliquée pour des lycéens sans base en théorie des graphes."</span>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-num">2</div>
+      <div class="seq-type">
+        <span class="seq-type-name">Exercices guidés</span>
+        <span class="seq-type-dur">45 min</span>
+      </div>
+      <div class="seq-body">
+        <span class="code-block" style="width:100%;display:block;">"Crée <strong>3 exercices progressifs</strong> (facile / moyen / difficile) sur Dijkstra avec graphes ASCII, questions guidées et corrigés Python commentés utilisant <code>heapq</code>."</span>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-num">3</div>
+      <div class="seq-type">
+        <span class="seq-type-name">TP noté</span>
+        <span class="seq-type-dur">1h30</span>
+      </div>
+      <div class="seq-body">
+        <span class="code-block" style="width:100%;display:block;">"Génère un TP évalué : carte d'une ville (9 nœuds), fichier <strong>CSV fourni</strong>, script Python incomplet à compléter, <strong>barème détaillé 20 pts</strong> avec critères de correction."</span>
+      </div>
+    </div>
+    <div class="seq-row">
+      <div class="seq-num">4</div>
+      <div class="seq-type">
+        <span class="seq-type-name">Auto-évaluation</span>
+        <span class="seq-type-dur">20 min</span>
+      </div>
+      <div class="seq-body">
+        <span class="code-block" style="width:100%;display:block;">"Produis <strong>5 questions flash</strong> de consolidation Dijkstra vs Bellman-Ford, format vrai/faux + justification courte, corrigé enseignant séparé."</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p class="callout-body"><strong>Règle de découpage :</strong> Générez chaque composant (cours, TP, éval) dans des prompts séparés. Un TP de 300 lignes ≈ 4 000 tokens. Si votre séquence dépasse 800 lignes, découpez en plusieurs prompts et utilisez le «&nbsp;summary prompting&nbsp;» : en début de chaque nouveau prompt, résumez le contexte déjà généré en 2–3 lignes.</p>
+  </div>
+</section>
+
+<!-- ======== DOMAINES ======== -->
+<section class="section" id="domaines">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <div>
+      <h2 class="section-title">Ressources pédagogiques par domaine NSI</h2>
+      <p class="section-subtitle">Prompts testés et validés — algorithmes, cybersécurité, réseaux, bases de données</p>
+    </div>
+  </div>
+
+  <div class="card-grid card-grid-3" style="margin-bottom:32px;">
+    <div class="domain-col">
+      <p class="domain-header">Algorithmique</p>
+      <div class="domain-card">
+        <p class="domain-card-title">Structures de données — Piles</p>
+        <p class="domain-prompt">"Tu es prof NSI Terminale. Crée un TP complet sur les piles en Python : implémentation (push/pop/peek/isEmpty), vérification de parenthèses, exercice bonus pile avec deux files en 4 étapes."</p>
+        <ul class="domain-outputs">
+          <li class="domain-output">Classe Stack commentée</li>
+          <li class="domain-output">Application vérification d'expressions</li>
+          <li class="domain-output">Exercice guidé complexité amortie</li>
+        </ul>
+      </div>
+      <div class="domain-card">
+        <p class="domain-card-title">Complexité et récursivité</p>
+        <p class="domain-prompt">"Raisonne étape par étape. 1. Cas de base Fibonacci ? 2. Pile d'appels pour n=4 ? 3. Génère exercice récursif + mémoïsation. 4. Visualise l'arbre d'appels ASCII."</p>
+        <ul class="domain-outputs">
+          <li class="domain-output">Arbre d'appels fib(4) en ASCII</li>
+          <li class="domain-output">Comparatif récursif / mémoïsé</li>
+          <li class="domain-output">Tableau complexités O(n) pour 6 algos</li>
+        </ul>
+      </div>
+    </div>
+    <div class="domain-col">
+      <p class="domain-header">Cybersécurité</p>
+      <div class="domain-card">
+        <p class="domain-card-title">Cryptographie RSA</p>
+        <p class="domain-prompt">"Crée un exercice complet sur RSA : génère p=17, q=11, calcule n, φ(n), e, d. Guide l'élève pas à pas. Corrigé Python avec sympy. Niveau Terminale. Barème 12 pts."</p>
+        <ul class="domain-outputs">
+          <li class="domain-output">Exercice dirigé 5 étapes</li>
+          <li class="domain-output">Code Python sympy complet</li>
+          <li class="domain-output">Barème détaillé 12 pts</li>
+        </ul>
+      </div>
+      <div class="domain-card">
+        <p class="domain-card-title">Analyse de protocoles</p>
+        <p class="domain-prompt">"Génère un scénario d'analyse Wireshark simulée : HTTP sur TCP, 3-way handshake, fragmentation IP. Questions progressives avec captures ASCII annotées."</p>
+        <ul class="domain-outputs">
+          <li class="domain-output">Trame ASCII commentée</li>
+          <li class="domain-output">8 questions progressives</li>
+          <li class="domain-output">Corrigé complet</li>
+        </ul>
+      </div>
+    </div>
+    <div class="domain-col">
+      <p class="domain-header">Réseaux et BDD</p>
+      <div class="domain-card">
+        <p class="domain-card-title">Schéma relationnel SQL</p>
+        <p class="domain-prompt">"Génère un schéma SQL bibliothèque scolaire : tables Livre, Élève, Emprunt, Auteur, clés primaires/étrangères. 3 requêtes progressives SELECT/JOIN/GROUP BY avec corrigés."</p>
+        <ul class="domain-outputs">
+          <li class="domain-output">CREATE TABLE complet</li>
+          <li class="domain-output">3 niveaux SELECT, JOIN, GROUP BY</li>
+          <li class="domain-output">Corrigé enseignant séparé</li>
+        </ul>
+      </div>
+      <div class="domain-card">
+        <p class="domain-card-title">Adressage IP et routage</p>
+        <p class="domain-prompt">"Génère 5 exercices progressifs sur le découpage CIDR /24 → /26 : calcul de plages, sous-réseaux, représentation binaire. Script Python de vérification inclus."</p>
+        <ul class="domain-outputs">
+          <li class="domain-output">5 exercices + fichiers CSV</li>
+          <li class="domain-output">Script Python de vérification</li>
+          <li class="domain-output">Corrigé étape par étape</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== DIFFERENTIATION ======== -->
+<section class="section" id="diff">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <div>
+      <h2 class="section-title">Différenciation pédagogique automatisée</h2>
+      <p class="section-subtitle">Générer trois niveaux de ressources sur le même sujet — exemple : arbres binaires</p>
+    </div>
+  </div>
+
+  <div class="diff-grid" style="margin-bottom:28px;">
+    <div class="diff-col diff-A">
+      <p class="diff-label">Parcours A — Aide</p>
+      <h3 class="diff-title">Accompagnement renforcé</h3>
+      <p class="diff-body">Prompt : «&nbsp;Génère le même exercice sur les arbres binaires mais avec : squelette de code Python à compléter, indices progressifs débloquables, explications inline sur chaque étape.&nbsp;»</p>
+      <ul class="diff-outputs">
+        <li class="diff-output-item">Code Python préstructuré avec <code>pass</code></li>
+        <li class="diff-output-item">Commentaires guidants détaillés</li>
+        <li class="diff-output-item">Tests unitaires fournis</li>
+        <li class="diff-output-item">Schéma visuel ASCII de l'arbre</li>
+      </ul>
+    </div>
+    <div class="diff-col diff-B">
+      <p class="diff-label">Parcours B — Standard</p>
+      <h3 class="diff-title">Niveau programme</h3>
+      <p class="diff-body">Prompt : «&nbsp;Exercice standard arbres binaires : insérer, parcourir en largeur, compter feuilles. Énoncé seul, barème 20 pts détaillé, corrigé enseignant séparé.&nbsp;»</p>
+      <ul class="diff-outputs">
+        <li class="diff-output-item">3 questions de difficulté croissante</li>
+        <li class="diff-output-item">Barème 20 pts précis</li>
+        <li class="diff-output-item">Corrigé enseignant complet</li>
+        <li class="diff-output-item">Grille d'autoévaluation</li>
+      </ul>
+    </div>
+    <div class="diff-col diff-C">
+      <p class="diff-label">Parcours C — Approfondissement</p>
+      <h3 class="diff-title">Enrichissement avancé</h3>
+      <p class="diff-body">Prompt : «&nbsp;Version avancée : arbre AVL, équilibrage automatique, démonstration de complexité O(log n). Introduire la notion de facteur d'équilibre et rotation simple.&nbsp;»</p>
+      <ul class="diff-outputs">
+        <li class="diff-output-item">Exercice ouvert de recherche</li>
+        <li class="diff-output-item">Piste de recherche personnelle</li>
+        <li class="diff-output-item">Lien vers ressources avancées</li>
+        <li class="diff-output-item">Démonstration de la propriété AVL</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p class="callout-body"><strong>Méthode de production :</strong> Générez d'abord le parcours B (standard). Puis demandez dans deux prompts distincts : «&nbsp;Adapte cet exercice pour le parcours A en ajoutant squelette et indices&nbsp;» et «&nbsp;Adapte pour un élève avancé en introduisant les arbres AVL&nbsp;». Cette approche garantit la cohérence thématique entre les trois niveaux.</p>
+  </div>
+</section>
+
+<!-- ======== VERIFICATION ======== -->
+<section class="section" id="verification">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <div>
+      <h2 class="section-title">Vérifier les sorties IA — Processus en 4 étapes</h2>
+      <p class="section-subtitle">Un protocole systématique avant toute diffusion aux élèves</p>
+    </div>
+  </div>
+
+  <div class="checklist" style="margin-bottom:28px;">
+    <div class="check-row">
+      <div class="check-icon">
+        <svg viewBox="0 0 18 18"><polyline points="3,9 7,13 15,5"/></svg>
+      </div>
+      <div class="check-content">
+        <p class="check-title">Étape 1 — Exécuter le code Python</p>
+        <p class="check-body">Toujours tester le code dans Thonny, un notebook Jupyter ou VSCode. L'IA produit des erreurs d'indentation, d'import manquant, de cas limites non traités. <strong>Fréquence observée : 1 bug sur 3 exercices générés en moyenne.</strong> Une erreur non détectée introduit une confusion en classe difficile à corriger.</p>
+      </div>
+    </div>
+    <div class="check-row">
+      <div class="check-icon">
+        <svg viewBox="0 0 18 18"><polyline points="3,9 7,13 15,5"/></svg>
+      </div>
+      <div class="check-content">
+        <p class="check-title">Étape 2 — Vérifier la rigueur algorithmique</p>
+        <p class="check-body">Contrôler : complexité annoncée (O(n) vs O(n²) ?), cas limites (liste vide, n=0, arbre null ?), cohérence avec le programme officiel NSI Terminale (BO 2019). Les LLM ont tendance à <strong>sous-estimer les complexités</strong> et à omettre les cas dégénérés.</p>
+      </div>
+    </div>
+    <div class="check-row">
+      <div class="check-icon">
+        <svg viewBox="0 0 18 18"><polyline points="3,9 7,13 15,5"/></svg>
+      </div>
+      <div class="check-content">
+        <p class="check-title">Étape 3 — Tester la pertinence pédagogique</p>
+        <p class="check-body">Une ressource techniquement correcte peut être pédagogiquement mal calibrée : trop facile, trop longue, vocabulaire inadapté. Faire relire par un collègue ou tester sur un <strong>groupe test</strong> avant diffusion à l'ensemble de la classe.</p>
+      </div>
+    </div>
+    <div class="check-row">
+      <div class="check-icon">
+        <svg viewBox="0 0 18 18"><polyline points="3,9 7,13 15,5"/></svg>
+      </div>
+      <div class="check-content">
+        <p class="check-title">Étape 4 — Documenter et capitaliser</p>
+        <p class="check-body">Conserver les prompts efficaces dans un fichier partagé (Notion, ENT, dossier partagé académique). <strong>Documenter les échecs</strong> est aussi précieux que les succès : un prompt qui a produit de mauvais résultats sur un thème particulier est une information utile pour toute la communauté NSI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ATELIER ======== -->
+<section class="section" id="atelier">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <div>
+      <h2 class="section-title">Atelier — Construire une séquence NSI de A à Z</h2>
+      <p class="section-subtitle">Travail en binômes · 3h30 de production réelle · Livrable direct</p>
+    </div>
+  </div>
+
+  <div class="atelier-phases" style="margin-bottom:28px;">
+    <div class="phase-cell">
+      <div class="phase-num">1</div>
+      <span class="phase-dur">30 min</span>
+      <p class="phase-title">Choix du thème et plan</p>
+      <p class="phase-body">Choisir un chapitre NSI Terminale. Générer avec l'IA un plan de séquence (4–6 séances). Identifier les prérequis algorithmiques et les erreurs élèves prévisibles.</p>
+    </div>
+    <div class="phase-cell">
+      <div class="phase-num">2</div>
+      <span class="phase-dur">1h30</span>
+      <p class="phase-title">Production des ressources</p>
+      <p class="phase-body">Générer : cours, 3 exercices progressifs, 1 TP noté, 1 évaluation formative. Utiliser few-shot + CoT pour chaque ressource. Itérer sur les prompts insuffisants.</p>
+    </div>
+    <div class="phase-cell">
+      <div class="phase-num">3</div>
+      <span class="phase-dur">45 min</span>
+      <p class="phase-title">Vérification critique</p>
+      <p class="phase-body">Tester le code Python dans un notebook. Vérifier la rigueur mathématique. Annoter les erreurs détectées et reformuler les prompts en conséquence.</p>
+    </div>
+    <div class="phase-cell">
+      <div class="phase-num">4</div>
+      <span class="phase-dur">45 min</span>
+      <p class="phase-title">Partage collectif</p>
+      <p class="phase-body">Présenter 1 ressource au groupe (5 min). Débat : quelle part du travail reste à l'enseignant ? Construire un template de prompt réutilisable et partagé.</p>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <p class="callout-body"><strong>Livrable attendu :</strong> Une séquence NSI complète sur un thème de Terminale, comprenant cours, exercices progressifs, TP noté et évaluation. Les prompts utilisés sont documentés. La séquence est utilisable en classe dans les 3 semaines suivantes.</p>
+  </div>
+</section>
+
+<!-- ======== BILAN ======== -->
+<section class="section" id="bilan">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <div>
+      <h2 class="section-title">Bilan — Ce que vous maîtrisez maintenant</h2>
+      <p class="section-subtitle">Compétences acquises Niveau 2 · Autoévaluation</p>
+    </div>
+  </div>
+
+  <div class="card-grid card-grid-2" style="margin-bottom:28px;">
+    <div class="card card-accent">
+      <span class="card-tag tag-gold">Acquis Niveau 2</span>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;">
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-gold);font-weight:700;min-width:18px;">01</span>Prompt engineering avancé : few-shot et Chain-of-Thought</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-gold);font-weight:700;min-width:18px;">02</span>Séquences complètes : cours, TP, évaluation, auto-éval</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-gold);font-weight:700;min-width:18px;">03</span>Ressources sur algo, BDD, réseaux, cybersécurité</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-gold);font-weight:700;min-width:18px;">04</span>Différenciation automatisée des parcours A/B/C</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-gold);font-weight:700;min-width:18px;">05</span>Processus de vérification systématique en 4 étapes</li>
+      </ul>
+    </div>
+    <div class="card card-accent-teal">
+      <span class="card-tag tag-teal">Prochain niveau — Avancé</span>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;">
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-teal);font-weight:700;min-width:14px;">»</span>Fonctionnement des transformers (attention, tokenisation)</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-teal);font-weight:700;min-width:14px;">»</span>Projets élèves autonomes : coder avec l'IA comme pair</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-teal);font-weight:700;min-width:14px;">»</span>Fine-tuning, RAG, agents IA — panorama et usages NSI</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-teal);font-weight:700;min-width:14px;">»</span>Biais algorithmiques — expérimentation en classe</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;"><span style="color:var(--accent-teal);font-weight:700;min-width:14px;">»</span>IA Act européen — cadre légal et implications NSI</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="footer-bar">
+  <span class="footer-left">Formation IA — NSI · 2025–2026 · Niveau 2 terminé</span>
+  <span class="footer-center">Rendez-vous pour le Niveau 3</span>
+  <div class="footer-right">
+    <a href="niveau1.html" class="footer-link">« Niveau 1</a>
+    <a href="niveau3.html" class="footer-link">Niveau 3 »</a>
+  </div>
+</footer>
+
+<script>
+const saved = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', saved);
+document.getElementById('theme-label').textContent = saved === 'dark' ? 'Mode clair' : 'Mode sombre';
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-label').textContent = next === 'dark' ? 'Mode clair' : 'Mode sombre';
+}
+</script>
+</body>
+</html>

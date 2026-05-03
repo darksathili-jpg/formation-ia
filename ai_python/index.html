@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="/mini-coi.js" scope="./"></script>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>IA NSI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <h1>NSI : Générateur de Code Python</h1>
+    <div class="alert alert-warning alert-dismissible fade show" id="alert_info" role="alert">
+        Pour utiliser cette application, vous devez disposer d'une clé API
+        Groq : <a rel="noopener" href="https://console.groq.com/home" target="_blank">https://console.groq.com/home</a>.
+        Veuillez entrer votre clé pour
+        commencer à générer du code Python. La clé est sauvegardée dans localStorage (thread principal) et utilisée pour
+        les requêtes vers le worker IA. Elle n'est pas envoyée à un serveur externe. Au démarrage de l'application, la
+        clé est restaurée depuis localStorage.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="container mt-5">
+
+        <!--CARD-->
+        <div class="card  mx-auto">
+            <img src="assets/images/image_card.png" class="card-img-top" alt="nsi">
+            <div class="card-body">
+                <h5 class="card-title">Mon code Python par Groq et DarkSATHI Li
+                    <span>Modèle : llama-3.3-70b-versatile</span>
+                </h5>
+                <p class="card-text">
+                <div class="form" id="from-cle">
+                    <input type="password" id="cle_ia" class="form-control mb-2 col-md-3 ms-md-auto"
+                        placeholder="Votre clé Groq">
+                </div>
+
+                <button type="button" id="cle_btn" class="btn btn-warning">Valider</button>
+
+                <div class="form">
+                    <textarea class="form-control mb-2 col-md-3 ms-md-auto" id="question"
+                        placeholder="Décrivez le code Python souhaité : Cette application génère uniquement du code Python exécutable directement dans l'éditeur."></textarea>
+                </div>
+
+                <button type="button" id="reponse_btn" class="btn btn-warning">Générer le code</button>
+            </div>
+        </div>
+
+        <div id="editeur-nsi"></div>
+        <script type="py-editor" id="editeur" env="ia" target="editeur-nsi"></script>
+    </div>
+
+    <script type="mpy" src="./main.py"></script>
+    <script type="py" worker name="ia" src="./src/ia.py" config="./config.json"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

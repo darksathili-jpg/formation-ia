@@ -1,0 +1,367 @@
+/* ========================================
+   IMPORTS DE POLICES
+======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+/* ========================================
+   STYLES GÉNÉRAUX
+======================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #8ca5b499;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* ========================================
+   TITRE PRINCIPAL
+======================================== */
+h1 {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 0 20px 0 calc(6.5vw + 30px);
+    /* Espace pour l'image */
+    height: auto;
+    min-height: 5vw;
+    line-height: 5vw;
+    font-family: "Rubik Dirt", system-ui;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: relative;
+    /* Pour positionner le ::before */
+}
+
+h1::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6.5vw;
+    height: 6.5vw;
+    background-image: url(assets/images/professeur.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* ========================================
+   CONTENEUR PRINCIPAL
+======================================== */
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+/* ========================================
+   CARTE (FORMULAIRE)
+======================================== */
+.card {
+    flex: 0 0 calc(40% - 10px);
+    background-color: #8ca5b4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+    color: white;
+    text-align: center;
+    font-family: "Rubik Dirt", system-ui;
+    margin-bottom: 10px;
+}
+
+.card-title span {
+    display: block;
+    font-size: 16px;
+    color: #e0e0e0;
+    margin-top: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: normal;
+}
+
+img[alt="nsi"] {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    display: block;
+    margin: 0 auto 15px auto;
+    border-radius: 8px;
+}
+
+/* ========================================
+   ALERTES
+======================================== */
+.alert {
+    width: 100%;
+    margin: 10px 0;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        max-height: 100px;
+    }
+
+    to {
+        opacity: 0;
+        max-height: 0;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.alert.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+    overflow: hidden;
+}
+
+/* ========================================
+   FORMULAIRE DE CLÉ API
+======================================== */
+#from-cle {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#cle_ia {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    float: left;
+    margin-right: 10px;
+}
+
+#cle_btn {
+    margin-bottom: 15px;
+}
+
+/* ========================================
+   ZONE DE QUESTION
+======================================== */
+#question {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+}
+
+/* ========================================
+   ÉDITEUR DE CODE
+======================================== */
+#editeur-nsi {
+    flex: 1 1 calc(60% - 10px);
+    min-width: 300px;
+    display: block;
+}
+
+#editeur-nsi>* {
+    width: 100%;
+    height: 100%;
+}
+
+.py-editor-input {
+    background-color: white !important;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.py-editor-output {
+    display: block !important;
+    margin-top: 10px !important;
+    width: 100% !important;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    text-align: left !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.py-editor-run-button {
+    background-color: #ffc107;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.py-editor-run-button:hover {
+    background-color: #ffb300;
+    transform: scale(1.02);
+}
+
+.py-editor-run-button:active {
+    transform: scale(0.98);
+}
+
+/* ========================================
+   BOUTONS GÉNÉRAUX
+======================================== */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #ffb300;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* ========================================
+   UTILITAIRES
+======================================== */
+.accordion {
+    clear: both;
+}
+
+/* Amélioration de l'accessibilité */
+button:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid #ffc107;
+    outline-offset: 2px;
+}
+
+@media screen and (max-width: 1080px) {
+
+    #editeur-nsi {
+        display: block !important;
+        width: 100% !important;
+        height: 300px !important;
+        margin-bottom: 50px;
+        margin-left: 0 !important;
+        /* Annuler le margin-left: 50px du desktop */
+    }
+
+    .card {
+        width: 100% !important;
+        /* Au lieu de 400px fixe */
+        max-width: 400px;
+        /* Limite maximale */
+        margin: 0 auto 20px auto;
+        /* Centre la card */
+        float: none !important;
+        /* Annule le float */
+        clear: both !important;
+    }
+
+    .container {
+        flex-direction: column;
+        width: 100% !important;
+        height: auto !important;
+        /* auto au lieu de 100% */
+        padding-bottom: 30px !important;
+    }
+
+    .alert {
+        width: 100% !important;
+        font-size: 0.9rem;
+        /* Texte légèrement plus petit sur mobile */
+    }
+
+    h1 {
+        width: 100% !important;
+        height: auto;
+        /* Auto au lieu de vw fixe */
+        line-height: 1.4;
+        /* Line-height relatif */
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        /* Taille responsive */
+        padding: 10px 15px;
+        /* Padding au lieu de height fixe */
+        margin: 10px 0;
+        /* Espacement vertical */
+    }
+
+    h1::before {
+        width: auto;
+        /* S'adapte au contenu */
+        height: auto;
+        /* S'adapte au contenu */
+    }
+
+    /* Ajustement des boutons pour mobile */
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Formulaires plus lisibles */
+    #question {
+        font-size: 16px;
+        /* Évite le zoom automatique sur iOS */
+        min-height: 120px;
+    }
+
+    #cle_ia {
+        font-size: 16px;
+        /* Évite le zoom automatique sur iOS */
+    }
+
+}
+
+/* Media query supplémentaire pour très petits écrans */
+@media screen and (max-width: 480px) {
+
+    .card {
+        padding: 15px;
+        margin: 0 10px 20px 10px;
+    }
+
+    h1 {
+        font-size: clamp(1.2rem, 4vw, 2rem);
+    }
+
+    #editeur-nsi {
+        height: 250px !important;
+    }
+}

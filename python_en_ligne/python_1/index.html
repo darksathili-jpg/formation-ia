@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css" />
+
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="./mini-coi.js"></script>
+  <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+
+  <title>Programmer en mode débranché — Première NSI</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ── Composants spécifiques à ce TP (dans l'esprit du style.css) ── */
+
+    .nav-parts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 0 auto 24px;
+      max-width: 1000px;
+      padding: 0 20px;
+    }
+    .progress-step {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .progress-step:hover { color: white; background: rgba(255,255,255,0.12); }
+    .progress-step.active {
+      background: #ffc107;
+      color: #1a2a35;
+      border-color: #ffc107;
+      font-weight: 700;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      font-family: "Rubik Dirt", system-ui;
+      font-size: 1.1rem;
+      color: white;
+      white-space: nowrap;
+    }
+    .section-head .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .animated-sep {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ffc107, #ff6b00, transparent);
+      border-radius: 2px;
+      margin: 6px 0 18px;
+      animation: sep-shine 3s linear infinite;
+      background-size: 200% auto;
+    }
+    @keyframes sep-shine {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+
+    .card-title {
+      color: white;
+      font-family: "Rubik Dirt", system-ui;
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    .card-title span {
+      display: block;
+      font-size: 0.75rem;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-weight: normal;
+      margin-top: 3px;
+    }
+
+    /* ─ En-tête exercice ─ */
+    .ex-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .ex-num {
+      background: linear-gradient(135deg, #ffc107, #ff8800);
+      color: #1a2a35;
+      font-family: "Rubik Dirt", system-ui;
+      font-size: 1.15rem;
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .ex-meta h3 {
+      font-family: "Rubik Dirt", system-ui;
+      font-size: 0.95rem;
+      color: white;
+      margin-bottom: 5px;
+    }
+    .ex-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .ex-tag {
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.06em;
+    }
+    .tag-green  { background: rgba(40,167,69,0.25); color: #7effc8; border: 1px solid rgba(40,167,69,0.4); }
+    .tag-yellow { background: rgba(255,193,7,0.2);  color: #ffc107; border: 1px solid rgba(255,193,7,0.35); }
+    .tag-blue   { background: rgba(37,99,235,0.25); color: #93c5fd; border: 1px solid rgba(37,99,235,0.4); }
+    .tag-purple { background: rgba(112,64,192,0.3); color: #c9a9ff; border: 1px solid rgba(112,64,192,0.4); }
+    .tag-red    { background: rgba(220,38,38,0.2);  color: #fca5a5; border: 1px solid rgba(220,38,38,0.35); }
+    .ex-diff { margin-left: auto; font-size: 0.8rem; flex-shrink: 0; }
+    .star-on  { color: #ffc107; }
+    .star-off { color: rgba(255,255,255,0.2); }
+
+    /* ─ Énoncé ─ */
+    .enonce {
+      background: rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: #e0e0e0;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .enonce strong { color: #ffc107; }
+    .enonce code { background: rgba(0,0,0,0.35); padding: 1px 5px; border-radius: 3px; font-family: 'Courier New', monospace; color: #ffc107; font-size: 0.85em; }
+
+    /* ─ Exemples ─ */
+    .exemples {
+      background: rgba(0,0,0,0.35);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.77rem;
+      color: #e0e0e0;
+      line-height: 1.9;
+      margin: 10px 0;
+    }
+    .ex-label { font-size: 0.6rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 4px; }
+    .ex-prompt { color: #7effc8; }
+    .ex-result { color: #ffc107; }
+
+    /* ─ Théorie ─ */
+    .theory-box {
+      background: rgba(0,0,0,0.15);
+      border-radius: 6px;
+      padding: 13px 15px;
+      font-size: 0.82rem;
+      color: #e0e0e0;
+      line-height: 1.8;
+      margin: 10px 0;
+    }
+    .theory-box strong { color: white; }
+    .theory-box code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; font-family: 'Courier New', monospace; color: #ffc107; font-size: 0.85em; }
+
+    /* ─ Formule (style tp_neurone) ─ */
+    .formula-box {
+      background: rgba(0,0,0,0.3);
+      border-left: 4px solid #7040c0;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #c9a9ff;
+      line-height: 2;
+    }
+    .formula-box .f-label { font-size: 0.7rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; display: block; }
+    .formula-box .hi { color: #ffc107; }
+    .formula-box .gr { color: #7effc8; }
+    .formula-box .wh { color: white; }
+
+    /* ─ Pseudo-code ─ */
+    .pseudo-code {
+      background: rgba(0,0,0,0.4);
+      border-radius: 6px;
+      padding: 13px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.77rem;
+      color: #e0e0e0;
+      line-height: 2;
+      margin: 10px 0;
+      position: relative;
+      overflow-x: auto;
+    }
+    .pseudo-code .badge-algo { position: absolute; top: 6px; right: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-size: 0.6rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
+    .pseudo-code .kw  { color: #c9a9ff; font-weight: 700; }
+    .pseudo-code .fn  { color: #7effc8; }
+    .pseudo-code .cm  { color: rgba(255,255,255,0.35); font-style: italic; }
+    .pseudo-code .nm  { color: #ffc107; }
+    .pseudo-code .op  { color: white; }
+    .pseudo-code .str { color: #ff8800; }
+    .pseudo-code .ind  { padding-left: 2em; display: block; }
+    .pseudo-code .ind2 { padding-left: 4em; display: block; }
+    .pseudo-code .ind3 { padding-left: 6em; display: block; }
+
+    /* ─ Hint ─ */
+    .hint-block {
+      background: rgba(255,193,7,0.08);
+      border: 1px dashed rgba(255,193,7,0.3);
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-size: 0.79rem;
+      color: #e0e0e0;
+      line-height: 1.75;
+      margin: 10px 0;
+    }
+    .hint-block .hint-title { color: #ffc107; font-family: 'Courier New', monospace; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 6px; }
+    .hint-block code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; font-family: 'Courier New', monospace; color: #ffc107; font-size: 0.82em; }
+    .hint-block ul { margin-left: 16px; margin-top: 5px; }
+    .hint-block li { margin-bottom: 3px; }
+
+    /* ─ Question block (style tp_neurone) ─ */
+    .question-block {
+      background: linear-gradient(135deg, rgba(74,26,154,0.3), rgba(112,64,192,0.25));
+      border: 1px solid rgba(201,169,255,0.25);
+      border-radius: 8px;
+      padding: 13px 16px;
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .q-num { background: #7040c0; color: white; font-family: "Rubik Dirt", system-ui; font-size: 0.8rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .question-block p { font-size: 0.81rem; color: #e0e0e0; line-height: 1.7; }
+    .question-block code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; color: #ffc107; font-family: 'Courier New', monospace; font-size: 0.8em; }
+
+    /* ─ Diff banner ─ */
+    .diff-banner {
+      background: linear-gradient(135deg, rgba(74,26,154,0.3), rgba(112,64,192,0.3));
+      border: 1px solid rgba(201,169,255,0.25);
+      border-radius: 8px;
+      padding: 11px 14px;
+      margin-top: 10px;
+      font-size: 0.79rem;
+      color: #c9a9ff;
+    }
+
+    /* ─ Complexity table ─ */
+    .cplx-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-family: 'Courier New', monospace; font-size: 0.74rem; }
+    .cplx-table th { background: rgba(0,0,0,0.3); color: #ffc107; padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .cplx-table td { padding: 7px 10px; color: #e0e0e0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .cplx-table tr:hover td { background: rgba(255,255,255,0.04); }
+    .c-good { color: #7effc8; font-weight: 700; }
+    .c-avg  { color: #ffc107; }
+    .c-bad  { color: #ff8080; }
+
+    /* ─ Summary table ─ */
+    .summary-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+    .summary-table th { background: rgba(0,0,0,0.3); color: #ffc107; font-family: "Rubik Dirt", system-ui; padding: 9px 12px; text-align: left; font-size: 0.78rem; letter-spacing: 0.04em; }
+    .summary-table td { padding: 8px 12px; color: #e0e0e0; border-bottom: 1px solid rgba(255,255,255,0.07); line-height: 1.5; }
+    .summary-table tr:hover td { background: rgba(255,255,255,0.04); }
+    .summary-table code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; font-family: 'Courier New', monospace; color: #ffc107; font-size: 0.85em; }
+
+    /* ─ Pipeline (style tp_neurone) ─ */
+    .pipeline { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 12px; justify-content: center; }
+    .pipeline-step { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 7px 12px; font-size: 0.72rem; color: white; font-family: 'Courier New', monospace; text-align: center; }
+    .pipeline-step.accent { border-color: #ffc107; color: #ffc107; background: rgba(255,193,7,0.1); }
+    .pipeline-arrow { color: rgba(255,255,255,0.3); font-size: 1rem; }
+
+    /* ─ Niveau cards (style tp_neurone) ─ */
+    .niveau-card { background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 16px; }
+    .niveau-card h3 { font-family: "Rubik Dirt", system-ui; font-size: 0.9rem; color: white; margin: 6px 0 5px; }
+    .niveau-card p, .niveau-card li { font-size: 0.77rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
+    .niveau-card ul { list-style: none; padding: 0; margin-top: 6px; }
+    .niveau-card li::before { content: '→ '; color: #ffc107; }
+    .badge-niveau { font-family: 'Courier New', monospace; font-size: 0.6rem; letter-spacing: 0.12em; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+    .n1 { background: rgba(40,167,69,0.2); color: #7effc8; border: 1px solid rgba(40,167,69,0.3); }
+    .n2 { background: rgba(255,193,7,0.2); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
+    .n3 { background: rgba(220,38,38,0.2); color: #fca5a5; border: 1px solid rgba(220,38,38,0.3); }
+
+    /* ─ Grids ─ */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .grid-ex { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+
+    /* ─ Objectifs ─ */
+    .objectif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 10px; margin-top: 14px; }
+    .objectif-item { background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 7px; padding: 14px; transition: border-color 0.2s; }
+    .objectif-item:hover { border-color: rgba(255,193,7,0.4); }
+    .objectif-item strong { display: block; color: #ffc107; font-family: "Rubik Dirt", system-ui; font-size: 0.82rem; margin-bottom: 5px; }
+    .objectif-item p { font-size: 0.76rem; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    /* ─ Schema algo ─ */
+    .schema-algo { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+    .schema-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 6px 10px; font-size: 0.7rem; color: white; font-family: 'Courier New', monospace; text-align: center; }
+    .schema-box.hl { background: rgba(255,193,7,0.2); border-color: #ffc107; color: #ffc107; }
+    .schema-box.gr { background: rgba(40,167,69,0.2); border-color: #28a745; color: #7effc8; }
+    .schema-arrow { font-size: 1.3rem; color: rgba(255,255,255,0.35); }
+
+    /* ─ Fond blanc pour l'éditeur PyScript (CodeMirror) ─ */
+    .py-editor-input,
+    .py-editor-input .cm-editor,
+    .py-editor-input .cm-scroller,
+    .py-editor-input .cm-content {
+      background-color: white !important;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2, .grid-3, .grid-ex { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <h1 class="no-img">Programmer en ligne</h1>
+  <p class="subtitle">Première NSI — Algorithmique &amp; Python — 9 Exercices</p>
+
+  <!-- Barre de navigation -->
+  <div class="nav-parts" id="navParts">
+    <div class="progress-step active" onclick="showPart(0)">Cours transversal</div>
+    <div class="progress-step" onclick="showPart(1)">Ex 1–3 · Listes</div>
+    <div class="progress-step" onclick="showPart(2)">Ex 4–5 · Booléens</div>
+    <div class="progress-step" onclick="showPart(3)">Ex 6–7 · Recherche</div>
+    <div class="progress-step" onclick="showPart(4)">Ex 8–9 · Dico &amp; Binaire</div>
+    <div class="progress-step" onclick="showPart(5)">Synthèse</div>
+  </div>
+
+  <div class="container">
+
+    <!-- ══════════ OBJECTIFS ══════════ -->
+    <div class="card">
+      <div class="section-head"><h2>Objectifs du TP</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+      <div class="objectif-grid">
+        <div class="objectif-item"><strong>Parcours de tableaux</strong><p>Maîtriser les patterns de parcours séquentiel avec indices et valeurs.</p></div>
+        <div class="objectif-item"><strong>Accumulation</strong><p>Calculer un résultat en une seule passe : maximum, somme pondérée, comptage.</p></div>
+        <div class="objectif-item"><strong>Recherche efficace</strong><p>Exploiter les propriétés d'une liste triée pour réduire la complexité.</p></div>
+        <div class="objectif-item"><strong>Structures de données</strong><p>Manipuler listes, tuples, dictionnaires et représentation binaire.</p></div>
+        <div class="objectif-item"><strong>Complexité $O(n)$</strong><p>Analyser l'efficacité de ses solutions et éviter les doubles boucles inutiles.</p></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="section-head"><h2 style="font-size:0.88rem;">Prérequis</h2><div class="line"></div></div>
+        <div class="prereq-pills">
+          <div class="pill">Python : boucles, fonctions, listes</div>
+          <div class="pill">Structures : tuples, dictionnaires</div>
+          <div class="pill">Maths : puissances de 2, $O(n)$</div>
+          <div class="pill">Module <code>random</code></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 0 — COURS TRANSVERSAL ══════════ -->
+    <div id="part-0">
+      <div class="section-head"><h2>Cours transversal — Notions fondamentales</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Complexité algorithmique<span>Mesurer l'efficacité avec la notation Grand O</span></div>
+          <div class="theory-box">La <strong>complexité temporelle</strong> indique le nombre d'opérations effectuées en fonction de la taille $n$ de l'entrée. La notation <strong>Grand O</strong> exprime le comportement dans le pire cas.</div>
+          <div class="formula-box">
+            <span class="f-label">Notations courantes</span>
+            <span class="gr">$O(1)$</span> &nbsp;— constant (indépendant de $n$)<br>
+            <span class="gr">$O(n)$</span> &nbsp;— linéaire (une boucle sur $n$ éléments)<br>
+            <span class="hi">$O(n^2)$</span> — quadratique (deux boucles imbriquées)
+          </div>
+          <table class="cplx-table">
+            <thead><tr><th>Complexité</th><th>n = 10</th><th>n = 1 000</th><th>n = 10⁶</th></tr></thead>
+            <tbody>
+              <tr><td class="c-good">$O(1)$</td><td>1</td><td>1</td><td>1</td></tr>
+              <tr><td class="c-good">$O(n)$</td><td>10</td><td>1 000</td><td>1 000 000</td></tr>
+              <tr><td class="c-bad">$O(n^2)$</td><td>100</td><td>10⁶</td><td>10¹²</td></tr>
+            </tbody>
+          </table>
+          <div class="alert-info" style="margin-top:10px;"><strong>Objectif de ce TP :</strong> tous les exercices ont une solution en $O(n)$. Éviter les doubles boucles imbriquées inutiles !</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Parcours de tableaux — Patterns clés<span>Les techniques essentielles en Python</span></div>
+          <div class="theory-box">La plupart des exercices reposent sur un <strong>parcours séquentiel</strong> avec accumulation. Voici les patterns fondamentaux :</div>
+          <div class="pseudo-code">
+            <span class="badge-algo">PYTHON</span>
+            <span class="cm"># Parcours par indice (pour comparer tab[i] et tab[i+1])</span>
+            <span class="kw">for</span> <span class="nm">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="nm">tab</span>) <span class="op">- 1</span>):
+            <span class="ind"><span class="cm"># comparer tab[i] et tab[i+1]</span></span>
+            <span class="cm"># Indice ET valeur simultanément</span>
+            <span class="kw">for</span> <span class="nm">i</span>, <span class="nm">val</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="nm">tab</span>):
+            <span class="ind"><span class="cm"># i = indice, val = tab[i]</span></span>
+            <span class="cm"># Parcours à rebours (fin → début)</span>
+            <span class="kw">for</span> <span class="nm">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="nm">tab</span>) <span class="op">- 1</span>, <span class="op">-1</span>, <span class="op">-1</span>):
+          </div>
+          <div class="alert-info"><strong>Court-circuit :</strong> retourner <code>False</code> dès qu'une condition est violée interrompt immédiatement la boucle — c'est l'optimisation classique des algorithmes de <em>vérification</em>.</div>
+          <div class="diff-banner" style="margin-top:10px;"><p><strong style="color:white;">Retour anticipé :</strong> <code>return True</code> ou <code>return False</code> en cours de boucle interrompt immédiatement la fonction — souvent plus lisible qu'un indicateur booléen.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 1 — EX 1, 2, 3 ══════════ -->
+    <div id="part-1">
+      <div class="section-head"><h2>Exercices 1, 2, 3 — Parcours et accumulation</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <!-- EX 1 -->
+      <div class="grid-ex" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Cours — Vérification de propriété<span>Parcours de paires avec condition d'arrêt</span></div>
+          <div class="theory-box">Pour vérifier qu'un tableau est trié, on parcourt les <strong>paires d'éléments consécutifs</strong>. Dès qu'une paire viole la condition, on retourne <code>False</code> — sans finir la boucle.</div>
+          <div class="formula-box">
+            <span class="f-label">Condition de tri croissant</span>
+            $\forall\, i \in [0,\, n-2],\quad \text{tab}[i] \leq \text{tab}[i+1]$
+          </div>
+          <div class="pseudo-code">
+            <span class="badge-algo">ALGO</span>
+            <span class="kw">Algorithme</span> <span class="fn">verifie</span>(<span class="nm">tab</span>) :
+            <span class="ind"><span class="kw">Pour</span> <span class="nm">i</span> <span class="kw">de</span> <span class="op">0</span> <span class="kw">à</span> <span class="fn">len</span>(<span class="nm">tab</span>)<span class="op">−2</span> :</span>
+            <span class="ind2"><span class="kw">Si</span> <span class="nm">tab</span>[<span class="nm">i</span>] <span class="op">&gt;</span> <span class="nm">tab</span>[<span class="nm">i</span><span class="op">+1</span>] :</span>
+            <span class="ind3"><span class="kw">Retourner</span> <span class="str">False</span>  <span class="cm">← court-circuit</span></span>
+            <span class="ind"><span class="kw">Retourner</span> <span class="str">True</span></span>
+          </div>
+          <div class="alert-info"><strong>Complexité :</strong> $O(n)$ au pire (tout parcourir), $O(1)$ au mieux (violation dès la 1ère paire). Tableau à 1 élément : boucle vide → <code>True</code>.</div>
+          <div class="hint-block">
+            <span class="hint-title">💡 Indices</span>
+            <ul>
+              <li>Utiliser <code>range(len(tab) - 1)</code> pour ne pas dépasser</li>
+              <li>Égalités autorisées : condition stricte <code>&gt;</code>, pas <code>&gt;=</code></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">1</div>
+            <div class="ex-meta"><h3>Fonction <code>verifie(tab)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Parcours</span><span class="ex-tag tag-yellow">Booléen</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-off">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Programmer <code>verifie</code> qui prend un tableau de valeurs numériques <strong>non vide</strong> et retourne <strong>True</strong> s'il est trié en ordre croissant, <strong>False</strong> sinon.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; verifie([0, 5, 8, 8, 9])</span><br><span class="ex-result">True</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; verifie([8, 12, 4])</span><br><span class="ex-result">False</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; verifie([5])</span><br><span class="ex-result">True</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex1">
+# Écris ta fonction verifie ci-dessous
+def verifie(tab):
+    # TODO : parcourir les paires consécutives
+    # Retourner False dès qu'une paire n'est pas croissante
+    pass
+
+# ── Créer la fonction test_verifie ──
+
+          </script>
+          <div id="out-ex1"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Que retourne <code>verifie([])</code> sur une liste vide ? Le sujet précise que le tableau est non vide, mais que se passerait-il ?</p></div>
+        </div>
+      </div>
+
+      <!-- EX 2 -->
+      <div class="grid-ex" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Cours — Recherche du maximum avec tous ses indices<span>Accumulation en une passe + reset de la liste</span></div>
+          <div class="theory-box">Chercher le maximum <em>et</em> tous ses indices se fait en <strong>une seule passe</strong> $O(n)$. La difficulté : quand on trouve un <strong>nouveau</strong> maximum, il faut <strong>réinitialiser</strong> la liste des indices.</div>
+          <div class="pseudo-code">
+            <span class="badge-algo">ALGO</span>
+            <span class="nm">maxi</span> <span class="op">←</span> <span class="nm">tab</span>[<span class="op">0</span>] &nbsp;; <span class="nm">indices</span> <span class="op">← [0]</span>
+            <span class="kw">Pour</span> <span class="nm">i</span> <span class="kw">de</span> <span class="op">1</span> <span class="kw">à</span> <span class="fn">len</span>(<span class="nm">tab</span>)<span class="op">−1</span> :
+            <span class="ind"><span class="kw">Si</span> <span class="nm">tab</span>[<span class="nm">i</span>] <span class="op">&gt;</span> <span class="nm">maxi</span> :</span>
+            <span class="ind2"><span class="nm">maxi</span> <span class="op">←</span> <span class="nm">tab</span>[<span class="nm">i</span>] ; <span class="nm">indices</span> <span class="op">← [</span><span class="nm">i</span><span class="op">]</span>  <span class="cm">← reset !</span></span>
+            <span class="ind"><span class="kw">Sinon si</span> <span class="nm">tab</span>[<span class="nm">i</span>] <span class="op">==</span> <span class="nm">maxi</span> :</span>
+            <span class="ind2"><span class="nm">indices</span>.<span class="fn">append</span>(<span class="nm">i</span>)</span>
+            <span class="kw">Retourner</span> (<span class="nm">maxi</span>, <span class="nm">indices</span>)
+          </div>
+          <div class="alert-info"><strong>Complexité :</strong> $O(n)$ — une seule boucle. Espace $O(k)$ avec $k$ = nombre d'occurrences du maximum.</div>
+          <div class="diff-banner"><p>Le <strong style="color:white;">reset</strong> de la liste d'indices est le point délicat : un nouveau maximum rend obsolètes tous les indices précédents.</p></div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">2</div>
+            <div class="ex-meta"><h3>Fonction <code>indices_maxi(tab)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Maximum</span><span class="ex-tag tag-purple">Tuple</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-on">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Écrire <code>indices_maxi(tab)</code> qui renvoie un <strong>couple</strong> : le plus grand élément de <code>tab</code>, et la <strong>liste de tous ses indices</strong>.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; indices_maxi([1, 5, 6, 9, 1, 2, 3, 7, 9, 8])</span><br><span class="ex-result">(9, [3, 8])</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; indices_maxi([7])</span><br><span class="ex-result">(7, [0])</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex2">
+# Écris ta fonction indices_maxi ci-dessous
+def indices_maxi(tab):
+    # TODO : trouver le maximum et TOUS ses indices
+    pass
+
+# ── Créer la fonction test_indices_maxi ──
+
+          </script>
+          <div id="out-ex2"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Pourquoi initialiser <code>maxi</code> avec <code>tab[0]</code> plutôt qu'avec <code>0</code> ou <code>-999</code> ?</p></div>
+        </div>
+      </div>
+
+      <!-- EX 3 -->
+      <div class="grid-ex">
+        <div class="card">
+          <div class="card-title">Cours — Moyenne pondérée et cas limite<span>Double accumulateur, None, tuples</span></div>
+          <div class="theory-box">Une <strong>moyenne pondérée</strong> attribue un poids différent à chaque valeur. Chaque entrée est un tuple <code>(valeur, coefficient)</code>.</div>
+          <div class="formula-box">
+            <span class="f-label">Formule mathématique</span>
+            $$\bar{x} = \frac{\displaystyle\sum_{i} v_i \cdot c_i}{\displaystyle\sum_{i} c_i}$$
+            $v_i$ = valeur &nbsp;·&nbsp; $c_i$ = coefficient
+          </div>
+          <div class="theory-box"><strong>Cas particulier :</strong> si $\sum c_i = 0$, la division serait par zéro → retourner <code>None</code> (absence de valeur en Python).</div>
+          <div class="hint-block">
+            <span class="hint-title">💡 Indices</span>
+            <ul>
+              <li>Déstructurer le tuple : <code>for valeur, coeff in tab</code></li>
+              <li>Accumuler <code>somme_ponderee</code> et <code>somme_coeffs</code></li>
+              <li>Tester <code>somme_coeffs == 0</code> avant de diviser</li>
+              <li>Le <code>/</code> donne directement un <code>float</code></li>
+            </ul>
+          </div>
+          <div class="alert-info"><strong>Complexité :</strong> $O(n)$ — un seul parcours de la liste de tuples.</div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">3</div>
+            <div class="ex-meta"><h3>Fonction <code>moyenne(liste_notes)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Accumulation</span><span class="ex-tag tag-purple">None</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-on">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Écrire <code>moyenne(liste_notes)</code> prenant une liste de tuples <code>(valeur, coefficient)</code>. Retourne la <strong>moyenne pondérée</strong> en <code>float</code>, ou <strong><code>None</code></strong> si la somme des coefficients est nulle.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; moyenne([(8, 2), (12, 0), (13.5, 1), (5, 0.5)])</span><br><span class="ex-result">9.142857142857142</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; moyenne([(3, 0), (5, 0)])</span><br><span class="ex-result">None</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex3">
+# Écris ta fonction moyenne ci-dessous
+def moyenne(liste_notes):
+    # TODO : calculer somme pondérée et somme des coefficients
+    # Retourner None si somme des coefficients == 0
+    pass
+
+# ── Créer la fonction test_moyenne ──
+
+          </script>
+          <div id="out-ex3"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Pourquoi retourner <code>None</code> et non <code>0</code> ou <code>False</code> quand tous les coefficients sont nuls ?</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 2 — EX 4, 5 ══════════ -->
+    <div id="part-2">
+      <div class="section-head"><h2>Exercices 4, 5 — Booléens et aléatoire</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <!-- EX 4 -->
+      <div class="grid-ex" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Cours — Exploiter le tri pour détecter les doublons<span>Voisins adjacents → $O(n)$ au lieu de $O(n^2)$</span></div>
+          <div class="theory-box">Dans une liste <strong>déjà triée</strong>, deux valeurs identiques sont forcément <em>adjacentes</em>. Il suffit de comparer chaque élément avec son voisin suivant — pas besoin de double boucle !</div>
+          <div class="formula-box">
+            <span class="f-label">Propriété clé</span>
+            Liste triée + doublon $\Rightarrow\, \exists\, i$ tel que $\text{tab}[i] = \text{tab}[i+1]$<br><br>
+            Avec tri : <span class="gr">$O(n)$</span> &nbsp;·&nbsp; Sans tri (naïf) : <span class="hi">$O(n^2)$</span>
+          </div>
+          <div class="alert-info"><strong>Avantage du tri :</strong> exploiter la structure de l'entrée réduit la complexité. C'est un principe général de l'algorithmique.</div>
+          <div class="diff-banner"><p>Liste vide ou à un seul élément <strong style="color:white;">ne peut pas</strong> contenir de doublons — à traiter en premier pour éviter une erreur d'index.</p></div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">4</div>
+            <div class="ex-meta"><h3>Fonction <code>a_doublon(tab)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Liste triée</span><span class="ex-tag tag-yellow">Booléen</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-off">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Écrire <code>a_doublon(tab)</code> qui prend une liste <strong>triée</strong> et retourne <strong>True</strong> si elle contient au moins deux valeurs identiques, <strong>False</strong> sinon.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; a_doublon([])</span><br><span class="ex-result">False</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; a_doublon([1, 2, 4, 6, 6])</span><br><span class="ex-result">True</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; a_doublon([0, 2, 3])</span><br><span class="ex-result">False</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex4">
+# Écris ta fonction a_doublon ci-dessous
+def a_doublon(tab):
+    # TODO : comparer les éléments voisins de la liste triée
+    pass
+
+# ── Créer la fonction test_a_doublon──
+
+          </script>
+          <div id="out-ex4"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Cette fonction fonctionnerait-elle sur une liste <em>non triée</em> ? Donne un contre-exemple pour justifier.</p></div>
+        </div>
+      </div>
+
+      <!-- EX 5 -->
+      <div class="grid-ex">
+        <div class="card">
+          <div class="card-title">Cours — Simulation et comptage<span>Module random · .count() · list comprehension</span></div>
+          <div class="theory-box"><code>random.randint(a, b)</code> renvoie un entier $N$ tel que $a \leq N \leq b$ (bornes <em>incluses</em>). Méthode <code>.count(val)</code> : nombre d'occurrences de <code>val</code> dans la liste.</div>
+          <div class="pseudo-code">
+            <span class="badge-algo">PYTHON</span>
+            <span class="kw">import</span> <span class="nm">random</span>
+            <span class="cm"># Générer une liste de n lancers (list comprehension)</span>
+            [<span class="nm">random</span>.<span class="fn">randint</span>(<span class="op">1</span>, <span class="op">6</span>) <span class="kw">for</span> <span class="nm">_</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">n</span>)]
+            <span class="cm"># Compter les 6 dans une liste</span>
+            <span class="nm">tab</span>.<span class="fn">count</span>(<span class="op">6</span>)  <span class="cm"># complexité O(n)</span>
+          </div>
+          <div class="alert-info"><strong>Probabilité théorique :</strong> pour $n = 5$ dés, la probabilité d'obtenir au moins deux 6 vaut environ 19,6 %. La simulation permet de vérifier empiriquement cette valeur.</div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">5</div>
+            <div class="ex-meta"><h3><code>lancer(n)</code> et <code>paire_6(tab)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Aléatoire</span><span class="ex-tag tag-yellow">Comptage</span><span class="ex-tag tag-red">random</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-off">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Écrire <code>lancer(n)</code> qui renvoie une liste de <code>n</code> entiers aléatoires entre 1 et 6. Écrire <code>paire_6(tab)</code> qui retourne <strong>True</strong> si <code>tab</code> contient au moins <strong>deux fois</strong> le 6.</div>
+          <div class="exemples">
+            <span class="ex-label">Comportement attendu (résultats aléatoires)</span>
+            <span class="ex-prompt">&gt;&gt;&gt; lancer(5)   # ex : [5, 6, 6, 2, 2]</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; paire_6([5, 6, 6, 2, 2])</span><br><span class="ex-result">True</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; lancer(0)</span><br><span class="ex-result">[]</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex5">
+import random
+
+# Écris tes deux fonctions ci-dessous
+def lancer(n):
+    # TODO : renvoyer une liste de n valeurs aléatoires entre 1 et 6
+    pass
+
+def paire_6(tab):
+    # TODO : True si tab contient au moins 2 fois le 6
+    pass
+
+# ── Réaliser des tests de validité ──
+
+          </script>
+          <div id="out-ex5"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Simule 1000 lancers de 5 dés et compte combien de fois <code>paire_6</code> est vraie. Le résultat est-il proche de 19,6 % ?</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 3 — EX 6, 7 ══════════ -->
+    <div id="part-3">
+      <div class="section-head"><h2>Exercices 6, 7 — Recherche et fusion</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <!-- EX 6 -->
+      <div class="grid-ex" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Cours — Recherche de la dernière occurrence<span>Parcours inverse et valeur sentinelle</span></div>
+          <div class="theory-box">Pour trouver la <strong>dernière</strong> occurrence d'un élément, on parcourt le tableau <em>à rebours</em> et on retourne l'indice dès la première valeur trouvée — qui est la dernière dans l'ordre original.</div>
+          <div class="pseudo-code">
+            <span class="badge-algo">ALGO</span>
+            <span class="cm"># Parcours décroissant</span>
+            <span class="kw">Pour</span> <span class="nm">i</span> <span class="kw">de</span> <span class="fn">len</span>(<span class="nm">tab</span>)<span class="op">−1</span> <span class="kw">jusqu'à</span> <span class="op">0</span> :
+            <span class="ind"><span class="kw">Si</span> <span class="nm">tab</span>[<span class="nm">i</span>] <span class="op">==</span> <span class="nm">n</span> : <span class="kw">Retourner</span> <span class="nm">i</span></span>
+            <span class="kw">Retourner</span> <span class="fn">len</span>(<span class="nm">tab</span>)  <span class="cm">← valeur sentinelle</span>
+          </div>
+          <div class="alert-info"><strong>Valeur sentinelle :</strong> retourner <code>len(tab)</code> quand l'élément est absent est une valeur hors domaine qui signale "non trouvé" sans lever d'exception.</div>
+          <div class="theory-box"><strong>Complexité :</strong> $O(n)$ dans le pire cas. $O(1)$ dans le meilleur cas (dernier élément = valeur cherchée).</div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">6</div>
+            <div class="ex-meta"><h3>Fonction <code>recherche(tab, n)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Recherche</span><span class="ex-tag tag-yellow">Indice</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-on">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Programmer <code>recherche(tab, n)</code> qui retourne l'<strong>indice de la dernière occurrence</strong> de <code>n</code> dans <code>tab</code>, ou <code>len(tab)</code> si <code>n</code> est absent.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; recherche([5, 3], 1)</span><br><span class="ex-result">2</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; recherche([2, 4], 2)</span><br><span class="ex-result">0</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; recherche([2, 3, 5, 2, 4], 2)</span><br><span class="ex-result">3</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex6">
+# Écris ta fonction recherche ci-dessous
+def recherche(tab, n):
+    # TODO : retourner l'indice de la DERNIÈRE occurrence de n
+    # ou len(tab) si n est absent
+    pass
+
+# ── Créer la fonction test_recherche ──
+
+          </script>
+          <div id="out-ex6"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Pourquoi retourner <code>len(tab)</code> et pas <code>-1</code> pour signaler l'absence ? Quels avantages et inconvénients chaque convention offre-t-elle ?</p></div>
+        </div>
+      </div>
+
+      <!-- EX 7 -->
+      <div class="grid-ex">
+        <div class="card">
+          <div class="card-title">Cours — Fusion de listes triées<span>Deux pointeurs — cœur du tri fusion $O(n \log n)$</span></div>
+          <div class="theory-box">Fusionner deux listes triées est la brique du <strong>tri fusion</strong>. On utilise deux pointeurs <code>i</code> et <code>j</code>, et on avance celui qui pointe vers la plus petite valeur.</div>
+          <div class="schema-algo">
+            <div class="schema-box hl">tab1<br>[3, 5]</div>
+            <div class="schema-arrow">+</div>
+            <div class="schema-box hl">tab2<br>[2, 5]</div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-box gr">résultat<br>[2, 3, 5, 5]</div>
+          </div>
+          <div class="pseudo-code">
+            <span class="badge-algo">ALGO</span>
+            <span class="nm">i</span>, <span class="nm">j</span> <span class="op">← 0, 0</span> ; <span class="nm">result</span> <span class="op">← []</span>
+            <span class="kw">TantQue</span> <span class="nm">i</span> <span class="op">&lt;</span> <span class="fn">len</span>(<span class="nm">tab1</span>) <span class="kw">et</span> <span class="nm">j</span> <span class="op">&lt;</span> <span class="fn">len</span>(<span class="nm">tab2</span>) :
+            <span class="ind"><span class="kw">Si</span> <span class="nm">tab1</span>[<span class="nm">i</span>] <span class="op">≤</span> <span class="nm">tab2</span>[<span class="nm">j</span>] : ajouter <span class="nm">tab1</span>[<span class="nm">i</span>] ; <span class="nm">i</span><span class="op">++</span></span>
+            <span class="ind"><span class="kw">Sinon</span> : ajouter <span class="nm">tab2</span>[<span class="nm">j</span>] ; <span class="nm">j</span><span class="op">++</span></span>
+            <span class="nm">result</span> <span class="op">+=</span> <span class="nm">tab1</span>[<span class="nm">i</span>:] <span class="op">+</span> <span class="nm">tab2</span>[<span class="nm">j</span>:]  <span class="cm">← restes</span>
+          </div>
+          <div class="alert-info"><strong>Complexité :</strong> $O(n + m)$ — optimal. Le tri fusion complet atteint $O(n \log n)$ en appliquant cette fusion récursivement.</div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">7</div>
+            <div class="ex-meta"><h3>Fonction <code>fusion(tab1, tab2)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Fusion</span><span class="ex-tag tag-purple">2 pointeurs</span><span class="ex-tag tag-blue">O(n+m)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-on">★</span><span class="star-on">★</span></div>
+          </div>
+          <div class="enonce">Programmer <code>fusion(tab1, tab2)</code> qui prend deux tableaux <strong>triés</strong> et retourne un nouveau tableau contenant tous leurs éléments, trié en ordre croissant.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; fusion([3, 5], [2, 5])</span><br><span class="ex-result">[2, 3, 5, 5]</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; fusion([-2, 4], [-3, 5, 10])</span><br><span class="ex-result">[-3, -2, 4, 5, 10]</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex7">
+# Écris ta fonction fusion ci-dessous
+def fusion(tab1, tab2):
+    # TODO : fusionner deux listes triées en une seule liste triée
+    # Utiliser deux pointeurs i et j
+    pass
+
+# ── Créer la fonction test_fusion ──
+
+          </script>
+          <div id="out-ex7"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Pourquoi ne pas simplement faire <code>return sorted(tab1 + tab2)</code> ? Quel est l'avantage de l'algorithme à deux pointeurs ?</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 4 — EX 8, 9 ══════════ -->
+    <div id="part-4">
+      <div class="section-head"><h2>Exercices 8, 9 — Dictionnaires et représentation binaire</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <!-- EX 8 -->
+      <div class="grid-ex" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-title">Cours — Parcours de dictionnaire<span>.items() — clés et valeurs simultanément</span></div>
+          <div class="theory-box">Un <strong>dictionnaire</strong> Python associe des clés à des valeurs. Pour parcourir clés et valeurs ensemble, on utilise <code>.items()</code> qui renvoie des paires <code>(clé, valeur)</code>.</div>
+          <div class="pseudo-code">
+            <span class="badge-algo">PYTHON</span>
+            <span class="nm">dico</span> <span class="op">=</span> {<span class="str">'Bob'</span>: <span class="op">102</span>, <span class="str">'Ada'</span>: <span class="op">201</span>}
+            <span class="kw">for</span> <span class="nm">cle</span>, <span class="nm">val</span> <span class="kw">in</span> <span class="nm">dico</span>.<span class="fn">items</span>():
+            <span class="ind"><span class="cm"># cle = 'Bob', val = 102, puis 'Ada', 201...</span></span>
+            <span class="cm"># Méthodes utiles</span>
+            <span class="nm">dico</span>.<span class="fn">keys</span>() &nbsp; <span class="cm"># vue des clés</span>
+            <span class="nm">dico</span>.<span class="fn">values</span>() <span class="cm"># vue des valeurs</span>
+          </div>
+          <div class="hint-block">
+            <span class="hint-title">Indices</span>
+            <ul>
+              <li>Initialiser <code>max_cle, max_val</code> avec la première entrée</li>
+              <li>Mettre à jour si <code>val > max_val</code></li>
+              <li>Retourner le tuple <code>(max_cle, max_val)</code></li>
+            </ul>
+          </div>
+          <div class="alert-info"><strong>Complexité :</strong> $O(n)$ avec $n$ le nombre d'entrées du dictionnaire.</div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">8</div>
+            <div class="ex-meta"><h3>Fonction <code>max_dico(dico)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Dictionnaire</span><span class="ex-tag tag-purple">Tuple</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-on">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Écrire <code>max_dico(dico)</code> qui prend un dictionnaire non vide (clés : chaînes, valeurs : entiers ≥ 0) et retourne un <strong>tuple</strong> <code>(clé_du_max, valeur_max)</code>.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; max_dico({'Bob': 102, 'Ada': 201, 'Alice': 103, 'Tim': 50})</span><br><span class="ex-result">('Ada', 201)</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; max_dico({'Alan': 222, 'Ada': 201, 'Eve': 220, 'Tim': 50})</span><br><span class="ex-result">('Alan', 222)</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex8">
+# Écris ta fonction max_dico ci-dessous
+def max_dico(dico):
+    # TODO : retourner (cle_du_max, valeur_max)
+    pass
+
+# ── Créer la fonction test_max_dico ──
+
+          </script>
+          <div id="out-ex8"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Que se passe-t-il si deux clés partagent la valeur maximale ? Comment modifier la fonction pour renvoyer <em>toutes</em> les clés ex æquo ?</p></div>
+        </div>
+      </div>
+
+      <!-- EX 9 -->
+      <div class="grid-ex">
+        <div class="card">
+          <div class="card-title">Cours — Représentation binaire<span>Puissances de 2 · Algorithme de Horner</span></div>
+          <div class="theory-box">En base 2, chaque bit à la position $i$ <strong>depuis la droite</strong> vaut $2^i$. Le tableau va du bit de <strong>poids fort</strong> (gauche, $2^{n-1}$) au bit de <strong>poids faible</strong> (droite, $2^0$).</div>
+          <div class="formula-box">
+            <span class="f-label">Formule de conversion</span>
+            $$\text{décimal} = \sum_{i=0}^{n-1} \text{tab}[i] \cdot 2^{\,n-1-i}$$
+            <span class="gr">Exemple :</span> <code>[1,0,1,0,0,1,1]</code> → $n=7$<br>
+            $1{\cdot}64 + 0{\cdot}32 + 1{\cdot}16 + 0 + 0 + 1{\cdot}2 + 1{\cdot}1 = \mathbf{83}$
+          </div>
+          <div class="diff-banner" style="margin-top:10px;"><p><strong style="color:white;">Méthode de Horner :</strong> sans calculer de puissance : accumuler $r \leftarrow r \times 2 + \text{tab}[i]$ à chaque étape. Essaie de l'implémenter !</p></div>
+          <div class="alert-info" style="margin-top:10px;"><strong>Complexité :</strong> $O(n)$ — une seule passe sur les $n$ bits du tableau.</div>
+        </div>
+        <div class="card">
+          <div class="ex-header">
+            <div class="ex-num">9</div>
+            <div class="ex-meta"><h3>Fonction <code>convertir(tab)</code></h3><div class="ex-tags"><span class="ex-tag tag-green">Binaire</span><span class="ex-tag tag-yellow">Puissances de 2</span><span class="ex-tag tag-blue">O(n)</span></div></div>
+            <div class="ex-diff"><span class="star-on">★</span><span class="star-on">★</span><span class="star-off">★</span></div>
+          </div>
+          <div class="enonce">Écrire <code>convertir(tab)</code> qui prend un tableau de <code>0</code> et <code>1</code> (bit de poids fort en tête) et retourne sa valeur en <strong>décimal</strong>.</div>
+          <div class="exemples">
+            <span class="ex-label">Exemples attendus</span>
+            <span class="ex-prompt">&gt;&gt;&gt; convertir([1, 0, 1, 0, 0, 1, 1])</span><br><span class="ex-result">83</span><br>
+            <span class="ex-prompt">&gt;&gt;&gt; convertir([1, 0, 0, 0, 0, 0, 1, 0])</span><br><span class="ex-result">130</span>
+          </div>
+          <script type="py-editor" env="nsi" output="out-ex9">
+# Écris ta fonction convertir ci-dessous
+def convertir(tab):
+    # TODO : parcourir tab et accumuler la valeur décimale
+    # tab[i] contribue à 2**(n-1-i) où n = len(tab)
+    pass
+
+# ── Créer la fonction test_convertir ──
+
+          </script>
+          <div id="out-ex9"></div>
+          <div class="question-block"><div class="q-num">Q</div><p>Implémente une version utilisant la <strong>méthode de Horner</strong> : <code>r = r * 2 + tab[i]</code>. Vérifie qu'elle donne les mêmes résultats.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 5 — SYNTHÈSE ══════════ -->
+    <div id="part-5">
+      <div class="section-head"><h2>Synthèse — Récapitulatif des notions clés</h2><div class="line"></div></div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="card-title">Tableau récapitulatif<span>Les 9 exercices en un coup d'œil</span></div>
+        <table class="summary-table">
+          <thead><tr><th>Ex.</th><th>Fonction</th><th>Complexité</th><th>Technique clé</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><code>verifie</code></td><td style="color:#7effc8;">$O(n)$</td><td>Parcours de paires + court-circuit</td></tr>
+            <tr><td>2</td><td><code>indices_maxi</code></td><td style="color:#7effc8;">$O(n)$</td><td>Accumulation max + reset de la liste</td></tr>
+            <tr><td>3</td><td><code>moyenne</code></td><td style="color:#7effc8;">$O(n)$</td><td>Double accumulateur, gestion <code>None</code></td></tr>
+            <tr><td>4</td><td><code>a_doublon</code></td><td style="color:#7effc8;">$O(n)$</td><td>Voisins adjacents (exploit du tri)</td></tr>
+            <tr><td>5</td><td><code>lancer / paire_6</code></td><td style="color:#7effc8;">$O(n)$</td><td>Génération aléatoire + comptage</td></tr>
+            <tr><td>6</td><td><code>recherche</code></td><td style="color:#7effc8;">$O(n)$</td><td>Parcours inverse + valeur sentinelle</td></tr>
+            <tr><td>7</td><td><code>fusion</code></td><td style="color:#7effc8;">$O(n+m)$</td><td>Deux pointeurs (cœur du tri fusion)</td></tr>
+            <tr><td>8</td><td><code>max_dico</code></td><td style="color:#7effc8;">$O(n)$</td><td>Parcours <code>.items()</code></td></tr>
+            <tr><td>9</td><td><code>convertir</code></td><td style="color:#7effc8;">$O(n)$</td><td>Puissances de 2 / méthode de Horner</td></tr>
+          </tbody>
+        </table>
+        <div class="alert-info" style="margin-top:14px;"><strong>Bilan :</strong> tous ces algorithmes sont $O(n)$ — linéaires. Éviter les doubles boucles imbriquées inutiles reste l'objectif principal pour ce niveau.</div>
+
+        <div class="section-head" style="margin-top:18px;"><h2 style="font-size:0.88rem;">Pipeline algorithmique générique</h2><div class="line"></div></div>
+        <div class="pipeline">
+          <div class="pipeline-step">Entrée</div><div class="pipeline-arrow">→</div>
+          <div class="pipeline-step accent">Initialisation<br><small>accumulateurs</small></div><div class="pipeline-arrow">→</div>
+          <div class="pipeline-step">Boucle<br><small>parcours</small></div><div class="pipeline-arrow">→</div>
+          <div class="pipeline-step accent">Mise à jour<br><small>conditions</small></div><div class="pipeline-arrow">→</div>
+          <div class="pipeline-step">Retour<br><small>résultat</small></div>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top:16px;">
+        <div class="niveau-card">
+          <span class="badge-niveau n1">NIVEAU 1</span>
+          <h3>Trier sans sorted()</h3>
+          <p>Implémenter tri à bulles ou tri par sélection.</p>
+          <ul><li>Comparer avec <code>sorted()</code></li><li>Mesurer le temps d'exécution</li><li>Tracer les courbes de performance</li></ul>
+        </div>
+        <div class="niveau-card">
+          <span class="badge-niveau n2">NIVEAU 2</span>
+          <h3>Recherche dichotomique</h3>
+          <p>Sur liste triée, chercher en $O(\log n)$ au lieu de $O(n)$.</p>
+          <ul><li>Implémenter la dichotomie</li><li>Comparer avec la recherche linéaire</li><li>Tester sur 10⁶ éléments</li></ul>
+        </div>
+        <div class="niveau-card">
+          <span class="badge-niveau n3">NIVEAU 3</span>
+          <h3>Tri fusion récursif</h3>
+          <p>Utiliser <code>fusion()</code> de l'ex. 7 pour le tri fusion complet.</p>
+          <ul><li>Implémenter la récursion</li><li>Vérifier $O(n \log n)$</li><li>Comparer avec le tri rapide</li></ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <footer>
+    TP Programmer en ligne — Première NSI &nbsp;|&nbsp;
+    Algorithmique Python &nbsp;·&nbsp;
+    <a href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt" target="_blank">Programme NSI officiel</a>
+  </footer>
+
+  <script>
+    const partIds = ['part-0','part-1','part-2','part-3','part-4','part-5'];
+
+    function showPart(idx) {
+      const el = document.getElementById(partIds[idx]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.progress-step').forEach((s,i) => s.classList.toggle('active', i===idx));
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = partIds.indexOf(entry.target.id);
+          if (idx >= 0)
+            document.querySelectorAll('.progress-step').forEach((s,i) => s.classList.toggle('active', i===idx));
+        }
+      });
+    }, { threshold: 0.2 });
+
+    partIds.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+  </script>
+</body>
+</html>

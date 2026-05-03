@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/style_cinq_grandes_idees_IA_NSI.css">
+    <title>5 Grandes Idées en IA – NSI Lycée</title>
+
+</head>
+
+<body>
+
+  <h1>
+    5 Grandes Idées en Intelligence Artificielle
+    <span class="subtitle-h1">D'après AI4K12 · AAAI &amp; CSTA · CC BY-NC-SA 4.0</span>
+  </h1>
+  <div class="badge-nsi">Spécialité NSI — Terminale / Première</div>
+
+  <div class="container">
+
+    <!-- 1. Perception -->
+    <div class="card">
+      <div class="card-title">
+        <span class="num">01</span>
+        Perception
+      </div>
+      <div class="sep"></div>
+      <p>
+        Les ordinateurs perçoivent le monde grâce à des <strong>capteurs</strong>
+        (caméras, microphones, lidars…). La perception consiste à extraire du
+        <em>sens</em> à partir de signaux bruts. Faire « voir » et « entendre »
+        les machines de façon fiable est l'une des plus grandes avancées de l'IA.
+      </p>
+      <div class="tags">
+        <span class="tag">Vision par ordinateur</span>
+        <span class="tag">Reconnaissance vocale</span>
+        <span class="tag">CNN</span>
+      </div>
+      <div class="code-block">
+        <span class="cm"># Exemple : classer une image</span><br>
+        <span class="kw">import</span> tensorflow <span class="kw">as</span> tf<br>
+        model = tf.<span class="fn">keras</span>.<span class="fn">applications</span>.<span
+          class="fn">MobileNetV2</span>()<br>
+        prediction = model.<span class="fn">predict</span>(image)
+      </div>
+    </div>
+
+    <!-- 2. Représentation & Raisonnement -->
+    <div class="card">
+      <div class="card-title">
+        <span class="num">02</span>
+        Représentation &amp; Raisonnement
+      </div>
+      <div class="sep"></div>
+      <p>
+        Les agents IA maintiennent des <strong>représentations du monde</strong>
+        (graphes, arbres, matrices…) et utilisent des algorithmes pour en
+        déduire de nouvelles informations. Ils raisonnent sur des problèmes
+        complexes — mais différemment des humains.
+      </p>
+      <div class="tags">
+        <span class="tag">Graphes</span>
+        <span class="tag">Arbres de décision</span>
+        <span class="tag">Logique formelle</span>
+      </div>
+      <div class="code-block">
+        <span class="cm"># Graphe de connaissances</span><br>
+        monde = {<br>
+        &nbsp;&nbsp;<span class="str">"Paris"</span>: [<span class="str">"Lyon"</span>, <span
+          class="str">"Lille"</span>],<br>
+        &nbsp;&nbsp;<span class="str">"Lyon"</span>: [<span class="str">"Marseille"</span>]<br>
+        }<br>
+        <span class="cm"># Parcours en largeur (BFS)</span><br>
+        chemin = <span class="fn">bfs</span>(monde, <span class="str">"Paris"</span>, <span
+          class="str">"Marseille"</span>)
+      </div>
+    </div>
+
+    <!-- 3. Apprentissage (pleine largeur) -->
+    <div class="card card-full">
+      <div class="card-title">
+        <span class="num">03</span>
+        Apprentissage automatique
+      </div>
+      <div class="sep"></div>
+      <div class="card-body-grid">
+        <div>
+          <p>
+            Les ordinateurs apprennent à partir de <strong>données</strong>.
+            Le <em>machine learning</em> est une forme d'inférence statistique
+            qui repère des motifs dans de grandes masses de données — souvent
+            fournies par des humains. Ces algorithmes ont conduit aux plus
+            grandes avancées récentes de l'IA : traduction, génération d'images,
+            détection de maladies, recommandation…
+          </p>
+          <div class="tags">
+            <span class="tag">Supervised learning</span>
+            <span class="tag">Réseaux de neurones</span>
+            <span class="tag">Données d'entraînement</span>
+            <span class="tag">Biais algorithmiques</span>
+            <span class="tag">Overfitting</span>
+          </div>
+        </div>
+        <div>
+          <div class="code-block">
+            <span class="cm"># Entraîner un classifieur</span><br>
+            <span class="kw">from</span> sklearn.tree <span class="kw">import</span> <span
+              class="fn">DecisionTreeClassifier</span><br>
+            <br>
+            X_train, y_train = <span class="fn">charger_données</span>()<br>
+            clf = <span class="fn">DecisionTreeClassifier</span>(max_depth=<span class="num">5</span>)<br>
+            clf.<span class="fn">fit</span>(X_train, y_train)<br>
+            <br>
+            <span class="cm"># Évaluation du modèle</span><br>
+            score = clf.<span class="fn">score</span>(X_test, y_test)<br>
+            <span class="fn">print</span>(<span class="str">f"Précision : {score:.2%}"</span>)<br>
+            <span class="cm"># → Plus de données = meilleur modèle</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Interaction Naturelle -->
+    <div class="card">
+      <div class="card-title">
+        <span class="num">04</span>
+        Interaction Naturelle
+      </div>
+      <div class="sep"></div>
+      <p>
+        Les agents intelligents doivent comprendre le <strong>langage humain</strong>,
+        les émotions et les conventions culturelles. Traduire l'intention humaine
+        en action machine reste un défi immense — les <em>LLM</em> actuels
+        y excellent de plus en plus.
+      </p>
+      <div class="tags">
+        <span class="tag">NLP</span>
+        <span class="tag">LLM</span>
+        <span class="tag">Chatbots</span>
+        <span class="tag">Tokenisation</span>
+      </div>
+      <div class="code-block">
+        <span class="cm"># Tokenisation simple</span><br>
+        phrase = <span class="str">"Bonjour, comment ça va ?"</span><br>
+        tokens = phrase.<span class="fn">split</span>()<br>
+        <span class="cm"># → ['Bonjour,','comment','ça','va','?']</span><br>
+        <br>
+        <span class="cm"># Analyse de sentiment</span><br>
+        score = <span class="fn">analyser_sentiment</span>(phrase)<br>
+        <span class="cm"># → {'positif': 0.82, 'négatif': 0.18}</span>
+      </div>
+    </div>
+
+    <!-- 5. Impact Sociétal -->
+    <div class="card">
+      <div class="card-title">
+        <span class="num">05</span>
+        Impact Sociétal
+      </div>
+      <div class="sep"></div>
+      <p>
+        L'IA transforme nos façons de travailler, voyager et communiquer.
+        Mais des <strong>risques existent</strong> : biais algorithmiques,
+        surveillance de masse, désinformation. Définir des critères
+        <em>éthiques</em> pour concevoir et déployer l'IA est une
+        responsabilité collective et citoyenne.
+      </p>
+      <div class="tags">
+        <span class="tag">Éthique</span>
+        <span class="tag">Biais</span>
+        <span class="tag">RGPD</span>
+        <span class="tag">Fairness</span>
+      </div>
+      <div class="code-block">
+        <span class="cm"># Questions clés à se poser :</span><br>
+        <span class="arr">→</span> Qui a collecté ces données ?<br>
+        <span class="arr">→</span> Qui profite du modèle ?<br>
+        <span class="arr">→</span> Qui pourrait en être lésé ?<br>
+        <span class="arr">→</span> Peut-on expliquer la décision ?<br>
+        <span class="arr">→</span> Y a-t-il un biais dans l'entraînement ?
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-card">
+      <div>
+        <p>
+          <strong>À propos</strong> — Basé sur le poster <em>Five Big Ideas in AI</em>
+          de l'initiative <strong>AI4K12</strong>, projet conjoint de l'AAAI et de la CSTA,
+          financé par la National Science Foundation (NSF, award DRL-1846073).<br>
+          Licence : <strong>Creative Commons BY-NC-SA 4.0</strong> —
+          <a  rel="noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+            creativecommons.org/licenses/by-nc-sa/4.0
+          </a>
+          &nbsp;·&nbsp; Document imprimable en A3 ou affichage numérique.
+        </p>
+      </div>
+      <div class="footer-badge">
+        <div class="big">AI4K12</div>
+        <span class="small">NSI · Lycée</span>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+</body>
+
+</html>

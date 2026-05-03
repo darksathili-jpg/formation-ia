@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYNTH vs Common Crawl — Baguettotron</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/style_synth_vs_common_crawl.css">
+</head>
+<body>
+
+<!-- ══ TITRE ══ -->
+<h1>SYNTH vs Common Crawl</h1>
+<p class="page-subtitle">
+    Pourquoi Baguettotron n'a jamais touché au web — et ce que ça change pour l'IA souveraine
+</p>
+
+<div class="container">
+
+  <!-- ══ CHIFFRES CLÉS ══ -->
+  <div class="card-full">
+    <div class="section-label">Baguettotron en chiffres</div>
+    <div class="chiffres-grid">
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">321M</span>
+        <span class="chiffre-label">paramètres</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">79,6M</span>
+        <span class="chiffre-label">échantillons SYNTH</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">200 Mds</span>
+        <span class="chiffre-label">tokens entraînement</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">58 698</span>
+        <span class="chiffre-label">articles Wikipedia sources</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">80</span>
+        <span class="chiffre-label">couches (record de sa taille)</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">649 Mo</span>
+        <span class="chiffre-label">taille GGUF Q8</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">×75</span>
+        <span class="chiffre-label">plus efficace par token vs web</span>
+      </div>
+      <div class="chiffre-item">
+        <span class="chiffre-valeur">🇫🇷</span>
+        <span class="chiffre-label">Jean Zay — IDRIS — France</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INTRODUCTION ══ -->
+  <div class="card-full">
+    <div class="section-label">01 — Introduction</div>
+    <h2>L'empire du Common Crawl</h2>
+    <p>
+      Depuis dix ans, l'industrie de l'IA s'est construite sur une certitude : pour entraîner un bon modèle de langage, il faut des <strong>données massives issues du web</strong>. Le Common Crawl — cet aspirateur géant qui archive des milliards de pages internet depuis 2008 — est devenu la matière première universelle de GPT, LLaMA, Qwen et Gemma. L'archive dépasse aujourd'hui <strong>3,5 pétaoctets</strong> de données non filtrées.
+    </p>
+    <p>
+      En novembre 2025, le laboratoire français <strong>PleIAs</strong> a rompu radicalement avec cette tradition en publiant Baguettotron et le dataset SYNTH : un modèle de raisonnement entraîné <em>exclusivement sur des données synthétiques</em>, sans une seule ligne issue du web non filtré.
+    </p>
+
+    <div class="encart-warning">
+      <div class="encart-label">Problème juridique du Common Crawl</div>
+      <p style="margin:0">Le Common Crawl archive des pages web sans vérification des droits d'auteur. Des procès sont actuellement en cours aux États-Unis et en Europe contre OpenAI, Meta et Stability AI. La situation juridique des modèles entraînés sur Common Crawl reste <strong>fondamentalement incertaine</strong> en droit européen.</p>
+    </div>
+  </div>
+
+  <!-- ══ PIPELINE CLASSIQUE ══ -->
+  <div class="card-full">
+    <div class="section-label">02 — Pipeline traditionnel</div>
+    <h2>Comment l'industrie entraîne ses modèles</h2>
+
+    <div class="pipeline">
+      <div class="pipeline-label">Pipeline Common Crawl — LLaMA, Mistral, Qwen, GPT…</div>
+      <div class="pipeline-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-titre">Crawl brut</div>
+          <div class="step-desc">Archive web Common Crawl
+~Pétaoctets
+Qualité très variable</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-titre">Filtrage massif</div>
+          <div class="step-desc">Déduplication
+Détection spam
+Filtres heuristiques</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-titre">Sources premium</div>
+          <div class="step-desc">Livres, articles, code
+Pondération manuelle
+Annotation humaine</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-titre">Pré-entraînement</div>
+          <div class="step-desc">Milliers de GPUs
+Des semaines de calcul
+Trillions de tokens</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">05</div>
+          <div class="step-titre">Fine-tuning / RLHF</div>
+          <div class="step-desc">Instructions humaines
+Feedback annotateurs
+Alignement final</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ APPROCHE SYNTH ══ -->
+  <div class="card-wide">
+    <div class="section-label">03 — L'approche SYNTH</div>
+    <h2>Zéro Common Crawl — tout synthétique</h2>
+
+    <blockquote>
+      "SYNTH is the first open generalist synthetic dataset for training small reasoning models end-to-end. It differs from existing open synthetic datasets in being fully open based on seed text under open license."
+      <cite>— PleIAs, documentation officielle SYNTH (Hugging Face, 2025)</cite>
+    </blockquote>
+
+    <p>
+      PleIAs part de <strong>3 sources seed seulement</strong>, toutes sous licence ouverte vérifiable, puis génère synthétiquement 79,6 millions d'échantillons d'entraînement. Chaque article source génère en moyenne <strong>1 357 échantillons différents</strong>.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipeline-label">Pipeline SYNTH — Amplification synthétique</div>
+      <div class="pipeline-steps">
+        <div class="step">
+          <div class="step-num">SEED</div>
+          <div class="step-titre">Wikipedia CC-BY-SA</div>
+          <div class="step-desc">58 698 articles
+Vital Articles L1→L5
+Sélection communautaire</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">GEN 1</div>
+          <div class="step-titre">Mémorisation</div>
+          <div class="step-desc">QA encyclopédiques
+Résumés multi-niveaux
+Définitions reformulées</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">GEN 2</div>
+          <div class="step-titre">Raisonnement</div>
+          <div class="step-desc">Traces de pensée
+Décomposition logique
+Problèmes multi-étapes</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">GEN 3</div>
+          <div class="step-titre">RAG + Créatif</div>
+          <div class="step-desc">Retrieval augmenté
+Écriture créative
+Exercices variés</div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">RÉSULTAT</div>
+          <div class="step-titre">79,6M échantillons</div>
+          <div class="step-desc">~75 Mds tokens
+6 langues européennes
+Licence CC-BY-SA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHIFFRES SOURCES ══ -->
+  <div class="card">
+    <div class="card-title">
+      Les 3 sources seed
+      <span>toutes sous licence ouverte</span>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Licence</th>
+            <th>Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Wikipedia Vital Articles (L1→L5)</td>
+            <td class="ok">CC-BY-SA</td>
+            <td>50 000 articles</td>
+          </tr>
+          <tr>
+            <td>Wikibooks</td>
+            <td class="ok">CC-BY-SA</td>
+            <td>~8 698 articles</td>
+          </tr>
+          <tr>
+            <td>Documentation PleIAs</td>
+            <td class="ok">Propriété PleIAs</td>
+            <td>Minoritaire</td>
+          </tr>
+          <tr>
+            <td>Common Crawl</td>
+            <td class="nok">Non utilisé</td>
+            <td>0 ligne</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="encart-success">
+      <div class="encart-label">Licence héritée</div>
+      <p style="margin:0;font-size:0.88rem">Le dataset SYNTH est publié sous CC-BY-SA, licence héritée des sources Wikipedia. Il est redistribuable, modifiable et utilisable commercialement librement.</p>
+    </div>
+  </div>
+
+  <div class="sep">· · ·</div>
+
+  <!-- ══ TABLEAU COMPARATIF ══ -->
+  <div class="card-full">
+    <div class="section-label">04 — Comparatif exhaustif</div>
+    <h2>Common Crawl vs SYNTH — 13 dimensions</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Common Crawl (GPT, LLaMA, Qwen…)</th>
+            <th>SYNTH — Baguettotron (PleIAs)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sources originales</td>
+            <td class="nok">Tout le web — droits flous</td>
+            <td class="ok">58 698 articles Wikipedia CC-BY-SA</td>
+          </tr>
+          <tr>
+            <td>Statut juridique</td>
+            <td class="nok">Contentieux actifs EU + USA</td>
+            <td class="ok">Irréprochable — CC-BY-SA héritée</td>
+          </tr>
+          <tr>
+            <td>Données personnelles</td>
+            <td class="nok">Présentes malgré filtrage</td>
+            <td class="ok">Zéro — sources encyclopédiques</td>
+          </tr>
+          <tr>
+            <td>Reproductibilité</td>
+            <td class="nok">Difficile — snapshots changeants</td>
+            <td class="ok">Totale — pipeline open source complet</td>
+          </tr>
+          <tr>
+            <td>Qualité des données</td>
+            <td class="nok">Très variable — spam, fakes, erreurs</td>
+            <td class="ok">Haute — base encyclopédique vérifiée</td>
+          </tr>
+          <tr>
+            <td>Tokens d'entraînement</td>
+            <td class="nok">1 000 à 15 000 milliards</td>
+            <td class="ok">~200 milliards (×75 plus efficace)</td>
+          </tr>
+          <tr>
+            <td>Infrastructure</td>
+            <td class="nok">AWS / Azure / GCP (USA)</td>
+            <td class="ok">Jean Zay — IDRIS — Orsay 🇫🇷</td>
+          </tr>
+          <tr>
+            <td>Traces de raisonnement</td>
+            <td class="nok">Rares dans les données brutes</td>
+            <td class="ok">Intégrées nativement dans chaque sample</td>
+          </tr>
+          <tr>
+            <td>Auditabilité</td>
+            <td class="nok">Impossible — milliards de pages opaques</td>
+            <td class="ok">Totale — chaque sample tracé jusqu'au seed</td>
+          </tr>
+          <tr>
+            <td>Multilingue</td>
+            <td class="mid">Oui mais ~50% anglais</td>
+            <td class="ok">6 langues européennes équilibrées</td>
+          </tr>
+          <tr>
+            <td>Licence modèle</td>
+            <td class="mid">Variable (LLaMA custom, GPT fermé…)</td>
+            <td class="ok">Apache 2.0 — usage commercial libre</td>
+          </tr>
+          <tr>
+            <td>Génération de code</td>
+            <td class="ok">Forte (code présent sur le web)</td>
+            <td class="nok">Faible (pas de code dans Wikipedia)</td>
+          </tr>
+          <tr>
+            <td>Souveraineté</td>
+            <td class="nok">Dépendance infrastructure US</td>
+            <td class="ok">100% souverain — GENCI / IDRIS</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ ARCHITECTURE ══ -->
+  <div class="card">
+    <div class="card-title">
+      80 couches pour 321M params
+      <span>pourquoi c'est contre-intuitif</span>
+    </div>
+    <p>
+      Les modèles comparables (Qwen-0.5B, Gemma-300M) utilisent 24 à 30 couches. Baguettotron en a <strong>80</strong> — c'est le SLM le plus profond de sa catégorie.
+    </p>
+
+    <blockquote>
+      "Nous avons mesuré des améliorations constantes en empilant davantage de couches. Les architectures profondes bénéficient davantage de données de raisonnement dense."
+      <cite>— PleIAs, blog SYNTH (Hugging Face, novembre 2025)</cite>
+    </blockquote>
+
+    <div class="encart-info">
+      <div class="encart-label">Pourquoi ça marche</div>
+      <p style="margin:0;font-size:0.88rem">Les données synthétiques de raisonnement créent des séquences longues et complexes qui "remplissent" mieux les couches profondes. Les signaux MMLU sont apparus dès les <strong>2 premières heures</strong> d'entraînement — là où les modèles Common Crawl nécessitent souvent des trillions de tokens.</p>
+    </div>
+  </div>
+
+  <!-- ══ BENCHMARK ══ -->
+  <div class="card-wide">
+    <div class="section-label">05 — Performances</div>
+    <h2>MMLU — Raisonnement général</h2>
+    <p>Comparaison de modèles ~300M–600M paramètres sur le benchmark MMLU :</p>
+
+    <div class="benchmark">
+      <div class="bench-label">Score MMLU — modèles SLM (300M–600M paramètres)</div>
+
+      <div class="bench-row">
+        <div class="bench-nom">Baguettotron 321M<em>SYNTH — 200 Mds tokens 🇫🇷</em></div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar bar-gold" style="width:72%">72%</div>
+        </div>
+        <div class="bench-score">~72%</div>
+      </div>
+
+      <div class="bench-row">
+        <div class="bench-nom">Qwen2.5 0.5B<em>Web — ~15 000 Mds tokens</em></div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar bar-blue" style="width:75%">75%</div>
+        </div>
+        <div class="bench-score">~75%</div>
+      </div>
+
+      <div class="bench-row">
+        <div class="bench-nom">Gemma 300M<em>Web — billiers de tokens</em></div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar bar-purple" style="width:55%">55%</div>
+        </div>
+        <div class="bench-score">~55%</div>
+      </div>
+
+      <div class="bench-row">
+        <div class="bench-nom">Monad 56M (PleIAs)<em>SYNTH — même pipeline</em></div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar bar-green" style="width:42%">42%</div>
+        </div>
+        <div class="bench-score">~42%</div>
+      </div>
+    </div>
+
+    <div class="encart-info">
+      <div class="encart-label">Le chiffre clé</div>
+      <p style="margin:0;font-size:0.88rem">Baguettotron atteint ~72% sur MMLU avec <strong>200 milliards de tokens</strong>, contre ~15 000 milliards pour Qwen. C'est <strong>75 fois moins de données</strong> pour un résultat quasi-équivalent en raisonnement général.</p>
+    </div>
+  </div>
+
+  <div class="sep">· · ·</div>
+
+  <!-- ══ SOUVERAINETÉ ══ -->
+  <div class="card-full">
+    <div class="section-label">06 — Souveraineté numérique</div>
+    <h2>Jean Zay, GENCI et l'IA publique française</h2>
+    <p>
+      L'ensemble du projet SYNTH + Baguettotron a été réalisé grâce à un <strong>plan de calcul GENCI/Jean Zay</strong> (n°A0191016886) — le supercalculateur national de l'IDRIS à Orsay, qui sert également aux modèles climatiques et à la recherche pharmaceutique. C'est la démonstration qu'une infrastructure publique peut produire de l'IA de pointe.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Composant</th>
+            <th>Modèle Common Crawl typique</th>
+            <th>Baguettotron / SYNTH</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Infrastructure calcul</td>
+            <td class="nok">AWS / Azure / GCP (USA)</td>
+            <td class="ok">Jean Zay — IDRIS, Orsay 🇫🇷</td>
+          </tr>
+          <tr>
+            <td>Données sources</td>
+            <td class="nok">Serveurs Common Crawl (USA)</td>
+            <td class="ok">Wikimedia Foundation (neutre, open)</td>
+          </tr>
+          <tr>
+            <td>Licence dataset</td>
+            <td class="nok">Propriétaire ou droits flous</td>
+            <td class="ok">CC-BY-SA — redistribuable librement</td>
+          </tr>
+          <tr>
+            <td>Licence modèle</td>
+            <td class="mid">Variable</td>
+            <td class="ok">Apache 2.0 — usage commercial libre</td>
+          </tr>
+          <tr>
+            <td>Organisation pilote</td>
+            <td class="nok">Entreprises privées (OpenAI, Meta…)</td>
+            <td class="ok">PleIAs + AI Alliance + GENCI (public)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ LIMITES ══ -->
+  <div class="card">
+    <div class="card-title">
+      Les limites honnêtes
+      <span>ce que SYNTH ne résout pas</span>
+    </div>
+
+    <div class="encart-warning">
+      <div class="encart-label">Génération de code</div>
+      <p style="margin:0;font-size:0.88rem">Wikipedia ne contient pas de code source Python. Pour votre projet NSI, <strong>qwen2.5-coder:1.5b reste supérieur</strong> pour générer du code. PleIAs le documente explicitement.</p>
+    </div>
+
+    <div class="encart-warning">
+      <div class="encart-label">Thinking traces en anglais</div>
+      <p style="margin:0;font-size:0.88rem">Les traces <code>&lt;think&gt;</code> sont générées en anglais même si la question et la réponse sont en français. Le modèle pense en anglais et répond en français — une anomalie fascinante à discuter en classe !</p>
+    </div>
+
+    <div class="encart-warning">
+      <div class="encart-label">Couverture limitée</div>
+      <p style="margin:0;font-size:0.88rem">58 698 articles ne couvrent pas tout le savoir humain. Domaines ultra-spécialisés et actualité récente sont structurellement moins bien représentés qu'avec un corpus web massif.</p>
+    </div>
+  </div>
+
+  <!-- ══ CONCLUSION ══ -->
+  <div class="card-full">
+    <div class="section-label">07 — Conclusion</div>
+    <h2>Une nouvelle frontière des données</h2>
+    <p>
+      SYNTH et Baguettotron représentent bien plus qu'un modèle français de 321 millions de paramètres. Ils démontrent qu'il est possible de construire une IA <strong>souveraine, légalement irréprochable, reproductible à 100%</strong> — et compétitive — sans jamais toucher au Common Crawl.
+    </p>
+    <p>
+      L'efficacité est stupéfiante : <strong>200 milliards de tokens synthétiques</strong> produisent des performances proches de modèles entraînés sur 75 fois plus de données web brutes. La raison profonde : la <em>qualité du signal de raisonnement</em> compte infiniment plus que le volume brut.
+    </p>
+
+    <div class="encart-success">
+      <div class="encart-label">Pour vos élèves NSI</div>
+      <p style="margin:0;font-size:0.88rem">Baguettotron est un cas d'étude complet : données d'entraînement, souveraineté numérique, droits d'auteur dans l'IA, raisonnement machine. Son code source, dataset, pipeline et infrastructure sont <strong>100% ouverts et 100% français</strong> — un objet pédagogique sans équivalent dans l'écosystème IA actuel.</p>
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+      <a href="https://huggingface.co/PleIAs/Baguettotron" target="_blank">
+        <button class="btn btn-warning">Baguettotron sur HuggingFace</button>
+      </a>
+      <a href="https://huggingface.co/datasets/PleIAs/SYNTH" target="_blank">
+        <button class="btn btn-success">Dataset SYNTH</button>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer-card">
+    <p>Article produit dans le cadre du projet NSI v5.1 — Raspberry Pi 5 · Hailo-8 · PyScript 2026</p>
+    <p>
+      Sources :
+      <a href="https://huggingface.co/PleIAs/Baguettotron" target="_blank">PleIAs/Baguettotron</a> ·
+      <a href="https://huggingface.co/datasets/PleIAs/SYNTH" target="_blank">SYNTH Dataset</a> ·
+      <a href="https://vintagedata.org/blog/posts/synthetic-pretraining" target="_blank">Synthetic Pretraining Blog</a>
+    </p>
+  </div>
+
+</div><!-- .container -->
+</body>
+</html>

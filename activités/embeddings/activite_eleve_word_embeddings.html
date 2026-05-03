@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSI — Word Embeddings en Python</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>Word Embeddings &amp; Python</h1>
+  <p class="subtitle">// Activité NSI · Terminale · Intelligence Artificielle · 2h //</p>
+
+  <div class="container">
+
+    <!-- ===== PRÉSENTATION ===== -->
+    <div class="section-head">
+      <h2>Présentation de l'activité</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Contexte
+        <span>Comment un ordinateur comprend-il le sens des mots ?</span>
+      </div>
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        Dans cette activité, tu vas découvrir comment les systèmes d'intelligence artificielle (comme les chatbots ou
+        les moteurs de traduction) transforment les mots en nombres pour pouvoir les manipuler mathématiquement. Cette
+        technique s'appelle les <strong style="color:white">word embeddings</strong>.
+      </p>
+      <div class="rctf-grid">
+        <div class="rctf-item">
+          <div class="label">Niveau</div>
+          <div class="example">Terminale NSI</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Durée</div>
+          <div class="example">2 heures</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Langage</div>
+          <div class="example">Python 3</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Thème IA</div>
+          <div class="example">NLP / Vecteurs</div>
+        </div>
+      </div>
+      <div class="alert-info" style="margin-top:14px;">
+        <strong>Prérequis :</strong> fonctions Python, listes, boucles <code>for</code>, notion de vecteur
+        (mathématiques). Aucune connaissance en IA n'est nécessaire.
+      </div>
+    </div>
+
+    <!-- ===== OBJECTIFS ===== -->
+    <div class="section-head">
+      <h2>Objectifs</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="niveau-card n1">
+        <span class="badge-niveau">OBJECTIF 1</span>
+        <h3>Comprendre</h3>
+        <div class="meta">Conceptuel · 20 min</div>
+        <ul>
+          <li>Pourquoi transformer un mot en vecteur ?</li>
+          <li>Limite du codage one-hot</li>
+          <li>Notion de distance entre mots</li>
+        </ul>
+      </div>
+      <div class="niveau-card n2">
+        <span class="badge-niveau">OBJECTIF 2</span>
+        <h3>Construire</h3>
+        <div class="meta">Pratique Python · 45 min</div>
+        <ul>
+          <li>Créer son propre embedding manuel</li>
+          <li>Coder la distance euclidienne</li>
+          <li>Coder la similarité cosinus</li>
+        </ul>
+      </div>
+      <div class="niveau-card n3">
+        <span class="badge-niveau">OBJECTIF 3</span>
+        <h3>Explorer</h3>
+        <div class="meta">Bibliothèque · 40 min</div>
+        <ul>
+          <li>Utiliser <code>gensim</code> (modèle réel)</li>
+          <li>Arithmétique sémantique</li>
+          <li>Visualiser en 2D avec PCA</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 1 ===== -->
+    <div class="section-head">
+      <h2>Partie 1 — Accroche</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Question de départ
+        <span>Réfléchis avant de coder !</span>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 1</div>
+        <p>Comment un ordinateur peut-il savoir que <strong style="color:#ffc107">"chat"</strong> et <strong
+            style="color:#ffc107">"chien"</strong> sont plus proches sémantiquement que <strong
+            style="color:#ffc107">"chat"</strong> et <strong style="color:#ffc107">"voiture"</strong> ?</p>
+        <textarea placeholder="Écris ta réponse ici..."></textarea>
+      </div>
+
+      <div class="question-block" style="margin-top:10px;">
+        <div class="q-label">QUESTION 2</div>
+        <p>Selon toi, quelles informations sur un mot permettraient de le "mesurer" ? Propose 3 caractéristiques.</p>
+        <textarea placeholder="Exemple : le mot est-il un animal ? est-il vivant ? etc."></textarea>
+      </div>
+
+      <div class="alert-info">
+        <strong>Mise en commun :</strong> ton professeur organisera une discussion de classe avant de passer à la suite.
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 2 ===== -->
+    <div class="section-head">
+      <h2>Partie 2 — Embedding manuel</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Construire son propre espace vectoriel
+        <span>fichier : embedding_manuel.py ou tu peux tester la partie 2 en ligne</span>
+      </div>
+
+      <div class="etape-row">
+        <div class="etape-badge">1</div>
+        <div class="etape-content">
+          <div class="etape-title">Définir le vocabulaire et les dimensions</div>
+          <div class="etape-desc">On choisit 4 "axes de sens" : langage, web, données, bas niveau. Chaque mot est un
+            vecteur de 4 valeurs binaires.</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+      <!--
+      vocabulaire = {
+        "python"     : [1, 1, 1, 0],   # langage, web, données, pas bas niveau
+        "javascript" : [1, 1, 0, 0],   # langage, web, pas données, pas bas niveau
+        "sql"        : [0, 0, 1, 0],   # pas langage classique, pas web, données, pas bas niveau
+        "c"          : [1, 0, 0, 1],   # langage, pas web, pas données, bas niveau
+        "html"       : [0, 1, 0, 0],   # pas langage, web, pas données, pas bas niveau
+        "binaire"    : [0, 0, 0, 1],   # pas langage, pas web, pas données, bas niveau
+        #              langage  web  données  bas_niveau
+      }
+      -->
+
+      <script type="py-editor" id="editeur" env="ia" target="editeur-nsi" worker>
+# Partie 2 — Étape 1 : notre vocabulaire
+vocabulaire = {
+    "python"     : [1, 1, 1, 0],
+    "javascript" : [1, 1, 0, 0],
+    "sql"        : [0, 0, 1, 0],
+    "c"          : [1, 0, 0, 1],
+    "html"       : [0, 1, 0, 0],
+    "binaire"    : [0, 0, 0, 1],
+}
+# langage web données bas_niveau
+print(vocabulaire)
+        </script>
+      <div id="editeur-nsi"></div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">2</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder la distance euclidienne</div>
+          <div class="etape-desc">Complète la fonction ci-dessous. Elle mesure l'écart entre deux vecteurs dans
+            l'espace.</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_2" env="ia" target="editeur-nsi_2" worker>
+# Partie 2 — Étape 2 : distance euclidienne
+def distance_euclidienne(v1, v2):
+    """
+    Calcule la distance entre deux vecteurs v1 et v2.
+    Formule : sqrt( sum( (a-b)^2 ) )
+    """
+    # À COMPLÉTER
+    ...
+
+# Test : distance entre "python" et "sql"
+d = distance_euclidienne(vocabulaire["python"],
+vocabulaire["sql"])
+print(f"python ↔ sql : {d:.2f}")
+        </script>
+      <div id="editeur-nsi_2"></div>
+      <div class="question-block">
+        <div class="q-label">QUESTION 3</div>
+        <p>Quel mot est le plus proche de <strong style="color:#ffc107">"python"</strong> dans ton espace ? Est-ce
+          cohérent avec le sens réel ? Pourquoi cette approche manuelle est-elle limitée ?</p>
+        <textarea placeholder="Ta réponse..."></textarea>
+      </div>
+
+      <!--
+        Partiellement. Python et JavaScript sont effectivement proches dans la réalité : tous les deux sont des langages de haut niveau, interprétés, utilisés pour le web. Cependant dans la réalité, Python est aussi très utilisé en data science et en IA, ce que notre modèle ne capture pas car on n'a que 4 dimensions. C est anormalement loin de Python alors qu'ils partagent beaucoup de syntaxe.
+
+        Limite 1 — Les dimensions sont choisies subjectivement
+          On a décidé arbitrairement que "web" et "bas_niveau" étaient des axes pertinents. Mais pourquoi pas "orienté objet", "typé", "open source" ? Deux personnes différentes construiraient deux espaces différents et obtiendraient des résultats différents.
+        Limite 2 — Les valeurs sont trop grossières (0 ou 1)
+          Python est "un peu" bas niveau comparé à JavaScript, mais "beaucoup moins" que C. Avec seulement 0 ou 1, on ne peut pas exprimer ces nuances. Un vrai embedding utilise des nombres réels comme 0.73 ou -0.41.
+        Limite 3 — Ça ne passe pas à l'échelle
+          Avec 6 mots et 4 dimensions c'est gérable. Mais un vrai vocabulaire contient 100 000 mots ou plus. Impossible de remplir ce tableau à la main. Les modèles comme Word2Vec apprennent automatiquement des centaines de dimensions en analysant des milliards de phrases — sans intervention humaine.
+      -->
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">3</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder la similarité cosinus</div>
+          <div class="etape-desc">Une autre mesure plus robuste : elle compare l'<em>orientation</em> des vecteurs, pas
+            leur longueur.</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_3" env="ia" target="editeur-nsi_3" worker>
+# Partie 2 — Étape 3 : similarité cosinus
+def similarite_cosinus(v1, v2):
+  # produit scalaire
+  scalaire = sum(a * b for a, b in zip(v1, v2))
+  # normes
+  norme1 = sum(a**2 for a  in v1) ** 0.5
+  norme2 = sum(b**2 for b  in v2) ** 0.5
+  return scalaire / (norme1 * norme2)
+
+# Comparaison
+print(similarite_cosinus(vocabulaire["python"], vocabulaire["html"]))
+print(similarite_cosinus(vocabulaire["python"], vocabulaire["javascript"]))
+        </script>
+      <div id="editeur-nsi_3"></div>
+    </div>
+
+    <!-- ===== PARTIE 3 ===== -->
+    <div class="section-head">
+      <h2>Partie 3 — Vrais embeddings avec Gensim</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Utiliser un modèle pré-entraîné
+        <span>fichier : embeddings_gensim.py · bibliothèque : gensim</span>
+      </div>
+
+      <div class="alert-info">
+        <strong>Installation :</strong> Dans Thonny, via le menu graphique — Outils → Gérer les paquets...
+        Puis dans la barre de recherche, taper et installer un par un : gensim scikit-learnmat plotlib
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">4</div>
+        <div class="etape-content">
+          <div class="etape-title">Charger le modèle et explorer un vecteur</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+
+<div class="code-box"><span class="c-pink">import</span> gensim.downloader <span class="c-pink">as</span> api
+
+<span class="c-muted"># Chargement du modèle GloVe (50 dimensions)</span>
+<span class="c-yellow">modele</span> = api.load(<span class="c-white">"glove-wiki-gigaword-50"</span>)
+
+<span class="c-muted"># Explorer un vecteur</span>
+v = modele[<span class="c-white">"bug"</span>]
+<span class="c-pink">print</span>(<span class="c-white">f"Dimensions : {len(v)}"</span>)
+<span class="c-pink">print</span>(<span class="c-white">f"5 premières valeurs : {v[:5]}"</span>)
+</div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">5</div>
+        <div class="etape-content">
+          <div class="etape-title">Mots similaires et arithmétique sémantique</div>
+          <div class="etape-time">15 min</div>
+        </div>
+      </div>
+
+<div class="code-box"><span class="c-muted"># Mots les plus proches de "bug"</span>
+<span class="c-pink">for</span> mot, score <span class="c-pink">in</span> modele.most_similar(<span
+class="c-white">"bug"</span>, topn=<span class="c-blue">5</span>):
+    <span class="c-pink">print</span>(<span class="c-white">f" {mot:15} → {score:.3f}"</span>)
+
+<span class="c-muted"># Arithmétique : bug - problem + solution = ?</span>
+resultat = modele.most_similar(
+positive=[<span class="c-white">"bug"</span>, <span class="c-white">"solution"</span>],
+negative=[<span class="c-white">"problem"</span>],
+topn=<span class="c-blue">3</span>
+)
+<span class="c-pink">print</span>(<span class="c-white">"bug - problem + solution ="</span>, resultat)
+</div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 4</div>
+        <p>Que donne <code>bug - problem + solution</code> ? Le résultat te surprend-il ? Essaie d'autres combinaisons
+          de ton choix et note-les.</p>
+        <textarea placeholder="Exemples testés et résultats..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">6</div>
+        <div class="etape-content">
+          <div class="etape-title">Trouver l'intrus</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+<div class="code-box"><span class="c-muted"># Quel mot ne va pas avec les autres ?</span>
+<span class="c-pink">print</span>(modele.doesnt_match([<span class="c-white">"cat"</span>, <span
+class="c-white">"dog"</span>, <span class="c-white">"lion"</span>, <span class="c-white">"car"</span>]))
+<span class="c-pink">print</span>(modele.doesnt_match([<span class="c-white">"paris"</span>, <span
+class="c-white">"berlin"</span>, <span class="c-white">"london"</span>, <span class="c-white">"dog"</span>]))
+
+<span class="c-muted"># À TOI : propose ta propre liste de 4 mots avec un intrus</span>
+ma_liste = [...] <span class="c-muted"># complète ici</span>
+<span class="c-pink">print</span>(modele.doesnt_match(ma_liste))
+</div>
+
+    </div>
+
+    <!-- ===== PARTIE 4 VISUALISATION ===== -->
+    <div class="section-head">
+      <h2>Partie 4 — Visualisation 2D</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Projeter les vecteurs dans un plan
+        <span>PCA — Analyse en composantes principales</span>
+      </div>
+      <p style="color:#e0e0e0; font-size:0.82rem; line-height:1.5; margin-bottom:10px;">
+        Les vecteurs ont 50 dimensions — impossible à visualiser directement ! On utilise une technique mathématique
+        (PCA) pour les projeter en 2D tout en conservant l'essentiel de l'information.
+      </p>
+
+<div class="code-box"><span class="c-pink">import</span> matplotlib.pyplot <span class="c-pink">as</span> plt
+<span class="c-pink">from</span> sklearn.decomposition <span class="c-pink">import</span> PCA
+
+mots = [<span class="c-white">"cat"</span>, <span class="c-white">"dog"</span>, <span
+class="c-white">"lion"</span>, <span class="c-white">"tiger"</span>,
+<span class="c-white">"car"</span>, <span class="c-white">"truck"</span>, <span class="c-white">"bus"</span>,
+<span class="c-white">"paris"</span>, <span class="c-white">"queen"</span>, <span class="c-white">"man"</span>,
+<span class="c-white">"woman"</span>]
+
+vecteurs = [modele[m] <span class="c-pink">for</span> m <span class="c-pink">in</span> mots]
+
+<span class="c-muted"># Réduction en 2 dimensions</span>
+pca = PCA(n_components=<span class="c-blue">2</span>)
+coords = pca.fit_transform(vecteurs)
+
+<span class="c-muted"># Affichage</span>
+plt.figure(figsize=(<span class="c-blue">9</span>, <span class="c-blue">6</span>))
+<span class="c-pink">for</span> i, mot <span class="c-pink">in</span> <span
+class="c-pink">enumerate</span>(mots):
+    x, y = coords[i]
+    plt.scatter(x, y, s=<span class="c-blue">80</span>)
+    plt.annotate(mot, (x, y), fontsize=<span class="c-blue">11</span>, xytext=(<span class="c-blue">4</span>, <span class="c-blue">4</span>), textcoords=<span class="c-white">'offsetpoints'</span>)
+
+plt.title(<span class="c-white">"Word Embeddings — projection 2D (PCA)"</span>)
+plt.grid(<span class="c-blue">True</span>, alpha=<span class="c-blue">0.3</span>)
+plt.tight_layout()
+plt.show()
+</div>
+
+      <div class="question-block">
+        <div class="q-label">✏ QUESTION 5</div>
+        <p>Observe le graphique obtenu. Les groupes de mots se forment-ils comme tu le prévoyais ? Que remarques-tu sur
+          la position de "paris" et "queen" par rapport à "man" et "woman" ?</p>
+        <textarea placeholder="Décris ce que tu observes..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== DÉFI ===== -->
+    <div class="section-head">
+      <h2>Défi final</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="niveau-card n2">
+        <span class="badge-niveau">DÉFI <img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"></span>
+        <h3>Classement automatique</h3>
+        <div class="meta">Algorithme · 15 min</div>
+        <ul>
+          <li>Prends une liste de 10 mots</li>
+          <li>Calcule toutes les distances entre eux</li>
+          <li>Affiche les 3 paires les plus proches</li>
+          <li>Utilise ta fonction <code>similarite_cosinus</code></li>
+        </ul>
+      </div>
+      <div class="niveau-card n3">
+        <span class="badge-niveau">DÉFI <img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"></span>
+        <h3>Analogies automatiques</h3>
+        <div class="meta">Exploration · 20 min</div>
+        <ul>
+          <li>Crée une fonction <code>analogie(a, b, c)</code></li>
+          <li>Elle retourne <em>d</em> tel que <em>a:b = c:d</em></li>
+          <li>Teste avec des pays et leurs capitales</li>
+          <li>Teste avec des verbes et leurs conjugaisons</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== BILAN ===== -->
+    <div class="section-head">
+      <h2>Bilan de l'activité</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ce que tu as appris aujourd'hui</div>
+      <div class="rctf-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="rctf-item">
+          <div class="label">Vecteur</div>
+          <div class="example">Un mot = une liste de nombres réels</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Distance</div>
+          <div class="example">Euclidienne & cosinus pour comparer</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Sens</div>
+          <div class="example">La géométrie encode la sémantique</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Fondation IA</span>
+            <div class="example">Base de GPT, BERT, traduction...</div>
+          </div>
+        </div>
+      </div>
+      <div class="question-block" style="margin-top:14px;grid-template-columns: repeat(1, 4fr);">
+        <div class="q-label">SYNTHÈSE FINALE</div>
+        <p>En 3 phrases, explique à quelqu'un qui ne fait pas NSI ce qu'est un word embedding et pourquoi c'est utile.
+        </p>
+        <textarea style="min-height:80px;" placeholder="Ma synthèse..."></textarea>
+      </div>
+
+    </div><!-- /container -->
+
+    <!-- ===== RESSOURCES ===== -->
+    <div class="section-head">
+      <h2>Ressources</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pour aller plus loin</div>
+      <ul class="link-list">
+        <li>
+          <a href="https://radimrehurek.com/gensim/" target="_blank">Documentation officielle Gensim</a>
+          <span class="tag blue">DOC</span>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=viZrOnJclY0" target="_blank">Word2Vec expliqué visuellement (YouTube,
+            EN)</a>
+          <span class="tag grey">VIDEO</span>
+        </li>
+        <li>
+          <a href="https://projector.tensorflow.org/" target="_blank">Embedding Projector — TensorFlow (interactif)</a>
+          <span class="tag green">OUTIL</span>
+        </li>
+        <li>
+          <a href="https://arxiv.org/abs/1301.3781" target="_blank">Article original Word2Vec — Mikolov et al.
+            (2013)</a>
+          <span class="tag grey">RECHERCHE</span>
+        </li>
+        <li>
+          <a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html"
+            target="_blank">Documentation PCA — scikit-learn</a>
+          <span class="tag blue">DOC</span>
+        </li>
+      </ul>
+    </div>
+    <footer>
+      Activité NSI · Word Embeddings · Python · Terminale &nbsp;—&nbsp;
+      <a href="#">Retour au cours</a>
+    </footer>
+
+</body>
+
+</html>

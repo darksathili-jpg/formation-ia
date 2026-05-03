@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css" />
+
+  <!-- Active SharedArrayBuffer via mini-coi (requis par PyScript workers) -->
+  <script src="./mini-coi.js"></script>
+
+  <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+
+
+  <title>TP – Entraîner un neurone artificiel</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <h1>Entraîner un neurone artificiel</h1>
+  <p class="subtitle">Première NSI — Intelligence Artificielle — TP Pratique</p>
+
+  <!-- Barre de navigation parties -->
+  <div class="nav-parts" id="navParts">
+    <div class="progress-step active" onclick="showPart(0)">Théorie</div>
+    <div class="progress-step" onclick="showPart(1)">Code Python</div>
+    <div class="progress-step" onclick="showPart(2)">Expérimentation</div>
+    <div class="progress-step" onclick="showPart(3)">Synthèse</div>
+    <div class="progress-step" onclick="showPart(4)">Aller plus loin</div>
+  </div>
+
+  <div class="container">
+
+    <!-- ══════════ INTRO ══════════ -->
+    <div class="card">
+      <div class="section-head">
+        <h2>Objectifs du TP</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+      <div class="objectif-grid">
+        <div class="objectif-item">
+          <p><strong>Neurone artificiel</strong>Comprendre la structure : entrées, poids, biais, fonction d'activation.
+          </p>
+        </div>
+        <div class="objectif-item">
+          <p><strong>Descente de gradient</strong>Implémenter l'algorithme d'apprentissage automatique.</p>
+        </div>
+        <div class="objectif-item">
+          <p><strong>Détection de motifs</strong>Expérimenter la classification de points en 2D.</p>
+        </div>
+        <div class="objectif-item">
+          <p><strong>Limites du modèle</strong>Analyser pourquoi un seul neurone ne suffit pas toujours.</p>
+        </div>
+      </div>
+
+      <!-- Prérequis -->
+      <div style="margin-top:16px;">
+        <div class="section-head">
+          <h2 style="font-size:0.9rem;">Prérequis</h2>
+          <div class="line"></div>
+        </div>
+        <div class="prereq-pills">
+          <div class="pill">Python : boucles, fonctions, listes</div>
+          <div class="pill">Maths : fonction sigmoïde, dérivée</div>
+          <div class="pill">Algèbre : produit scalaire</div>
+          <div class="pill">Librairie <code>math</code> Python</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 1 — THÉORIE ══════════ -->
+    <div id="part-0">
+      <div class="section-head">
+        <h2>Partie 1 — Théorie</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+
+        <!-- Structure neurone -->
+        <div class="card">
+          <div class="card-title">1.1 — Structure d'un neurone artificiel
+            <span>Entrées → Calcul → Sortie</span>
+          </div>
+
+          <div class="schema-neurone">
+            <div class="schema-col">
+              <div class="schema-box">x₁</div>
+              <div class="schema-box">x₂</div>
+              <div class="schema-label">Entrées</div>
+            </div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-col">
+              <div class="schema-box highlight">w₁·x₁ + w₂·x₂ + b</div>
+              <div class="schema-label">Poids + Biais</div>
+            </div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-col">
+              <div class="schema-box highlight">σ(z)</div>
+              <div class="schema-label">Activation</div>
+            </div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-col">
+              <div class="schema-box output">ŷ</div>
+              <div class="schema-label">Sortie</div>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <span class="f-label">formule de sortie</span>
+            <span class="wh">ŷ</span> = <span class="hi">σ</span>(<span class="gr">w₁·x₁</span> + <span
+              class="gr">w₂·x₂</span> + <span class="hi">b</span>)
+          </div>
+
+          <div class="alert-info" style="margin-top:10px;">
+            La fonction <strong>sigmoïde σ</strong> compresse n'importe quelle valeur dans l'intervalle <strong>[0 ;
+              1]</strong>, ce qui permet d'interpréter la sortie comme une probabilité.
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">1</div>
+            <p><strong>Question :</strong> Pourquoi utilise-t-on une fonction d'activation comme la sigmoïde ? Que se
+              passerait-il sans elle ?</p>
+          </div>
+        </div>
+
+        <!-- Descente de gradient -->
+        <div class="card">
+          <div class="card-title">1.2 — Apprentissage par descente de gradient
+            <span>Minimiser l'erreur itérativement</span>
+          </div>
+
+          <p style="font-size:0.82rem;color:#e0e0e0;line-height:1.6;">
+            L'objectif est de trouver les <strong style="color:white;">poids w</strong> et le <strong
+              style="color:white;">biais b</strong> qui minimisent l'écart entre la sortie prédite <em>ŷ</em> et la
+            sortie réelle <em>y</em>.
+          </p>
+
+          <div class="formula-box" style="margin-top:10px;">
+            <span class="f-label">erreur quadratique</span>
+            <span class="hi">E</span> = ½ · (<span class="wh">y</span> − <span class="gr">ŷ</span>)²
+          </div>
+          <div class="formula-box" style="margin-top:6px;">
+            <span class="f-label">mise à jour des poids</span>
+            <span class="gr">wᵢ</span> ← <span class="gr">wᵢ</span> − <span class="hi">α</span> · ∂E/∂<span
+              class="gr">wᵢ</span>
+          </div>
+
+          <div class="alert-info" style="margin-top:10px;">
+            <strong>α (alpha)</strong> = taux d'apprentissage. Ce paramètre contrôle la <em>taille du pas</em> lors de
+            chaque mise à jour. Trop grand → oscillations. Trop petit → convergence lente.
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">2</div>
+            <p><strong>Question :</strong> Pourquoi utilise-t-on la <em>dérivée</em> de l'erreur pour mettre à jour les
+              poids ? Quel est le lien avec la notion de "pente" d'une courbe ?</p>
+          </div>
+        </div>
+
+      </div><!-- /grid-2 -->
+    </div>
+
+    <!-- ══════════ PARTIE 2 — CODE ══════════ -->
+    <div id="part-1">
+      <div class="section-head">
+        <h2>Partie 2 — Implémentation Python</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab-btn active" onclick="switchTab(this,'tab-code1')">2.1 — Fonctions de base</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-code2')">2.2 — Jeu de données</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-code3')">2.3 — Entraînement</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-code4')">2.4 — Visualisation</div>
+        <div class="tab-btn" onclick="switchTab(this,'tab-code5')">2.5 — Inférence</div>
+      </div>
+
+      <div class="card" style="border-radius:0 8px 8px 8px;">
+
+        <!-- Tab 1 : code neurone -->
+        <div class="tab-panel active" id="tab-code1">
+          <div class="card-title">Classe Neurone &amp; fonctions utiles
+            <span>sigmoid · derivee_sigmoid · Neurone</span>
+          </div>
+          <script type="py-editor" id="editeur" env='ia' output="editeur-nsi" config="config.json">
+import math
+import random
+
+# ── Fonction d'activation ──────────────────────
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+def derivee_sigmoid(x):
+    s = sigmoid(x)
+    return s * (1 - s)
+
+# ── Classe Neurone ─────────────────────────────
+class Neurone:
+    def __init__(self, nb_entrees, taux=0.1):
+        self.poids = [random.uniform(-0.5, 0.5) for _ in range(nb_entrees)]
+        self.biais = random.uniform(-0.5, 0.5)
+        self.taux  = taux
+
+    def calculer_sortie(self, entrees):
+        if len(entrees) != len(self.poids):
+            raise ValueError("Le nombre d'entrées doit correspondre au nombre de poids.")
+        z = sum(w * x for w, x in zip(self.poids, entrees)) + self.biais
+        return sigmoid(z)
+
+    def entrainer(self, entrees, sortie_attendue):
+        y_prediction = self.calculer_sortie(entrees)
+        derivee_erreur = (sortie_attendue - y_prediction) * derivee_sigmoid(y_prediction)
+        for i in range(len(self.poids)):
+            self.poids[i] += self.taux * derivee_erreur * entrees[i]
+        self.biais += self.taux * derivee_erreur
+
+    def entrainer_epoques(self, donnees, epochs=1000):
+        for _ in range(epochs):
+            for entrees, sortie_attendue in donnees:
+                self.entrainer(entrees, sortie_attendue)
+print("Classe Neurone et fonctions sigmoid chargées avec succès !")
+        </script>
+          <div id="editeur-nsi"></div>
+
+
+          <div class="question-block">
+            <div class="q-num">3</div>
+            <p><strong>Question :</strong> Quel est le rôle de <code style="color:#ffc107;">derivee_sigmoid</code> dans
+              la mise à jour des poids ? Pourquoi doit-on multiplier par la dérivée ?</p>
+          </div>
+        </div>
+
+        <!-- Tab 2 : données -->
+        <div class="tab-panel" id="tab-code2">
+          <div class="card-title">Jeu de données &amp; initialisation
+            <span>Points 2D séparés par 2x₁ - x₂ + 1 = 0</span>
+          </div>
+
+          <script type="py-editor" id="editeur_2" env='ia' output="editeur-nsi_2">
+import random
+
+def generer_donnees(nb_points=150, bruit=0.8, bruit_labels=0.08):
+    # Frontière inconnue : a*x1 + b*x2 + c = 0
+    a = round(random.uniform(-3, 3), 1) or 1
+    b = round(random.uniform(-3, 3), 1) or 1
+    c = round(random.uniform(-3, 3), 1)
+
+    donnees = []
+    for _ in range(nb_points):
+        x1 = random.uniform(-4, 4)
+        x2_frontiere = (-a * x1 - c) / b
+
+        # Classe 0 : d'un côté
+        x2 = random.uniform(x2_frontiere + bruit, x2_frontiere + 6)
+        if -6 <= x2 <= 6:
+            label = 1 if random.random() < bruit_labels else 0
+            donnees.append(((x1, x2), label))
+
+        # Classe 1 : de l'autre côté
+        x1 = random.uniform(-4, 4)
+        x2_frontiere = (-a * x1 - c) / b
+        x2 = random.uniform(x2_frontiere - 6, x2_frontiere - bruit)
+        if -6 <= x2 <= 6:
+            label = 0 if random.random() < bruit_labels else 1
+            donnees.append(((x1, x2), label))
+
+    return donnees
+
+# Génération des données
+donnees = generer_donnees()
+nb0 = sum(1 for _, l in donnees if l == 0)
+nb1 = sum(1 for _, l in donnees if l == 1)
+print(f"Données générées : {nb0} points classe 0, {nb1} points classe 1")
+print("~8% des points sont du mauvais côté (bruit de classification)")
+print("À toi de trouver la frontière... sans la connaître !")
+
+        </script>
+          <div id="editeur-nsi_2"></div>
+          <div class="diff-banner">
+            <p>Les poids sont initialisés à des valeurs <strong>non nulles</strong> pour "briser la symétrie" : si tous
+              les poids valaient 0, toutes les mises à jour seraient identiques et le neurone n'apprendrait rien
+              d'utile.</p>
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">4</div>
+            <p><strong>Question :</strong> Pourquoi initialise-t-on les poids à des valeurs non nulles ? Que se
+              passerait-il avec <code style="color:#ffc107;">poids=[0, 0]</code> ?</p>
+          </div>
+
+        </div>
+
+        <!-- Tab 3 : entraînement -->
+        <div class="tab-panel" id="tab-code3">
+          <div class="card-title">Boucle d'entraînement &amp; test
+            <span>1000 itérations sur le jeu de données</span>
+          </div>
+
+          <script type="py-editor" id="editeur_3" env='ia' output="editeur-nsi_3">
+# Création du neurone (2 entrées : x1 et x2)
+neurone = Neurone(nb_entrees=2, taux=0.1)
+
+# Entraînement sur 1000 époques
+neurone.entrainer_epoques(donnees, epochs=1000)
+
+# Affichage de l'équation de la frontière apprise
+print(f"Équation de la frontière apprise : {neurone.poids[0]:.2f} x1 + {neurone.poids[1]:.2f} x2 + {neurone.biais:.2f} = 0")
+
+# Test du neurone sur quelques points
+print("\nTest du neurone sur 5 points aléatoires :")
+for i in range(5):
+    point, label = random.choice(donnees)
+    prediction = neurone.calculer_sortie(list(point))
+    print(f"Point {point}, Label réel: {label}, Prédiction: {prediction:.2f}")
+
+  </script>
+          <div id="editeur-nsi_3"></div>
+
+
+          <div class="alert-info" style="margin-top:10px;">
+            <strong>Exemple de sortie attendue :</strong><br>
+            Entrées: [0, 0] &nbsp;→&nbsp; Prédiction: 0.08 &nbsp; Attendue: 0<br>
+            Entrées: [1, 1] &nbsp;→&nbsp; Prédiction: 0.91 &nbsp; Attendue: 1
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">5</div>
+            <p><strong>Question :</strong> Que se passe-t-il si le taux d'apprentissage est <strong>trop grand</strong>
+              (ex : α = 10) ou <strong>trop petit</strong> (ex : α = 0.0001) ? Testez et observez.</p>
+          </div>
+        </div>
+
+        <!-- Tab 4 : visualisation -->
+        <div class="tab-panel" id="tab-code4">
+          <div class="card-title">Boucle d'entraînement &amp; test
+            <span>1000 itérations sur le jeu de données</span>
+          </div>
+
+          <script type="py-editor" id="editeur_4" env='ia' output="editeur-nsi_5">
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+from pyscript import display
+
+# Extraction des coordonnées et des labels
+x1_class0 = [point[0] for point, label in donnees if label == 0]
+x2_class0 = [point[1] for point, label in donnees if label == 0]
+x1_class1 = [point[0] for point, label in donnees if label == 1]
+x2_class1 = [point[1] for point, label in donnees if label == 1]
+
+# Calcul de la précision
+correct = sum(
+    1 for (entrees, label) in donnees
+    if round(neurone.calculer_sortie(list(entrees))) == label
+)
+precision = correct / len(donnees) * 100
+
+# Création de la figure
+fig, ax = plt.subplots()
+ax.scatter(x1_class0, x2_class0, c='blue', label='Classe 0', alpha=0.6)
+ax.scatter(x1_class1, x2_class1, c='red', label='Classe 1', alpha=0.6)
+
+# Frontière apprise par le neurone
+x1_vals = np.linspace(-5, 5, 100)
+x2_apprise = (-neurone.poids[0] * x1_vals - neurone.biais) / neurone.poids[1]
+ax.plot(x1_vals, x2_apprise, 'g-', linewidth=2, label=f"Frontière apprise")
+
+ax.set_xlabel("x₁")
+ax.set_ylabel("x₂")
+ax.set_title(f"Frontière de décision — Précision : {precision:.1f}%")
+ax.legend()
+ax.grid(True)
+ax.set_xlim(-5, 5)
+ax.set_ylim(-6, 6)
+
+display(fig, target="editeur-nsi_5", append=False)
+display(fig, target="rappelfigure", append=False)
+plt.close()
+print(f"Précision : {correct}/{len(donnees)} points bien classés ({precision:.1f}%)")
+  </script>
+          <div id="editeur-nsi_5"></div>
+
+
+          <div class="alert-info" style="margin-top:10px;">
+            <strong>Exemple de sortie attendue :</strong><br>
+            Entrées: [0, 0] &nbsp;→&nbsp; Prédiction: 0.08 &nbsp; Attendue: 0<br>
+            Entrées: [1, 1] &nbsp;→&nbsp; Prédiction: 0.91 &nbsp; Attendue: 1
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">5</div>
+            <p><strong>Question :</strong> Que se passe-t-il si le taux d'apprentissage est <strong>trop grand</strong>
+              (ex : α = 10) ou <strong>trop petit</strong> (ex : α = 0.0001) ? Testez et observez.</p>
+          </div>
+        </div>
+
+        <!-- Tab 5 : inférence -->
+        <div class="tab-panel" id="tab-code5">       
+          <!-- Éditeur libre pour tester en masse -->
+          <div class="card-title">Tester plusieurs points avec le modèle entrainé.
+            <span>Libre à toi d'expérimenter</span>
+          </div>
+          <script type="py-editor" id="editeur_5" env='ia' output="editeur-nsi_inference">
+# Teste le neurone sur des points de ton choix
+points_test = [
+    ([3, 2], "?"),
+    ([-2, -1], "?"),
+    ([0, 0], "?"),
+    ([1, 4], "?"),
+    ([-3, 3], "?"),
+]
+
+print(f"{'Point':<15} {'Score':>8} {'Classe prédite':>16}")
+print("-" * 42)
+for point, _ in points_test:
+    score = neurone.calculer_sortie(point)
+    classe = round(score)
+    print(f"{str(point):<15} {score:>8.4f} {'Classe ' + str(classe):>16}")
+          </script>
+          <div id="editeur-nsi_inference"></div>
+
+          <div class="question-block" style="margin-top:12px;">
+            <div class="q-num">6</div>
+            <p><strong>Question :</strong> Trouve un point très proche de la frontière apprise.
+            Que remarques-tu sur le score sigmoid ? Pourquoi est-il proche de 0.5 ?</p>
+          </div>
+        </div>
+
+
+
+
+      </div><!-- /card -->
+    </div>
+
+    <!-- ══════════ PARTIE 3 — Analyse ══════════ -->
+    <div id="part-2">
+      <div class="section-head">
+        <h2>Partie 3 —  Visualisation et Analyse</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-2">
+
+        <div class="card">
+          <div class="card-title">3.1 — Visualisation des résultats
+            <span>Frontière de décision linéaire</span>
+          </div>
+
+          <div id="rappelfigure">
+          </div>
+          
+          <div class="question-block">
+            <div class="q-num">7</div>
+            <p><strong>Question :</strong> La frontière de décision correspond-elle à la droite que tu
+              attendais ? Explique pourquoi elle peut légèrement différer.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">3.2 — Limites du neurone unique
+            <span>Séparabilité linéaire</span>
+          </div>
+          <p style="font-size:0.82rem;color:#e0e0e0;line-height:1.6;margin-bottom:10px;">
+            Un seul neurone ne peut apprendre que des frontières de décision <strong
+              style="color:#ffc107;">linéaires</strong>. Certains problèmes sont fondamentalement non linéaires.
+          </p>
+
+          <div class="grid-2" style="gap:8px;margin-top:10px;">
+            <div class="niveau-card n1" style="padding:14px;">
+              <div class="badge-niveau">POSSIBLE</div>
+              <h3>ET / OU / NON</h3>
+              <p style="font-size:0.75rem;color:rgba(255,255,255,0.8);">Frontière linéaire suffisante</p>
+            </div>
+            <div class="niveau-card n3" style="padding:14px;">
+              <div class="badge-niveau">IMPOSSIBLE</div>
+              <h3>XOR / Cercle</h3>
+              <p style="font-size:0.75rem;color:rgba(255,255,255,0.8);">Nécessite des couches cachées</p>
+            </div>
+          </div>
+
+          <div class="diff-banner" style="margin-top:12px;">
+            <p>Le problème XOR est historiquement célèbre : il a démontré les limites du perceptron simple et motivé le
+              développement des réseaux multicouches (Minsky &amp; Papert, 1969).</p>
+          </div>
+
+          <div class="question-block">
+            <div class="q-num">8</div>
+            <p><strong>Question :</strong> Propose un exemple de motif que ce neurone ne pourrait <em>pas</em>
+              apprendre, même avec 1 000 000 d'itérations. Justifie ta réponse.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 4 — SYNTHÈSE ══════════ -->
+    <div id="part-3">
+      <div class="section-head">
+        <h2>Partie 4 — Synthèse des notions clés</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="card">
+        <div class="card-title">Tableau récapitulatif
+          <span>Les 4 concepts fondamentaux du TP</span>
+        </div>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Notion</th>
+              <th>Définition</th>
+              <th>Rôle dans l'algorithme</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:#ffc107;">Neurone artificiel</strong></td>
+              <td>Unité de calcul avec entrées, poids, biais et fonction d'activation</td>
+              <td>Transforme un vecteur d'entrée en une sortie scalaire</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#7effc8;">Descente de gradient</strong></td>
+              <td>Algorithme d'optimisation qui suit la pente de la fonction de coût</td>
+              <td>Ajuste w et b pour minimiser l'erreur</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#c9a9ff;">Taux d'apprentissage α</strong></td>
+              <td>Hyperparamètre contrôlant la taille de chaque mise à jour</td>
+              <td>Équilibre vitesse de convergence et stabilité</td>
+            </tr>
+            <tr>
+              <td><strong style="color:#ff8800;">Frontière de décision</strong></td>
+              <td>Hyperplan séparant les classes dans l'espace des entrées</td>
+              <td>Visualise la règle de classification apprise</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="section-head" style="margin-top:20px;">
+          <h2 style="font-size:0.9rem;">Pipeline d'apprentissage</h2>
+          <div class="line"></div>
+        </div>
+        <div class="pipeline">
+          <div class="pipeline-step">Données</div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step accent">Initialisation<br><small>poids aléatoires</small></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step">Boucle<br><small>N itérations</small></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step accent">Gradient<br><small>∂E/∂w</small></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step">Mise à jour<br><small>w ← w − α·δ</small></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step accent">Neurone<br><small>entraîné</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PARTIE 5 — ALLER PLUS LOIN ══════════ -->
+    <div id="part-4">
+      <div class="section-head">
+        <h2>Partie 5 — Pour aller plus loin</h2>
+        <div class="line"></div>
+      </div>
+      <div class="animated-sep"></div>
+
+      <div class="grid-3">
+
+        <div class="niveau-card n1">
+          <div class="badge-niveau"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"> NIVEAU 1</div>
+          <h3>Tracer la courbe d'erreur</h3>
+          <div class="meta">Visualisation · matplotlib</div>
+          <ul>
+            <li>Stocker l'erreur à chaque époque</li>
+            <li>Tracer E = f(itérations)</li>
+            <li>Observer la convergence</li>
+            <li>Comparer différents α</li>
+          </ul>
+        </div>
+
+        <div class="niveau-card n2">
+          <div class="badge-niveau"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"> NIVEAU 2</div>
+          <h3>Résoudre le XOR</h3>
+          <div class="meta">Réseau 2 couches · rétropropagation</div>
+          <ul>
+            <li>Implémenter 2 neurones cachés</li>
+            <li>Ajouter une couche de sortie</li>
+            <li>Adapter l'algorithme d'entraînement</li>
+            <li>Vérifier sur la table XOR</li>
+          </ul>
+        </div>
+
+        <div class="niveau-card n3">
+          <div class="badge-niveau"> <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            width="13" alt="Python"> NIVEAU 3</div>
+          <h3>Mini réseau générique</h3>
+          <div class="meta">POO avancée · architecture flexible</div>
+          <ul>
+            <li>Classe <code>CoucheNeurones</code></li>
+            <li>Réseau [n, m, 1] configurable</li>
+            <li>Entraîner sur MNIST simplifié</li>
+            <li>Mesurer la précision</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Ressources -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Ressources utiles
+          <span>Liens pour approfondir</span>
+        </div>
+        <ul class="link-list">
+          <li>
+            <a href="https://playground.tensorflow.org" target="_blank">TensorFlow Playground</a>
+            — Visualiser l'entraînement de réseaux interactivement
+            <span class="tag green">Interactif</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank">3Blue1Brown — Neural Networks</a>
+            — Série vidéo visuelle sur les réseaux de neurones
+            <span class="tag blue">Vidéo</span>
+          </li>
+          <li>
+            <a href="https://scikit-learn.org/stable/modules/neural_networks_supervised.html"
+              target="_blank">Scikit-learn — MLPClassifier</a>
+            — Documentation officielle du perceptron multicouches
+            <span class="tag grey">Doc</span>
+          </li>
+          <li>
+            <a href="https://ml-playground.com" target="_blank">ML Playground</a>
+            — Visualisation interactive de la descente de gradient
+            <span class="tag green">Interactif</span>
+          </li>
+        </ul>
+      </div>
+      
+    </div><!-- /container -->
+
+    <footer>
+      TP Intelligence Artificielle — Première NSI &nbsp;|&nbsp;
+      Neurone artificiel &amp; descente de gradient &nbsp;·&nbsp;
+      <a href="https://eduscol.education.fr/2068/programmes-et-ressources-en-numerique-et-sciences-informatiques-voie-gt"
+        target="_blank">Programme NSI officiel</a>
+    </footer>
+
+    <script>
+      // ── Tabs ──────────────────────────────────────
+      function switchTab(btn, id) {
+        const card = btn.closest('.card') || btn.parentElement.nextElementSibling;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // find all panels sibling to the card
+        const panels = btn.closest('.container') ?
+          btn.parentElement.nextElementSibling.querySelectorAll('.tab-panel') :
+          document.querySelectorAll('.tab-panel');
+        panels.forEach(p => p.classList.remove('active'));
+        const target = document.getElementById(id);
+        if (target) target.classList.add('active');
+      }
+
+      // ── Progress bar / navigation ─────────────────
+      function showPart(idx) {
+        // scroll to part
+        const parts = ['part-0', 'part-1', 'part-2', 'part-3', 'part-4'];
+        const el = document.getElementById(parts[idx]);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // highlight
+        document.querySelectorAll('.progress-step').forEach((s, i) => {
+          s.classList.toggle('active', i === idx);
+        });
+      }
+
+      // ── Intersection Observer pour progress bar ───
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = ['part-0', 'part-1', 'part-2', 'part-3', 'part-4']
+              .indexOf(entry.target.id);
+            if (idx >= 0) {
+              document.querySelectorAll('.progress-step').forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+              });
+            }
+          }
+        });
+      }, { threshold: 0.3 });
+
+      ['part-0', 'part-1', 'part-2', 'part-3', 'part-4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSI Terminale – Diviser pour régner</title>
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath:  [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        tags: 'none'
+      },
+      options: {
+        skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+      },
+      startup: {
+        typeset: false   // on déclenchera manuellement après déblocage des sections
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+  <style>
+    :root{
+      --bg:#0f1117;--surface:#181c27;--surface2:#1e2235;--surface3:#232840;
+      --border:#2a3050;--accent:#5dde8a;--accent2:#f7c948;--accent3:#6eb3ff;
+      --accent4:#ff7eb3;--text:#dde3f0;--muted:#7a849a;--py:#5dde8a;
+      --radius:10px;--shadow:0 4px 24px rgba(0,0,0,.4)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;font-size:15px;line-height:1.65}
+
+    /* ── LOADING ── */
+    #ecran-chargement{position:fixed;inset:0;z-index:999;background:#0a0d16;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;transition:opacity .6s}
+    #ecran-chargement.masque{opacity:0;pointer-events:none}
+    .anneau-chargement{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:rotation .8s linear infinite}
+    @keyframes rotation{to{transform:rotate(360deg)}}
+    #ecran-chargement p{color:var(--muted);font-size:.85rem;font-family:'IBM Plex Mono',monospace}
+
+    /* ── HEADER ── */
+    header{background:linear-gradient(135deg,#0d1a2e 0%,#142040 50%,#1a0f2e 100%);border-bottom:2px solid var(--border);padding:2rem 2.5rem 1.5rem;position:relative;overflow:hidden}
+    header::before{content:'NSI';position:absolute;font-family:'Syne',sans-serif;font-size:8rem;font-weight:800;opacity:.03;right:2rem;top:-.5rem;pointer-events:none;color:#fff}
+    .etiquette{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+    header h1{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:#fff;line-height:1.2}
+    header h1 span{color:var(--accent2)}
+    header .sous-titre{margin-top:.4rem;color:var(--muted);font-size:.88rem}
+
+    /* ── PROGRESSION ── */
+    .barre-progression{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2.5rem;display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted)}
+    .fond-barre{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+    .remplissage-barre{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .5s;width:0%}
+    #etiquette-score{font-family:'IBM Plex Mono',monospace;color:var(--accent2);font-size:.85rem;min-width:3rem;text-align:right}
+
+    /* ── LAYOUT ── */
+    main{max-width:980px;margin:0 auto;padding:2rem 1.5rem 4rem}
+    .en-tete-partie{display:flex;align-items:center;gap:1rem;margin:2.5rem 0 1.2rem}
+    .badge-partie{font-family:'Syne',sans-serif;font-weight:800;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding:.25rem .75rem;border-radius:99px}
+    .badge-py{background:rgba(93,222,138,.12);color:var(--py);border:1px solid rgba(93,222,138,.3)}
+    .badge-concept{background:rgba(110,179,255,.12);color:var(--accent3);border:1px solid rgba(110,179,255,.3)}
+    .en-tete-partie h2{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:#fff}
+
+    /* ── COURS ── */
+    .boite-cours{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.5rem;overflow:hidden}
+    .toggle-cours{width:100%;background:none;border:none;cursor:pointer;padding:.85rem 1.2rem;display:flex;align-items:center;gap:.7rem;color:var(--text);font-size:.9rem;font-family:'Syne',sans-serif;font-weight:700;transition:background .2s}
+    .toggle-cours:hover{background:rgba(255,255,255,.03)}
+    .toggle-cours .chevron{margin-left:auto;transition:transform .3s;color:var(--muted);font-size:.8rem}
+    .toggle-cours.ouvert .chevron{transform:rotate(180deg)}
+    .corps-cours{display:none;padding:0 1.4rem 1.4rem;border-top:1px solid var(--border)}
+    .corps-cours.visible{display:block}
+
+    /* ── SECTIONS DU COURS ── */
+    .section-cours{margin-top:1.2rem}
+    .titre-section{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+    .titre-section::before{content:'';width:3px;height:1rem;background:var(--accent);border-radius:2px;display:inline-block}
+    .corps-cours p{color:#aab4cc;font-size:.88rem;line-height:1.7;margin-bottom:.5rem}
+    .corps-cours ul,.corps-cours ol{padding-left:1.5rem;margin:.4rem 0}
+    .corps-cours li{color:#aab4cc;font-size:.88rem;line-height:1.7;margin-bottom:.3rem}
+    .corps-cours strong{color:#d0dcf0}
+
+    .encadre{background:rgba(93,222,138,.08);border-left:3px solid var(--accent);padding:.7rem 1rem;margin:.8rem 0;border-radius:0 6px 6px 0}
+    .encadre-formule{background:rgba(110,179,255,.08);border-left:3px solid var(--accent3);padding:.7rem 1rem;margin:.8rem 0;border-radius:0 6px 6px 0}
+    .encadre-attention{background:rgba(247,201,72,.07);border-left:3px solid var(--accent2);padding:.7rem 1rem;margin:.8rem 0;border-radius:0 6px 6px 0}
+    .encadre-methode{background:rgba(255,126,179,.07);border-left:3px solid var(--accent4);padding:.7rem 1rem;margin:.8rem 0;border-radius:0 6px 6px 0}
+
+    /* ── ARBRE DE RÉCURSION ── */
+    .arbre-recursion{background:#0c0f1a;border:1px solid var(--border);border-radius:6px;padding:1rem;margin:.8rem 0;overflow-x:auto}
+    .arbre-recursion pre{font-family:'IBM Plex Mono',monospace;font-size:.78rem;line-height:1.8;color:#7ab8ff}
+    .niveau-arbre-0{color:#5dde8a}
+    .niveau-arbre-1{color:#6eb3ff}
+    .niveau-arbre-2{color:#f7c948}
+    .niveau-arbre-3{color:#ff7eb3}
+
+    /* ── TABLE COMPLEXITÉ ── */
+    .tableau-complexite{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.83rem}
+    .tableau-complexite th{background:var(--surface3);color:#c8d8ff;font-family:'Syne',sans-serif;padding:.5rem .8rem;text-align:left;border:1px solid var(--border)}
+    .tableau-complexite td{padding:.45rem .8rem;border:1px solid var(--border);color:#aab4cc}
+    .tableau-complexite tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+    .complexite-bonne{color:#5dde8a;font-family:'IBM Plex Mono',monospace;font-weight:600}
+    .complexite-neutre{color:#f7c948;font-family:'IBM Plex Mono',monospace}
+
+    /* ── CARTE QUESTION ── */
+    .carte-question{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.3rem;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+    .carte-question.reussie{border-color:rgba(93,222,138,.5);box-shadow:0 0 16px rgba(93,222,138,.08)}
+    .carte-question.echouee{border-color:rgba(255,107,107,.4)}
+    .en-tete-question{padding:1rem 1.2rem .5rem;display:flex;align-items:flex-start;gap:.8rem}
+    .numero-question{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600}
+    .num-python{background:rgba(93,222,138,.12);color:var(--py)}
+    .num-texte{background:rgba(110,179,255,.12);color:var(--accent3)}
+    .corps-question{flex:1}
+    .corps-question h3{font-size:.95rem;font-weight:700;color:#e8eef8;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+    .badge-difficulte{font-size:.65rem;font-family:'IBM Plex Mono',monospace;padding:.1rem .45rem;border-radius:99px;font-weight:600}
+    .difficulte-1{background:rgba(93,222,138,.15);color:#5dde8a}
+    .difficulte-2{background:rgba(247,201,72,.15);color:#f7c948}
+    .difficulte-3{background:rgba(255,126,179,.15);color:#ff7eb3}
+    .corps-question p{font-size:.88rem;color:#8a97b5;line-height:1.6}
+    .corps-question .contexte{margin-top:.4rem;font-size:.82rem;color:#6a7a9a;font-style:italic}
+
+    /* ── ZONE DE RÉPONSE ── */
+    .zone-reponse{padding:.3rem 1.2rem 1rem}
+    textarea.saisie-code, input.saisie-texte{width:100%;background:#10131e;border:1px solid var(--border);border-radius:6px;color:#e0e9ff;font-family:'IBM Plex Mono',monospace;font-size:.82rem;padding:.7rem .9rem;resize:vertical;outline:none;transition:border-color .2s}
+    textarea.saisie-code:focus, input.saisie-texte:focus{border-color:var(--accent)}
+    textarea.saisie-code{min-height:66px}
+
+    /* ── BOUTONS ── */
+    .rangee-boutons{display:flex;gap:.6rem;margin-top:.6rem;flex-wrap:wrap}
+    .btn{padding:.42rem 1.05rem;border-radius:6px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;transition:opacity .15s,transform .1s}
+    .btn:active{transform:scale(.97)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn-executer{background:var(--accent3);color:#06111e}
+    .btn-valider{background:var(--accent);color:#0a1a10}
+    .btn-aide{background:transparent;border:1px solid var(--border);color:var(--muted)}
+    .btn-aide:hover{border-color:var(--accent2);color:var(--accent2)}
+    .btn-solution{background:transparent;border:1px solid rgba(255,126,179,.3);color:#ff7eb3;font-size:.75rem}
+    .btn-solution:hover{background:rgba(255,126,179,.08)}
+    .btn-reinitialiser{background:transparent;border:1px solid var(--border);color:var(--muted);font-size:.75rem}
+    .btn-reinitialiser:hover{border-color:var(--muted)}
+
+    /* ── RETOURS ── */
+    .retour{margin-top:.7rem;border-radius:6px;padding:.65rem .9rem;font-size:.84rem;display:none;line-height:1.6}
+    .retour.visible{display:block}
+    .retour.succes{background:rgba(93,222,138,.1);color:#6ef5a2;border:1px solid rgba(93,222,138,.3);font-family:'IBM Plex Mono',monospace}
+    .retour.erreur{background:rgba(255,107,107,.1);color:#ff9090;border:1px solid rgba(255,107,107,.3)}
+    .retour.erreur .conseil{margin-top:.4rem;color:#ffb0b0;font-size:.82rem;font-style:italic}
+
+    /* ── SORTIE PYTHON ── */
+    .sortie-python{background:#080b14;border:1px solid var(--border);border-radius:6px;margin-top:.6rem;padding:.65rem .9rem;font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:#8af5aa;min-height:36px;white-space:pre-wrap;display:none}
+    .sortie-python.visible{display:block}
+    .sortie-python.sortie-erreur{color:#ff9090}
+
+    /* ── AIDE PROGRESSIVE ── */
+    .conteneur-aides{margin-top:.7rem}
+    .aide-niveau{display:none;margin-bottom:.5rem;border-radius:6px;padding:.65rem .9rem;font-size:.84rem;line-height:1.65}
+    .aide-niveau.visible{display:block}
+    .aide-1{background:rgba(110,179,255,.06);border:1px dashed rgba(110,179,255,.25);color:#8ec8ff}
+    .aide-2{background:rgba(247,201,72,.06);border:1px dashed rgba(247,201,72,.3);color:#e8c96a}
+    .aide-3{background:rgba(255,126,179,.06);border:1px dashed rgba(255,126,179,.3);color:#ffaad0}
+    .aide-1::before{content:'💡 Piste 1 — ';font-weight:700}
+    .aide-2::before{content:'🔍 Piste 2 — ';font-weight:700}
+    .aide-3::before{content:'📝 Piste 3 (solution guidée) — ';font-weight:700}
+    .compteur-aides{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);margin-left:.3rem}
+
+    /* ── CODE ── */
+    code{font-family:'IBM Plex Mono',monospace;font-size:.82em;background:rgba(255,255,255,.07);padding:.1em .35em;border-radius:3px;color:#c8d8ff}
+    pre.bloc-code{background:#10131e;border:1px solid var(--border);border-radius:6px;padding:.7rem 1rem;font-size:.8rem;font-family:'IBM Plex Mono',monospace;color:#b0c8e8;overflow-x:auto;margin:.5rem 0;line-height:1.6}
+    pre.bloc-code .mc{color:#f7c948}  /* mot-clé */
+    pre.bloc-code .fn{color:#5dde8a}  /* fonction */
+    pre.bloc-code .ch{color:#f5a97f}  /* chaîne */
+    pre.bloc-code .cm{color:#5a6480;font-style:italic}  /* commentaire */
+    pre.bloc-code .nb{color:#ff7eb3}  /* nombre */
+    pre.bloc-code .op{color:#aab4cc}  /* opérateur */
+
+    /* ── SOUS-SECTIONS COURS avec toggle ── */
+    .sous-section-cours{border:1px solid var(--border);border-radius:6px;margin:.6rem 0;overflow:hidden;transition:border-color .4s,opacity .4s}
+    .toggle-sous-section{width:100%;background:var(--surface3);border:none;cursor:pointer;padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem;color:#c8d8ff;font-size:.85rem;font-family:'Syne',sans-serif;font-weight:700;transition:background .2s;text-align:left}
+    .toggle-sous-section:hover{background:rgba(255,255,255,.04)}
+    .toggle-sous-section .chevron-ss{margin-left:auto;transition:transform .3s;color:var(--muted);font-size:.75rem}
+    .toggle-sous-section.ouvert .chevron-ss{transform:rotate(180deg)}
+    .corps-sous-section{display:none;padding:.8rem 1rem;border-top:1px solid var(--border)}
+    .corps-sous-section.visible{display:block}
+
+    /* ── SOUS-SECTIONS VERROUILLÉES ── */
+    .sous-section-cours.verrouillee{border-color:rgba(122,132,154,.25);opacity:.55}
+    .sous-section-cours.verrouillee .toggle-sous-section{cursor:not-allowed;color:var(--muted)}
+    .sous-section-cours.verrouillee .toggle-sous-section:hover{background:none}
+    .sous-section-cours.verrouillee .icone-verrou{font-size:.8rem;margin-left:.3rem}
+    .sous-section-cours.debloquee{border-color:rgba(93,222,138,.3);opacity:1}
+    .badge-deblocage{font-size:.68rem;font-family:'IBM Plex Mono',monospace;padding:.1rem .4rem;border-radius:99px;background:rgba(93,222,138,.12);color:var(--accent);border:1px solid rgba(93,222,138,.25);margin-left:.5rem;vertical-align:middle}
+    @keyframes deblocage{0%{box-shadow:0 0 0 0 rgba(93,222,138,.5)}70%{box-shadow:0 0 0 8px rgba(93,222,138,0)}100%{box-shadow:0 0 0 0 rgba(93,222,138,0)}}
+    .sous-section-cours.debloquee-flash{animation:deblocage .7s ease}
+
+    /* ── ÉTAPES ALGO ── */
+    .etapes-algo{display:grid;gap:.5rem;margin:.6rem 0}
+    .etape{display:flex;gap:.7rem;align-items:flex-start;padding:.5rem .7rem;background:rgba(255,255,255,.02);border-radius:6px;border:1px solid var(--border)}
+    .num-etape{flex-shrink:0;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent);color:#0a1a10}
+    .texte-etape{font-size:.85rem;color:#aab4cc;line-height:1.5}
+    .texte-etape strong{color:#d0dcf0}
+
+    footer{text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);margin-top:2rem}
+    footer a{color:var(--muted);text-decoration:none}
+
+    /* ── ANIMATION RÉUSSITE ── */
+    @keyframes celebration{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+    .carte-question.reussie{animation:celebration .4s ease}
+  </style>
+</head>
+<body>
+
+<div id="ecran-chargement">
+  <div class="anneau-chargement"></div>
+  <p>Chargement de l'environnement Python...</p>
+</div>
+
+<header>
+  <div class="etiquette">NSI · Terminale · Algorithmes</div>
+  <h1>Diviser <span>pour</span> régner</h1>
+  <p class="sous-titre">Recherche dichotomique · Tri fusion · Exponentiation rapide · Complexité — 10 exercices progressifs</p>
+</header>
+
+<div class="barre-progression">
+  <span>Progression</span>
+  <div class="fond-barre"><div class="remplissage-barre" id="remplissage-barre"></div></div>
+  <span id="etiquette-score">0 / 10</span>
+</div>
+
+<main>
+
+<!-- ==================== COURS COMPLET ==================== -->
+<div class="boite-cours">
+  <button class="toggle-cours" onclick="basculerCours(this)">
+    📖 Cours complet — Diviser pour régner
+    <span class="chevron">▼</span>
+  </button>
+  <div class="corps-cours">
+
+    <!-- 1. Principe général -->
+    <div class="section-cours">
+      <div class="titre-section">Le paradigme « Diviser pour régner »</div>
+      <p>Le <strong>paradigme diviser pour régner</strong> (<em>Divide and Conquer</em> en anglais) est une stratégie algorithmique fondamentale qui consiste à résoudre un problème complexe en le décomposant en sous-problèmes plus simples, de même nature, jusqu'à atteindre des cas triviaux à résoudre directement.</p>
+      <div class="encadre">
+        <strong>Les 3 phases obligatoires :</strong>
+        <div class="etapes-algo" style="margin-top:.6rem">
+          <div class="etape"><div class="num-etape">1</div><div class="texte-etape"><strong>Diviser</strong> : Découper le problème de taille <em>n</em> en <em>k</em> sous-problèmes de taille <em>n/k</em></div></div>
+          <div class="etape"><div class="num-etape" style="background:var(--accent3);color:#06111e">2</div><div class="texte-etape"><strong>Régner</strong> : Résoudre chaque sous-problème <em>récursivement</em> (ou directement si cas de base)</div></div>
+          <div class="etape"><div class="num-etape" style="background:var(--accent2);color:#1a1000">3</div><div class="texte-etape"><strong>Combiner</strong> : Fusionner les solutions des sous-problèmes pour obtenir la solution globale</div></div>
+        </div>
+      </div>
+      <div class="encadre-attention">
+        <strong>⚠️ Condition d'arrêt — le cas de base :</strong><br>
+        Toute fonction récursive <em>doit</em> posséder un <strong>cas de base</strong> : une condition qui termine la récursion sans appel récursif. Sans cas de base, la fonction s'appellera indéfiniment et provoquera un dépassement de pile (<code>RecursionError</code> en Python).
+      </div>
+    </div>
+
+    <!-- 2. Recherche dichotomique — débloquée par Q1 -->
+    <div class="sous-section-cours verrouillee" id="cours-dichotomie">
+      <button class="toggle-sous-section" onclick="basculerSousSectionSiDebloquee(this, 'cours-dichotomie')">
+        🔍 Recherche dichotomique (recherche par dichotomie)
+        <span class="badge-deblocage">🔒 Résoudre Q1</span>
+        <span class="chevron-ss">▼</span>
+      </button>
+      <div class="corps-sous-section">
+        <p><strong>Pré-condition :</strong> la liste doit être <em>triée</em>.</p>
+        <p>L'idée est de comparer l'élément cherché avec l'élément <em>central</em> de la liste. Selon le résultat, on continue uniquement sur la moitié gauche ou droite. À chaque étape, on divise l'espace de recherche par 2.</p>
+        <div class="encadre-methode">
+          <strong>📌 Méthode :</strong><br>
+          • <code>gauche = 0</code>, <code>droite = len(liste) - 1</code><br>
+          • Tant que <code>gauche &lt;= droite</code> :<br>
+          &nbsp;&nbsp;— <code>milieu = (gauche + droite) // 2</code><br>
+          &nbsp;&nbsp;— Si <code>liste[milieu] == cible</code> → trouvé, retourner <code>milieu</code><br>
+          &nbsp;&nbsp;— Si <code>liste[milieu] &lt; cible</code> → chercher à droite : <code>gauche = milieu + 1</code><br>
+          &nbsp;&nbsp;— Sinon → chercher à gauche : <code>droite = milieu - 1</code><br>
+          • Si sorti de la boucle → retourner <code>-1</code> (absent)
+        </div>
+        <p><strong>Exemple sur [1, 3, 5, 7, 9, 11, 13] en cherchant 7 :</strong></p>
+        <div class="arbre-recursion"><pre>
+Étape 1 : [<span class="niveau-arbre-2">1, 3, 5</span>, <span class="niveau-arbre-0">7</span>, <span class="niveau-arbre-1">9, 11, 13</span>]  milieu=3  liste[3]=7 → TROUVÉ à l'index 3 !
+
+Exemple en cherchant 11 :
+Étape 1 : [1, 3, 5, <span class="niveau-arbre-0">7</span>, 9, 11, 13]  milieu=3  liste[3]=7 &lt; 11 → droite
+Étape 2 : [<span class="niveau-arbre-2">9</span>, <span class="niveau-arbre-0">11</span>, <span class="niveau-arbre-1">13</span>]              milieu=5  liste[5]=11 → TROUVÉ à l'index 5 !</pre>
+        </div>
+        <p><strong>Complexité temporelle :</strong> À chaque étape on divise par 2. Pour une liste de taille \(n\), on effectue au maximum \(\lfloor \log_2 n \rfloor + 1\) comparaisons.</p>
+        <div class="encadre-formule">
+          <strong>Complexité : \(\mathcal{O}(\log n)\)</strong> dans le pire cas et en moyenne.<br>
+          Comparaison : pour \(n = 1\,000\,000\), au plus <strong>20 comparaisons</strong> car \(\log_2(10^6) \approx 20\) !<br>
+          La recherche séquentielle nécessiterait jusqu'à \(1\,000\,000\) comparaisons.
+        </div>
+        <pre class="bloc-code"><span class="mc">def</span> <span class="fn">recherche_dichotomique</span>(liste, cible):
+    <span class="cm">"""Retourne l'indice de cible dans liste (triée), ou -1 si absent."""</span>
+    gauche, droite = <span class="nb">0</span>, len(liste) - <span class="nb">1</span>
+    <span class="mc">while</span> gauche <span class="op">&lt;=</span> droite:
+        milieu = (gauche <span class="op">+</span> droite) <span class="op">//</span> <span class="nb">2</span>
+        <span class="mc">if</span> liste[milieu] <span class="op">==</span> cible:
+            <span class="mc">return</span> milieu          <span class="cm"># trouvé</span>
+        <span class="mc">elif</span> liste[milieu] <span class="op">&lt;</span> cible:
+            gauche = milieu <span class="op">+</span> <span class="nb">1</span>   <span class="cm"># chercher à droite</span>
+        <span class="mc">else</span>:
+            droite = milieu <span class="op">-</span> <span class="nb">1</span>   <span class="cm"># chercher à gauche</span>
+    <span class="mc">return</span> <span class="op">-</span><span class="nb">1</span>                    <span class="cm"># non trouvé</span></pre>
+      </div>
+    </div>
+
+    <!-- 3. Fusion — débloquée par Q3 -->
+    <div class="sous-section-cours verrouillee" id="cours-fusion">
+      <button class="toggle-sous-section" onclick="basculerSousSectionSiDebloquee(this, 'cours-fusion')">
+        🔗 Fusion de deux listes triées — fonction <code>fusionner</code>
+        <span class="badge-deblocage">🔒 Résoudre Q3</span>
+        <span class="chevron-ss">▼</span>
+      </button>
+      <div class="corps-sous-section">
+        <p>La fusion est l'étape <em>Combiner</em> du tri fusion. On parcourt simultanément deux listes déjà triées avec deux indices <code>i</code> et <code>j</code>, et on ajoute à chaque étape le plus petit des deux éléments courants dans la liste résultat.</p>
+        <div class="encadre-methode">
+          <strong>📌 Algorithme de fusion :</strong><br>
+          • Initialiser <code>resultat = []</code>, <code>i = 0</code>, <code>j = 0</code><br>
+          • Tant que <code>i &lt; len(gauche)</code> ET <code>j &lt; len(droite)</code> :<br>
+          &nbsp;&nbsp;— Si <code>gauche[i] &lt;= droite[j]</code> → ajouter <code>gauche[i]</code>, incrémenter <code>i</code><br>
+          &nbsp;&nbsp;— Sinon → ajouter <code>droite[j]</code>, incrémenter <code>j</code><br>
+          • Ajouter les éléments restants de <code>gauche[i:]</code> ou <code>droite[j:]</code>
+        </div>
+        <pre class="bloc-code"><span class="mc">def</span> <span class="fn">fusionner</span>(gauche, droite):
+    <span class="cm">"""Fusionne deux listes triées en une liste triée."""</span>
+    resultat = []
+    i = j = <span class="nb">0</span>
+    <span class="mc">while</span> i <span class="op">&lt;</span> len(gauche) <span class="mc">and</span> j <span class="op">&lt;</span> len(droite):
+        <span class="mc">if</span> gauche[i] <span class="op">&lt;=</span> droite[j]:
+            resultat.append(gauche[i])
+            i <span class="op">+=</span> <span class="nb">1</span>
+        <span class="mc">else</span>:
+            resultat.append(droite[j])
+            j <span class="op">+=</span> <span class="nb">1</span>
+    <span class="mc">return</span> resultat <span class="op">+</span> gauche[i:] <span class="op">+</span> droite[j:]</pre>
+      </div>
+    </div>
+
+    <!-- 4. Tri fusion — débloquée par Q4 -->
+    <div class="sous-section-cours verrouillee" id="cours-tri-fusion">
+      <button class="toggle-sous-section" onclick="basculerSousSectionSiDebloquee(this, 'cours-tri-fusion')">
+        🔀 Tri fusion (<em>merge sort</em>)
+        <span class="badge-deblocage">🔒 Résoudre Q4</span>
+        <span class="chevron-ss">▼</span>
+      </button>
+      <div class="corps-sous-section">
+        <p>Le tri fusion applique le paradigme diviser pour régner au tri : on divise la liste en deux moitiés, on trie chacune récursivement, puis on les fusionne.</p>
+        <p><strong>Arbre de récursion pour [5, 3, 8, 1, 9, 2] :</strong></p>
+        <div class="arbre-recursion"><pre>
+<span class="niveau-arbre-0">tri_fusion([5, 3, 8, 1, 9, 2])</span>
+       ┌─────────────┴─────────────┐
+<span class="niveau-arbre-1">tri_fusion([5, 3, 8])      tri_fusion([1, 9, 2])</span>
+   ┌────┴────┐               ┌────┴────┐
+<span class="niveau-arbre-2">tri([5,3]) tri([8])      tri([1,9])  tri([2])</span>
+  ┌──┴──┐   │              ┌──┴──┐    │
+<span class="niveau-arbre-3">tri([5]) tri([3]) [8]  tri([1]) tri([9]) [2]</span>
+  [5]    [3]           [1]    [9]
+         ↓ fusionner ↓         ↓ fusionner ↓
+<span class="niveau-arbre-2">   [3, 5]      [8]          [1, 9]     [2]</span>
+         ↓ fusionner ↓         ↓ fusionner ↓
+<span class="niveau-arbre-1">      [3, 5, 8]             [1, 2, 9]</span>
+                  ↓ fusionner ↓
+<span class="niveau-arbre-0">            [1, 2, 3, 5, 8, 9]</span></pre>
+        </div>
+        <pre class="bloc-code"><span class="mc">def</span> <span class="fn">tri_fusion</span>(liste):
+    <span class="cm">"""Trie une liste par la méthode du tri fusion (récursif)."""</span>
+    <span class="mc">if</span> len(liste) <span class="op">&lt;=</span> <span class="nb">1</span>:          <span class="cm"># cas de base : liste vide ou singleton</span>
+        <span class="mc">return</span> liste
+    milieu = len(liste) <span class="op">//</span> <span class="nb">2</span>
+    gauche = <span class="fn">tri_fusion</span>(liste[:milieu])   <span class="cm"># régner sur la moitié gauche</span>
+    droite = <span class="fn">tri_fusion</span>(liste[milieu:])   <span class="cm"># régner sur la moitié droite</span>
+    <span class="mc">return</span> <span class="fn">fusionner</span>(gauche, droite)       <span class="cm"># combiner</span></pre>
+        <div class="encadre-formule">
+          <strong>Complexité du tri fusion :</strong><br>
+          • <em>Diviser</em> : \(\mathcal{O}(1)\) — couper en deux<br>
+          • <em>Régner</em> : 2 appels récursifs sur des listes de taille \(n/2\)<br>
+          • <em>Combiner</em> : \(\mathcal{O}(n)\) — parcourir les deux moitiés<br>
+          Relation de récurrence :
+          \[ T(n) = 2\,T\!\left(\frac{n}{2}\right) + \mathcal{O}(n) \]
+          Par le théorème maître :
+          \[ T(n) = \mathcal{O}(n \log n) \quad \text{dans tous les cas} \]
+        </div>
+        <div class="encadre-attention">
+          <strong>⚠️ Avantage et inconvénient :</strong><br>
+          ✅ Complexité garantie \(\mathcal{O}(n \log n)\) dans tous les cas (meilleur, moyen, pire)<br>
+          ❌ Utilise de la <strong>mémoire supplémentaire</strong> \(\mathcal{O}(n)\) pour les listes temporaires
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Exponentiation rapide — débloquée par Q10 -->
+    <div class="sous-section-cours verrouillee" id="cours-exponentiation">
+      <button class="toggle-sous-section" onclick="basculerSousSectionSiDebloquee(this, 'cours-exponentiation')">
+        ⚡ Exponentiation rapide — <code>puissance(x, n)</code>
+        <span class="badge-deblocage">🔒 Résoudre Q10</span>
+        <span class="chevron-ss">▼</span>
+      </button>
+      <div class="corps-sous-section">
+        <p>Calculer \(x^n\) naïvement demande \(n-1\) multiplications, soit \(\mathcal{O}(n)\). L'exponentiation rapide exploite diviser pour régner pour atteindre \(\mathcal{O}(\log n)\).</p>
+        <div class="encadre-methode">
+          <strong>📌 Principe :</strong><br>
+          • Si \(n = 0\) → retourner \(1\) (cas de base, car \(x^0 = 1\))<br>
+          • Si \(n\) est <strong>pair</strong> :
+          \[ x^n = \left(x^{n/2}\right)^2 \]
+          → un seul appel récursif, puis un carré<br>
+          • Si \(n\) est <strong>impair</strong> :
+          \[ x^n = x \cdot x^{n-1} = x \cdot \left(x^{(n-1)/2}\right)^2 \]
+        </div>
+        <pre class="bloc-code"><span class="mc">def</span> <span class="fn">puissance</span>(x, n):
+    <span class="cm">"""Calcule x^n par exponentiation rapide — O(log n)."""</span>
+    <span class="mc">if</span> n <span class="op">==</span> <span class="nb">0</span>:
+        <span class="mc">return</span> <span class="nb">1</span>
+    <span class="mc">if</span> n <span class="op">%</span> <span class="nb">2</span> <span class="op">==</span> <span class="nb">0</span>:                 <span class="cm"># exposant pair</span>
+        moitie = <span class="fn">puissance</span>(x, n <span class="op">//</span> <span class="nb">2</span>)
+        <span class="mc">return</span> moitie <span class="op">*</span> moitie
+    <span class="mc">else</span>:                           <span class="cm"># exposant impair</span>
+        moitie = <span class="fn">puissance</span>(x, (n<span class="op">-</span><span class="nb">1</span>) <span class="op">//</span> <span class="nb">2</span>)
+        <span class="mc">return</span> x <span class="op">*</span> moitie <span class="op">*</span> moitie</pre>
+        <div class="encadre-formule">
+          <strong>Exemple : <code>puissance(2, 10)</code></strong><br>
+          \[ 2^{10} \xrightarrow{\text{pair}} \left(2^5\right)^2 \xrightarrow{\text{impair}} \left(2 \cdot \left(2^2\right)^2\right)^2 \xrightarrow{\text{pair}} \cdots \xrightarrow{} 1024 \]
+          Total : seulement <strong>4 appels récursifs</strong> au lieu de 9 multiplications !
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Tableau de complexités -->
+    <div class="section-cours">
+      <div class="titre-section">Tableau récapitulatif des complexités</div>
+      <table class="tableau-complexite">
+        <thead>
+          <tr><th>Algorithme</th><th>Meilleur cas</th><th>Cas moyen</th><th>Pire cas</th><th>Mémoire</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Recherche dichotomique</td><td class="complexite-bonne">\(\mathcal{O}(1)\)</td><td class="complexite-bonne">\(\mathcal{O}(\log n)\)</td><td class="complexite-bonne">\(\mathcal{O}(\log n)\)</td><td>\(\mathcal{O}(1)\)</td></tr>
+          <tr><td>Tri fusion</td><td class="complexite-bonne">\(\mathcal{O}(n \log n)\)</td><td class="complexite-bonne">\(\mathcal{O}(n \log n)\)</td><td class="complexite-bonne">\(\mathcal{O}(n \log n)\)</td><td class="complexite-neutre">\(\mathcal{O}(n)\)</td></tr>
+          <tr><td>Tri rapide</td><td class="complexite-bonne">\(\mathcal{O}(n \log n)\)</td><td class="complexite-bonne">\(\mathcal{O}(n \log n)\)</td><td class="complexite-neutre">\(\mathcal{O}(n^2)\)</td><td>\(\mathcal{O}(\log n)\)</td></tr>
+          <tr><td>Exponentiation rapide</td><td class="complexite-bonne">\(\mathcal{O}(1)\)</td><td class="complexite-bonne">\(\mathcal{O}(\log n)\)</td><td class="complexite-bonne">\(\mathcal{O}(\log n)\)</td><td>\(\mathcal{O}(\log n)\)</td></tr>
+          <tr><td>Maximum (D&amp;R)</td><td class="complexite-bonne">\(\mathcal{O}(n)\)</td><td class="complexite-bonne">\(\mathcal{O}(n)\)</td><td class="complexite-bonne">\(\mathcal{O}(n)\)</td><td>\(\mathcal{O}(\log n)\)</td></tr>
+        </tbody>
+      </table>
+      <div class="encadre-formule" style="margin-top:.6rem">
+        <strong>Théorème maître (rappel) :</strong> Soit la relation de récurrence
+        \[ T(n) = a \cdot T\!\left(\frac{n}{b}\right) + \mathcal{O}(n^c), \quad a \geq 1,\ b > 1 \]
+        Alors :
+        <ul style="margin:.5rem 0 .2rem 1.3rem;line-height:2">
+          <li>Si \(\log_b a > c\) : \(\quad T(n) = \mathcal{O}\!\left(n^{\log_b a}\right)\)</li>
+          <li>Si \(\log_b a = c\) : \(\quad T(n) = \mathcal{O}(n^c \log n)\) — <em>cas du tri fusion : \(a=2,\ b=2,\ c=1\)</em></li>
+          <li>Si \(\log_b a < c\) : \(\quad T(n) = \mathcal{O}(n^c)\)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== EXERCICES ==================== -->
+<div class="en-tete-partie">
+  <span class="badge-partie badge-py">Exercices</span>
+  <h2>Algorithmes Diviser pour régner — progression guidée</h2>
+</div>
+
+<!-- ── Q1 ── -->
+<div class="carte-question" id="carte-q1">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">1</div>
+    <div class="corps-question">
+      <h3>Recherche dichotomique <span class="badge-difficulte difficulte-1">★☆☆ Débutant</span></h3>
+      <p>Complète la fonction <code>recherche_dichotomique(liste, cible)</code> qui retourne l'<strong>indice</strong> de <code>cible</code> dans la liste triée <code>liste</code>, ou <code>-1</code> si absente.</p>
+      <p class="contexte">💡 Utilise des variables nommées <code>gauche</code>, <code>droite</code> et <code>milieu</code>. Regarde le cours si besoin.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <textarea class="saisie-code" id="q1-saisie" rows="12" spellcheck="false">def recherche_dichotomique(liste, cible):
+    # Initialiser les bornes
+    gauche = ???
+    droite = ???
+    while gauche <= droite:
+        milieu = ???
+        if liste[milieu] == cible:
+            return ???
+        elif liste[milieu] < cible:
+            gauche = ???
+        else:
+            droite = ???
+    return -1  # non trouvé
+
+# Tests de validation
+print(recherche_dichotomique([1, 3, 5, 7, 9], 5))   # Attendu : 2
+print(recherche_dichotomique([1, 3, 5, 7, 9], 6))   # Attendu : -1
+print(recherche_dichotomique([2, 4, 6, 8, 10], 2))  # Attendu : 0</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q1">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(1)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q1', 3)">💡 Aide <span class="compteur-aides" id="compteur-q1">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q1-1">Initialise <code>gauche = 0</code> et <code>droite = len(liste) - 1</code>. Le milieu se calcule avec la division entière : <code>milieu = (gauche + droite) // 2</code>.</div>
+      <div class="aide-niveau aide-2" id="aide-q1-2">Si <code>liste[milieu] &lt; cible</code>, l'élément est dans la moitié droite : <code>gauche = milieu + 1</code>. Sinon (<code>liste[milieu] &gt; cible</code>), il est dans la moitié gauche : <code>droite = milieu - 1</code>.</div>
+      <div class="aide-niveau aide-3" id="aide-q1-3">Solution complète : <code>gauche=0</code>, <code>droite=len(liste)-1</code>, <code>milieu=(gauche+droite)//2</code>, si trouvé <code>return milieu</code>, si trop petit <code>gauche=milieu+1</code>, si trop grand <code>droite=milieu-1</code>, sinon <code>return -1</code>.</div>
+    </div>
+    <div class="sortie-python" id="sortie-q1"></div>
+    <div class="retour" id="retour-q1"></div>
+  </div>
+</div>
+
+<!-- ── Q2 ── -->
+<div class="carte-question" id="carte-q2">
+  <div class="en-tete-question">
+    <div class="numero-question num-texte">2</div>
+    <div class="corps-question">
+      <h3>Complexité — Recherche dichotomique <span class="badge-difficulte difficulte-1">★☆☆ Débutant</span></h3>
+      <p>Quelle est la complexité temporelle de la recherche dichotomique dans le <strong>pire cas</strong> ? Réponds avec la notation O grand.</p>
+      <p class="contexte">Pense à combien de fois on peut diviser un tableau de taille <em>n</em> par 2 avant d'arriver à 1.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <input type="text" class="saisie-texte" id="q2-saisie" placeholder="Ex: O(n), O(log n), O(n²)..." />
+    <div class="rangee-boutons">
+      <button class="btn btn-valider" onclick="validerReponse(2)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q2', 3)">💡 Aide <span class="compteur-aides" id="compteur-q2">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q2-1">À chaque étape, on divise l'espace de recherche par 2. La question est : combien de fois peut-on diviser \(n\) par 2 ?</div>
+      <div class="aide-niveau aide-2" id="aide-q2-2">Résoudre \(2^k = n\) donne \(k = \log_2 n\). Donc le nombre maximal d'étapes est proportionnel à \(\log n\).</div>
+      <div class="aide-niveau aide-3" id="aide-q2-3">La complexité est \(\mathcal{O}(\log n)\). Pour \(n = 1\,000\,000\) éléments, au plus 20 comparaisons. C'est la signature d'un algorithme qui divise par 2 à chaque étape.</div>
+    </div>
+    <div class="retour" id="retour-q2"></div>
+  </div>
+</div>
+
+<!-- ── Q3 ── -->
+<div class="carte-question" id="carte-q3">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">3</div>
+    <div class="corps-question">
+      <h3>Fusion de deux listes triées <span class="badge-difficulte difficulte-1">★☆☆ Débutant</span></h3>
+      <p>Complète la fonction <code>fusionner(gauche, droite)</code> qui fusionne deux listes <em>déjà triées</em> en une seule liste triée. C'est la brique de base du tri fusion.</p>
+      <p class="contexte">Utilise deux indices <code>i</code> et <code>j</code> pour parcourir les deux listes simultanément.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <textarea class="saisie-code" id="q3-saisie" rows="14" spellcheck="false">def fusionner(gauche, droite):
+    resultat = []
+    i = 0   # indice pour gauche
+    j = 0   # indice pour droite
+    while i < len(gauche) and j < len(droite):
+        if gauche[i] <= droite[j]:
+            # Ajouter le plus petit élément et avancer
+            ???
+        else:
+            ???
+    # Ne pas oublier les éléments restants !
+    return resultat + ??? + ???
+
+# Tests
+print(fusionner([1, 3, 5], [2, 4, 6]))   # Attendu : [1, 2, 3, 4, 5, 6]
+print(fusionner([1, 5], [2, 3, 4]))      # Attendu : [1, 2, 3, 4, 5]
+print(fusionner([], [1, 2]))             # Attendu : [1, 2]</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q3">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(3)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q3', 3)">💡 Aide <span class="compteur-aides" id="compteur-q3">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q3-1">Dans le <code>if gauche[i] &lt;= droite[j]</code> : ajoute <code>gauche[i]</code> à <code>resultat</code> et incrémente <code>i</code>. Dans le <code>else</code> : ajoute <code>droite[j]</code> et incrémente <code>j</code>.</div>
+      <div class="aide-niveau aide-2" id="aide-q3-2">Quand la boucle se termine, l'une des deux listes peut avoir des éléments restants. Utilise le slicing Python pour les ajouter : <code>gauche[i:]</code> et <code>droite[j:]</code>. L'un des deux sera une liste vide <code>[]</code>.</div>
+      <div class="aide-niveau aide-3" id="aide-q3-3">Les <code>???</code> se remplacent par : <code>resultat.append(gauche[i]); i += 1</code> | <code>resultat.append(droite[j]); j += 1</code> | <code>gauche[i:]</code> | <code>droite[j:]</code>.</div>
+    </div>
+    <div class="sortie-python" id="sortie-q3"></div>
+    <div class="retour" id="retour-q3"></div>
+  </div>
+</div>
+
+<!-- ── Q4 ── -->
+<div class="carte-question" id="carte-q4">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">4</div>
+    <div class="corps-question">
+      <h3>Tri fusion — Implémentation complète <span class="badge-difficulte difficulte-2">★★☆ Intermédiaire</span></h3>
+      <p>Complète la fonction <code>tri_fusion(liste)</code> en utilisant la fonction <code>fusionner</code> déjà fournie. Applique les 3 étapes : diviser, régner (appels récursifs), combiner.</p>
+      <p class="contexte">Identifie d'abord le cas de base, puis détermine le point de division, puis effectue les deux appels récursifs et fusionne.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <!-- Bandeau affiché si Q3 non validée -->
+    <div id="q4-bandeau-verrou" style="background:rgba(247,201,72,.07);border:1px dashed rgba(247,201,72,.35);border-radius:6px;padding:.65rem .9rem;font-size:.84rem;color:#e8c96a;margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem">
+      🔒 <span>Le code de <code>fusionner</code> sera fourni ici après validation de la <strong>question 3</strong>. En attendant, tu peux écrire ta propre version de fusionner avant tri_fusion !</span>
+    </div>
+    <textarea class="saisie-code" id="q4-saisie" rows="18" spellcheck="false">def fusionner(gauche, droite):
+    # À compléter ou copier depuis Q3 si validée
+    pass
+
+def tri_fusion(liste):
+    # Étape 1 — Cas de base : une liste de 0 ou 1 élément est déjà triée
+    if ???:
+        return liste
+    # Étape 2 — Diviser : trouver le milieu
+    milieu = ???
+    # Étape 3 — Régner : trier récursivement chaque moitié
+    partie_gauche = tri_fusion(???)
+    partie_droite = tri_fusion(???)
+    # Étape 4 — Combiner : fusionner les deux moitiés triées
+    return ???
+
+# Test
+print(tri_fusion([3, 1, 4, 1, 5, 9, 2, 6]))  # Attendu : [1, 1, 2, 3, 4, 5, 6, 9]
+print(tri_fusion([5]))                         # Attendu : [5]
+print(tri_fusion([]))                          # Attendu : []</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q4">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(4)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q4', 3)">💡 Aide <span class="compteur-aides" id="compteur-q4">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q4-1">Le cas de base : si la liste a 0 ou 1 élément, elle est déjà triée → <code>if len(liste) &lt;= 1: return liste</code>. Le milieu : <code>milieu = len(liste) // 2</code>.</div>
+      <div class="aide-niveau aide-2" id="aide-q4-2">Pour les appels récursifs, divise la liste avec le slicing : <code>liste[:milieu]</code> pour la partie gauche, <code>liste[milieu:]</code> pour la partie droite. Puis appelle <code>tri_fusion</code> sur chacune.</div>
+      <div class="aide-niveau aide-3" id="aide-q4-3">La ligne finale : <code>return fusionner(partie_gauche, partie_droite)</code>. Les <code>???</code> : <code>len(liste)&lt;=1</code> | <code>len(liste)//2</code> | <code>liste[:milieu]</code> | <code>liste[milieu:]</code> | <code>fusionner(partie_gauche, partie_droite)</code>.</div>
+    </div>
+    <div class="sortie-python" id="sortie-q4"></div>
+    <div class="retour" id="retour-q4"></div>
+  </div>
+</div>
+
+<!-- ── Q5 ── -->
+<div class="carte-question" id="carte-q5">
+  <div class="en-tete-question">
+    <div class="numero-question num-texte">5</div>
+    <div class="corps-question">
+      <h3>Complexité — Tri fusion <span class="badge-difficulte difficulte-2">★★☆ Intermédiaire</span></h3>
+      <p>Quelle est la complexité temporelle du tri fusion dans le <strong>pire cas</strong> ? Exprime ta réponse avec la notation O grand.</p>
+      <p class="contexte">Compte le nombre de niveaux dans l'arbre de récursion et le travail effectué à chaque niveau.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <input type="text" class="saisie-texte" id="q5-saisie" placeholder="Ex: O(n), O(n log n), O(n²)..." />
+    <div class="rangee-boutons">
+      <button class="btn btn-valider" onclick="validerReponse(5)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q5', 3)">💡 Aide <span class="compteur-aides" id="compteur-q5">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q5-1">Observe l'arbre de récursion dans le cours : combien y a-t-il de niveaux ? Et quel est le travail total effectué à chaque niveau (somme de toutes les fusions) ?</div>
+      <div class="aide-niveau aide-2" id="aide-q5-2">Il y a \(\log n\) niveaux dans l'arbre (on divise par 2 à chaque fois). À chaque niveau, on fusionne tous les éléments, ce qui prend en tout \(n\) opérations. Total \(= n \times \log n\).</div>
+      <div class="aide-niveau aide-3" id="aide-q5-3">La complexité est \(\mathcal{O}(n \log n)\). C'est optimal pour un tri par comparaison : aucun algorithme de ce type ne peut faire mieux que \(\mathcal{O}(n \log n)\) dans le pire cas.</div>
+    </div>
+    <div class="retour" id="retour-q5"></div>
+  </div>
+</div>
+
+<!-- ── Q6 ── -->
+<div class="carte-question" id="carte-q6">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">6</div>
+    <div class="corps-question">
+      <h3>Implémenter <code>mon_max</code> et <code>maximum_diviser</code> <span class="badge-difficulte difficulte-2">★★☆ Intermédiaire</span></h3>
+      <p>Écris deux fonctions :</p>
+      <ul style="margin:.4rem 0 .4rem 1.2rem;font-size:.88rem;color:#8a97b5;line-height:1.8">
+        <li><code>mon_max(a, b)</code> — retourne le plus grand de deux valeurs <strong>sans utiliser <code>max()</code></strong>, uniquement avec un <code>if</code>.</li>
+        <li><code>maximum_diviser(liste)</code> — trouve le maximum d'une liste par diviser pour régner, en utilisant <code>mon_max</code> pour la comparaison finale.</li>
+      </ul>
+      <p class="contexte">L'idée : reconstruire <code>max</code> depuis zéro, puis s'en servir dans l'algorithme récursif. Aucune fonction Python standard de comparaison de liste n'est autorisée.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <textarea class="saisie-code" id="q6-saisie" rows="18" spellcheck="false">def mon_max(a, b):
+    """Retourne le plus grand de a et b, sans utiliser max()."""
+    # À toi d'écrire (utilise un if/else simple)
+    pass
+
+def maximum_diviser(liste):
+    """Trouve le maximum de liste par diviser pour régner.
+    Utilise mon_max pour comparer, pas max()."""
+    # Cas de base : liste d'un seul élément
+    if len(liste) == 1:
+        return liste[0]
+    # Diviser
+    milieu = len(liste) // 2
+    # Régner
+    max_gauche  = maximum_diviser(???)
+    max_droite  = maximum_diviser(???)
+    # Combiner : utiliser mon_max, pas max() !
+    return mon_max(???, ???)
+
+# Tests
+print(mon_max(3, 7))                              # Attendu : 7
+print(mon_max(10, 2))                             # Attendu : 10
+print(maximum_diviser([3, 1, 4, 1, 5, 9, 2, 6])) # Attendu : 9
+print(maximum_diviser([7]))                        # Attendu : 7
+print(maximum_diviser([-5, -1, -8]))              # Attendu : -1</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q6">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(6)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q6', 3)">💡 Aide <span class="compteur-aides" id="compteur-q6">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q6-1"><code>mon_max(a, b)</code> : si <code>a &gt;= b</code> retourner <code>a</code>, sinon retourner <code>b</code>. C'est tout ! La difficulté est dans <code>maximum_diviser</code> : pense à quoi passer en argument à chaque appel récursif.</div>
+      <div class="aide-niveau aide-2" id="aide-q6-2">Pour régner : appelle <code>maximum_diviser</code> sur <code>liste[:milieu]</code> (la moitié gauche) et sur <code>liste[milieu:]</code> (la moitié droite). Puis combine avec <code>mon_max(max_gauche, max_droite)</code>.</div>
+      <div class="aide-niveau aide-3" id="aide-q6-3"><code>mon_max</code> : <code>if a >= b: return a</code> / <code>else: return b</code>. Les <code>???</code> de <code>maximum_diviser</code> : <code>liste[:milieu]</code> | <code>liste[milieu:]</code> | <code>max_gauche</code> | <code>max_droite</code>.</div>
+    </div>
+    <div class="sortie-python" id="sortie-q6"></div>
+    <div class="retour" id="retour-q6"></div>
+  </div>
+</div>
+
+<!-- ── Q7 ── -->
+<div class="carte-question" id="carte-q7">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">7</div>
+    <div class="corps-question">
+      <h3>Somme d'une liste par D&amp;R <span class="badge-difficulte difficulte-2">★★☆ Intermédiaire</span></h3>
+      <p>Complète la fonction <code>somme_diviser(liste)</code> qui calcule la somme des éléments d'une liste en utilisant diviser pour régner. Cette fois, sans squelette guidé — à toi de structurer la fonction.</p>
+      <p class="contexte">Applique les 3 étapes : cas de base, diviser en deux moitiés, additionner les sommes des deux moitiés.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <textarea class="saisie-code" id="q7-saisie" rows="12" spellcheck="false">def somme_diviser(liste):
+    # À toi d'écrire la fonction complète !
+    pass
+
+# Tests
+print(somme_diviser([1, 2, 3, 4, 5]))   # Attendu : 15
+print(somme_diviser([10]))               # Attendu : 10
+print(somme_diviser([]))                 # Attendu : 0
+print(somme_diviser([-3, 5, -2, 8]))    # Attendu : 8</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q7">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(7)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q7', 3)">💡 Aide <span class="compteur-aides" id="compteur-q7">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q7-1">Deux cas de base possibles : liste vide → retourner 0 ; liste d'un élément → retourner cet élément. Ensuite, divise la liste en deux moitiés autour du milieu.</div>
+      <div class="aide-niveau aide-2" id="aide-q7-2">L'étape combiner est une simple addition : <code>return somme_diviser(liste[:milieu]) + somme_diviser(liste[milieu:])</code>. La somme de la liste complète = somme de la moitié gauche + somme de la moitié droite.</div>
+      <div class="aide-niveau aide-3" id="aide-q7-3">Structure complète :<br><code>if len(liste) == 0: return 0</code><br><code>if len(liste) == 1: return liste[0]</code><br><code>milieu = len(liste) // 2</code><br><code>return somme_diviser(liste[:milieu]) + somme_diviser(liste[milieu:])</code></div>
+    </div>
+    <div class="sortie-python" id="sortie-q7"></div>
+    <div class="retour" id="retour-q7"></div>
+  </div>
+</div>
+
+<!-- ── Q8 ── -->
+<div class="carte-question" id="carte-q8">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">8</div>
+    <div class="corps-question">
+      <h3>Compter les occurrences par D&amp;R <span class="badge-difficulte difficulte-2">★★☆ Intermédiaire</span></h3>
+      <p>Complète la fonction <code>compter_occurrences(liste, valeur)</code> qui compte le nombre d'occurrences de <code>valeur</code> dans <code>liste</code> en utilisant diviser pour régner.</p>
+      <p class="contexte">Note : la liste n'est pas forcément triée. Le nombre d'occurrences total = occurrences dans la moitié gauche + occurrences dans la moitié droite.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <textarea class="saisie-code" id="q8-saisie" rows="12" spellcheck="false">def compter_occurrences(liste, valeur):
+    # À toi d'écrire la fonction complète !
+    pass
+
+# Tests
+print(compter_occurrences([1, 2, 3, 2, 4, 2], 2))  # Attendu : 3
+print(compter_occurrences([1, 1, 1, 1], 1))         # Attendu : 4
+print(compter_occurrences([5, 3, 7], 2))             # Attendu : 0
+print(compter_occurrences([], 5))                    # Attendu : 0</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q8">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(8)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q8', 3)">💡 Aide <span class="compteur-aides" id="compteur-q8">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q8-1">Cas de base liste vide : retourner 0. Cas de base liste d'un élément : retourner <code>1 if liste[0] == valeur else 0</code>.</div>
+      <div class="aide-niveau aide-2" id="aide-q8-2">Divise la liste en deux moitiés. Additionne les occurrences de chaque moitié : <code>compter_occurrences(liste[:milieu], valeur) + compter_occurrences(liste[milieu:], valeur)</code>.</div>
+      <div class="aide-niveau aide-3" id="aide-q8-3">Structure : <code>if len(liste)==0: return 0</code> | <code>if len(liste)==1: return 1 if liste[0]==valeur else 0</code> | puis diviser + additionner récursivement. Même structure que <code>somme_diviser</code> !</div>
+    </div>
+    <div class="sortie-python" id="sortie-q8"></div>
+    <div class="retour" id="retour-q8"></div>
+  </div>
+</div>
+
+<!-- ── Q9 ── -->
+<div class="carte-question" id="carte-q9">
+  <div class="en-tete-question">
+    <div class="numero-question num-texte">9</div>
+    <div class="corps-question">
+      <h3>Analyse — Cas de base et récursivité <span class="badge-difficulte difficulte-1">★☆☆ Débutant</span></h3>
+      <p>Sans cas de base dans une fonction récursive, que se passe-t-il à l'exécution ? Quel est le nom de l'erreur levée par Python dans cette situation ?</p>
+      <p class="contexte">Réfléchis à ce qui se passe si la fonction s'appelle elle-même sans jamais s'arrêter.</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <input type="text" class="saisie-texte" id="q9-saisie" placeholder="Décris ce qui se passe et le nom de l'erreur..." />
+    <div class="rangee-boutons">
+      <button class="btn btn-valider" onclick="validerReponse(9)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q9', 2)">💡 Aide <span class="compteur-aides" id="compteur-q9">(0/2)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q9-1">Chaque appel de fonction crée un <em>cadre de pile</em> (<em>stack frame</em>) en mémoire. Si la fonction s'appelle indéfiniment, que se passe-t-il pour ces cadres ?</div>
+      <div class="aide-niveau aide-2" id="aide-q9-2">La pile d'appels (<em>call stack</em>) déborde → Python lève une <strong>RecursionError</strong> (anciennement RuntimeError). Par défaut, Python limite la récursion à 1000 appels.</div>
+    </div>
+    <div class="retour" id="retour-q9"></div>
+  </div>
+</div>
+
+<!-- ── Q10 ── -->
+<div class="carte-question" id="carte-q10">
+  <div class="en-tete-question">
+    <div class="numero-question num-python">10</div>
+    <div class="corps-question">
+      <h3>Exponentiation rapide <span class="badge-difficulte difficulte-3">★★★ Avancé</span></h3>
+      <p>Complète la fonction <code>puissance(x, n)</code> qui calcule \(x^n\) par <strong>exponentiation rapide</strong> en \(\mathcal{O}(\log n)\). L'astuce : si \(n\) est pair, \(x^n = \left(x^{n/2}\right)^2\).</p>
+      <p class="contexte">La méthode naïve fait \(n\) multiplications. L'exponentiation rapide n'en fait que \(\log_2 n\). Pour \(n = 1000\), c'est 1000 multiplications contre seulement 10 !</p>
+    </div>
+  </div>
+  <div class="zone-reponse">
+    <textarea class="saisie-code" id="q10-saisie" rows="14" spellcheck="false">def puissance(x, n):
+    # Cas de base : tout nombre à la puissance 0 vaut 1
+    if n == ???:
+        return ???
+    # Cas n pair : x^n = (x^(n/2)) * (x^(n/2)) → un seul appel récursif !
+    if n % 2 == 0:
+        moitie = puissance(x, ???)
+        return moitie * ???
+    # Cas n impair : x^n = x * x^(n-1) avec n-1 pair
+    else:
+        moitie = puissance(x, ???)
+        return x * moitie * ???
+
+# Tests
+print(puissance(2, 10))   # Attendu : 1024
+print(puissance(3, 4))    # Attendu : 81
+print(puissance(5, 0))    # Attendu : 1
+print(puissance(2, 1))    # Attendu : 2</textarea>
+    <div class="rangee-boutons">
+      <button class="btn btn-executer" py-click="executer_q10">▶ Tester</button>
+      <button class="btn btn-valider" onclick="validerReponse(10)">✔ Valider</button>
+      <button class="btn btn-aide" onclick="afficherAideSuivante('q10', 3)">💡 Aide <span class="compteur-aides" id="compteur-q10">(0/3)</span></button>
+    </div>
+    <div class="conteneur-aides">
+      <div class="aide-niveau aide-1" id="aide-q10-1">Cas de base : \(n = 0 \Rightarrow\) retourner \(1\) (car \(x^0 = 1\) pour tout \(x\)). Pour le cas pair : on calcule la moitié <code>puissance(x, n//2)</code> et on fait <code>moitie * moitie</code> (pas deux appels séparés qui doubleraient le travail !)</div>
+      <div class="aide-niveau aide-2" id="aide-q10-2">Pour le cas impair : \(x^n = x \cdot x^{n-1} = x \cdot \left(x^{(n-1)/2}\right)^2\). Donc <code>moitie = puissance(x, (n-1)//2)</code> et <code>return x * moitie * moitie</code>.</div>
+      <div class="aide-niveau aide-3" id="aide-q10-3">Les <code>???</code> : <code>0</code> | <code>1</code> | <code>n//2</code> | <code>moitie</code> (pair) | <code>(n-1)//2</code> | <code>moitie</code> (impair). Trace : \(2^{10} \to (2^5)^2 \to (2 \cdot (2^2)^2)^2 \to \cdots \to 1024\).</div>
+    </div>
+    <div class="sortie-python" id="sortie-q10"></div>
+    <div class="retour" id="retour-q10"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Page interactive créée pour NSI Terminale &middot; Diviser pour régner &middot; 2026
+</footer>
+
+<!-- ==================== PYSCRIPT ==================== -->
+<script type="py">
+from pyscript import document
+import io, sys
+
+def _executer_code(id_saisie, id_sortie):
+    """Exécute le code Python d'un textarea et affiche le résultat."""
+    code = document.getElementById(id_saisie).value
+    element_sortie = document.getElementById(id_sortie)
+    element_sortie.classList.add('visible')
+    element_sortie.classList.remove('sortie-erreur')
+    try:
+        ancien_stdout = sys.stdout
+        sys.stdout = tampon = io.StringIO()
+        exec(code, {})
+        sys.stdout = ancien_stdout
+        sortie = tampon.getvalue()
+        element_sortie.textContent = sortie if sortie else '(aucune sortie — as-tu des print ?)'
+    except Exception as erreur:
+        sys.stdout = ancien_stdout
+        element_sortie.classList.add('sortie-erreur')
+        element_sortie.textContent = f'Erreur : {type(erreur).__name__}: {str(erreur)}'
+
+def executer_q1(evenement):  _executer_code("q1-saisie",  "sortie-q1")
+def executer_q3(evenement):  _executer_code("q3-saisie",  "sortie-q3")
+def executer_q4(evenement):  _executer_code("q4-saisie",  "sortie-q4")
+def executer_q6(evenement):  _executer_code("q6-saisie",  "sortie-q6")
+def executer_q7(evenement):  _executer_code("q7-saisie",  "sortie-q7")
+def executer_q8(evenement):  _executer_code("q8-saisie",  "sortie-q8")
+def executer_q10(evenement): _executer_code("q10-saisie", "sortie-q10")
+
+document.getElementById("ecran-chargement").classList.add("masque")
+</script>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ── Variables globales ──
+const NOMBRE_TOTAL_QUESTIONS = 10;
+const questionsReussies = new Set();
+const niveauxAidesAffiches = {};  // { 'q1': 2, 'q3': 0, ... }
+
+// ── Correspondance question → section cours à débloquer ──
+const COURS_A_DEBLOQUER = {
+  1: 'cours-dichotomie',
+  3: 'cours-fusion',
+  4: 'cours-tri-fusion',
+  10: 'cours-exponentiation'
+};
+
+// ── Code de fusionner à injecter dans Q4 quand Q3 est validée ──
+const CODE_FUSIONNER_FOURNI = `def fusionner(gauche, droite):
+    """Fusionne deux listes triées en une liste triée (fournie après validation Q3)."""
+    resultat = []
+    i = j = 0
+    while i < len(gauche) and j < len(droite):
+        if gauche[i] <= droite[j]:
+            resultat.append(gauche[i]); i += 1
+        else:
+            resultat.append(droite[j]); j += 1
+    return resultat + gauche[i:] + droite[j:]
+
+def tri_fusion(liste):
+    # Étape 1 — Cas de base : une liste de 0 ou 1 élément est déjà triée
+    if ???:
+        return liste
+    # Étape 2 — Diviser : trouver le milieu
+    milieu = ???
+    # Étape 3 — Régner : trier récursivement chaque moitié
+    partie_gauche = tri_fusion(???)
+    partie_droite = tri_fusion(???)
+    # Étape 4 — Combiner : fusionner les deux moitiés triées
+    return ???
+
+# Test
+print(tri_fusion([3, 1, 4, 1, 5, 9, 2, 6]))  # Attendu : [1, 1, 2, 3, 4, 5, 6, 9]
+print(tri_fusion([5]))                         # Attendu : [5]
+print(tri_fusion([]))                          # Attendu : []`;
+
+// ── Débloquer une section cours liée à une question ──
+function debloquerCours(idSection) {
+  const section = document.getElementById(idSection);
+  if (!section || !section.classList.contains('verrouillee')) return;
+  section.classList.remove('verrouillee');
+  section.classList.add('debloquee', 'debloquee-flash');
+  // Mettre à jour le badge dans le bouton
+  const badge = section.querySelector('.badge-deblocage');
+  if (badge) {
+    badge.textContent = '✓ Débloqué';
+    badge.style.background = 'rgba(93,222,138,.2)';
+    badge.style.color = '#5dde8a';
+    badge.style.borderColor = 'rgba(93,222,138,.5)';
+  }
+  setTimeout(() => section.classList.remove('debloquee-flash'), 800);
+  // Relancer MathJax sur la section débloquée
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([section]).catch(err => console.warn('MathJax:', err));
+  }
+}
+
+// ── Injecter le code de fusionner dans Q4 quand Q3 est validée ──
+function injecterFusionnerDansQ4() {
+  const bandeau = document.getElementById('q4-bandeau-verrou');
+  const saisie = document.getElementById('q4-saisie');
+  if (bandeau) {
+    bandeau.style.background = 'rgba(93,222,138,.07)';
+    bandeau.style.borderColor = 'rgba(93,222,138,.3)';
+    bandeau.style.color = '#5dde8a';
+    bandeau.innerHTML = '✅ <span>Question 3 validée ! Le code de <code>fusionner</code> a été injecté dans l\'éditeur ci-dessous. Il te reste à compléter <code>tri_fusion</code>.</span>';
+  }
+  if (saisie && saisie.value.includes('pass')) {
+    saisie.value = CODE_FUSIONNER_FOURNI;
+  }
+}
+
+
+const REGLES_VALIDATION = {
+  1: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def recherche_dichotomique') &&
+             c.includes('while') &&
+             c.includes('gauche') &&
+             c.includes('droite') &&
+             c.includes('milieu') &&
+             !c.includes('???');
+    },
+    messageSucces: '✓ Correct ! Ta recherche dichotomique utilise bien les variables gauche, droite et milieu.',
+    messageErreur: 'Il manque des éléments. Vérifie : la boucle while, les variables gauche/droite/milieu, et que tu as remplacé tous les ???.',
+    conseilErreur: 'Consulte la section "Recherche dichotomique" du cours pour revoir la méthode étape par étape.'
+  },
+  2: {
+    type: 'texte',
+    reponsesAcceptees: ['o(log n)', 'o(log(n))', 'o(logn)', 'logarithmique', 'log n', 'log(n)', 'o(log2(n))'],
+    messageSucces: '✓ Exact ! \\(\\mathcal{O}(\\log n)\\) : à chaque étape on divise l\'espace de recherche par 2.',
+    messageErreur: 'Ce n\'est pas la bonne complexité. Combien d\'étapes faut-il pour diviser \\(n\\) par 2 jusqu\'à atteindre 1 ?',
+    conseilErreur: 'Rappel : \\(2^k = n \\Rightarrow k = \\log_2 n\\). La complexité est donc \\(\\mathcal{O}(\\log n)\\).'
+  },
+  3: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def fusionner') &&
+             (c.includes('while') || c.includes('for')) &&
+             c.includes('append') &&
+             c.includes('gauche') &&
+             c.includes('droite') &&
+             !c.includes('???');
+    },
+    messageSucces: '✓ Bravo ! Ta fonction fusionner parcourt bien les deux listes avec les indices i et j.',
+    messageErreur: 'Vérifie que ta fonction fusionner utilise append() pour construire le résultat et qu\'elle gère les éléments restants.',
+    conseilErreur: 'N\'oublie pas d\'ajouter les éléments restants après la boucle avec gauche[i:] et droite[j:].'
+  },
+  4: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def tri_fusion') &&
+             c.includes('len(liste)') &&
+             c.includes('tri_fusion(') &&
+             c.includes('fusionner(') &&
+             !c.includes('???');
+    },
+    messageSucces: '✓ Excellent ! Ton tri fusion applique correctement les 3 étapes : diviser, régner (appels récursifs), combiner (fusionner).',
+    messageErreur: 'Vérifie : le cas de base (len <= 1), les deux appels récursifs à tri_fusion, et l\'appel final à fusionner.',
+    conseilErreur: 'La structure est : if len<=1 → return liste | calculer milieu | appeler tri_fusion sur chaque moitié | return fusionner(...)'
+  },
+  5: {
+    type: 'texte',
+    reponsesAcceptees: ['o(n log n)', 'o(n log(n))', 'o(nlogn)', 'o(n*log n)', 'n log n', 'n log(n)', 'nlogn', 'n*log(n)'],
+    messageSucces: '✓ Parfait ! \\(\\mathcal{O}(n \\log n)\\) : \\(\\log n\\) niveaux × \\(n\\) éléments fusionnés par niveau.',
+    messageErreur: 'Ce n\'est pas la bonne complexité. Compte : niveaux de l\'arbre (\\(\\log n\\)) × travail par niveau (\\(n\\)).',
+    conseilErreur: 'Relation de récurrence : \\(T(n) = 2T(n/2) + \\mathcal{O}(n)\\). Par le théorème maître : \\(T(n) = \\mathcal{O}(n \\log n)\\).'
+  },
+  6: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def mon_max') &&
+             c.includes('def maximum_diviser') &&
+             c.includes('maximum_diviser(') &&
+             c.includes('mon_max(') &&
+             !c.includes('max(max') &&   // interdire max() builtin sur les deux max
+             c.includes('len(liste)') &&
+             !c.includes('???') &&
+             !c.includes('pass');
+    },
+    messageSucces: '✓ Parfait ! Tu as codé mon_max depuis zéro et l\'as utilisé dans maximum_diviser. C\'est exactement ça le paradigme : construire des briques et les composer !',
+    messageErreur: 'Vérifie : la fonction mon_max doit exister et être utilisée dans le return final de maximum_diviser (pas max() de Python).',
+    conseilErreur: 'mon_max(a, b) : un simple if/else. Dans maximum_diviser : return mon_max(max_gauche, max_droite). Aucun appel à max() de Python !'
+  },
+  7: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def somme_diviser') &&
+             c.includes('somme_diviser(') &&
+             c.includes('len(liste)') &&
+             !c.includes('pass') &&
+             !c.includes('???');
+    },
+    messageSucces: '✓ Bien joué ! Ta somme_diviser décompose correctement le calcul en deux moitiés récursives.',
+    messageErreur: 'Ta fonction contient encore "pass" ou n\'est pas complète. Pense aux cas de base (vide et un élément) et aux appels récursifs.',
+    conseilErreur: 'La somme d\'une liste = somme de la première moitié + somme de la deuxième moitié. C\'est la même structure que maximum_diviser !'
+  },
+  8: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def compter_occurrences') &&
+             c.includes('compter_occurrences(') &&
+             c.includes('len(liste)') &&
+             c.includes('valeur') &&
+             !c.includes('pass') &&
+             !c.includes('???');
+    },
+    messageSucces: '✓ Correct ! Compter les occurrences par D&R : occurrences totales = occurrences gauche + occurrences droite.',
+    messageErreur: 'Ta fonction n\'est pas complète. Vérifie les cas de base et les appels récursifs avec le paramètre valeur.',
+    conseilErreur: 'Cas de base liste vide → 0. Cas de base un élément → 1 si liste[0]==valeur sinon 0. Puis diviser et additionner.'
+  },
+  9: {
+    type: 'texte',
+    reponsesAcceptees: ['recursionerror', 'recursion error', 'débordement', 'debordement', 'pile', 'infinie', 'infini', 'stackoverflow', 'stack overflow', 'récursion infinie', 'recursion infinie'],
+    messageSucces: '✓ Exact ! Sans cas de base : récursion infinie → dépassement de la pile d\'appels → RecursionError en Python.',
+    messageErreur: 'Réfléchis à ce qui se passe si la fonction s\'appelle indéfiniment. Quel mécanisme est saturé ?',
+    conseilErreur: 'Chaque appel crée un cadre dans la pile d\'appels (call stack). Si la pile est pleine → RecursionError (dépassement de pile).'
+  },
+  10: {
+    type: 'code',
+    verifier: (code) => {
+      const c = code.toLowerCase();
+      return c.includes('def puissance') &&
+             c.includes('puissance(') &&
+             c.includes('n == 0') &&
+             (c.includes('n % 2') || c.includes('n%2')) &&
+             c.includes('moitie') &&
+             !c.includes('???');
+    },
+    messageSucces: '✓ Excellent ! Ton exponentiation rapide est correcte : O(log n) au lieu de O(n). L\'astuce clé : stocker le résultat de puissance(x, n//2) dans une variable pour ne faire qu\'un seul appel récursif !',
+    messageErreur: 'Vérifie : le cas de base n==0, la distinction pair/impair (n%2), et l\'utilisation d\'une variable "moitie" pour éviter deux appels récursifs.',
+    conseilErreur: 'Attention : écrire return puissance(x,n//2)*puissance(x,n//2) fait DEUX appels récursifs. Il faut stocker dans une variable : moitie = puissance(x,n//2); return moitie*moitie'
+  }
+};
+
+// ── Afficher l'aide suivante (progression) ──
+function afficherAideSuivante(idQuestion, nombreMaxAides) {
+  if (!niveauxAidesAffiches[idQuestion]) {
+    niveauxAidesAffiches[idQuestion] = 0;
+  }
+  const niveauActuel = niveauxAidesAffiches[idQuestion];
+  if (niveauActuel >= nombreMaxAides) return;
+
+  const niveauSuivant = niveauActuel + 1;
+  const elementAide = document.getElementById(`aide-${idQuestion}-${niveauSuivant}`);
+  if (elementAide) {
+    elementAide.classList.add('visible');
+    niveauxAidesAffiches[idQuestion] = niveauSuivant;
+    const compteur = document.getElementById(`compteur-${idQuestion}`);
+    if (compteur) compteur.textContent = `(${niveauSuivant}/${nombreMaxAides})`;
+    // Typesetter le contenu LaTeX de l'aide
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([elementAide]).catch(err => console.warn('MathJax:', err));
+    }
+  }
+}
+
+// ── Valider la réponse d'une question ──
+function validerReponse(numeroQuestion) {
+  const regle = REGLES_VALIDATION[numeroQuestion];
+  const idSaisie = `q${numeroQuestion}-saisie`;
+  const saisieElement = document.getElementById(idSaisie);
+  const valeur = saisieElement.value.trim();
+
+  let estCorrect = false;
+
+  if (regle.type === 'code') {
+    estCorrect = regle.verifier(valeur);
+  } else if (regle.type === 'texte') {
+    const valeurMinuscule = valeur.toLowerCase();
+    estCorrect = regle.reponsesAcceptees.some(r => valeurMinuscule.includes(r));
+  }
+
+  if (estCorrect) {
+    afficherRetour(`q${numeroQuestion}`, 'succes', regle.messageSucces);
+    marquerCarteReussie(numeroQuestion);
+    questionsReussies.add(numeroQuestion);
+    mettreAJourProgression();
+    // Débloquer la section cours correspondante
+    if (COURS_A_DEBLOQUER[numeroQuestion]) {
+      debloquerCours(COURS_A_DEBLOQUER[numeroQuestion]);
+    }
+    // Si Q3 validée, injecter fusionner dans Q4
+    if (numeroQuestion === 3) {
+      injecterFusionnerDansQ4();
+    }
+  } else {
+    afficherRetourErreur(`q${numeroQuestion}`, regle.messageErreur, regle.conseilErreur);
+    marquerCarteEchouee(numeroQuestion);
+  }
+}
+
+// ── Marquer une carte comme réussie ──
+function marquerCarteReussie(numero) {
+  const carte = document.getElementById(`carte-q${numero}`);
+  carte.classList.remove('echouee');
+  carte.classList.add('reussie');
+}
+
+// ── Marquer une carte comme échouée ──
+function marquerCarteEchouee(numero) {
+  const carte = document.getElementById(`carte-q${numero}`);
+  carte.classList.remove('reussie');
+  carte.classList.add('echouee');
+}
+
+// ── Afficher un retour de succès ──
+function afficherRetour(id, type, message) {
+  const elementRetour = document.getElementById(`retour-${id}`);
+  elementRetour.className = `retour visible ${type}`;
+  elementRetour.innerHTML = message;
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([elementRetour]).catch(err => console.warn('MathJax:', err));
+  }
+}
+
+// ── Afficher un retour d'erreur avec conseil ──
+function afficherRetourErreur(id, message, conseil) {
+  const elementRetour = document.getElementById(`retour-${id}`);
+  elementRetour.className = 'retour visible erreur';
+  elementRetour.innerHTML = `${message}<div class="conseil">💬 ${conseil}</div>`;
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([elementRetour]).catch(err => console.warn('MathJax:', err));
+  }
+}
+
+// ── Basculer la visibilité du cours ──
+function basculerCours(bouton) {
+  bouton.classList.toggle('ouvert');
+  const corps = bouton.nextElementSibling;
+  corps.classList.toggle('visible');
+  // Lancer MathJax à la première ouverture
+  if (corps.classList.contains('visible') && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([corps]).catch(err => console.warn('MathJax:', err));
+  }
+}
+
+// ── Basculer une sous-section (toujours accessible) ──
+function basculerSousSection(bouton) {
+  bouton.classList.toggle('ouvert');
+  bouton.nextElementSibling.classList.toggle('visible');
+}
+
+// ── Basculer une sous-section seulement si débloquée ──
+function basculerSousSectionSiDebloquee(bouton, idSection) {
+  const section = document.getElementById(idSection);
+  if (section && section.classList.contains('verrouillee')) {
+    // Petit tremblement pour indiquer que c'est verrouillé
+    section.style.transform = 'translateX(4px)';
+    setTimeout(() => { section.style.transform = 'translateX(-4px)'; }, 80);
+    setTimeout(() => { section.style.transform = 'translateX(2px)'; }, 160);
+    setTimeout(() => { section.style.transform = ''; }, 240);
+    return;
+  }
+  bouton.classList.toggle('ouvert');
+  bouton.nextElementSibling.classList.toggle('visible');
+}
+
+// ── Mettre à jour la barre de progression ──
+function mettreAJourProgression() {
+  const score = questionsReussies.size;
+  const pourcentage = (score / NOMBRE_TOTAL_QUESTIONS) * 100;
+  document.getElementById('remplissage-barre').style.width = pourcentage + '%';
+  document.getElementById('etiquette-score').textContent = `${score} / ${NOMBRE_TOTAL_QUESTIONS}`;
+}
+
+// ── Support touche Tab pour l'indentation dans les textareas ──
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.saisie-code').forEach(zoneSaisie => {
+    zoneSaisie.addEventListener('keydown', function (evenement) {
+      if (evenement.key === 'Tab') {
+        evenement.preventDefault();
+        const debut = this.selectionStart;
+        const fin = this.selectionEnd;
+        const indentation = '    ';  // 4 espaces
+        this.value = this.value.substring(0, debut) + indentation + this.value.substring(fin);
+        this.selectionStart = this.selectionEnd = debut + indentation.length;
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

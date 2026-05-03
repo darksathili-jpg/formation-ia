@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Li — Visualisation du projet</title>
+ <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080d14;
+    --panel:     #0d1520;
+    --border:    #1a2d45;
+    --cyan:      #32dcc8;
+    --blue:      #50b4ff;
+    --purple:    #c896ff;
+    --orange:    #ffc83c;
+    --pink:      #ff6478;
+    --white:     #e6f0ff;
+    --muted:     #4a6080;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'Exo 2', sans-serif;
+    color: var(--white);
+    background-color:#8ca5b499;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    overflow-x: hidden;
+  }
+
+    h1 {
+      display: block;
+      padding: 0 20px;
+      min-height: clamp(44px, 6.5vw, 88px);
+      line-height: clamp(44px, 6.5vw, 88px);
+      font-family: "Rubik Dirt", system-ui;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      position: relative;
+      font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    }
+  .wrapper { position: relative; z-index: 1; width: 100%; max-width: 1100px; }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  header p {
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* ── Layout principal ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 720px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* ── BOÎTIER 3D ── */
+  .enclosure-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .enclosure {
+    position: relative;
+    width: 260px;
+    height: 320px;
+    filter: drop-shadow(0 0 40px rgba(50,220,200,0.2)) drop-shadow(0 20px 40px rgba(0,0,0,0.7));
+  }
+
+  /* Corps principal du boîtier */
+  .case-body {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, #1e2d3d 0%, #141f2b 40%, #0e1820 100%);
+    border-radius: 22px;
+    border: 1px solid #2a3f55;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      inset 0 -2px 0 rgba(0,0,0,0.4),
+      inset 2px 0 0 rgba(255,255,255,0.03),
+      0 0 0 1px rgba(0,0,0,0.5);
+  }
+
+  /* Relief des bords */
+  .case-body::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 19px;
+    border: 1px solid rgba(255,255,255,0.04);
+    pointer-events: none;
+  }
+
+  /* Texture surface */
+  .case-body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.012) 3px,
+      rgba(255,255,255,0.012) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* ── Écran TFT embarqué ── */
+  .screen-bezel {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 140px;
+    background: #05080f;
+    border-radius: 10px;
+    border: 3px solid #0a1520;
+    box-shadow:
+      inset 0 0 20px rgba(0,0,0,0.8),
+      0 0 0 1px #1a2a3a,
+      0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .screen-canvas {
+    position: absolute;
+    inset: 4px;
+    border-radius: 7px;
+    overflow: hidden;
+    background: #0a0f1a;
+  }
+
+  /* ── Visage Li sur l'écran ── */
+  .face-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Grille ventilation (dessus) ── */
+  .vent-grid {
+    position: absolute;
+    top: 175px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 30px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    opacity: 0.5;
+  }
+  .vent-hole {
+    background: #050a12;
+    border-radius: 1px;
+  }
+
+  /* ── Micro (cercle grillé) ── */
+  .mic-circle {
+    position: absolute;
+    top: 222px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #1a2d40;
+    background: radial-gradient(circle, #060c15 60%, #0d1a28 100%);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .mic-dots {
+    display: grid;
+    grid-template-columns: repeat(3, 5px);
+    grid-template-rows: repeat(3, 5px);
+    gap: 1.5px;
+  }
+  .mic-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #1a2d40;
+  }
+
+  /* ── Bouton latéral ── */
+  .btn-side {
+    position: absolute;
+    right: -5px;
+    top: 130px;
+    width: 5px;
+    height: 30px;
+    background: linear-gradient(to right, #1a2d40, #243a50);
+    border-radius: 0 4px 4px 0;
+    border-right: 1px solid #2a4060;
+  }
+
+  /* ── Ports USB (bas) ── */
+  .ports {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .port {
+    background: #050a12;
+    border: 1px solid #1a2a3a;
+    border-radius: 3px;
+    font-size: 7px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    padding: 3px 5px;
+    font-family: 'Orbitron', monospace;
+  }
+  .port.usbc { width: 22px; height: 12px; border-radius: 6px; padding: 0; }
+
+  /* ── Haut-parleur (face avant bas) ── */
+  .speaker-grill {
+    position: absolute;
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 20px;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+  }
+  .speaker-line {
+    width: 3px;
+    border-radius: 2px;
+    background: #0d1825;
+    border: 1px solid #1a2d40;
+  }
+
+  /* ── Logo Li ── */
+  .logo-li {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1d3a55;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ── LED statut ── */
+  .led-strip {
+    position: absolute;
+    top: 168px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+  .led {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    animation: ledPulse 2s ease-in-out infinite;
+  }
+  .led:nth-child(1) { background: var(--cyan); animation-delay: 0s; }
+  .led:nth-child(2) { background: var(--blue); animation-delay: 0.3s; }
+  .led:nth-child(3) { background: var(--purple); animation-delay: 0.6s; }
+  @keyframes ledPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50%       { opacity: 1;   transform: scale(1.2); box-shadow: 0 0 6px currentColor; }
+  }
+
+  /* ── Batterie externe (sous le boîtier) ── */
+  .battery {
+    width: 220px;
+    height: 55px;
+    background: linear-gradient(145deg, #1a2535 0%, #111c28 100%);
+    border-radius: 12px;
+    border: 1px solid #2a3a4a;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .battery-icon {
+    width: 36px; height: 20px;
+    border: 2px solid #32dcc8;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    flex-shrink: 0;
+  }
+  .battery-icon::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px; height: 8px;
+    background: #32dcc8;
+    border-radius: 0 2px 2px 0;
+  }
+  .battery-fill {
+    height: 100%;
+    width: 80%;
+    background: linear-gradient(to right, var(--cyan), var(--blue));
+    border-radius: 2px;
+  }
+  .battery-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 8px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+  .battery-label strong { color: var(--cyan); font-size: 10px; display: block; }
+  .cable {
+    position: absolute;
+    top: -18px;
+    left: 40px;
+    width: 3px;
+    height: 18px;
+    background: linear-gradient(to bottom, #1a2d40, #243a50);
+    border-radius: 2px;
+  }
+  .cable::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px; height: 6px;
+    background: #1a3050;
+    border-radius: 2px;
+    border: 1px solid #2a4060;
+  }
+
+  /* ── Panel droit : animations du visage ── */
+  .face-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .panel-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    border-left: 2px solid var(--cyan);
+    padding-left: 10px;
+  }
+
+  .emotions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 500px) { .emotions-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .emotion-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+  .emotion-card:hover {
+    transform: translateY(-3px);
+  }
+  .emotion-card.idle    { border-color: #2a3f55; }
+  .emotion-card.listen  { border-color: var(--cyan); box-shadow: 0 0 12px rgba(50,220,200,0.15); }
+  .emotion-card.think   { border-color: var(--purple); box-shadow: 0 0 12px rgba(200,150,255,0.15); }
+  .emotion-card.speak   { border-color: var(--orange); box-shadow: 0 0 12px rgba(255,200,60,0.15); }
+  .emotion-card.happy   { border-color: #64dd64; box-shadow: 0 0 12px rgba(100,220,100,0.15); }
+  .emotion-card.surp    { border-color: var(--pink); box-shadow: 0 0 12px rgba(255,100,120,0.15); }
+  .emotion-card.sleep   { border-color: #3050a0; }
+  .emotion-card.wake    { border-color: var(--blue); box-shadow: 0 0 12px rgba(80,180,255,0.15); }
+
+  .emotion-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* ── Mini canvas SVG pour chaque émotion ── */
+  .face-mini {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #0a0f1a;
+    flex-shrink: 0;
+  }
+
+  /* ── Section specs techniques ── */
+  .specs-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .spec-chip {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+  .spec-chip .spec-key {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .spec-chip .spec-val {
+    color: var(--cyan);
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  /* ── Grande face centrale ── */
+  .big-face-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .big-face-canvas {
+    width: 220px;
+    height: 220px;
+    border-radius: 16px;
+    background: #080d14;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+  }
+  .big-face-canvas svg { width: 100%; height: 100%; }
+
+  /* Halo animé autour de la grande face */
+  .big-face-canvas::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 18px;
+    background: conic-gradient(
+      var(--cyan), var(--blue), var(--purple), var(--orange), var(--cyan)
+    );
+    z-index: -1;
+    animation: rotateBorder 4s linear infinite;
+  }
+  @keyframes rotateBorder {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .state-badge {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    padding: 4px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .state-badge.speaking {
+    background: rgba(255,200,60,0.12);
+    border: 1px solid var(--orange);
+    color: var(--orange);
+    animation: badgePulse 1s ease-in-out infinite;
+  }
+  @keyframes badgePulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* ── Animations yeux / bouche ── */
+  @keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.05); }
+  }
+  @keyframes mouthSpeak {
+    0%, 100% { d: path("M 88 145 Q 110 158 132 145"); }
+    25%       { d: path("M 88 148 Q 110 165 132 148"); }
+    50%       { d: path("M 90 150 Q 110 168 130 150"); }
+    75%       { d: path("M 88 148 Q 110 162 132 148"); }
+  }
+  @keyframes irisWander {
+    0%, 100% { transform: translate(0px, 0px); }
+    20%  { transform: translate(-4px, -2px); }
+    50%  { transform: translate(3px, 2px); }
+    70%  { transform: translate(-2px, 3px); }
+  }
+  @keyframes pupilWander {
+    0%, 100% { transform: translate(0px, 0px); }
+    20%  { transform: translate(-4px, -2px); }
+    50%  { transform: translate(3px, 2px); }
+    70%  { transform: translate(-2px, 3px); }
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.15; r: 85; }
+    50%       { opacity: 0.35; r: 95; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <h1>LI — Assistant Vocal IA</h1>
+    <p>Raspberry Pi 5 &nbsp;•&nbsp; Boîtier PETG &nbsp;•&nbsp; Écran TFT 240&times;240 ST7735</p>
+  </header>
+
+    <div class="alert alert-warning mb-5" role="alert">
+Li est issu de mon pseudo DarkSathi Li qui représente mon chien Lili, une chienne adorable et pleine de vie. J'ai choisi ce nom pour mon assistant vocal IA car il incarne la personnalité chaleureuse, loyale et joyeuse que je souhaite que Li ait. Tout comme Lili apporte de la joie et du réconfort à mon quotidien, je veux que Li soit un compagnon numérique qui rend la vie plus facile et agréable grâce à son intelligence artificielle.
+Li est de race yorkshire terrier, est un petit chien au caractère vif et affectueux. Il est connu pour sa loyauté envers ses proches et son énergie débordante.
+</div>
+
+  <div class="main-grid">
+
+    <!-- ═══ COLONNE GAUCHE : Boîtier 3D ═══ -->
+    <div class="enclosure-wrap">
+      <p class="panel-title">Produit fini — vue de face</p>
+
+      <div class="enclosure">
+        <div class="case-body"></div>
+
+        <!-- Écran TFT avec visage -->
+        <div class="screen-bezel">
+          <div class="screen-canvas">
+            <svg class="face-svg" viewBox="0 0 132 132" xmlns="http://www.w3.org/2000/svg">
+              <!-- Fond -->
+              <rect width="132" height="132" fill="#080d14"/>
+
+              <!-- Halo SPEAKING orange -->
+              <circle cx="66" cy="66" r="62" fill="none" stroke="#ffc83c" stroke-width="1.5" opacity="0.25">
+                <animate attributeName="r" values="58;64;58" dur="1.2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.15;0.35;0.15" dur="1.2s" repeatCount="indefinite"/>
+              </circle>
+
+              <!-- ŒIL GAUCHE -->
+              <g>
+                <ellipse cx="38" cy="52" rx="19" ry="19" fill="#e6f0ff"/>
+                <g style="animation: blink 4s ease-in-out infinite 0.5s; transform-origin: 38px 52px;">
+                  <ellipse cx="38" cy="52" rx="19" ry="19" fill="#e6f0ff"/>
+                </g>
+                <!-- Iris -->
+                <g style="animation: irisWander 6s ease-in-out infinite;">
+                  <ellipse cx="38" cy="52" rx="12" ry="12" fill="#50b4ff"/>
+                  <ellipse cx="38" cy="52" rx="6"  ry="6"  fill="#0a0f19"/>
+                  <ellipse cx="33" cy="47" rx="3"  ry="3"  fill="white"/>
+                </g>
+                <!-- Paupière clignement -->
+                <rect x="19" y="33" width="38" height="38" fill="#080d14" rx="0"
+                  style="transform-origin:38px 52px; transform:scaleY(0);">
+                  <animate attributeName="transform" attributeType="CSS"
+                    values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)"
+                    keyTimes="0;0.88;0.92;1"
+                    dur="4.5s" repeatCount="indefinite"/>
+                </rect>
+                <!-- Sourcil -->
+                <path d="M 22 33 Q 38 28 54 33" fill="none" stroke="#50b4ff" stroke-width="2.5" stroke-linecap="round"/>
+              </g>
+
+              <!-- ŒIL DROIT -->
+              <g>
+                <ellipse cx="94" cy="52" rx="19" ry="19" fill="#e6f0ff"/>
+                <g style="animation: irisWander 6s ease-in-out infinite 0.2s;">
+                  <ellipse cx="94" cy="52" rx="12" ry="12" fill="#50b4ff"/>
+                  <ellipse cx="94" cy="52" rx="6"  ry="6"  fill="#0a0f19"/>
+                  <ellipse cx="89" cy="47" rx="3"  ry="3"  fill="white"/>
+                </g>
+                <rect x="75" y="33" width="38" height="38" fill="#080d14"
+                  style="transform-origin:94px 52px; transform:scaleY(0);">
+                  <animate attributeName="transform" attributeType="CSS"
+                    values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)"
+                    keyTimes="0;0.88;0.92;1"
+                    dur="4.5s" repeatCount="indefinite"/>
+                </rect>
+                <path d="M 78 33 Q 94 28 110 33" fill="none" stroke="#50b4ff" stroke-width="2.5" stroke-linecap="round"/>
+              </g>
+
+              <!-- BOUCHE animée (speaking) -->
+              <g>
+                <!-- Fond bouche -->
+                <ellipse cx="66" cy="95" rx="22" ry="10" fill="#ff6478">
+                  <animate attributeName="ry" values="4;11;7;13;5;10;4" dur="0.9s" repeatCount="indefinite"/>
+                </ellipse>
+                <!-- Dents -->
+                <rect x="49" y="88" width="34" height="5" rx="2" fill="#e6f0ff" opacity="0.9">
+                  <animate attributeName="opacity" values="0.9;0.9;0;0;0.9" dur="0.9s" repeatCount="indefinite"/>
+                </rect>
+                <!-- Joues -->
+                <ellipse cx="20" cy="88" rx="10" ry="5" fill="#ff6478" opacity="0.3"/>
+                <ellipse cx="112" cy="88" rx="10" ry="5" fill="#ff6478" opacity="0.3"/>
+              </g>
+
+              <!-- Point état -->
+              <circle cx="66" cy="125" r="4" fill="#ffc83c">
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="1s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </div>
+        </div>
+
+        <!-- LEDs de statut sous l'écran -->
+        <div class="led-strip">
+          <div class="led"></div>
+          <div class="led"></div>
+          <div class="led"></div>
+        </div>
+
+        <!-- Grille ventilation -->
+        <div class="vent-grid">
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+          <div class="vent-hole"></div><div class="vent-hole"></div><div class="vent-hole"></div>
+        </div>
+
+        <!-- Micro -->
+        <div class="mic-circle">
+          <div class="mic-dots">
+            <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+            <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+            <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+          </div>
+        </div>
+
+        <!-- Haut-parleur -->
+        <div class="speaker-grill">
+          <div class="speaker-line" style="height:12px"></div>
+          <div class="speaker-line" style="height:16px"></div>
+          <div class="speaker-line" style="height:18px"></div>
+          <div class="speaker-line" style="height:16px"></div>
+          <div class="speaker-line" style="height:18px"></div>
+          <div class="speaker-line" style="height:16px"></div>
+          <div class="speaker-line" style="height:12px"></div>
+        </div>
+
+        <!-- Logo -->
+        <div class="logo-li">Li</div>
+
+        <!-- Ports bas -->
+        <div class="ports">
+          <div class="port">USB-A</div>
+          <div class="port usbc"></div>
+          <div class="port">ETH</div>
+        </div>
+
+        <!-- Bouton côté -->
+        <div class="btn-side"></div>
+      </div>
+
+      <!-- Batterie -->
+      <div class="battery">
+        <div class="cable"></div>
+        <div class="battery-icon"><div class="battery-fill"></div></div>
+        <div class="battery-label">
+          <strong>Anker 737</strong>
+          24 000 mAh — 6 à 8h autonomie
+        </div>
+      </div>
+
+      <!-- Specs compactes -->
+      <div class="specs-row" style="width:260px">
+        <div class="spec-chip">
+          <span class="spec-key">Boîtier</span>
+          <span class="spec-val">PETG</span>
+          130&times;85&times;60mm
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">Écran</span>
+          <span class="spec-val">ST7735</span>
+          240&times;240 IPS
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">Micro</span>
+          <span class="spec-val">ReSpeaker</span>
+          2-Mics HAT
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ COLONNE DROITE : Émotions et détails ═══ -->
+    <div class="face-panel">
+
+      <!-- Grande face en état SPEAKING -->
+      <p class="panel-title">Écran TFT — rendu visage Li</p>
+      <div class="big-face-wrap">
+        <div class="big-face-canvas">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="220" height="220" fill="#080d14"/>
+
+            <!-- Halo orange speaking -->
+            <circle cx="110" cy="110" r="100" fill="none" stroke="#ffc83c" stroke-width="2" opacity="0.2">
+              <animate attributeName="r" values="90;105;90" dur="1.2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.1;0.3;0.1" dur="1.2s" repeatCount="indefinite"/>
+            </circle>
+
+            <!-- Œil gauche grand -->
+            <ellipse cx="72" cy="88" rx="30" ry="30" fill="#e6f0ff"/>
+            <g style="animation: irisWander 7s ease-in-out infinite;">
+              <ellipse cx="72" cy="88" rx="20" ry="20" fill="#50b4ff"/>
+              <ellipse cx="72" cy="88" rx="10" ry="10" fill="#0a0f19"/>
+              <ellipse cx="63" cy="79" rx="5" ry="5" fill="white"/>
+              <ellipse cx="66" cy="83" rx="2" ry="2" fill="white" opacity="0.5"/>
+            </g>
+            <!-- Paupière G -->
+            <rect x="42" y="58" width="60" height="60" fill="#080d14"
+              style="transform-origin:72px 88px; transform:scaleY(0);">
+              <animate attributeName="transform" attributeType="CSS"
+                values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)"
+                keyTimes="0;0.85;0.91;1"
+                dur="5s" repeatCount="indefinite"/>
+            </rect>
+            <!-- Sourcil G -->
+            <path d="M 46 58 Q 72 48 98 58" fill="none" stroke="#50b4ff" stroke-width="3.5" stroke-linecap="round"/>
+
+            <!-- Œil droit grand -->
+            <ellipse cx="148" cy="88" rx="30" ry="30" fill="#e6f0ff"/>
+            <g style="animation: irisWander 7s ease-in-out infinite 0.3s;">
+              <ellipse cx="148" cy="88" rx="20" ry="20" fill="#50b4ff"/>
+              <ellipse cx="148" cy="88" rx="10" ry="10" fill="#0a0f19"/>
+              <ellipse cx="139" cy="79" rx="5" ry="5" fill="white"/>
+              <ellipse cx="142" cy="83" rx="2" ry="2" fill="white" opacity="0.5"/>
+            </g>
+            <!-- Paupière D -->
+            <rect x="118" y="58" width="60" height="60" fill="#080d14"
+              style="transform-origin:148px 88px; transform:scaleY(0);">
+              <animate attributeName="transform" attributeType="CSS"
+                values="scaleY(0);scaleY(0);scaleY(1);scaleY(0)"
+                keyTimes="0;0.85;0.91;1"
+                dur="5s" repeatCount="indefinite"/>
+            </rect>
+            <!-- Sourcil D -->
+            <path d="M 122 58 Q 148 48 174 58" fill="none" stroke="#50b4ff" stroke-width="3.5" stroke-linecap="round"/>
+
+            <!-- BOUCHE speaking grande -->
+            <ellipse cx="110" cy="158" rx="36" ry="16" fill="#ff6478">
+              <animate attributeName="ry" values="6;18;11;20;8;16;6" dur="0.85s" repeatCount="indefinite"/>
+            </ellipse>
+            <rect x="80" y="147" width="60" height="8" rx="4" fill="#e6f0ff" opacity="0.85">
+              <animate attributeName="opacity" values="0.85;0.85;0;0;0.85" dur="0.85s" repeatCount="indefinite"/>
+            </rect>
+            <!-- Joues speaking -->
+            <ellipse cx="34" cy="145" rx="18" ry="10" fill="#ff6478" opacity="0.25">
+              <animate attributeName="opacity" values="0.15;0.3;0.15" dur="0.85s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="186" cy="145" rx="18" ry="10" fill="#ff6478" opacity="0.25">
+              <animate attributeName="opacity" values="0.15;0.3;0.15" dur="0.85s" repeatCount="indefinite"/>
+            </ellipse>
+
+            <!-- Point état orange -->
+            <circle cx="110" cy="208" r="5" fill="#ffc83c">
+              <animate attributeName="opacity" values="0.4;1;0.4" dur="1s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="state-badge speaking">● Speaking — Réponse vocale en cours</div>
+      </div>
+
+      <!-- Grille des 7 émotions -->
+      <p class="panel-title" style="margin-top:8px">Les 7 états émotionnels de Li</p>
+      <div class="emotions-grid">
+
+        <!-- IDLE -->
+        <div class="emotion-card idle">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <ellipse cx="24" cy="28" rx="11" ry="11" fill="#e6f0ff"/>
+              <ellipse cx="24" cy="28" rx="7" ry="7" fill="#50b4ff"/>
+              <ellipse cx="24" cy="28" rx="3.5" ry="3.5" fill="#0a0f19"/>
+              <ellipse cx="21" cy="25" rx="1.8" ry="1.8" fill="white"/>
+              <ellipse cx="48" cy="28" rx="11" ry="11" fill="#e6f0ff"/>
+              <ellipse cx="48" cy="28" rx="7" ry="7" fill="#50b4ff"/>
+              <ellipse cx="48" cy="28" rx="3.5" ry="3.5" fill="#0a0f19"/>
+              <ellipse cx="45" cy="25" rx="1.8" ry="1.8" fill="white"/>
+              <path d="M 22 52 Q 36 60 50 52" fill="none" stroke="#ff6478" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="emotion-label">Idle</div>
+        </div>
+
+        <!-- LISTENING -->
+        <div class="emotion-card listen">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <circle cx="36" cy="36" r="34" fill="none" stroke="#32dcc8" stroke-width="1" opacity="0.4">
+                <animate attributeName="r" values="30;34;30" dur="1.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.5s" repeatCount="indefinite"/>
+              </circle>
+              <ellipse cx="22" cy="28" rx="12" ry="12" fill="#e6f0ff"/>
+              <ellipse cx="22" cy="28" rx="8" ry="8" fill="#50b4ff"/>
+              <ellipse cx="22" cy="28" rx="4" ry="4" fill="#0a0f19"/>
+              <ellipse cx="18" cy="25" rx="2" ry="2" fill="white"/>
+              <ellipse cx="50" cy="28" rx="12" ry="12" fill="#e6f0ff"/>
+              <ellipse cx="50" cy="28" rx="8" ry="8" fill="#50b4ff"/>
+              <ellipse cx="50" cy="28" rx="4" ry="4" fill="#0a0f19"/>
+              <ellipse cx="46" cy="25" rx="2" ry="2" fill="white"/>
+              <ellipse cx="36" cy="54" rx="10" ry="5" fill="#ff6478" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:var(--cyan)">Écoute</div>
+        </div>
+
+        <!-- THINKING -->
+        <div class="emotion-card think">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <circle cx="36" cy="36" r="32" fill="none" stroke="#c896ff" stroke-width="1" opacity="0.3">
+                <animate attributeName="opacity" values="0.1;0.4;0.1" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <ellipse cx="22" cy="30" rx="11" ry="11" fill="#e6f0ff"/>
+              <ellipse cx="20" cy="28" rx="7" ry="7" fill="#50b4ff"/>
+              <ellipse cx="20" cy="28" rx="3.5" ry="3.5" fill="#0a0f19"/>
+              <ellipse cx="50" cy="30" rx="11" ry="11" fill="#e6f0ff"/>
+              <ellipse cx="48" cy="28" rx="7" ry="7" fill="#50b4ff"/>
+              <ellipse cx="48" cy="28" rx="3.5" ry="3.5" fill="#0a0f19"/>
+              <!-- Sourcils froncés -->
+              <path d="M 14 19 L 28 22" fill="none" stroke="#50b4ff" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 44 22 L 58 19" fill="none" stroke="#50b4ff" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Bouche de côté -->
+              <path d="M 28 54 Q 40 50 48 54" fill="none" stroke="#ff6478" stroke-width="2" stroke-linecap="round"/>
+              <!-- Points de réflexion -->
+              <circle cx="56" cy="16" r="2" fill="#c896ff" opacity="0.8"><animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0s"/></circle>
+              <circle cx="62" cy="10" r="3" fill="#c896ff" opacity="0.6"><animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.3s"/></circle>
+              <circle cx="68" cy="4" r="4" fill="#c896ff" opacity="0.4"><animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" begin="0.6s"/></circle>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:var(--purple)">Réflexion</div>
+        </div>
+
+        <!-- SPEAKING -->
+        <div class="emotion-card speak">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <circle cx="36" cy="36" r="32" fill="none" stroke="#ffc83c" stroke-width="1" opacity="0.3">
+                <animate attributeName="r" values="28;33;28" dur="0.8s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.15;0.4;0.15" dur="0.8s" repeatCount="indefinite"/>
+              </circle>
+              <ellipse cx="22" cy="27" rx="11" ry="11" fill="#e6f0ff"/>
+              <ellipse cx="22" cy="27" rx="7" ry="7" fill="#50b4ff"/>
+              <ellipse cx="22" cy="27" rx="3.5" ry="3.5" fill="#0a0f19"/>
+              <ellipse cx="19" cy="24" rx="1.8" ry="1.8" fill="white"/>
+              <ellipse cx="50" cy="27" rx="11" ry="11" fill="#e6f0ff"/>
+              <ellipse cx="50" cy="27" rx="7" ry="7" fill="#50b4ff"/>
+              <ellipse cx="50" cy="27" rx="3.5" ry="3.5" fill="#0a0f19"/>
+              <ellipse cx="47" cy="24" rx="1.8" ry="1.8" fill="white"/>
+              <ellipse cx="36" cy="54" rx="14" ry="8" fill="#ff6478">
+                <animate attributeName="ry" values="3;9;5;11;4;8;3" dur="0.8s" repeatCount="indefinite"/>
+              </ellipse>
+              <rect x="26" y="49" width="20" height="4" rx="2" fill="#e6f0ff">
+                <animate attributeName="opacity" values="1;1;0;0;1" dur="0.8s" repeatCount="indefinite"/>
+              </rect>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:var(--orange)">Parole</div>
+        </div>
+
+        <!-- HAPPY -->
+        <div class="emotion-card happy">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <ellipse cx="22" cy="26" rx="11" ry="9" fill="#e6f0ff"/>
+              <ellipse cx="22" cy="26" rx="7" ry="5.5" fill="#50b4ff"/>
+              <ellipse cx="22" cy="26" rx="3.5" ry="2.5" fill="#0a0f19"/>
+              <ellipse cx="19" cy="23" rx="1.8" ry="1.5" fill="white"/>
+              <ellipse cx="50" cy="26" rx="11" ry="9" fill="#e6f0ff"/>
+              <ellipse cx="50" cy="26" rx="7" ry="5.5" fill="#50b4ff"/>
+              <ellipse cx="50" cy="26" rx="3.5" ry="2.5" fill="#0a0f19"/>
+              <ellipse cx="47" cy="23" rx="1.8" ry="1.5" fill="white"/>
+              <path d="M 18 52 Q 36 66 54 52" fill="#ff6478" stroke="#ff6478" stroke-width="1"/>
+              <ellipse cx="12" cy="46" rx="7" ry="4" fill="#ff6478" opacity="0.35"/>
+              <ellipse cx="60" cy="46" rx="7" ry="4" fill="#ff6478" opacity="0.35"/>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:#64dd64">Joyeux</div>
+        </div>
+
+        <!-- SURPRISED -->
+        <div class="emotion-card surp">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <ellipse cx="22" cy="28" rx="13" ry="13" fill="#e6f0ff"/>
+              <ellipse cx="22" cy="28" rx="9" ry="9" fill="#50b4ff"/>
+              <ellipse cx="22" cy="28" rx="4.5" ry="4.5" fill="#0a0f19"/>
+              <ellipse cx="18" cy="24" rx="2.2" ry="2.2" fill="white"/>
+              <ellipse cx="50" cy="28" rx="13" ry="13" fill="#e6f0ff"/>
+              <ellipse cx="50" cy="28" rx="9" ry="9" fill="#50b4ff"/>
+              <ellipse cx="50" cy="28" rx="4.5" ry="4.5" fill="#0a0f19"/>
+              <ellipse cx="46" cy="24" rx="2.2" ry="2.2" fill="white"/>
+              <!-- Sourcils hauts -->
+              <path d="M 12 14 Q 22 10 32 14" fill="none" stroke="#50b4ff" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 40 14 Q 50 10 60 14" fill="none" stroke="#50b4ff" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Bouche ronde -->
+              <ellipse cx="36" cy="57" rx="9" ry="9" fill="#ff6478"/>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:var(--pink)">Surprise</div>
+        </div>
+
+        <!-- SLEEPING -->
+        <div class="emotion-card sleep">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <!-- Yeux fermés -->
+              <path d="M 11 30 Q 22 36 33 30" fill="none" stroke="#e6f0ff" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 39 30 Q 50 36 61 30" fill="none" stroke="#e6f0ff" stroke-width="3" stroke-linecap="round"/>
+              <!-- Bouche horizontale -->
+              <path d="M 28 50 L 44 50" fill="none" stroke="#ff6478" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- ZZZ -->
+              <text x="52" y="22" font-size="8" fill="#3050a0" font-family="monospace" opacity="0.8">
+                <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" begin="0s"/>z
+              </text>
+              <text x="57" y="14" font-size="10" fill="#3050a0" font-family="monospace" opacity="0.6">
+                <animate attributeName="opacity" values="0;0.6;0" dur="2s" repeatCount="indefinite" begin="0.5s"/>Z
+              </text>
+              <text x="62" y="6" font-size="12" fill="#3050a0" font-family="monospace" opacity="0.4">
+                <animate attributeName="opacity" values="0;0.4;0" dur="2s" repeatCount="indefinite" begin="1s"/>Z
+              </text>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:#3050a0">Veille</div>
+        </div>
+
+        <!-- WAKE WORD -->
+        <div class="emotion-card wake">
+          <div class="face-mini">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <rect width="72" height="72" fill="#080d14"/>
+              <!-- Ondes sonores -->
+              <circle cx="36" cy="36" r="28" fill="none" stroke="#50b4ff" stroke-width="1" opacity="0.6">
+                <animate attributeName="r" values="28;36;28" dur="1s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.6;0;0.6" dur="1s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="36" cy="36" r="20" fill="none" stroke="#50b4ff" stroke-width="1.5" opacity="0.8">
+                <animate attributeName="r" values="20;28;20" dur="1s" repeatCount="indefinite" begin="0.3s"/>
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="1s" repeatCount="indefinite" begin="0.3s"/>
+              </circle>
+              <!-- Micro icône -->
+              <rect x="30" y="22" width="12" height="16" rx="6" fill="#50b4ff"/>
+              <path d="M 24 36 Q 24 46 36 46 Q 48 46 48 36" fill="none" stroke="#50b4ff" stroke-width="2" stroke-linecap="round"/>
+              <line x1="36" y1="46" x2="36" y2="52" stroke="#50b4ff" stroke-width="2"/>
+              <line x1="30" y1="52" x2="42" y2="52" stroke="#50b4ff" stroke-width="2" stroke-linecap="round"/>
+              <!-- Texte HELLO LI -->
+              <text x="36" y="66" text-anchor="middle" font-size="6.5" fill="#50b4ff" font-family="monospace" letter-spacing="1">HELLO LI</text>
+            </svg>
+          </div>
+          <div class="emotion-label" style="color:var(--blue)">Wake Word</div>
+        </div>
+
+      </div><!-- /emotions-grid -->
+
+      <!-- Specs pipeline -->
+      <p class="panel-title" style="margin-top:8px">Pipeline logiciel</p>
+      <div class="specs-row">
+        <div class="spec-chip">
+          <span class="spec-key">Wake Word</span>
+          <span class="spec-val">openWakeWord</span>
+          "Hello Li" — ONNX ARM64
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">STT</span>
+          <span class="spec-val">Whisper small</span>
+          faster-whisper int8
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">LLM</span>
+          <span class="spec-val">llama3.2:3b</span>
+          via Ollama local
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">TTS</span>
+          <span class="spec-val">Piper TTS</span>
+          fr_FR-upmc-medium
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">Écran</span>
+          <span class="spec-val">ST7735 SPI</span>
+          240&times;240 IPS 30 FPS
+        </div>
+        <div class="spec-chip">
+          <span class="spec-key">Latence</span>
+          <span class="spec-val">5 – 12 s</span>
+          par échange complet
+        </div>
+      </div>
+
+    </div><!-- /face-panel -->
+  </div><!-- /main-grid -->
+
+  <footer>
+    Li Assistant — Raspberry Pi 5 16 Go &nbsp;•&nbsp; 100% local &nbsp;•&nbsp; 100% offline &nbsp;•&nbsp; Open Source
+  </footer>
+
+</div>
+</body>
+</html>

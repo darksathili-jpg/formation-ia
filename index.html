@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formation IA — NSI · DarkSATHI Li</title>
+  <meta name="description" content="Formation pratique à l'intelligence artificielle pour enseignants de NSI — 3 niveaux progressifs, méthode RCTF, prompt engineering et activités élèves. Par DarkSATHI Li, lycée Antoine Watteau, Valenciennes." />
+  <meta name="author" content="DarkSATHI Li — lycée Antoine Watteau, Valenciennes" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       TOKENS & THEMES
+    ========================================================= */
+    :root {
+      --radius:        4px;
+      --radius-lg:     8px;
+      --transition:    0.22s ease;
+      --font-sans:     'IBM Plex Sans', sans-serif;
+      --font-mono:     'IBM Plex Mono', monospace;
+      --font-display:  'Space Grotesk', sans-serif;
+    }
+
+    /* --- DARK (default) --- */
+    [data-theme="dark"] {
+      --bg:            #0d1117;
+      --bg-card:       #161b22;
+      --bg-card-alt:   #1c2230;
+      --bg-code:       #0d1117;
+      --border:        #30363d;
+      --border-accent: #3d8bcd;
+
+      --text-primary:  #e6edf3;
+      --text-secondary:#8b949e;
+      --text-muted:    #484f58;
+
+      --accent-blue:   #58a6ff;
+      --accent-cyan:   #39d0d6;
+      --accent-yellow: #e3b341;
+      --accent-green:  #3fb950;
+      --accent-orange: #f0883e;
+      --accent-red:    #f85149;
+      --accent-violet: #bc8cff;
+
+      --badge-n1-bg:   rgba(88,166,255,0.12);
+      --badge-n1-fg:   #58a6ff;
+      --badge-n2-bg:   rgba(57,208,214,0.12);
+      --badge-n2-fg:   #39d0d6;
+      --badge-n3-bg:   rgba(188,140,255,0.12);
+      --badge-n3-fg:   #bc8cff;
+
+      --header-grad:   linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1c2230 100%);
+      --scanline-opacity: 0.025;
+    }
+
+    /* --- LIGHT --- */
+    [data-theme="light"] {
+      --bg:            #f4f6f9;
+      --bg-card:       #ffffff;
+      --bg-card-alt:   #f0f4fa;
+      --bg-code:       #eaeef2;
+      --border:        #d0d7de;
+      --border-accent: #0969da;
+
+      --text-primary:  #1f2328;
+      --text-secondary:#57606a;
+      --text-muted:    #9ba5b0;
+
+      --accent-blue:   #0969da;
+      --accent-cyan:   #1a7f64;
+      --accent-yellow: #9a6700;
+      --accent-green:  #1a7f3c;
+      --accent-orange: #bc4c00;
+      --accent-red:    #cf222e;
+      --accent-violet: #6e40c9;
+
+      --badge-n1-bg:   rgba(9,105,218,0.1);
+      --badge-n1-fg:   #0969da;
+      --badge-n2-bg:   rgba(26,127,100,0.1);
+      --badge-n2-fg:   #1a7f64;
+      --badge-n3-bg:   rgba(110,64,201,0.1);
+      --badge-n3-fg:   #6e40c9;
+
+      --header-grad:   linear-gradient(135deg, #e8ecf1 0%, #f4f6f9 60%, #ffffff 100%);
+      --scanline-opacity: 0;
+    }
+
+    /* =========================================================
+       RESET & BASE
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+
+    body {
+      font-family:       var(--font-sans);
+      background-color:  var(--bg);
+      color:             var(--text-primary);
+      font-size:         15px;
+      line-height:       1.65;
+      transition:        background-color var(--transition), color var(--transition);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color:           var(--accent-blue);
+      text-decoration: none;
+      transition:      opacity var(--transition);
+    }
+    a:hover { opacity: 0.8; text-decoration: underline; }
+
+    ul { list-style: none; }
+
+    /* =========================================================
+       LAYOUT
+    ========================================================= */
+    .page-container {
+      max-width: 1100px;
+      margin:    0 auto;
+      padding:   0 24px 80px;
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+    .site-header {
+      background:    var(--header-grad);
+      border-bottom: 1px solid var(--border);
+      position:      sticky;
+      top:           0;
+      z-index:       100;
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width:   1100px;
+      margin:      0 auto;
+      padding:     0 24px;
+      height:      60px;
+      display:     flex;
+      align-items: center;
+      gap:         16px;
+    }
+
+    .header-logo {
+      font-family:   var(--font-display);
+      font-weight:   700;
+      font-size:     1.05rem;
+      color:         var(--text-primary);
+      white-space:   nowrap;
+      display:       flex;
+      align-items:   center;
+      gap:           10px;
+    }
+
+    .header-logo .logo-mark {
+      display:          inline-flex;
+      align-items:      center;
+      justify-content:  center;
+      width:            30px;
+      height:           30px;
+      background:       var(--accent-blue);
+      color:            var(--bg);
+      font-size:        0.75rem;
+      font-family:      var(--font-mono);
+      font-weight:      600;
+      border-radius:    var(--radius);
+      flex-shrink:      0;
+    }
+
+    .header-nav {
+      display:     flex;
+      gap:         6px;
+      flex:        1;
+      overflow-x:  auto;
+      scrollbar-width: none;
+    }
+    .header-nav::-webkit-scrollbar { display: none; }
+
+    .nav-link {
+      font-size:   0.8rem;
+      font-weight: 500;
+      color:       var(--text-secondary);
+      padding:     6px 10px;
+      border-radius: var(--radius);
+      white-space: nowrap;
+      transition:  background var(--transition), color var(--transition);
+    }
+    .nav-link:hover {
+      background:      var(--bg-card-alt);
+      color:           var(--text-primary);
+      text-decoration: none;
+      opacity:         1;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      flex-shrink: 0;
+      width:       44px;
+      height:      26px;
+      background:  var(--bg-card-alt);
+      border:      1px solid var(--border);
+      border-radius: 13px;
+      cursor:      pointer;
+      position:    relative;
+      transition:  background var(--transition), border-color var(--transition);
+    }
+    .theme-toggle::before {
+      content:     '';
+      position:    absolute;
+      top:         3px;
+      left:        3px;
+      width:       18px;
+      height:      18px;
+      border-radius: 50%;
+      background:  var(--accent-blue);
+      transition:  transform var(--transition), background var(--transition);
+    }
+    [data-theme="light"] .theme-toggle::before {
+      transform: translateX(18px);
+      background: var(--accent-yellow);
+    }
+    .theme-toggle-label {
+      font-size:  0.7rem;
+      color:      var(--text-muted);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+    .toggle-wrapper {
+      display:     flex;
+      align-items: center;
+      gap:         8px;
+      flex-shrink: 0;
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    .hero {
+      padding:       64px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+      position:      relative;
+      overflow:      hidden;
+    }
+
+    .hero::before {
+      content:    '';
+      position:   absolute;
+      inset:      0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,var(--scanline-opacity)) 2px,
+        rgba(255,255,255,var(--scanline-opacity)) 4px
+      );
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      font-family:     var(--font-mono);
+      font-size:       0.75rem;
+      color:           var(--accent-cyan);
+      letter-spacing:  0.12em;
+      text-transform:  uppercase;
+      margin-bottom:   16px;
+      display:         flex;
+      align-items:     center;
+      gap:             10px;
+    }
+    .hero-kicker::before {
+      content:    '';
+      display:    inline-block;
+      width:      24px;
+      height:     1px;
+      background: var(--accent-cyan);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size:   clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color:       var(--text-primary);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title .hl {
+      color:       var(--accent-blue);
+      position:    relative;
+    }
+
+    .hero-subtitle {
+      font-size:   1rem;
+      color:       var(--text-secondary);
+      max-width:   600px;
+      margin-bottom: 32px;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    .hero-meta {
+      font-family: var(--font-mono);
+      font-size:   0.75rem;
+      color:       var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+    }
+
+    /* =========================================================
+       BUTTON SYSTEM
+    ========================================================= */
+    .btn-row {
+      display:   flex;
+      flex-wrap: wrap;
+      gap:       8px;
+    }
+
+    .btn {
+      display:       inline-flex;
+      align-items:   center;
+      gap:           6px;
+      padding:       8px 16px;
+      border-radius: var(--radius);
+      font-size:     0.82rem;
+      font-weight:   500;
+      font-family:   var(--font-sans);
+      cursor:        pointer;
+      border:        1px solid transparent;
+      text-decoration: none;
+      transition:    background var(--transition), border-color var(--transition),
+                     color var(--transition), transform 0.1s ease, box-shadow var(--transition);
+      white-space:   nowrap;
+      line-height:   1.3;
+    }
+    .btn:hover { transform: translateY(-1px); text-decoration: none; opacity: 1; }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background:   var(--accent-blue);
+      color:        #fff;
+      border-color: var(--accent-blue);
+    }
+    .btn-primary:hover { box-shadow: 0 4px 12px rgba(88,166,255,0.35); }
+
+    .btn-secondary {
+      background:   transparent;
+      color:        var(--text-primary);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent-blue); background: var(--bg-card-alt); }
+
+    .btn-accent {
+      background:   var(--accent-yellow);
+      color:        var(--bg);
+      border-color: var(--accent-yellow);
+    }
+    .btn-accent:hover { box-shadow: 0 4px 12px rgba(227,179,65,0.35); }
+
+    .btn-green {
+      background:   var(--accent-green);
+      color:        #fff;
+    }
+    .btn-green:hover { box-shadow: 0 4px 12px rgba(63,185,80,0.35); }
+
+    .btn-red {
+      background:   var(--accent-red);
+      color:        #fff;
+    }
+    .btn-red:hover { box-shadow: 0 4px 12px rgba(248,81,73,0.35); }
+
+    .btn-ghost {
+      background:  transparent;
+      color:       var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+    .btn-ghost:hover { background: rgba(88,166,255,0.08); }
+
+    .btn-violet {
+      background:   var(--accent-violet);
+      color:        #fff;
+    }
+
+    .btn-cyan {
+      background:   var(--accent-cyan);
+      color:        var(--bg);
+    }
+
+    .btn-orange {
+      background:   var(--accent-orange);
+      color:        #fff;
+    }
+
+    /* =========================================================
+       SECTION HEADER
+    ========================================================= */
+    .section-header {
+      display:       flex;
+      align-items:   baseline;
+      gap:           16px;
+      margin-bottom: 24px;
+      margin-top:    56px;
+    }
+
+    .section-header h2 {
+      font-family:   var(--font-display);
+      font-size:     1.35rem;
+      font-weight:   600;
+      color:         var(--text-primary);
+      letter-spacing: -0.01em;
+      white-space:   nowrap;
+    }
+
+    .section-rule {
+      flex:            1;
+      height:          1px;
+      background:      linear-gradient(to right, var(--border), transparent);
+    }
+
+    .section-sub {
+      font-family:   var(--font-mono);
+      font-size:     0.72rem;
+      color:         var(--text-muted);
+      letter-spacing: 0.06em;
+      white-space:   nowrap;
+    }
+
+    /* =========================================================
+       CARDS
+    ========================================================= */
+    .card {
+      background:    var(--bg-card);
+      border:        1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding:       24px;
+      transition:    border-color var(--transition), box-shadow var(--transition);
+    }
+    .card:hover { border-color: var(--border-accent); }
+
+    .card-header {
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-family:   var(--font-display);
+      font-size:     1rem;
+      font-weight:   600;
+      color:         var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .card-meta {
+      font-family: var(--font-mono);
+      font-size:   0.72rem;
+      color:       var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .card-body {
+      font-size:   0.9rem;
+      color:       var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* =========================================================
+       GRIDS
+    ========================================================= */
+    .grid-1 { display: grid; gap: 20px; }
+
+    .grid-2 {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap:                   20px;
+    }
+
+    .grid-3 {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:                   20px;
+    }
+
+    /* =========================================================
+       LEVEL CARDS
+    ========================================================= */
+    .level-card {
+      background:    var(--bg-card);
+      border:        1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding:       24px;
+      display:       flex;
+      flex-direction: column;
+      gap:           12px;
+      transition:    border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .level-card:hover {
+      transform:    translateY(-2px);
+      box-shadow:   0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .level-card.n1 { border-top: 3px solid var(--badge-n1-fg); }
+    .level-card.n2 { border-top: 3px solid var(--badge-n2-fg); }
+    .level-card.n3 { border-top: 3px solid var(--badge-n3-fg); }
+
+    .level-badge {
+      display:       inline-flex;
+      align-items:   center;
+      padding:       4px 10px;
+      border-radius: var(--radius);
+      font-family:   var(--font-mono);
+      font-size:     0.68rem;
+      font-weight:   600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width:         fit-content;
+    }
+    .n1 .level-badge { background: var(--badge-n1-bg); color: var(--badge-n1-fg); }
+    .n2 .level-badge { background: var(--badge-n2-bg); color: var(--badge-n2-fg); }
+    .n3 .level-badge { background: var(--badge-n3-bg); color: var(--badge-n3-fg); }
+
+    .level-card h3 {
+      font-family:   var(--font-display);
+      font-size:     1.05rem;
+      font-weight:   600;
+      color:         var(--text-primary);
+    }
+
+    .level-card .meta {
+      font-family:  var(--font-mono);
+      font-size:    0.72rem;
+      color:        var(--text-muted);
+    }
+
+    .level-card ul {
+      list-style:  none;
+      display:     flex;
+      flex-direction: column;
+      gap:         7px;
+      flex:        1;
+    }
+
+    .level-card ul li {
+      font-size:   0.85rem;
+      color:       var(--text-secondary);
+      padding-left: 16px;
+      position:    relative;
+      line-height: 1.5;
+    }
+    .level-card ul li::before {
+      content:    '';
+      position:   absolute;
+      left:       0;
+      top:        8px;
+      width:      6px;
+      height:     1px;
+      background: var(--text-muted);
+    }
+
+    /* =========================================================
+       LINK LIST (resources, tools)
+    ========================================================= */
+    .link-list { display: flex; flex-direction: column; }
+
+    .link-list li {
+      display:      flex;
+      align-items:  center;
+      justify-content: space-between;
+      gap:          8px;
+      padding:      11px 0;
+      border-bottom: 1px solid var(--border);
+      font-size:    0.87rem;
+      transition:   background var(--transition);
+    }
+    .link-list li:last-child { border-bottom: none; }
+    .link-list li:hover { padding-left: 4px; }
+
+    .link-list a {
+      color:       var(--text-primary);
+      font-weight: 400;
+    }
+    .link-list a:hover { color: var(--accent-blue); }
+
+    /* =========================================================
+       TAGS
+    ========================================================= */
+    .tag {
+      display:       inline-flex;
+      align-items:   center;
+      padding:       2px 8px;
+      border-radius: var(--radius);
+      font-family:   var(--font-mono);
+      font-size:     0.65rem;
+      font-weight:   600;
+      letter-spacing: 0.05em;
+      white-space:   nowrap;
+      flex-shrink:   0;
+    }
+
+    .tag-default { background: rgba(139,148,158,0.15); color: var(--text-secondary); }
+    .tag-green   { background: rgba(63,185,80,0.12);   color: var(--accent-green); }
+    .tag-blue    { background: rgba(88,166,255,0.12);  color: var(--accent-blue); }
+    .tag-red     { background: rgba(248,81,73,0.12);   color: var(--accent-red); }
+    .tag-grey    { background: rgba(139,148,158,0.15); color: var(--text-secondary); }
+    .tag-yellow  { background: rgba(227,179,65,0.15);  color: var(--accent-yellow); }
+    .tag-violet  { background: rgba(188,140,255,0.15); color: var(--accent-violet); }
+
+    /* =========================================================
+       RCTF GRID
+    ========================================================= */
+    .rctf-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:                   16px;
+      margin:                20px 0;
+    }
+
+    .rctf-item {
+      background:    var(--bg-card-alt);
+      border:        1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding:       20px;
+      transition:    border-color var(--transition), transform var(--transition);
+    }
+    .rctf-item:hover {
+      border-color: var(--accent-blue);
+      transform:    translateY(-2px);
+    }
+
+    .rctf-letter {
+      font-family:   var(--font-mono);
+      font-size:     2rem;
+      font-weight:   600;
+      color:         var(--accent-blue);
+      line-height:   1;
+      margin-bottom: 8px;
+      display:       block;
+    }
+
+    .rctf-label {
+      font-weight:   600;
+      font-size:     0.85rem;
+      color:         var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .rctf-example {
+      font-family:  var(--font-mono);
+      font-size:    0.72rem;
+      color:        var(--text-muted);
+      line-height:  1.5;
+    }
+
+    /* =========================================================
+       CODE BOX
+    ========================================================= */
+    .code-box {
+      background:    var(--bg-code);
+      border:        1px solid var(--border);
+      border-left:   3px solid var(--accent-cyan);
+      border-radius: var(--radius);
+      padding:       16px 20px;
+      font-family:   var(--font-mono);
+      font-size:     0.8rem;
+      line-height:   1.7;
+      color:         var(--text-secondary);
+      margin:        16px 0;
+      overflow-x:    auto;
+    }
+
+    .c-muted  { color: var(--text-muted); }
+    .c-yellow { color: var(--accent-yellow); display: block; }
+    .c-cyan   { color: var(--accent-cyan); }
+    .c-green  { color: var(--accent-green); }
+
+    /* =========================================================
+       ALERT / INFO BOX
+    ========================================================= */
+    .info-box {
+      border:        1px solid var(--border);
+      border-left:   3px solid var(--accent-yellow);
+      border-radius: var(--radius);
+      padding:       14px 18px;
+      font-size:     0.85rem;
+      color:         var(--text-secondary);
+      background:    rgba(227,179,65,0.07);
+      line-height:   1.65;
+    }
+    .info-box strong { color: var(--accent-yellow); }
+
+    .notice-box {
+      border:      1px solid var(--border);
+      border-left: 3px solid var(--accent-orange);
+      border-radius: var(--radius);
+      padding:     14px 18px;
+      font-size:   0.85rem;
+      color:       var(--text-secondary);
+      background:  rgba(240,136,62,0.07);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    /* =========================================================
+       CARD ACCENT BAR (intro card)
+    ========================================================= */
+    .intro-card {
+      background:  var(--bg-card);
+      border:      1px solid var(--border);
+      border-top:  3px solid var(--accent-blue);
+      border-radius: var(--radius-lg);
+      padding:     28px 28px 24px;
+    }
+
+    .intro-card .card-title {
+      font-size:   1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .intro-card .card-sub {
+      font-family:  var(--font-mono);
+      font-size:    0.72rem;
+      color:        var(--accent-cyan);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .intro-card .card-desc {
+      font-size:   0.9rem;
+      color:       var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+
+    /* =========================================================
+       FIDLE CARD (special layout with logo)
+    ========================================================= */
+    .media-card {
+      background:    var(--bg-card);
+      border:        1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding:       24px;
+      display:       flex;
+      flex-direction: column;
+      gap:           16px;
+    }
+
+    .media-card .logo-zone {
+      display:     flex;
+      align-items: center;
+      gap:         16px;
+      flex-wrap:   wrap;
+    }
+
+    .media-card img {
+      height:      36px;
+      width:       auto;
+      filter:      brightness(0.9) saturate(0.8);
+    }
+
+    [data-theme="light"] .media-card img {
+      filter: none;
+    }
+
+    .media-card iframe {
+      width:         100%;
+      aspect-ratio:  16 / 9;
+      border:        none;
+      border-radius: var(--radius);
+    }
+
+    /* =========================================================
+       FORMATION INLINE NAV (scrollable chips)
+    ========================================================= */
+    .chip-nav {
+      display:   flex;
+      flex-wrap: wrap;
+      gap:       8px;
+      margin-bottom: 8px;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    .site-footer {
+      margin-top:    80px;
+      padding:       32px 24px;
+      border-top:    1px solid var(--border);
+      text-align:    center;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin:    0 auto;
+    }
+
+    .footer-brand {
+      font-family:   var(--font-mono);
+      font-size:     0.75rem;
+      color:         var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .footer-links {
+      display:   flex;
+      justify-content: center;
+      gap:       20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 0.82rem;
+      color:     var(--text-secondary);
+    }
+
+    /* =========================================================
+       HIGHLIGHT PANEL (for IA Coding / Watteau project)
+    ========================================================= */
+    .highlight-link-item {
+      display:       flex;
+      align-items:   center;
+      justify-content: space-between;
+      gap:           12px;
+      padding:       13px 16px;
+      border:        1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      background:    var(--bg-card-alt);
+      transition:    border-color var(--transition), background var(--transition);
+    }
+    .highlight-link-item:hover {
+      border-color: var(--accent-blue);
+      background:   var(--bg-card);
+    }
+
+    .highlight-link-item .hl-title {
+      font-size:   0.88rem;
+      font-weight: 500;
+      color:       var(--text-primary);
+    }
+    .highlight-link-item .hl-desc {
+      font-size:  0.78rem;
+      color:      var(--text-muted);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+
+    /* =========================================================
+       SEPARATOR DOT
+    ========================================================= */
+    .sep {
+      color: var(--text-muted);
+      margin: 0 4px;
+      font-size: 0.7rem;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media (max-width: 640px) {
+      .header-nav { display: none; }
+      .hero-title  { font-size: 1.9rem; }
+      .rctf-grid   { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* =========================================================
+       BANDEAU COLLABORATION
+    ========================================================= */
+    .collab-banner {
+      background:    var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding:       10px 24px;
+      display:       flex;
+      align-items:   center;
+      justify-content: center;
+      gap:           12px;
+      font-family:   var(--font-mono);
+      font-size:     0.72rem;
+      color:         var(--text-muted);
+      letter-spacing: 0.04em;
+      transition:    background var(--transition), color var(--transition);
+    }
+
+    .collab-banner .collab-dot {
+      width:         6px;
+      height:        6px;
+      border-radius: 50%;
+      background:    var(--accent-cyan);
+      flex-shrink:   0;
+      animation:     pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .collab-banner .collab-text {
+      color: var(--text-secondary);
+    }
+
+    .collab-banner .collab-text strong {
+      color:       var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .collab-banner .collab-link {
+      color:          var(--text-muted);
+      border-bottom:  1px dotted var(--text-muted);
+      padding-bottom: 1px;
+      transition:     color var(--transition), border-color var(--transition);
+    }
+    .collab-banner .collab-link:hover {
+      color:        var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      opacity:      1;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       SCROLL ANIMATION
+    ========================================================= */
+    .reveal {
+      opacity:    0;
+      transform:  translateY(16px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .reveal.visible {
+      opacity:   1;
+      transform: translateY(0);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ====================================================
+       STICKY HEADER
+  ==================================================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="logo-mark">AI</span>
+        Formation IA — NSI
+      </div>
+
+      <nav class="header-nav">
+        <a href="#histoire"  class="nav-link">Évolution</a>
+        <a href="#maths"     class="nav-link">Mathématiques</a>
+        <a href="#niveaux"   class="nav-link">Niveaux</a>
+        <a href="#prompt"    class="nav-link">Prompt Eng.</a>
+        <a href="#activites" class="nav-link">Activités</a>
+        <a href="#methode"   class="nav-link">RCTF</a>
+        <a href="#outils"    class="nav-link">Outils</a>
+        <a href="#ressources" class="nav-link">Ressources</a>
+      </nav>
+
+      <div class="toggle-wrapper">
+        <span class="theme-toggle-label" id="theme-label">DARK</span>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Basculer le thème"></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====================================================
+       BANDEAU COLLABORATION CLAUDE / ANTHROPIC
+  ==================================================== -->
+  <div class="collab-banner">
+    <span class="collab-dot" aria-hidden="true"></span>
+    <span class="collab-text">
+      Les ressources de ce site ont été conçues conjointement avec
+      <strong>Claude</strong> —
+      assistant IA développé par
+      <a href="https://www.anthropic.com" target="_blank" rel="noopener" class="collab-link">Anthropic</a>
+      &nbsp;&middot;&nbsp; DarkSATHI Li &nbsp;&middot;&nbsp; 2025-2026
+    </span>
+    <span class="collab-dot" aria-hidden="true"></span>
+  </div>
+
+
+  <!-- ====================================================
+       HERO
+  ==================================================== -->
+  <div class="page-container">
+
+    <section class="hero">
+      <p class="hero-kicker">DarkSATHI Li &mdash; Lycée Watteau, Valenciennes</p>
+      <h1 class="hero-title">
+        L'Intelligence Artificielle<br>
+        au service de l'<span class="hl">enseignement NSI</span>
+      </h1>
+      <p class="hero-subtitle">
+        Formation pratique en 3 niveaux progressifs. De la découverte des grands modèles de langage jusqu'à la conception de projets élèves autonomes.
+      </p>
+      <p class="hero-meta">SPÉCIALITÉ NSI &nbsp;&middot;&nbsp; 14H AU TOTAL &nbsp;&middot;&nbsp; 2025-2026</p>
+
+      <div class="btn-row">
+        <a href="#niveaux"    class="btn btn-primary">Projet de formations</a>
+        <a href="#methode"    class="btn btn-accent">La méthode RCTF</a>
+        <a href="pages/synth_vs_common_crawl.html"          target="_blank" class="btn btn-secondary">Baguettotron &mdash; SLM français souverain</a>
+        <a href="pages/cinq_grandes_idees_IA_NSI.html"      target="_blank" class="btn btn-secondary">Les 5 grandes idées en IA</a>
+        <a href="pages/fiche_technique_NSI_v5_1.html"       target="_blank" class="btn btn-secondary">Projet Watteau &mdash; IA embarquée</a>
+        <a href="#prompt"     class="btn btn-ghost">Prompt engineering</a>
+        <a href="#activites"  class="btn btn-ghost">Mes activités IA</a>
+        <a href="ia_coding"   target="_blank" class="btn btn-red">Projet DarkSATHI Li IA</a>
+        <a href="application_prompt/generateur-prompts-nsi-maths.html" target="_blank" class="btn btn-violet">Générateur de prompts NSI &amp; Maths</a>
+        <a href="#ressources" class="btn btn-secondary">Ressources &rarr;</a>
+      </div>
+    </section>
+
+
+    <!-- ====================================================
+         ÉVOLUTION DE L'IA
+    ==================================================== -->
+    <div class="section-header reveal" id="histoire">
+      <h2>L'évolution de l'IA</h2>
+      <div class="section-rule"></div>
+      <span class="section-sub">HISTOIRE &amp; FUTUR</span>
+    </div>
+
+    <div class="grid-1 reveal">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">IA : Histoire &amp; Futur</div>
+          <div class="card-meta">D'après CNRS Fidle</div>
+        </div>
+        <div class="media-card" style="border:none; padding:0; background:transparent;">
+          <div class="logo-zone">
+            <img src="https://www.fidle.cnrs.fr/w3/assets/images/web-logo-h.svg" alt="Logo CNRS Fidle">
+            <a href="pages/resume_ia.html" target="_blank" class="btn btn-accent">Accéder &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+         MATHÉMATIQUES DE L'IA
+    ==================================================== -->
+    <div class="section-header reveal" id="maths">
+      <h2>Les mathématiques de l'IA</h2>
+      <div class="section-rule"></div>
+      <span class="section-sub">NIVEAU TERMINALE</span>
+    </div>
+
+    <div class="grid-2 reveal">
+
+      <div class="level-card n1">
+        <span class="level-badge">Vidéo : Mathématiques de l'IA</span>
+        <h3>Niveau spécialité mathématiques de terminale</h3>
+        <div class="meta">0h49 &middot; MathAData</div>
+        <iframe src="https://www.youtube.com/embed/J2uNPjZ2YnQ?si=ewLkMYXvhVZB9Bqj"
+          title="Mathématiques de l'IA"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          loading="lazy"
+          style="width:100%; aspect-ratio:16/9; border:none; border-radius:var(--radius); margin-top:8px;">
+        </iframe>
+        <div class="btn-row" style="margin-top:8px;">
+          <a href="https://mathadata.fr/fr" target="_blank" rel="noopener" class="btn btn-accent">Accéder à MathAdata &rarr;</a>
+        </div>
+      </div>
+
+      <div class="level-card n2">
+        <span class="level-badge">Diapositives de la vidéo MathAData</span>
+        <h3>Les mathématiques de l'IA</h3>
+        <div class="meta">Les chapitres</div>
+        <ul>
+          <li>Algorithmes d'IA par apprentissage statistique</li>
+          <li>Comprendre l'IA avec les maths du lycée</li>
+          <li>Les réseaux de neurones</li>
+          <li>Enseigner les maths avec des défis d'IA</li>
+        </ul>
+        <div class="btn-row" style="margin-top:8px;">
+          <a href="documents/SlidesVideoIA_formation.pdf" target="_blank" class="btn btn-accent">Accéder &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================
+         3 NIVEAUX DE FORMATION
+    ==================================================== -->
+    <div class="section-header reveal" id="niveaux">
+      <h2>Les 3 niveaux de formation</h2>
+      <div class="section-rule"></div>
+      <span class="section-sub">14H AU TOTAL</span>
+    </div>
+
+    <div class="grid-3 reveal">
+
+      <!-- NIVEAU 1 -->
+      <div class="level-card n1">
+        <span class="level-badge">Niveau 1 &mdash; Débutant</span>
+        <h3>Découverte</h3>
+        <div class="meta">3h30 &middot; Ateliers pratiques</div>
+        <ul>
+          <li>Comprendre les LLM (prédiction de tokens)</li>
+          <li>Prompts RCTF : Rôle, Contexte, Tâche, Format</li>
+          <li>Générer exercices et corrigés NSI</li>
+          <li>Identifier les hallucinations &amp; enjeux RGPD</li>
+        </ul>
+        <div class="btn-row" style="margin-top:auto; padding-top:16px;">
+          <a href="formation_ia/niveau1.html" target="_blank" class="btn btn-primary">Accéder &rarr;</a>
+        </div>
+      </div>
+
+      <!-- NIVEAU 2 -->
+      <div class="level-card n2">
+        <span class="level-badge">Niveau 2 &mdash; Intermédiaire</span>
+        <h3>IA Générative Appliquée</h3>
+        <div class="meta">2 &times; 3h30 &middot; Prérequis : Niveau 1</div>
+        <ul>
+          <li>Few-shot &amp; Chain-of-Thought avancés</li>
+          <li>Séquences pédagogiques complètes</li>
+          <li>Générer TP, évaluations, supports de révision</li>
+          <li>Vérification systématique des sorties IA</li>
+        </ul>
+        <div class="btn-row" style="margin-top:auto; padding-top:16px;">
+          <a href="formation_ia/niveau2.html" target="_blank" class="btn btn-cyan">Accéder &rarr;</a>
+        </div>
+      </div>
+
+      <!-- NIVEAU 3 -->
+      <div class="level-card n3">
+        <span class="level-badge">Niveau 3 &mdash; Avancé</span>
+        <h3>De l'Outil à l'Expertise</h3>
+        <div class="meta">2 &times; 3h30 &middot; Prérequis : Niveaux 1 &amp; 2</div>
+        <ul>
+          <li>Fonctionnement des transformers</li>
+          <li>Projets élèves autonomes avec l'IA</li>
+          <li>Fine-tuning, RAG, agents IA</li>
+          <li>IA Act &amp; devenir référent IA en lycée</li>
+        </ul>
+        <div class="btn-row" style="margin-top:auto; padding-top:16px;">
+          <a href="formation_ia/niveau3.html" target="_blank" class="btn btn-violet">Accéder &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================
+         PROMPT ENGINEERING
+    ==================================================== -->
+    <div class="section-header reveal" id="prompt">
+      <h2>Prompt Engineering</h2>
+      <div class="section-rule"></div>
+      <span class="section-sub">DARKSATHI LI</span>
+    </div>
+
+    <div class="grid-1 reveal">
+      <div class="intro-card">
+        <div class="card-title">Formation en prompt engineering</div>
+        <div class="card-sub">// Concevoir, tester et améliorer les consignes données à une IA</div>
+
+        <div class="notice-box">
+          Le prompt engineering est la pratique qui consiste à concevoir, tester et améliorer les consignes
+          que l'on donne à une IA pour la guider vers le résultat souhaité, de la façon la plus fiable et
+          efficace possible. Il s'agit de : décrire clairement la tâche (contexte, objectif, format de sortie),
+          donner des contraintes (ton, langue, longueur, public visé), fournir eventuellement des exemples
+          de bonnes réponses à imiter, et ajuster le prompt par essais/erreurs pour corriger les réponses de l'IA.
+        </div>
+
+        <ul class="link-list">
+          <li>
+            <a rel="noopener" href="anatomie_prompt/anatomie_prompt_NSI.html" target="_blank">Anatomie d'un prompt</a>
+            <span class="tag tag-green">Enseignant NSI</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+         ACTIVITÉS IA
+    ==================================================== -->
+    <div class="section-header reveal" id="activites">
+      <h2>Mes activités IA</h2>
+      <div class="section-rule"></div>
+      <span class="section-sub">DARKSATHI LI</span>
+    </div>
+
+    <div class="grid-1 reveal">
+      <div class="intro-card">
+        <div class="card-title">Exemples d'activités pour la classe</div>
+        <div class="card-sub">// Points de départ à adapter selon vos objectifs pédagogiques</div>
+
+        <div class="notice-box">
+          Ces activités sont des points de départ à adapter selon votre classe et vos objectifs pédagogiques.
+          Testez-les vous-même avant de les proposer aux élèves. Il y a sans doute des erreurs ou des imprécisions
+          à corriger &mdash; n'hésitez pas à me contacter pour toute suggestion d'amélioration.
+          Je ne suis pas un expert de l'IA, juste un enseignant passionné qui partage ses découvertes et expérimentations.
+          Amusez-vous à explorer, tester et faire évoluer ces ressources pour vos classes&nbsp;!
+        </div>
+
+        <ul class="link-list">
+          <li>
+            <a rel="noopener" href="activités/perceptron/tp_neurone.html" target="_blank">À la découverte du perceptron</a>
+            <span class="tag tag-green">Terminale</span>
+          </li>
+          <li>
+            <a rel="noopener" href="activités/chat_chien/tp_reseaux_neurones_complet.html" target="_blank">Réseau de neurones : Chats vs Chiens</a>
+            <span class="tag tag-green">Terminale</span>
+          </li>
+          <li>
+            <a rel="noopener" href="activités/similarite_images/activite_similarite_images.html" target="_blank">Similarité d'images par vecteurs &mdash; travail du prompt expliqué</a>
+            <span class="tag tag-green">Première | Terminale</span>
+          </li>
+          <li>
+            <a rel="noopener" href="activités/embeddings/activite_eleve_word_embeddings.html" target="_blank">Word Embeddings &amp; Python</a>
+            <span class="tag tag-green">Première | Terminale</span>
+          </li>
+          <li>
+            <a rel="noopener" href="activités/mse_learningRate/activite_eleve_mse_learning_rate.html" target="_blank">MSE &amp; Learning Rate</a>
+            <span class="tag tag-green">Seconde | Première | Terminale</span>
+          </li>
+          <li style="border-left: 3px solid var(--accent-red); padding-left: 12px; margin-left: -12px;">
+            <a rel="noopener" href="activités/li/tp_li_nsi_v3.html" target="_blank">Li : Ton assistant vocal IA dans ta poche</a>
+            <span class="tag tag-red">Hors programme</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+         MÉTHODE RCTF
+    ==================================================== -->
+    <div class="section-header reveal" id="methode">
+      <h2>La méthode RCTF</h2>
+      <div class="section-rule"></div>
+      <span class="section-sub">4 INGRÉDIENTS D'UN PROMPT RÉUSSI</span>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-header">
+        <div class="card-title">Structurer un prompt pédagogique efficace</div>
+        <div class="card-meta">// Les 4 ingrédients d'un prompt réussi</div>
+      </div>
+
+      <div class="rctf-grid">
+        <div class="rctf-item">
+          <span class="rctf-letter">R</span>
+          <div class="rctf-label">Rôle</div>
+          <div class="rctf-example">"Tu es un prof de NSI Terminale..."</div>
+        </div>
+        <div class="rctf-item">
+          <span class="rctf-letter">C</span>
+          <div class="rctf-label">Contexte</div>
+          <div class="rctf-example">"...pour 25 élèves de niveau intermédiaire..."</div>
+        </div>
+        <div class="rctf-item">
+          <span class="rctf-letter">T</span>
+          <div class="rctf-label">Tâche</div>
+          <div class="rctf-example">"...génère un exercice sur l'algorithme BFS..."</div>
+        </div>
+        <div class="rctf-item">
+          <span class="rctf-letter">F</span>
+          <div class="rctf-label">Format</div>
+          <div class="rctf-example">"...avec graphe ASCII et corrigé Python commenté."</div>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <span class="c-muted"># Exemple de prompt complet RCTF</span>
+        <span class="c-yellow">"Tu es un professeur de NSI Terminale.</span>
+        <span class="c-yellow"> Pour une classe de 25 élèves niveau intermédiaire,</span>
+        <span class="c-yellow"> génère un exercice sur Dijkstra :</span>
+        <span class="c-yellow"> graphe ASCII 6 nœuds, 3 questions guidées,</span>
+        <span class="c-yellow"> corrigé Python commenté avec complexité."</span>
+      </div>
+
+      <div class="info-box">
+        <strong>Astuce :</strong> Si le résultat ne convient pas, itérez &mdash; précisez davantage.
+        L'IA améliore sa réponse à chaque reformulation du prompt.
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+         OUTILS RECOMMANDÉS
+    ==================================================== -->
+    <div class="section-header reveal" id="outils">
+      <h2>Outils recommandés</h2>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="grid-2 reveal">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Modèles IA à utiliser</div>
+          <div class="card-meta">// Classés par conformité RGPD</div>
+        </div>
+        <ul class="link-list">
+          <li>
+            <a rel="noopener" href="https://chat.mistral.ai" target="_blank">Le Chat &mdash; Mistral AI</a>
+            <span class="tag tag-green">RGPD</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://chatgpt.com" target="_blank">ChatGPT &mdash; OpenAI</a>
+            <span class="tag tag-default">Gratuit/Pro</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://claude.ai" target="_blank">Claude &mdash; Anthropic</a>
+            <span class="tag tag-blue">Raisonnement</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://console.groq.com" target="_blank">Groq API &mdash; Llama 3</a>
+            <span class="tag tag-blue">API rapide</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://ollama.com" target="_blank">Ollama &mdash; LLM local</a>
+            <span class="tag tag-grey">Local</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Outils pédagogiques</div>
+          <div class="card-meta">// Alternatives francophones pour la classe</div>
+        </div>
+        <ul class="link-list">
+          <li>
+            <a rel="noopener" href="https://poloclub.github.io/transformer-explainer/" target="_blank">Les transformers expliqués</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://bbycroft.net/llm" target="_blank">Visualisation 3D interne d'un LLM</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://www.elementsofai.fr/" target="_blank">Cours pour lycéens sur l'IA</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://commoncrawl.org/get-started" target="_blank">Internet à télécharger &mdash; Common Crawl</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://cs.stanford.edu/people/karpathy/convnetjs/" target="_blank">Visualiser l'apprentissage en temps réel</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://quickdraw.withgoogle.com/" target="_blank">Comment une IA reconnait des dessins</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================
+         RESSOURCES WEB
+    ==================================================== -->
+    <div class="section-header reveal" id="ressources">
+      <h2>Ressources Web</h2>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="grid-2 reveal">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Comprendre l'IA</div>
+          <div class="card-meta">// Ressources francophones recommandées</div>
+        </div>
+        <ul class="link-list">
+          <li>
+            <a rel="noopener" href="https://eduscol.education.fr/2285/se-former-et-enseigner-avec-lia" target="_blank">Éduscol &mdash; Se former et enseigner avec l'IA</a>
+            <span class="tag tag-grey">Ministère</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://pixees.fr" target="_blank">Pixees.fr &mdash; ressources NSI &amp; IA officielles</a>
+            <span class="tag tag-grey">NSI</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://www.fun-mooc.fr" target="_blank">FUN MOOC &mdash; cours IA en français</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://www.youtube.com/c/CNRSFormationFIDLE" target="_blank">CNRS Formation Fidle en FR</a>
+            <span class="tag tag-green">Gratuit</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Éthique &amp; cadre légal</div>
+          <div class="card-meta">// RGPD, biais, IA Act européen</div>
+        </div>
+        <ul class="link-list">
+          <li>
+            <a rel="noopener" href="https://www.cnil.fr/fr/intelligence-artificielle" target="_blank">CNIL &mdash; IA &amp; données personnelles</a>
+            <span class="tag tag-grey">Officiel</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://eduscol.education.fr" target="_blank">Éduscol &mdash; Vademecum "IA et education"</a>
+            <span class="tag tag-grey">Ministère</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://pixees.fr" target="_blank">Pixees.fr &mdash; ressources NSI officielles</a>
+            <span class="tag tag-grey">NSI</span>
+          </li>
+          <li>
+            <a rel="noopener" href="https://ai4k12.org" target="_blank">AI4K12 &mdash; 5 grands concepts IA (K-12)</a>
+            <span class="tag tag-grey">Pédagogie</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div><!-- /page-container -->
+
+
+  <!-- ====================================================
+       FOOTER
+  ==================================================== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-brand">DARKSATHI LI &nbsp;&middot;&nbsp; FORMATION IA &nbsp;&middot;&nbsp; SPÉCIALITÉ NSI &nbsp;&middot;&nbsp; 2025-2026</p>
+      <div class="footer-links">
+        <a href="../index.html">&larr; Retour au site NSI</a>
+        <span class="sep">&middot;</span>
+        <a href="https://darksathili.kesug.com" target="_blank" rel="noopener">darksathili.kesug.com</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ====================================================
+       SCRIPTS
+  ==================================================== -->
+  <script>
+    // --- Theme toggle ---
+    const html    = document.documentElement;
+    const btn     = document.getElementById('theme-toggle');
+    const label   = document.getElementById('theme-label');
+
+    const applyTheme = (theme) => {
+      html.setAttribute('data-theme', theme);
+      label.textContent = theme.toUpperCase();
+      localStorage.setItem('theme', theme);
+    };
+
+    // Init from storage or system preference
+    const stored = localStorage.getItem('theme');
+    if (stored) {
+      applyTheme(stored);
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      applyTheme('light');
+    }
+
+    btn.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    // --- Scroll reveal ---
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

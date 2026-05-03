@@ -1,0 +1,2885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de prompts pédagogiques — NSI &amp; Mathématiques</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   VARIABLES — THÈME SOMBRE (défaut)
+   ============================================================ */
+:root {
+  --bg:        #1a1f2e;
+  --bg-panel:  #242b3d;
+  --bg-deep:   #0f1320;
+  --bg-field:  #1e2538;
+  --border:    #2e3650;
+  --radius:    8px;
+
+  --bleu:      #8ca5b4;
+  --or:        #c9a84c;
+  --vert:      #4caf50;
+  --rouge:     #e05c5c;
+  --violet:    #9c6de0;
+
+  --t-main:    #d4dde4;
+  --t-muted:   #8a9ab0;
+  --t-or:      #c8b87a;
+
+  --disc-nsi:  #8ca5b4;
+  --disc-math: #9c6de0;
+
+  --encart-bg: linear-gradient(135deg,#1a2538 0%,#1e1a10 100%);
+  --encart-txt:#c8b87a;
+  --code-bg:   #0d1117;
+  --code-txt:  #c9d1d9;
+}
+
+/* ============================================================
+   THÈME CLAIR — CONFORT ÉCRAN
+   ============================================================ */
+body.light {
+  --bg:        #f7f9fc;
+  --bg-panel:  #eef1f7;
+  --bg-deep:   #e4e9f2;
+  --bg-field:  #ffffff;
+  --border:    #c8d3e0;
+
+  --bleu:      #3a7ca5;
+  --or:        #a07820;
+  --vert:      #2e8b57;
+  --rouge:     #c0392b;
+  --violet:    #7c4dbd;
+
+  --t-main:    #2c3548;
+  --t-muted:   #5a6780;
+  --t-or:      #7a5a10;
+
+  --disc-nsi:  #3a7ca5;
+  --disc-math: #7c4dbd;
+
+  --encart-bg: linear-gradient(135deg,#fefae8 0%,#fdf6e3 100%);
+  --encart-txt:#6b4e10;
+  --code-bg:   #f0f4f8;
+  --code-txt:  #2c3548;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--t-main);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+h1, h2, h3{
+    font-weight: lighter;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.app-header {
+  background: var(--bg-deep);
+  border-bottom: 3px solid var(--bleu);
+  padding: 1.8rem 2rem 1.4rem;
+  text-align: center;
+  position: relative;
+}
+
+.app-header h1 {
+  font-family: 'Rubik Dirt', cursive;
+  font-size: 1.9rem;
+  color: var(--t-main);
+  margin-bottom: .3rem;
+}
+
+.app-header .sous-titre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  color: var(--t-muted);
+  letter-spacing: .08em;
+}
+
+/* ============================================================
+   STEPPER
+   ============================================================ */
+.stepper {
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: .8rem 1.5rem;
+  gap: .3rem;
+  flex-wrap: wrap;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .73rem;
+  color: var(--t-muted);
+  padding: .28rem .7rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .25s;
+}
+
+.step.active  { color: var(--bleu); background: rgba(140,165,180,.1); border-color: var(--bleu); }
+.step.done    { color: var(--vert); }
+.step.active.disc-math  { color: var(--violet); background: rgba(156,109,224,.1); border-color: var(--violet); }
+
+.step-n {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--bg-panel); border: 1px solid currentColor;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; font-weight: 700; flex-shrink: 0;
+}
+
+.step-sep { width: 24px; height: 1px; background: var(--border); margin: 0 .1rem; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.wrap { max-width: 1020px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ============================================================
+   SÉLECTEUR DE DISCIPLINE
+   ============================================================ */
+.disc-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.disc-card {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.8rem;
+  cursor: pointer;
+  transition: all .25s;
+  text-align: center;
+  user-select: none;
+}
+
+.disc-card:hover { border-color: var(--t-muted); }
+.disc-card.selected-nsi   { border-color: var(--disc-nsi);  background: rgba(140,165,180,.07); }
+.disc-card.selected-math  { border-color: var(--disc-math); background: rgba(156,109,224,.07); }
+
+.disc-card .disc-icon {
+  font-family: 'Rubik Dirt', cursive;
+  font-size: 2rem;
+  display: block;
+  margin-bottom: .5rem;
+}
+
+.disc-card.selected-nsi  .disc-icon { color: var(--disc-nsi); }
+.disc-card.selected-math .disc-icon { color: var(--disc-math); }
+
+.disc-card h3 {
+  font-family: 'Rubik Dirt', cursive;
+  font-size: 1.2rem;
+  color: var(--t-main);
+  margin-bottom: .3rem;
+}
+
+.disc-card p {
+  font-size: .82rem;
+  color: var(--t-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.disc-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: .15rem .5rem;
+  border-radius: 3px;
+  margin-top: .5rem;
+}
+
+.disc-badge-nsi  { background: rgba(140,165,180,.2); color: var(--disc-nsi);  border: 1px solid var(--disc-nsi); }
+.disc-badge-math { background: rgba(156,109,224,.2); color: var(--disc-math); border: 1px solid var(--disc-math); }
+
+/* ============================================================
+   SECTIONS DU FORMULAIRE
+   ============================================================ */
+.fsec {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--bleu);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.5rem 1.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.fsec.s-or     { border-left-color: var(--or); }
+.fsec.s-vert   { border-left-color: var(--vert); }
+.fsec.s-rouge  { border-left-color: var(--rouge); }
+.fsec.s-violet { border-left-color: var(--violet); }
+
+.fsec-head {
+  display: flex;
+  align-items: flex-start;
+  gap: .9rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.2rem;
+}
+
+.fsec-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  font-weight: 700;
+  padding: .18rem .55rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: .25rem;
+  background: rgba(140,165,180,.12);
+  color: var(--bleu);
+}
+
+.fsec.s-or .fsec-badge    { background: rgba(201,168,76,.12); color: var(--or); }
+.fsec.s-vert .fsec-badge  { background: rgba(76,175,80,.12);  color: var(--vert); }
+.fsec.s-rouge .fsec-badge { background: rgba(224,92,92,.12);  color: var(--rouge); }
+.fsec.s-violet .fsec-badge{ background: rgba(156,109,224,.12);color: var(--violet); }
+
+.fsec-titre h2 {
+  font-family: 'Rubik Dirt', cursive;
+  font-size: 1.1rem;
+  color: var(--bleu);
+  margin-bottom: .2rem;
+}
+
+.fsec.s-or .fsec-titre h2     { color: var(--or); }
+.fsec.s-vert .fsec-titre h2   { color: var(--vert); }
+.fsec.s-rouge .fsec-titre h2  { color: var(--rouge); }
+.fsec.s-violet .fsec-titre h2 { color: var(--violet); }
+
+.fsec-desc { font-size: .84rem; color: var(--t-muted); margin: 0; }
+
+/* ============================================================
+   ENCART PÉDAGOGIQUE
+   ============================================================ */
+.encart {
+  background: var(--encart-bg);
+  border: 1px solid var(--or);
+  border-left: 4px solid var(--or);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: .9rem 1.2rem;
+  margin: 0 0 1.2rem;
+}
+
+.encart-titre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--or);
+  font-weight: 700;
+  display: block;
+  margin-bottom: .35rem;
+}
+
+.encart p { font-size: .88rem; color: var(--encart-txt); margin: 0; line-height: 1.6; }
+.encart p + p { margin-top: .4rem; }
+
+/* ============================================================
+   CHAMPS
+   ============================================================ */
+.frow { display: grid; gap: 1.1rem; margin-bottom: 1.1rem; }
+.frow.c2 { grid-template-columns: 1fr 1fr; }
+.frow.c3 { grid-template-columns: 1fr 1fr 1fr; }
+
+@media (max-width: 680px) {
+  .frow.c2, .frow.c3 { grid-template-columns: 1fr; }
+  .disc-selector { grid-template-columns: 1fr; }
+}
+
+.field { display: flex; flex-direction: column; gap: .28rem; }
+
+.field > label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--t-muted);
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  flex-wrap: wrap;
+}
+
+.req { color: var(--rouge); }
+
+.expl {
+  font-size: .82rem;
+  color: var(--t-muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: .15rem;
+}
+
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+  background: var(--bg-field);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--t-main);
+  font-family: 'Source Serif 4', serif;
+  font-size: .91rem;
+  padding: .55rem .85rem;
+  width: 100%;
+  transition: border-color .18s, box-shadow .18s;
+  resize: vertical;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--bleu);
+  box-shadow: 0 0 0 3px rgba(140,165,180,.1);
+}
+
+input[type="password"] {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .84rem;
+  letter-spacing: .05em;
+}
+
+select { cursor: pointer; }
+select option { background: var(--bg-panel); }
+textarea       { min-height: 78px; line-height: 1.6; }
+textarea.tall  { min-height: 128px; }
+textarea.xtall { min-height: 200px; }
+
+.note-verte { font-family: 'JetBrains Mono',monospace; font-size:.7rem; color:var(--vert); margin-top:.15rem; display:flex; align-items:flex-start; gap:.3rem; }
+.note-verte::before { content:'→'; flex-shrink:0; }
+.note-or    { font-family: 'JetBrains Mono',monospace; font-size:.7rem; color:var(--or);   margin-top:.15rem; display:flex; align-items:flex-start; gap:.3rem; }
+.note-or::before    { content:'!'; flex-shrink:0; font-weight:700; }
+
+/* ============================================================
+   TAGS (checkboxes stylisées)
+   ============================================================ */
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .25rem; }
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .73rem;
+  background: var(--bg-field);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: .28rem .65rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all .16s;
+  color: var(--t-muted);
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.tag input[type="checkbox"] { display: none; }
+.tag:has(input:checked) { border-color: var(--vert); background: rgba(76,175,80,.1); color: var(--vert); }
+
+/* BO tags — couleur selon discipline */
+.tag.bo-tag:has(input:checked) { border-color: var(--bleu); background: rgba(140,165,180,.1); color: var(--bleu); }
+.disc-math .tag.bo-tag:has(input:checked) { border-color: var(--violet); background: rgba(156,109,224,.1); color: var(--violet); }
+
+/* ============================================================
+   BADGE OBLIGATOIRE
+   ============================================================ */
+.oblig {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  background: rgba(224,92,92,.18);
+  color: var(--rouge);
+  border: 1px solid rgba(224,92,92,.4);
+  border-radius: 3px;
+  padding: .1rem .4rem;
+}
+
+/* ============================================================
+   BOUTONS
+   ============================================================ */
+.btn, .btn-or, .btn-vert, .btn-rouge, .btn-violet, .btn-ghost {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: .5rem 1.2rem;
+  cursor: pointer;
+  transition: opacity .18s, transform .1s;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.btn        { background: var(--bleu);   color: #0d1117; }
+.btn-or     { background: var(--or);     color: #0d1117; }
+.btn-vert   { background: var(--vert);   color: #0d1117; }
+.btn-rouge  { background: var(--rouge);  color: #fff; }
+.btn-violet { background: var(--violet); color: #fff; }
+.btn-ghost  { background: transparent; color: var(--t-muted); border: 1px solid var(--border); }
+
+.btn:hover, .btn-or:hover, .btn-vert:hover,
+.btn-rouge:hover, .btn-violet:hover { opacity: .83; transform: translateY(-1px); }
+.btn-ghost:hover { border-color: var(--bleu); color: var(--t-main); }
+.btn:disabled, .btn-or:disabled, .btn-vert:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+.btn-row {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 1.6rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ============================================================
+   PAGE 2 — APERÇU
+   ============================================================ */
+.apercu {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  color: var(--code-txt);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 460px;
+  overflow-y: auto;
+  margin: .8rem 0;
+}
+
+.apercu::-webkit-scrollbar { width: 5px; }
+.apercu::-webkit-scrollbar-track { background: var(--code-bg); }
+.apercu::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.stats { display: flex; gap: .7rem; flex-wrap: wrap; margin: .5rem 0 1rem; }
+
+.stat {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .4rem .85rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stat-v { font-size: 1.2rem; font-weight: 700; color: var(--bleu); display: block; line-height: 1; }
+.stat-l { font-size: .63rem; color: var(--t-muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* Zone API */
+.api-zone {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.4rem;
+  margin: 1.1rem 0;
+}
+
+.api-zone h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  color: var(--t-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .7rem;
+}
+
+.api-row { display: flex; gap: .7rem; align-items: flex-end; flex-wrap: wrap; }
+.api-row .field { flex: 1; min-width: 240px; }
+
+.api-st {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  padding: .28rem .65rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.api-st.ok   { background: rgba(76,175,80,.13); color: var(--vert); border: 1px solid var(--vert); }
+.api-st.ko   { background: rgba(224,92,92,.13); color: var(--rouge); border: 1px solid var(--rouge); }
+.api-st.idle { background: rgba(140,165,180,.08); color: var(--t-muted); border: 1px solid var(--border); }
+
+/* Résultats éval */
+.eval-crit {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .85rem 1.1rem;
+  margin-bottom: .55rem;
+  display: flex;
+  gap: .85rem;
+  align-items: flex-start;
+}
+
+.eval-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  min-width: 38px;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1.1;
+}
+
+.eval-note.n5{color:var(--vert)}.eval-note.n4{color:#9ccc65}
+.eval-note.n3{color:var(--or)}.eval-note.n2{color:#ff8a65}.eval-note.n1{color:var(--rouge)}
+
+.eval-corps h4 { font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:700; color:var(--t-main); margin-bottom:.2rem; }
+.eval-corps p  { font-size:.86rem; color:var(--t-muted); margin:0; }
+
+.eval-global {
+  background: var(--bg-field);
+  border: 2px solid var(--or);
+  border-radius: var(--radius);
+  padding: 1rem 1.3rem;
+  margin-top: .9rem;
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.eval-global-n { font-family:'Rubik Dirt',cursive; font-size:2.6rem; color:var(--or); line-height:1; white-space:nowrap; }
+.eval-global-t { font-size:.9rem; color:var(--t-muted); }
+
+.eval-sugg {
+  background: rgba(201,168,76,.07);
+  border: 1px solid rgba(201,168,76,.22);
+  border-radius: var(--radius);
+  padding: .9rem 1.2rem;
+  margin-top: .9rem;
+}
+
+.eval-sugg h4 { font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--or); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem; font-weight:700; }
+.eval-sugg ul { padding-left:1.1rem; font-size:.88rem; color:var(--t-muted); }
+.eval-sugg li { margin-bottom:.28rem; }
+
+/* ============================================================
+   PAGE 3 — EXPORT
+   ============================================================ */
+.export-bloc {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.7rem;
+  margin-bottom: 1.1rem;
+}
+
+.export-bloc h3 { font-family:'Rubik Dirt',cursive; font-size:1.05rem; color:var(--bleu); margin-bottom:.7rem; }
+.export-info    { font-size:.88rem; color:var(--t-muted); margin-bottom:.9rem; }
+
+/* Checklist qualité */
+.cq-volet-titre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-weight: 700;
+  padding: .3rem 0 .4rem;
+  margin-top: .8rem;
+}
+
+.cq-list { list-style: none; padding: 0; margin: 0; }
+
+.cq-list li {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .79rem;
+  padding: .32rem 0;
+  border-bottom: 1px solid rgba(46,54,80,.5);
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  color: var(--t-muted);
+  line-height: 1.5;
+}
+
+.ck-ok   { color: var(--vert);  font-weight: 700; flex-shrink:0; }
+.ck-ko   { color: var(--rouge); font-weight: 700; flex-shrink:0; }
+.ck-warn { color: var(--or);    font-weight: 700; flex-shrink:0; }
+
+.cq-conseil { font-size:.68rem; color:var(--t-muted); margin-left:.2rem; opacity:.8; }
+
+.score-bloc {
+  background: var(--bg-field);
+  border: 2px solid var(--or);
+  border-radius: var(--radius);
+  padding: .9rem 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.score-n { font-family:'Rubik Dirt',cursive; font-size:2.4rem; line-height:1; white-space:nowrap; }
+.score-label { font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--t-main); font-weight:700; }
+.score-detail{ font-size:.83rem; color:var(--t-muted); margin-top:.15rem; }
+
+/* ============================================================
+   MESSAGES
+   ============================================================ */
+.msg-err, .msg-ok { display:none; border-radius:var(--radius); padding:.75rem 1rem; font-size:.86rem; margin:.7rem 0; }
+.msg-err { background:rgba(224,92,92,.1); border:1px solid rgba(224,92,92,.35); color:#f5a0a0; }
+.msg-ok  { background:rgba(76,175,80,.1);  border:1px solid rgba(76,175,80,.35);  color:#a5d6a7; }
+.msg-err.visible, .msg-ok.visible { display:block; }
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+.loader {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(15,19,32,.88);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.loader.on { display: flex; }
+
+.spinner {
+  width: 48px; height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--bleu);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .83rem;
+  color: var(--t-muted);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: var(--bg-deep);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 1.1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .71rem;
+  color: var(--t-muted);
+  margin-top: 3rem;
+  line-height: 1.8;
+}
+
+/* ============================================================
+   BOUTON TOGGLE THÈME
+   ============================================================ */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 1100;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: .38rem .9rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--t-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  transition: all .2s;
+  user-select: none;
+}
+
+.theme-toggle:hover {
+  border-color: var(--bleu);
+  color: var(--bleu);
+}
+
+.theme-toggle .icon-dark  { display: block; }
+.theme-toggle .icon-light { display: none; }
+body.light .theme-toggle .icon-dark  { display: none; }
+body.light .theme-toggle .icon-light { display: block; }
+
+/* Correction boutons en mode clair (texte noir sur fond coloré) */
+body.light .btn        { color: #ffffff; }
+body.light .btn-or     { color: #ffffff; }
+body.light .btn-vert   { color: #ffffff; }
+body.light .btn-rouge  { color: #ffffff; }
+body.light .btn-violet { color: #ffffff; }
+
+/* Loader en mode clair */
+body.light .loader { background: rgba(240,244,248,.9); }
+body.light .spinner { border-color: var(--border); border-top-color: var(--bleu); }
+
+/* Code inline en mode clair */
+body.light code {
+  background: rgba(0,0,0,.06);
+  border-color: var(--border);
+  color: var(--rouge);
+}
+
+/* ============================================================
+   SECTION BO UPLOAD
+   ============================================================ */
+.bo-upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  margin: .5rem 0;
+  background: var(--bg-field);
+}
+
+.bo-upload-zone:hover,
+.bo-upload-zone.dragover {
+  border-color: var(--bleu);
+  background: rgba(140,165,180,.05);
+}
+
+.bo-upload-zone .upload-icon {
+  font-size: 1.6rem;
+  margin-bottom: .4rem;
+  display: block;
+}
+
+.bo-upload-zone p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  color: var(--t-muted);
+  margin: 0;
+}
+
+.bo-upload-zone input[type="file"] { display: none; }
+
+.bo-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  padding: .3rem .7rem;
+  border-radius: 4px;
+  margin-top: .5rem;
+  display: none;
+}
+
+.bo-status.visible { display: inline-block; }
+.bo-status.ok   { background: rgba(76,175,80,.12);  color: var(--vert); border: 1px solid var(--vert); }
+.bo-status.err  { background: rgba(224,92,92,.12);  color: var(--rouge); border: 1px solid var(--rouge); }
+.bo-status.load { background: rgba(140,165,180,.1); color: var(--t-muted); border: 1px solid var(--border); }
+
+.caps-extraites {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .8rem 1rem;
+  margin-top: .8rem;
+  display: none;
+}
+
+.caps-extraites.visible { display: block; }
+.caps-extraites-titre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  color: var(--bleu);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-weight: 700;
+  margin-bottom: .5rem;
+}
+
+/* ============================================================
+   PROMPT ÉDITABLE
+   ============================================================ */
+.prompt-edit-zone {
+  display: none;
+  margin-top: .8rem;
+}
+
+.prompt-edit-zone.visible { display: block; }
+
+.prompt-edit-zone textarea {
+  min-height: 400px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  background: var(--code-bg);
+  color: var(--code-txt);
+  line-height: 1.75;
+}
+
+/* ============================================================
+   RAPPELS AUTO
+   ============================================================ */
+.rappels-auto {
+  background: rgba(224,92,92,.06);
+  border: 1px solid rgba(224,92,92,.3);
+  border-radius: var(--radius);
+  padding: .8rem 1rem;
+  margin-top: .6rem;
+  font-size: .83rem;
+  color: var(--t-muted);
+}
+
+.rappels-auto-titre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  color: var(--rouge);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-weight: 700;
+  margin-bottom: .4rem;
+}
+
+/* ============================================================
+   UTILITAIRES
+   ============================================================ */
+.sep { border:none; border-top:1px solid var(--border); margin:1.3rem 0; }
+.hidden { display:none !important; }
+code { font-family:'JetBrains Mono',monospace; font-size:.85em; background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:3px; padding:.05em .3em; }
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div class="loader-msg" id="loader-msg">Évaluation en cours…</div>
+</div>
+
+<!-- Bouton toggle thème -->
+<button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Basculer mode sombre / clair">
+  <span class="icon-dark">☽ Sombre</span>
+  <span class="icon-light">☀ Clair</span>
+</button>
+
+<header class="app-header">
+  <h1>Générateur de prompts pédagogiques</h1>
+  <div class="sous-titre">NSI &amp; Mathématiques &mdash; Conforme aux Bulletins Officiels &mdash; DarkSATHI Li &middot; Lycée Antoine Watteau</div>
+</header>
+
+<div class="stepper">
+  <div class="step active" id="st1"><div class="step-n">1</div> Construire</div>
+  <div class="step-sep"></div>
+  <div class="step" id="st2"><div class="step-n">2</div> Aperçu &amp; Évaluation</div>
+  <div class="step-sep"></div>
+  <div class="step" id="st3"><div class="step-n">3</div> Export</div>
+</div>
+
+<div class="wrap">
+
+<!-- ====================================================
+     PAGE 1 — FORMULAIRE
+     ==================================================== -->
+<div class="page active" id="page1">
+
+<div class="encart" style="margin-bottom:1.8rem;">
+  <span class="encart-titre">Comment utiliser ce générateur ?</span>
+  <p>Un <strong>prompt</strong> est l'instruction que tu envoies à une IA pour lui décrire exactement ce qu'elle doit produire. Ce formulaire te guide pas à pas pour construire un prompt professionnel, ancré dans les programmes officiels (BO), adapté à ta discipline et à ton niveau.</p>
+  <p>Commence par choisir ta discipline ci-dessous — le formulaire s'adapte automatiquement. Chaque champ est accompagné d'une explication. Les valeurs pré-remplies te donnent un exemple de départ que tu modifies selon ton cours.</p>
+</div>
+
+<!-- === S0 : DISCIPLINE === -->
+<div class="fsec">
+  <div class="fsec-head">
+    <div class="fsec-badge">Étape 0</div>
+    <div class="fsec-titre">
+      <h2>Choix de la discipline</h2>
+      <p class="fsec-desc">Ce choix reconfigure tout le formulaire : champs affichés, BO référencé, format de sortie par défaut, rôle attribué à l'IA.</p>
+    </div>
+  </div>
+
+  <div class="disc-selector">
+    <div class="disc-card" id="card-nsi" onclick="choisirDisc('nsi')">
+      <span class="disc-icon">{ }</span>
+      <h3>NSI</h3>
+      <p>Numérique et Sciences Informatiques<br>Première &amp; Terminale</p>
+      <span class="disc-badge disc-badge-nsi">BO NSI 2019</span>
+    </div>
+    <div class="disc-card" id="card-math" onclick="choisirDisc('math')">
+      <span class="disc-icon">∑</span>
+      <h3>Mathématiques</h3>
+      <p>Spécialité Maths<br>Première &amp; Terminale</p>
+      <span class="disc-badge disc-badge-math">BO Maths 2019</span>
+    </div>
+  </div>
+
+  <div class="frow c3">
+    <div class="field">
+      <label>Niveau <span class="req">*</span></label>
+      <p class="expl">Le niveau de tes élèves. Conditionne le vocabulaire, la complexité et les pré-requis supposés.</p>
+      <select id="niveau">
+        <option value="Terminale NSI">Terminale NSI</option>
+        <option value="Première NSI">Première NSI</option>
+        <option value="Terminale Maths spécialité">Terminale Maths spécialité</option>
+        <option value="Première Maths spécialité">Première Maths spécialité</option>
+        <option value="Seconde — SNT">Seconde — SNT</option>
+        <option value="BTS SIO">BTS SIO</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Type de ressource <span class="req">*</span></label>
+      <p class="expl">Le format pédagogique. Un TP guidé est très structuré ; une activité découverte laisse plus d'autonomie.</p>
+      <select id="type-res">
+        <option value="TP guidé">TP guidé</option>
+        <option value="Cours interactif">Cours interactif</option>
+        <option value="Fiche d'exercices">Fiche d'exercices</option>
+        <option value="Devoir surveillé">Devoir surveillé</option>
+        <option value="Activité découverte">Activité découverte</option>
+        <option value="Devoir maison">Devoir maison</option>
+        <option value="Projet">Projet</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Numéro de ressource</label>
+      <p class="expl">Référence interne (ex : 07). Apparaît dans l'en-tête de la ressource produite.</p>
+      <input type="text" id="num-res" value="01" placeholder="01">
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Thème principal <span class="req">*</span></label>
+      <p class="expl">Le sujet exact. Sois précis : l'IA ancrera toute la ressource autour de ce thème.</p>
+      <input type="text" id="theme" placeholder="Ex : Programmation dynamique">
+    </div>
+    <div class="field">
+      <label>Sous-titre</label>
+      <p class="expl">Complète le titre. Optionnel mais donne du caractère à la ressource.</p>
+      <input type="text" id="sous-titre" placeholder="Ex : De la récursion naïve à la solution optimale">
+    </div>
+  </div>
+</div>
+
+<!-- === S1 : CONTEXTE PÉDAGOGIQUE === -->
+<div class="fsec">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 01</div>
+    <div class="fsec-titre">
+      <h2>Contexte pédagogique</h2>
+      <p class="fsec-desc">Portrait de ta classe. L'IA calibre le niveau de langage, la profondeur des explications et le type d'exemples à partir de ces informations.</p>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Pré-requis des élèves <span class="req">*</span></label>
+      <p class="expl">Liste les notions que les élèves <strong>maîtrisent déjà</strong>. L'IA ne réexplique pas ce qui est acquis et construit les exercices au bon niveau. Sois exhaustif.</p>
+      <textarea id="prerequis" placeholder="Ex : Récursivité en Python, listes, dictionnaires, POO…"></textarea>
+      <div class="note-verte">Sépare les notions par des virgules. Plus la liste est précise, mieux l'IA calibre la difficulté.</div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Profil des élèves &amp; contraintes particulières</label>
+      <p class="expl">Caractéristiques de ta classe qui influencent la pédagogie : hétérogénéité, absence de spécialité maths, élèves en difficulté de lecture, etc. C'est ici que tu précises les <strong>interdits</strong> : exemples abstraits, exercices trop longs, anglicismes…</p>
+      <textarea class="tall" id="profil" placeholder="Ex : Classe hétérogène. Une partie des élèves n'a pas de spécialité maths. Tous les exemples doivent être concrets et issus de la vie quotidienne."></textarea>
+      <div class="note-or">Ces contraintes ont un fort impact sur le résultat. Formule-les clairement.</div>
+    </div>
+  </div>
+
+  <!-- Champs NSI uniquement -->
+  <div id="ctx-nsi">
+    <div class="frow c2">
+      <div class="field">
+        <label>Langage de programmation</label>
+        <p class="expl">Langage utilisé dans les exercices. L'IA écrira tous les codes en Python avec commentaires en français si tu choisis Python.</p>
+        <select id="langage">
+          <option value="Python uniquement">Python uniquement</option>
+          <option value="Python et JavaScript">Python et JavaScript</option>
+          <option value="JavaScript uniquement">JavaScript uniquement</option>
+          <option value="Aucun — algorithmique en français">Aucun — algorithmique en français</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Environnement d'exécution</label>
+        <p class="expl">Où les élèves exécuteront-ils le code ? PyScript permet d'exécuter Python directement dans le navigateur, sans installation.</p>
+        <select id="environnement">
+          <option value="Navigateur — PyScript 2026.3.1">Navigateur — PyScript 2026.3.1</option>
+          <option value="IDE local (Thonny, VSCode)">IDE local (Thonny, VSCode)</option>
+          <option value="Basthon (en ligne)">Basthon (en ligne)</option>
+          <option value="Jupyter Notebook">Jupyter Notebook</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Champs Maths uniquement -->
+  <div id="ctx-math" class="hidden">
+    <div class="frow c2">
+      <div class="field">
+        <label>Outils autorisés</label>
+        <p class="expl">Précise les outils disponibles pendant la séance. Cela conditionne le type de questions posées (calcul formel, tracé de courbes, etc.).</p>
+        <select id="outils-maths">
+          <option value="Calculatrice autorisée">Calculatrice autorisée</option>
+          <option value="Calculatrice interdite">Calculatrice interdite</option>
+          <option value="Calculatrice + logiciel (GeoGebra, Python)">Calculatrice + logiciel (GeoGebra, Python)</option>
+          <option value="Formulaire fourni">Formulaire fourni</option>
+          <option value="Sans document">Sans document</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Durée de la séance</label>
+        <p class="expl">La durée permet à l'IA de calibrer le nombre d'exercices et leur longueur pour que la ressource soit faisable en temps imparti.</p>
+        <select id="duree-maths">
+          <option value="1 heure">1 heure</option>
+          <option value="2 heures">2 heures</option>
+          <option value="55 minutes (cours)">55 minutes (cours)</option>
+          <option value="Travail à la maison (sans contrainte de temps)">Travail à la maison</option>
+          <option value="3 heures (évaluation)">3 heures (évaluation)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === S2 : OBJECTIFS PÉDAGOGIQUES & BO === -->
+<div class="fsec s-or">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 02</div>
+    <div class="fsec-titre">
+      <h2>Objectifs pédagogiques &amp; Bulletin Officiel</h2>
+      <p class="fsec-desc">C'est la section la plus importante pour la conformité au programme. Les capacités cochées seront citées explicitement dans le prompt — l'IA construira la ressource autour d'elles.</p>
+    </div>
+  </div>
+
+  <div class="encart">
+    <span class="encart-titre">Pourquoi ancrer la ressource dans le BO ?</span>
+    <p>Sans référence au programme officiel, l'IA produit une ressource techniquement correcte mais potentiellement hors programme. En cochant les capacités attendues, tu garantis que chaque exercice et chaque section de cours correspondent à ce qui est exigible au bac.</p>
+  </div>
+
+  <!-- === UPLOAD BO — commun aux deux disciplines, toujours visible === -->
+  <div id="bo-upload-commun">
+    <div class="frow">
+      <div class="field">
+        <label>Importer ton BO en PDF (optionnel — enrichit les capacités pré-définies)</label>
+        <p class="expl">
+          Fournis le fichier PDF officiel de ton Bulletin Officiel.
+          Groq en extrait automatiquement les <strong>capacités exigibles</strong> sous forme de cases à cocher.
+          Cela garantit une conformité exacte au programme officiel — même pour d'autres disciplines,
+          d'autres niveaux ou des BO mis à jour après la publication de cet outil.
+        </p>
+
+        <div class="encart" style="margin-bottom:.7rem;">
+          <span class="encart-titre">Comment récupérer le PDF du BO ?</span>
+          <p>Rends-toi sur <strong>eduscol.education.fr</strong> → Programmes et ressources → ta discipline.
+          Télécharge le PDF du programme en vigueur. Tu peux aussi utiliser le PDF téléchargeable sur
+          <strong>education.gouv.fr</strong> dans la rubrique « Programmes de lycée ».</p>
+        </div>
+
+        <!-- Zone drag & drop PDF -->
+        <div class="bo-upload-zone" id="bo-drop-zone"
+             ondragover="boDragOver(event)" ondragleave="boDragLeave(event)" ondrop="boDrop(event)"
+             onclick="document.getElementById('bo-file-input').click()">
+          <span class="upload-icon">📄</span>
+          <p>Glisse le PDF du BO ici<br>
+            <span style="font-size:.65rem;opacity:.7;">ou clique pour choisir un fichier .pdf</span>
+          </p>
+          <input type="file" id="bo-file-input" accept=".pdf" onchange="boFileChange(event)">
+        </div>
+        <span class="bo-status" id="bo-status"></span>
+
+        <button class="btn-or" style="margin-top:.8rem;" id="btn-extraire-bo" onclick="extraireCapsBO()" disabled>
+          &#9733; Extraire les capacités avec Groq
+        </button>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--t-muted);margin-left:.5rem;">
+          La clé API Groq est saisie à l'étape 2
+        </span>
+
+        <!-- Résultat extraction -->
+        <div class="caps-extraites" id="caps-extraites">
+          <div class="caps-extraites-titre">Capacités extraites du BO — coche celles à inclure dans le prompt</div>
+          <div class="tags" id="caps-extraites-tags"></div>
+          <div class="note-verte" style="margin-top:.5rem;">Ces capacités s'ajoutent à celles pré-définies ci-dessous.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- fin upload commun -->
+
+  <!-- BO NSI (pré-défini) — masqué si discipline = math -->
+  <div id="bo-nsi" class="hidden">
+    <div class="frow">
+      <div class="field">
+        <label>Thème BO NSI concerné</label>
+        <p class="expl">Sélectionne le thème du programme NSI auquel appartient ton TP. Cela permet à l'IA de situer la ressource dans la progression annuelle.</p>
+        <select id="theme-bo-nsi">
+          <optgroup label="— Terminale NSI —">
+            <option value="Structures de données (listes, piles, files, arbres, graphes)">Structures de données</option>
+            <option value="Bases de données et SQL">Bases de données et SQL</option>
+            <option value="Architectures matérielles, SE et réseaux">Architectures, SE et réseaux</option>
+            <option value="Langages et programmation — POO, récursivité, modules">Langages et programmation</option>
+            <option value="Algorithmique — diviser pour régner, programmation dynamique, recherche textuelle" selected>Algorithmique avancée</option>
+            <option value="Processus et ordonnancement">Processus et ordonnancement</option>
+          </optgroup>
+          <optgroup label="— Première NSI —">
+            <option value="Représentation des données (entiers, flottants, texte, images)">Représentation des données</option>
+            <option value="Traitement des données en tables">Traitement des données en tables</option>
+            <option value="Interactions Homme-Machine sur le Web">Interactions HM sur le Web</option>
+            <option value="Architectures matérielles et systèmes d'exploitation">Architectures et SE</option>
+            <option value="Langages et programmation — Python, fonctions, récursivité">Langages et programmation</option>
+            <option value="Algorithmique — tri, recherche, gloutons">Algorithmique de base</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="field">
+        <label>Capacités attendues (BO NSI)</label>
+        <p class="expl">Coche les capacités exigibles du BO correspondant à ton TP. L'IA vérifiera que chaque capacité cochée est couverte par au moins un exercice ou une section de cours.</p>
+        <div class="tags" id="caps-nsi">
+          <label class="tag bo-tag"><input type="checkbox" value="Écrire un algorithme récursif."> Écrire un algorithme récursif</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Identifier la présence de sous-problèmes identiques lors de l'exécution d'un algorithme récursif." checked> Identifier sous-problèmes répétés</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Mettre en œuvre la mémoïsation." checked> Mettre en œuvre la mémoïsation</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Construire un tableau de résultats par programmation dynamique (approche ascendante)." checked> Construire une table DP (ascendant)</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Montrer que des problèmes classiques (rendu de monnaie, sac à dos, chemin optimal) se résolvent par programmation dynamique." checked> Résoudre des problèmes classiques</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Analyser la complexité temporelle d'un algorithme."> Analyser la complexité temporelle</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Écrire un programme orienté objet."> Écrire un programme orienté objet</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Utiliser une structure de type liste, pile, file ou arbre."> Utiliser liste/pile/file/arbre</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Écrire des requêtes SQL (SELECT, INSERT, UPDATE, DELETE, JOIN)."> Écrire des requêtes SQL</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Modéliser un problème à l'aide d'un graphe et appliquer un algorithme de parcours."> Modéliser avec des graphes</label>
+        </div>
+        <div class="note-verte">Ces capacités apparaîtront dans le prompt — l'IA construira la ressource pour les couvrir toutes.</div>
+      </div>
+    </div>
+  </div>
+  <!-- fin bo-nsi -->
+
+  <!-- BO Maths -->
+  <div id="bo-math" class="hidden">
+    <div class="frow c2">
+      <div class="field">
+        <label>Thème BO Maths</label>
+        <p class="expl">Thème du programme officiel auquel appartient la ressource. L'IA ancrera le contenu dans ce thème et respectera les définitions et notations officielles.</p>
+        <select id="theme-bo-math">
+          <optgroup label="— Analyse —">
+            <option value="Suites numériques (limites, monotonie, convergence, suite arithmétique, géométrique)">Suites numériques</option>
+            <option value="Continuité des fonctions (TVI, prolongement par continuité)">Continuité (TVI)</option>
+            <option value="Dérivation (fonctions composées, convexité, tableau de variations)">Dérivation avancée</option>
+            <option value="Primitives et intégration (calcul intégral, intégration par parties, valeur moyenne)">Intégration</option>
+            <option value="Équations différentielles (y'=ay+b, Cauchy-Lipschitz admis)">Équations différentielles</option>
+            <option value="Logarithme népérien et fonction exponentielle">Ln et exponentielle</option>
+          </optgroup>
+          <optgroup label="— Algèbre / Géométrie —">
+            <option value="Nombres complexes (forme algébrique, trigonométrique, exponentielle, géométrie)">Nombres complexes</option>
+            <option value="Matrices et systèmes (produit matriciel, puissances, systèmes linéaires 2×2)">Matrices et systèmes</option>
+            <option value="Géométrie dans l'espace (vecteurs, droites, plans, produit scalaire 3D)">Géométrie dans l'espace</option>
+          </optgroup>
+          <optgroup label="— Probabilités / Statistiques —">
+            <option value="Variables aléatoires (loi discrète, espérance, variance, écart-type)">Variables aléatoires discrètes</option>
+            <option value="Loi binomiale, loi de Poisson, loi normale (approximations)">Lois usuelles</option>
+            <option value="Intervalles de confiance, de fluctuation, tests d'hypothèses">Inférence statistique</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>Compétences mathématiques visées</label>
+        <p class="expl">Les 5 compétences officielles du BO Maths. Coche celles que les exercices doivent particulièrement mobiliser. L'IA calibre le type de questions en conséquence.</p>
+        <div class="tags" id="comp-maths">
+          <label class="tag bo-tag"><input type="checkbox" value="Chercher (explorer, expérimenter, émettre des conjectures, s'engager dans une démarche)." checked> Chercher</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Modéliser (traduire une situation en modèle mathématique, valider ou invalider un modèle)." checked> Modéliser</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Calculer (mettre en œuvre des algorithmes, effectuer des calculs formels ou numériques)." checked> Calculer</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Raisonner (démontrer, conjecturer, critiquer une démarche, justifier un résultat)." checked> Raisonner</label>
+          <label class="tag bo-tag"><input type="checkbox" value="Communiquer (rédiger une solution, présenter une démarche, utiliser le vocabulaire adapté)."> Communiquer</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="field">
+        <label>Savoirs visés (définitions et théorèmes à connaître)</label>
+        <p class="expl">Liste les définitions, théorèmes et propriétés que les élèves doivent connaître à l'issue de la séquence. L'IA s'assurera qu'ils sont soit rappelés dans la ressource, soit supposés connus.</p>
+        <textarea id="savoirs-maths" placeholder="Ex : Définition de la limite d'une suite, théorème des suites monotones bornées, critère de convergence des suites géométriques…"></textarea>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="field">
+        <label>Savoir-faire visés (types de calculs et de démonstrations)</label>
+        <p class="expl">Liste les types d'exercices et de calculs que les élèves doivent savoir faire. L'IA construira les exercices pour entraîner ces savoir-faire.</p>
+        <textarea id="savoir-faire-maths" placeholder="Ex : Calculer la limite d'une suite par comparaison, démontrer qu'une suite est monotone par récurrence, calculer la somme des termes d'une suite géométrique…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Objectifs opérationnels de la ressource</label>
+      <p class="expl">En une ou deux phrases : qu'est-ce qu'un élève doit être capable de faire à l'issue de cette ressource qu'il ne savait pas faire avant ? Formule cela comme un objectif mesurable.</p>
+      <textarea id="objectifs" placeholder="Ex : À l'issue de ce TP, l'élève sera capable de concevoir et implémenter un algorithme de programmation dynamique pour résoudre un problème d'optimisation, et d'expliquer pourquoi cette approche est plus efficace que la récursion naïve."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- === S3 : STRUCTURE === -->
+<div class="fsec s-or">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 03</div>
+    <div class="fsec-titre">
+      <h2>Structure de la ressource</h2>
+      <p class="fsec-desc">Le plan détaillé. C'est l'élément le plus influent du prompt : l'IA suit cet ordre à la lettre. Plus chaque section est décrite précisément, plus le résultat est fidèle.</p>
+    </div>
+  </div>
+
+  <div class="encart">
+    <span class="encart-titre">Comment bien décrire chaque section ?</span>
+    <p>Pour chaque section, indique : <strong>le contenu</strong>, <strong>l'approche pédagogique</strong> et les <strong>interdits éventuels</strong>. Par exemple, ne pas écrire « Introduction » mais « Introduction : part d'une situation concrète du quotidien, fait ressentir le problème AVANT de le nommer, vocabulaire technique interdit ».</p>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Sections de la ressource (une par ligne) <span class="req">*</span></label>
+      <p class="expl">Décris chaque section : numéro, titre, contenu et approche. La description doit répondre à : <em>Que fait l'élève ? Quelle notion est introduite ? Y a-t-il des contraintes ?</em></p>
+      <textarea class="xtall" id="sections" placeholder="1. Introduction — …
+2. Cours — …
+3. Exercice — …"></textarea>
+      <div class="note-verte">Alterne systématiquement cours → exercice → cours → exercice. C'est la progression qui garantit la compréhension.</div>
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Principe pédagogique central <span class="req">*</span></label>
+      <p class="expl">La règle d'or qui gouverne toute la rédaction. Formule-la comme une contrainte absolue, pas comme un souhait. Elle s'applique à chaque paragraphe.</p>
+      <textarea id="principe" placeholder="Ex : Chaque concept est illustré par un exemple concret avant d'être nommé. L'élève ressent le problème avant de recevoir la solution. Un concept nouveau maximum par paragraphe. Ton oral, tutoiement, questions rhétoriques."></textarea>
+      <div class="note-or">La contrainte pédagogique la plus souvent oubliée par l'IA. Formule-la explicitement ici.</div>
+    </div>
+    <div class="field">
+      <label>Vocabulaire interdit en introduction</label>
+      <p class="expl">Termes techniques que l'IA ne peut pas utiliser dans la section d'introduction. Ils arrivent uniquement dans les sections de cours, après illustration concrète.</p>
+      <textarea id="vocab-interdit" placeholder="Ex : mémoïsation, sous-problème, récurrence, DP, programmation dynamique, récursion naïve…"></textarea>
+      <div class="note-verte">Ces mots sont réservés aux cours, après illustration concrète.</div>
+    </div>
+  </div>
+</div>
+
+<!-- === S4a : EXERCICES NSI === -->
+<div class="fsec s-vert" id="sec-exo-nsi">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 04</div>
+    <div class="fsec-titre">
+      <h2>Contraintes des exercices NSI</h2>
+      <p class="fsec-desc">Ces règles définissent ce que chaque exercice doit obligatoirement contenir et la structure des codes Python testables.</p>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Composants obligatoires de chaque exercice</label>
+      <p class="expl">Coche les éléments que chaque exercice doit contenir. L'IA ignorera tout composant non coché.</p>
+      <div class="tags">
+        <label class="tag"><input type="checkbox" id="cb-sit" checked> Mise en situation narrative</label>
+        <label class="tag"><input type="checkbox" id="cb-eno" checked> Énoncé numéroté</label>
+        <label class="tag"><input type="checkbox" id="cb-ind" checked> Indices progressifs (min. 2 niveaux)</label>
+        <label class="tag"><input type="checkbox" id="cb-edi" checked> Éditeur PyScript exécutable</label>
+        <label class="tag"><input type="checkbox" id="cb-cor" checked> Correction cachée déverrouillable</label>
+        <label class="tag"><input type="checkbox" id="cb-tst" checked> Fonctions de test pré-écrites</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Règle des fonctions de test <span class="oblig">OBLIGATOIRE</span></label>
+      <p class="expl">Cette règle impose que tout code Python contenant une fonction se termine par une fonction <code>test_</code> avec des assertions. Elle donne à l'élève un objectif binaire clair : les tests passent ou non.</p>
+      <textarea class="tall" id="regle-tests">Tout bloc de code Python contenant une fonction doit se terminer par une fonction test_nom() avec minimum 3 assertions sur des valeurs littérales pré-calculées et exactes, suivie de print("Les tests sont validés."), appelée immédiatement après sa définition. Pour les exercices : la fonction de test est pré-écrite dans l'éditeur PyScript — l'élève complète la fonction jusqu'à ce que les assertions passent. Pour les corrections : les mêmes assertions que l'énoncé figurent dans le bloc correction. Exception : les blocs sans fonction (simples print) ne nécessitent pas de test.</textarea>
+      <div class="note-or">Ne supprime pas cette règle. C'est elle qui garantit que les codes Python sont testables et corrects.</div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Exemple de fonction de test (few-shot)</label>
+      <p class="expl">Montre à l'IA un exemple concret du format attendu. Un bon exemple concret vaut mieux qu'une longue description — c'est ce qu'on appelle le <em>few-shot prompting</em>.</p>
+      <textarea class="tall" id="ex-test">def test_monnaie_avec_cache():
+    assert monnaie_avec_cache(0)  == 0
+    assert monnaie_avec_cache(6)  == 2
+    assert monnaie_avec_cache(11) == 3
+    assert monnaie_avec_cache(20) == 4
+    print("Les tests sont validés.")
+
+test_monnaie_avec_cache()</textarea>
+      <div class="note-verte">L'exemple que tu fournis ici sera copié tel quel dans le prompt. Choisis-en un représentatif de ton TP.</div>
+    </div>
+  </div>
+</div>
+
+<!-- === S4b : EXERCICES MATHS === -->
+<div class="fsec s-violet hidden" id="sec-exo-math">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 04</div>
+    <div class="fsec-titre">
+      <h2>Contraintes des exercices — Mathématiques</h2>
+      <p class="fsec-desc">Ces règles définissent la structure, le barème et le niveau de rigueur des exercices mathématiques.</p>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Structure obligatoire de chaque exercice</label>
+      <p class="expl">Coche les éléments que chaque exercice doit contenir. Pour un DM, tu peux décocher le barème. Pour un DS, il est indispensable.</p>
+      <div class="tags">
+        <label class="tag"><input type="checkbox" id="cbm-ctx" checked> Contexte ou mise en situation</label>
+        <label class="tag"><input type="checkbox" id="cbm-quest" checked> Questions numérotées progressives</label>
+        <label class="tag"><input type="checkbox" id="cbm-ind"> Aide ou indication masquable</label>
+        <label class="tag"><input type="checkbox" id="cbm-bar" checked> Barème par question</label>
+        <label class="tag"><input type="checkbox" id="cbm-cor"> Correction détaillée (LaTeX)</label>
+        <label class="tag"><input type="checkbox" id="cbm-comp" checked> Compétences mobilisées indiquées</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Niveau de rigueur de rédaction exigé</label>
+      <p class="expl">Conditionne le niveau de détail des corrections et la façon dont les énoncés formulent les questions. Un lycéen n'est pas attendu au même niveau de rigueur qu'un étudiant en CPGE.</p>
+      <select id="rigueur-maths">
+        <option value="Lycée — justifications attendues, rédaction claire mais accessible">Lycée (Terminale spécialité)</option>
+        <option value="Lycée renforcé — démonstrations complètes, rédaction rigoureuse">Lycée renforcé (préparation CPGE)</option>
+        <option value="Bac — conforme aux attendus officiels de l'épreuve de bac">Conforme aux attendus du bac</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Barème total</label>
+      <p class="expl">Pour un devoir surveillé ou une évaluation. L'IA répartit les points entre les exercices en respectant ce total.</p>
+      <input type="text" id="bareme-total" value="20" placeholder="20">
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Règles de notation mathématiques <span class="oblig">OBLIGATOIRE</span></label>
+      <p class="expl">Précise les conventions de notation à respecter dans toute la ressource : notations ensemblistes, noms des variables, conventions d'écriture des limites, intégrales, etc.</p>
+      <textarea id="notation-maths">Utiliser les notations officielles du BO : ℝ, ℕ, ℤ, ℚ pour les ensembles. Variables réelles en italique. Vecteurs en gras ou avec flèche. Fonction f définie sur I à valeurs dans ℝ notée f : I → ℝ. Intervalles avec crochets français [a;b], ]a;b[. Limite notée lim et non lim→. Intégrale définie avec bornes en indice/exposant. Aucun anglicisme mathématique.</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- === S5a : TECHNIQUE HTML (NSI) === -->
+<div class="fsec" id="sec-tech-nsi">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 05</div>
+    <div class="fsec-titre">
+      <h2>Contraintes techniques — Page HTML</h2>
+      <p class="fsec-desc">Ces contraintes définissent la structure et l'apparence de la page HTML produite. Elles garantissent la cohérence visuelle entre toutes tes ressources NSI.</p>
+    </div>
+  </div>
+
+  <div class="encart">
+    <span class="encart-titre">Pourquoi préciser les versions exactes des CDN ?</span>
+    <p>Sans version précisée, l'IA utilise parfois des versions obsolètes ou incompatibles. PyScript 2025.x et 2026.x ont des syntaxes différentes, par exemple. Une URL exacte évite les bugs silencieux.</p>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Bibliothèques CDN (versions exactes)</label>
+      <p class="expl">Liste chaque bibliothèque avec son URL complète. L'IA les utilisera telles quelles dans le <code>&lt;head&gt;</code>.</p>
+      <textarea class="tall" id="cdn">Bootstrap 5.3.3 → https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
+Google Fonts → Rubik Dirt + Source Serif 4 + JetBrains Mono
+MathJax v3 → https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
+PyScript 2026.3.1 → https://pyscript.net/releases/2026.3.1/core.js</textarea>
+    </div>
+    <div class="field">
+      <label>Charte graphique — variables CSS</label>
+      <p class="expl">Les couleurs de ta charte. Toutes tes ressources auront le même rendu visuel.</p>
+      <textarea class="tall" id="charte">--bg-main: #1a1f2e
+--bg-panel: #242b3d
+--bg-cours: #1e2538
+--accent: #8ca5b4
+--accent-or: #c9a84c
+--accent-vert: #4caf50
+--text-main: #d4dde4
+--text-muted: #8a9ab0</textarea>
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Polices de caractères</label>
+      <p class="expl">Une police par usage. La cohérence typographique donne l'aspect professionnel.</p>
+      <textarea id="polices">Titres h1–h4 : Rubik Dirt
+Corps de texte : Source Serif 4
+Code, boutons, navigation : JetBrains Mono</textarea>
+    </div>
+    <div class="field">
+      <label>Composants UI obligatoires</label>
+      <p class="expl">Classes CSS et composants que l'IA doit impérativement utiliser dans la page HTML.</p>
+      <textarea id="composants">.encadre → cours (bordure accent bleu-gris)
+.encadre-conseil → remarque (bordure or)
+.encadre-indice → indice caché (bordure verte)
+Chaque encadré porte un .encadre-prefix en petites capitales.
+Boutons : .btn-tp / .btn-tp-or / .btn-tp-vert / .btn-secondaire
+Navigation sticky + bouton retour en haut</textarea>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Règles HTML critiques <span class="oblig">OBLIGATOIRE</span></label>
+      <p class="expl">Ces règles évitent des bugs silencieux. La règle ASCII sur les <code>id</code> et <code>class</code> est la plus importante : un seul accent dans un attribut HTML peut casser CSS ou JavaScript.</p>
+      <textarea id="regles-html">id et class : ASCII strict, sans accent, sans espace, sans caractère spécial — aucune exception.
+Fonctions JavaScript : camelCase ASCII uniquement.
+Page fonctionnelle en mode fichier local (pas de serveur).
+Styles dans style dans le head, scripts JavaScript en fin de body.
+Balise éditeur Python : script type="py-editor" env="dynamique" exclusivement.</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- === S5b : TECHNIQUE LATEX (MATHS) === -->
+<div class="fsec s-violet hidden" id="sec-tech-math">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 05</div>
+    <div class="fsec-titre">
+      <h2>Contraintes techniques — Fichier LaTeX</h2>
+      <p class="fsec-desc">Ces contraintes définissent le préambule et les packages du fichier <code>.tex</code> produit.</p>
+    </div>
+  </div>
+
+  <div class="encart">
+    <span class="encart-titre">Qu'est-ce que LaTeX et comment l'utiliser ?</span>
+    <p>LaTeX est un système de composition qui produit des PDF de qualité typographique professionnelle. Le fichier <code>.tex</code> généré peut être compilé avec TeX Live, MiKTeX, ou en ligne sur <strong>Overleaf</strong> (gratuit). L'IA produira un fichier complet compilable en une seule passe.</p>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Classe de document <span class="req">*</span></label>
+      <p class="expl"><strong>article</strong> pour une fiche ou un DM. <strong>exam</strong> pour un DS avec barème. <strong>beamer</strong> pour une présentation. <strong>report</strong> pour un cours complet.</p>
+      <select id="latex-classe">
+        <option value="article">article — fiche, DM, activité</option>
+        <option value="exam">exam — DS avec barème</option>
+        <option value="beamer">beamer — présentation projetée</option>
+        <option value="report">report — cours complet</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Moteur de compilation</label>
+      <p class="expl"><strong>pdflatex</strong> est le plus universel. <strong>xelatex</strong> gère l'UTF-8 nativement et les polices système — préférable si tu saisis les accents directement.</p>
+      <select id="latex-moteur">
+        <option value="pdflatex">pdflatex (le plus compatible)</option>
+        <option value="xelatex">xelatex (UTF-8 natif, polices système)</option>
+        <option value="lualatex">lualatex (UTF-8 natif, scripts Lua)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Format papier et marges</label>
+      <p class="expl">Paramètres transmis au package <code>geometry</code>. Pour une fiche A4 standard, les valeurs par défaut conviennent.</p>
+      <input type="text" id="latex-geo" value="a4paper, margin=2cm, top=2.5cm, bottom=2.5cm">
+    </div>
+    <div class="field">
+      <label>En-tête du document</label>
+      <p class="expl">Contenu de l'en-tête affiché en haut de chaque page (établissement, classe, date).</p>
+      <textarea id="latex-entete">Lycée Antoine Watteau — DarkSATHI Li
+Classe : \textbf{Terminale Maths spécialité}
+Date : \today</textarea>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Packages LaTeX à inclure</label>
+      <p class="expl">Coche les packages dont tu as besoin. L'IA les ajoutera dans le préambule dans le bon ordre. <strong>babel</strong>, <strong>amsmath</strong> et <strong>geometry</strong> sont recommandés pour tout document de maths.</p>
+      <div class="tags">
+        <label class="tag"><input type="checkbox" id="pkg-babel" checked> babel + inputenc/fontenc (français)</label>
+        <label class="tag"><input type="checkbox" id="pkg-geo" checked> geometry (marges)</label>
+        <label class="tag"><input type="checkbox" id="pkg-ams" checked> amsmath + amssymb + amsthm</label>
+        <label class="tag"><input type="checkbox" id="pkg-xcol" checked> xcolor (couleurs)</label>
+        <label class="tag"><input type="checkbox" id="pkg-tcol"> tcolorbox (encadrés colorés)</label>
+        <label class="tag"><input type="checkbox" id="pkg-tikz"> tikz + pgfplots (figures, graphes)</label>
+        <label class="tag"><input type="checkbox" id="pkg-enum" checked> enumitem (listes d'exercices)</label>
+        <label class="tag"><input type="checkbox" id="pkg-mdfr"> mdframed (encadrés simples)</label>
+        <label class="tag"><input type="checkbox" id="pkg-href"> hyperref (liens PDF — chargé en dernier)</label>
+        <label class="tag"><input type="checkbox" id="pkg-mcol"> multicol (deux colonnes)</label>
+        <label class="tag"><input type="checkbox" id="pkg-arr"> array + booktabs (tableaux)</label>
+        <label class="tag"><input type="checkbox" id="pkg-gfx"> graphicx (images)</label>
+      </div>
+      <div class="note-or">hyperref est toujours chargé EN DERNIER — cette contrainte est automatiquement intégrée au prompt généré.</div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Environnements pédagogiques</label>
+      <p class="expl">Ces environnements seront définis dans le préambule avec <code>\newtheorem</code> ou <code>\newenvironment</code>. L'IA les utilisera dans le corps du document.</p>
+      <div class="tags">
+        <label class="tag"><input type="checkbox" id="env-exo" checked> Exercice (numéroté)</label>
+        <label class="tag"><input type="checkbox" id="env-sol"> Solution masquable</label>
+        <label class="tag"><input type="checkbox" id="env-def" checked> Définition</label>
+        <label class="tag"><input type="checkbox" id="env-thm" checked> Théorème</label>
+        <label class="tag"><input type="checkbox" id="env-prop"> Propriété</label>
+        <label class="tag"><input type="checkbox" id="env-rem"> Remarque</label>
+        <label class="tag"><input type="checkbox" id="env-ex"> Exemple</label>
+        <label class="tag"><input type="checkbox" id="env-meth"> Méthode</label>
+      </div>
+      <div class="note-verte">L'environnement "Solution masquable" permet d'imprimer deux versions : avec et sans les corrections.</div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Règles LaTeX critiques <span class="oblig">OBLIGATOIRE</span></label>
+      <p class="expl">Ces règles évitent les erreurs de compilation. Elles seront intégrées au prompt pour que l'IA les respecte absolument.</p>
+      <textarea id="latex-regles">Le fichier .tex produit doit être complet et compilable en une seule passe sans fichier externe.
+Tous les packages sont chargés dans le préambule, jamais dans le corps du document.
+hyperref est toujours chargé EN DERNIER dans le préambule.
+Les environnements personnalisés (\newtheorem, \newenvironment) sont définis dans le préambule.
+Pour pdflatex : utiliser \usepackage[utf8]{inputenc} et \usepackage[T1]{fontenc}.
+Pour xelatex/lualatex : utiliser \usepackage{fontspec} à la place.
+Aucun placeholder % TODO ni section vide dans le document produit.
+Les formules mathématiques utilisent les environnements amsmath.
+Toutes les notations mathématiques respectent les conventions officielles du BO.</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- === S6 : LINGUISTIQUE === -->
+<div class="fsec s-or">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 06</div>
+    <div class="fsec-titre">
+      <h2>Exigences linguistiques</h2>
+      <p class="fsec-desc">Sans ces exigences, l'IA produit souvent un français appauvri, sans accents typographiques ni guillemets français.</p>
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field">
+      <label>Typographie</label>
+      <p class="expl">Les caractères typographiques attendus. L'IA les omet souvent sans instruction explicite.</p>
+      <textarea id="typographie">Français correct, accents obligatoires : é, è, ê, à, â, î, ô, û, ù, ç, œ.
+Guillemets français : « » pour toutes les citations.
+Apostrophe courbe : ' (pas le caractère droit ').
+Tiret demi-cadratin : – (pas le trait d'union -).
+Aucune faute d'accord, aucun anglicisme non justifié.</textarea>
+    </div>
+    <div class="field">
+      <label>Ton et registre</label>
+      <p class="expl">La voix que l'IA doit adopter. « Comme un professeur qui explique à l'oral » donne un résultat très différent de « style académique ».</p>
+      <textarea id="ton">Ton pédagogique, bienveillant et direct — comme un professeur qui explique à l'oral.
+Tutoiement avec les élèves (« tu »).
+Questions rhétoriques pour maintenir l'attention.
+L'élève ressent le problème avant de recevoir la solution.
+Un concept nouveau maximum par paragraphe.</textarea>
+    </div>
+  </div>
+
+  <div class="frow c2">
+    <div class="field" id="champ-langue-py">
+      <label>Langue des identifiants Python</label>
+      <p class="expl">Les noms de variables et fonctions doivent-ils être en français ou en anglais ? Le programme NSI recommande le français pour les ressources pédagogiques.</p>
+      <select id="langue-py">
+        <option value="Français dans les commentaires et chaînes, ASCII dans les identifiants">Français commentaires/chaînes, ASCII identifiants</option>
+        <option value="Tout en français (commentaires, chaînes et noms de variables)">Tout en français</option>
+        <option value="Tout en anglais (convention professionnelle)">Tout en anglais</option>
+      </select>
+      <div class="note-verte">Les identifiants Python ne supportent pas les accents — utilise l'ASCII pour eux.</div>
+    </div>
+    <div class="field">
+      <label>Pied de page / colophon</label>
+      <p class="expl">Texte affiché en bas de la ressource produite. Il identifie l'auteur et l'établissement.</p>
+      <input type="text" id="pied-page" value="Lycée Antoine Watteau — DarkSATHI Li">
+    </div>
+  </div>
+</div>
+
+<!-- === S7 : GARDE-FOUS ANTI-OUBLI === -->
+<div class="fsec s-rouge">
+  <div class="fsec-head">
+    <div class="fsec-badge">Section 07</div>
+    <div class="fsec-titre">
+      <h2>Garde-fous anti-oubli</h2>
+      <p class="fsec-desc">Les LLM oublient les contraintes situées au milieu d'un long prompt. Ces mécanismes forcent le modèle à les respecter jusqu'à la dernière ligne.</p>
+    </div>
+  </div>
+
+  <div class="encart">
+    <span class="encart-titre">Le phénomène « lost in the middle » — explication</span>
+    <p>Un modèle de langage lit tout le prompt, mais pondère inégalement les différentes parties : le début et la fin sont mieux mémorisés que le milieu. Trois techniques compensent cela : <strong>(1)</strong> marquer les contraintes critiques avec <code>[OBLIGATOIRE]</code>, <strong>(2)</strong> placer un bloc de rappels à la toute fin du prompt, <strong>(3)</strong> demander une auto-vérification avant de terminer la génération.</p>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Rappels de dernière minute (5 points maximum)</label>
+      <p class="expl">Ces rappels sont placés à la <strong>toute fin</strong> du prompt, juste avant la balise de fermeture. Le modèle les lit en dernier — leur impact est maximal. Limite-toi aux 5 contraintes les plus critiques.</p>
+      <textarea class="tall" id="rappels" placeholder="1. …
+2. …
+3. …"></textarea>
+      <div class="note-or">Ne dépasse pas 5 points. Un bloc trop long perd son effet de saillance.</div>
+    </div>
+  </div>
+
+  <div class="frow">
+    <div class="field">
+      <label>Instruction d'auto-vérification</label>
+      <p class="expl">Demande explicitement au modèle de relire sa propre production avant de la clore et de corriger immédiatement tout point non respecté. C'est la méthode la plus efficace pour rattraper les oublis.</p>
+      <textarea id="auto-verif">Avant de clore la ressource, parcourir mentalement la checklist de contrôle qualité point par point. Pour chaque point non satisfait, corriger immédiatement avant de continuer. Ne pas terminer la génération tant que tous les points ne sont pas validés.</textarea>
+    </div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn-or" onclick="allerPage2()">Générer l'aperçu du prompt &#8594;</button>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--t-muted);">Les champs <span style="color:var(--rouge);">*</span> sont obligatoires</span>
+</div>
+<div class="msg-err" id="err-p1">Merci de remplir tous les champs obligatoires et de choisir une discipline.</div>
+
+</div>
+<!-- fin page1 -->
+
+<!-- ====================================================
+     PAGE 2 — APERÇU & ÉVALUATION
+     ==================================================== -->
+<div class="page" id="page2">
+
+  <div class="encart" style="margin-bottom:1.4rem;">
+    <span class="encart-titre">Étape 2 — Aperçu et évaluation</span>
+    <p>Voici le prompt généré. Lis-le pour vérifier qu'il reflète ta vision, puis fais-le évaluer par Groq. L'évaluation est spécialisée par discipline et analyse la conformité au BO.</p>
+  </div>
+
+  <h3 style="font-family:'Rubik Dirt',cursive;color:var(--bleu);margin-bottom:.7rem;">Prompt généré</h3>
+  <div class="stats" id="stats-prompt"></div>
+
+  <!-- Bascule aperçu / édition -->
+  <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;">
+    <button class="btn-ghost" id="btn-mode-apercu" onclick="setModePrompt('apercu')"
+      style="border-color:var(--bleu);color:var(--bleu);">&#128065; Aperçu</button>
+    <button class="btn-ghost" id="btn-mode-edit" onclick="setModePrompt('edit')">&#9998; Éditer le prompt</button>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--t-muted);">
+      En mode édition, tu peux retoucher le prompt manuellement avant d'exporter.
+    </span>
+  </div>
+
+  <div class="apercu" id="apercu-prompt"></div>
+  <div class="prompt-edit-zone" id="prompt-edit-zone">
+    <textarea id="prompt-edit-textarea" onchange="PROMPT=this.value;afficherStats()"></textarea>
+  </div>
+
+  <div class="api-zone">
+    <h3>Évaluation par Groq (IA gratuite)</h3>
+    <div class="encart" style="margin-bottom:.8rem;">
+      <span class="encart-titre">Comment obtenir une clé API Groq ?</span>
+      <p>Rends-toi sur <strong>console.groq.com</strong>, crée un compte gratuit, puis génère une clé dans « API Keys ». Elle commence par <code>gsk_</code>. Elle reste uniquement dans ton navigateur — jamais envoyée ailleurs que chez Groq.</p>
+    </div>
+    <div class="api-row">
+      <div class="field">
+        <label>Clé API Groq</label>
+        <input type="password" id="api-key" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      </div>
+      <button class="btn-ghost" onclick="testerAPI()">Tester la connexion</button>
+      <span class="api-st idle" id="api-st">Non testée</span>
+    </div>
+    <div class="msg-err" id="err-api"></div>
+    <div class="msg-ok"  id="ok-api"></div>
+    <div style="margin-top:.9rem;">
+      <button class="btn-or" id="btn-eval" onclick="evaluerPrompt()">&#9733; Évaluer avec Groq</button>
+    </div>
+  </div>
+
+  <div id="eval-zone" style="display:none;">
+    <div style="font-family:'Rubik Dirt',cursive;font-size:1.1rem;color:var(--or);margin:1.2rem 0 .8rem;">Résultats de l'évaluation</div>
+    <div id="eval-criteres"></div>
+    <div id="eval-global"></div>
+    <div id="eval-sugg"></div>
+    <div class="btn-row" style="margin-top:1.3rem;">
+      <button class="btn-vert" onclick="allerPage3()">Exporter &#8594;</button>
+      <button class="btn-ghost" onclick="allerPage1()">&#8592; Modifier</button>
+    </div>
+  </div>
+
+  <div class="btn-row" id="btn-p2">
+    <button class="btn-vert" onclick="allerPage3()">Exporter sans évaluation &#8594;</button>
+    <button class="btn-ghost" onclick="allerPage1()">&#8592; Modifier</button>
+  </div>
+
+</div>
+<!-- fin page2 -->
+
+<!-- ====================================================
+     PAGE 3 — EXPORT
+     ==================================================== -->
+<div class="page" id="page3">
+
+  <div class="encart" style="margin-bottom:1.4rem;">
+    <span class="encart-titre">Étape 3 — Export</span>
+    <p>Télécharge ton prompt en <code>.txt</code> et utilise-le dans l'IA de ton choix : Claude, ChatGPT, Mistral, Gemini… Le contrôle qualité ci-dessous analyse le contenu réel du prompt généré sur 4 volets.</p>
+  </div>
+
+  <!-- Contrôle qualité -->
+  <div class="export-bloc">
+    <h3>Contrôle qualité final — 4 volets</h3>
+    <p class="export-info">Chaque point vérifie qu'une contrainte critique est réellement présente dans le texte du prompt, pas seulement que le champ était rempli.</p>
+    <div class="score-bloc" id="score-bloc">
+      <div class="score-n" id="score-n"></div>
+      <div>
+        <div class="score-label" id="score-label"></div>
+        <div class="score-detail" id="score-detail"></div>
+      </div>
+    </div>
+    <div class="cq-volet-titre" style="color:var(--bleu);">Volet 1 — Pédagogie</div>
+    <ul class="cq-list" id="cq-v1"></ul>
+    <div class="cq-volet-titre" id="v2-titre" style="color:var(--vert);">Volet 2 — Exercices</div>
+    <ul class="cq-list" id="cq-v2"></ul>
+    <div class="cq-volet-titre" id="v3-titre" style="color:var(--or);">Volet 3 — Technique</div>
+    <ul class="cq-list" id="cq-v3"></ul>
+    <div class="cq-volet-titre" style="color:var(--violet);">Volet 4 — Conformité BO</div>
+    <ul class="cq-list" id="cq-v4"></ul>
+    <div class="msg-err" id="cq-alerte" style="margin-top:.7rem;"></div>
+  </div>
+
+  <div class="export-bloc">
+    <h3>Prompt final</h3>
+    <div class="apercu" id="apercu-final" style="max-height:280px;"></div>
+  </div>
+
+  <div class="export-bloc">
+    <h3>Télécharger</h3>
+    <p class="export-info">Colle ce prompt en entier dans l'IA de ton choix. La longueur est intentionnelle — ne le tronque pas.</p>
+    <div class="btn-row" style="border-top:none;padding-top:0;margin-top:.5rem;">
+      <button class="btn-vert" onclick="dlTxt()">&#8595; Télécharger .txt</button>
+      <button class="btn" onclick="copier()">&#9632; Copier dans le presse-papier</button>
+      <button class="btn-ghost" onclick="allerPage2()">&#8592; Retour</button>
+    </div>
+    <div class="msg-ok" id="msg-copie">Prompt copié !</div>
+  </div>
+
+  <div class="encart">
+    <span class="encart-titre">Conseils d'utilisation</span>
+    <p><strong>1. Colle le prompt en entier</strong> dans la fenêtre de conversation de l'IA, sans le tronquer.</p>
+    <p><strong>2. Demande une génération complète :</strong> « Génère la ressource complète en une seule réponse. »</p>
+    <p><strong>3. Si la réponse est tronquée</strong>, envoie « Continues » — l'IA reprendra exactement où elle s'est arrêtée.</p>
+    <p id="conseil-nsi"><strong>4. Vérifie les fonctions de test</strong> en ouvrant la page HTML et en cliquant « Exécuter » dans chaque éditeur PyScript. Chaque bloc doit afficher « Les tests sont validés. »</p>
+    <p id="conseil-math"><strong>4. Compile le fichier .tex</strong> avec pdflatex ou xelatex (2 passes pour les références croisées), ou colle-le dans un projet Overleaf.</p>
+  </div>
+
+</div>
+<!-- fin page3 -->
+
+</div><!-- fin wrap -->
+
+<footer>
+  Générateur de prompts pédagogiques — NSI &amp; Mathématiques — DarkSATHI Li — Lycée Antoine Watteau<br>
+  <span style="color:#3a4560;">Aucune donnée n'est envoyée à un serveur tiers — tout reste dans ton navigateur</span>
+</footer>
+
+<script>
+/* ============================================================
+   THÈME — TOGGLE SOMBRE / CLAIR
+   ============================================================ */
+function toggleTheme() {
+  var body = document.body;
+  var estClair = body.classList.toggle('light');
+  localStorage.setItem('theme', estClair ? 'light' : 'dark');
+}
+
+function initTheme() {
+  var saved = localStorage.getItem('theme');
+  if (saved === 'light') document.body.classList.add('light');
+}
+
+initTheme();
+
+/* ============================================================
+   LOCAL STORAGE — SAUVEGARDE AUTOMATIQUE
+   ============================================================ */
+var CHAMPS_SAUVEGARDES = [
+  'niveau','type-res','num-res','theme','sous-titre','prerequis','profil',
+  'langage','environnement','outils-maths','duree-maths',
+  'objectifs','sections','principe','vocab-interdit',
+  'regle-tests','ex-test','cdn','charte','polices','composants','regles-html',
+  'savoirs-maths','savoir-faire-maths','notation-maths',
+  'rigueur-maths','bareme-total','latex-classe','latex-moteur',
+  'latex-geo','latex-entete','latex-regles',
+  'typographie','ton','langue-py','pied-page','rappels','auto-verif'
+];
+
+function sauvegarder() {
+  if (!DISC) return;
+  var data = { disc: DISC };
+  CHAMPS_SAUVEGARDES.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  // Checkboxes
+  document.querySelectorAll('input[type="checkbox"]').forEach(function(el) {
+    if (el.id) data['cb_' + el.id] = el.checked;
+  });
+  localStorage.setItem('generateur_v3_form', JSON.stringify(data));
+}
+
+function chargerSauvegarde() {
+  var raw = localStorage.getItem('generateur_v3_form');
+  if (!raw) return;
+  try {
+    var data = JSON.parse(raw);
+    if (data.disc) {
+      choisirDisc(data.disc);
+      setTimeout(function() {
+        CHAMPS_SAUVEGARDES.forEach(function(id) {
+          if (data[id] !== undefined) {
+            var el = document.getElementById(id);
+            if (el) el.value = data[id];
+          }
+        });
+        Object.keys(data).forEach(function(k) {
+          if (k.startsWith('cb_')) {
+            var el = document.getElementById(k.slice(3));
+            if (el && el.type === 'checkbox') el.checked = data[k];
+          }
+        });
+      }, 100);
+    }
+  } catch(e) { /* sauvegarde corrompue — on ignore */ }
+}
+
+// Sauvegarde auto toutes les 10 secondes et au changement de champ
+setInterval(sauvegarder, 10000);
+document.addEventListener('change', sauvegarder);
+document.addEventListener('input',  sauvegarder);
+
+// Charger au démarrage
+document.addEventListener('DOMContentLoaded', chargerSauvegarde);
+
+/* ============================================================
+   UPLOAD PDF DU BO
+   ============================================================ */
+var BO_TEXTE_EXTRAIT = '';
+
+function boDragOver(e) {
+  e.preventDefault();
+  document.getElementById('bo-drop-zone').classList.add('dragover');
+}
+
+function boDragLeave(e) {
+  document.getElementById('bo-drop-zone').classList.remove('dragover');
+}
+
+function boDrop(e) {
+  e.preventDefault();
+  document.getElementById('bo-drop-zone').classList.remove('dragover');
+  var files = e.dataTransfer.files;
+  if (files.length > 0) traiterFichierBO(files[0]);
+}
+
+function boFileChange(e) {
+  if (e.target.files.length > 0) traiterFichierBO(e.target.files[0]);
+}
+
+function traiterFichierBO(file) {
+  var statEl  = document.getElementById('bo-status');
+  var btnExtr = document.getElementById('btn-extraire-bo');
+  var zone    = document.getElementById('bo-drop-zone');
+
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    statEl.textContent = 'Format non supporté — PDF uniquement.';
+    statEl.className   = 'bo-status visible err';
+    return;
+  }
+
+  statEl.textContent = 'Lecture du PDF en cours…';
+  statEl.className   = 'bo-status visible load';
+
+  // Extraction du texte via FileReader (lecture binaire → conversion base64 pour envoi à Groq)
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    // Stocker le base64 pour l'envoi API
+    BO_TEXTE_EXTRAIT = ev.target.result; // base64 data URL
+    zone.querySelector('p').innerHTML =
+      '&#10003; <strong>' + file.name + '</strong> chargé (' +
+      Math.round(file.size/1024) + ' ko)';
+    statEl.textContent = 'PDF chargé — clique sur « Extraire les capacités » pour analyser.';
+    statEl.className   = 'bo-status visible ok';
+    btnExtr.disabled   = false;
+  };
+  reader.onerror = function() {
+    statEl.textContent = 'Erreur de lecture du fichier.';
+    statEl.className   = 'bo-status visible err';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function extraireCapsBO() {
+  var cle = (document.getElementById('api-key') || {}).value || '';
+  if (!cle) {
+    // Essayer la clé saisie à l'étape 2
+    alert('Saisis d\'abord ta clé API Groq à l\'étape 2, puis reviens extraire les capacités.');
+    return;
+  }
+
+  if (!BO_TEXTE_EXTRAIT) {
+    alert('Charge d\'abord un fichier PDF.');
+    return;
+  }
+
+  var statEl  = document.getElementById('bo-status');
+  var capsEl  = document.getElementById('caps-extraites');
+  var tagsEl  = document.getElementById('caps-extraites-tags');
+  var btnExtr = document.getElementById('btn-extraire-bo');
+
+  statEl.textContent = 'Analyse du BO par Groq en cours…';
+  statEl.className   = 'bo-status visible load';
+  btnExtr.disabled   = true;
+
+  document.getElementById('loader-msg').textContent = 'Extraction des capacités BO…';
+  document.getElementById('loader').classList.add('on');
+
+  var discipline = DISC === 'math' ? 'mathématiques' : 'NSI';
+
+  try {
+    // Envoyer le PDF en base64 à Groq vision ou comme document
+    var base64Data = BO_TEXTE_EXTRAIT.split(',')[1];
+
+    var resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + cle,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 2000,
+        temperature: 0.1,
+        messages: [
+          {
+            role: 'system',
+            content: 'Tu es un expert en programmes scolaires français. '
+              + 'On te fournit un extrait de Bulletin Officiel pour la discipline ' + discipline + '. '
+              + 'Extrait UNIQUEMENT les capacités exigibles, savoir-faire et compétences attendues, '
+              + 'formulées exactement comme dans le texte officiel. '
+              + 'Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks : '
+              + '{"capacites": ["capacité 1 exacte", "capacité 2 exacte", ...]}'
+          },
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: 'Voici le contenu du Bulletin Officiel. Extrais toutes les capacités exigibles : '
+              },
+              {
+                type: 'image_url',
+                image_url: {
+                  url: BO_TEXTE_EXTRAIT,
+                  detail: 'high'
+                }
+              }
+            ]
+          }
+        ]
+      })
+    });
+
+    var data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.error && data.error.message ? data.error.message : 'Erreur API Groq');
+
+    var txt  = data.choices[0].message.content.trim().replace(/```json|```/g,'').trim();
+    var obj  = JSON.parse(txt);
+    var caps = obj.capacites || [];
+
+    if (!caps.length) throw new Error('Aucune capacité extraite — vérifie que le PDF contient bien les capacités attendues.');
+
+    // Afficher les cases à cocher
+    tagsEl.innerHTML = '';
+    caps.forEach(function(cap, i) {
+      var lbl = document.createElement('label');
+      lbl.className = 'tag bo-tag';
+      var inp = document.createElement('input');
+      inp.type    = 'checkbox';
+      inp.value   = cap;
+      inp.id      = 'bo-cap-' + i;
+      inp.checked = true;
+      var sp = document.createElement('span');
+      sp.textContent = cap;
+      lbl.appendChild(inp);
+      lbl.appendChild(sp);
+      tagsEl.appendChild(lbl);
+    });
+
+    capsEl.classList.add('visible');
+    statEl.textContent = caps.length + ' capacités extraites avec succès.';
+    statEl.className   = 'bo-status visible ok';
+
+  } catch(e) {
+    statEl.textContent = 'Erreur : ' + e.message;
+    statEl.className   = 'bo-status visible err';
+    btnExtr.disabled   = false;
+  } finally {
+    document.getElementById('loader').classList.remove('on');
+    btnExtr.disabled = false;
+  }
+}
+
+/* ============================================================
+   RAPPELS AUTO-GÉNÉRÉS SELON DISCIPLINE
+   ============================================================ */
+function genererRappelsAuto() {
+  var rappelsNsi = [
+    '1. Chaque fonction Python est suivie d\'une fonction test_ avec minimum 3 assertions et print("Les tests sont validés.").',
+    '2. Aucun attribut id ou class HTML ne contient d\'accent ou de caractère non-ASCII.',
+    '3. L\'introduction n\'utilise aucun terme technique interdit sauf dans l\'encadré final « Vocabulaire ».',
+    '4. Toutes les capacités BO cochées sont couvertes par au moins un exercice ou une section de cours.',
+    '5. PyScript version 2026.3.1 exclusivement — URL exacte : https://pyscript.net/releases/2026.3.1/core.js'
+  ];
+  var rappelsMath = [
+    '1. Toutes les notations mathématiques respectent strictement les conventions officielles du BO.',
+    '2. Le fichier .tex produit est compilable sans fichier externe en une seule passe.',
+    '3. hyperref est chargé EN DERNIER dans le préambule — ordre des packages impératif.',
+    '4. Toutes les compétences mathématiques cochées sont mobilisées dans au moins un exercice.',
+    '5. Aucun placeholder % TODO ni section vide dans le document produit.'
+  ];
+
+  var champ = document.getElementById('rappels');
+  if (!champ) return;
+  // Ne pas écraser si l'enseignant a déjà personnalisé
+  if (champ.value.trim() && champ.dataset.autoGenerated !== 'true') return;
+  champ.value = (DISC === 'math' ? rappelsMath : rappelsNsi).join('\n');
+  champ.dataset.autoGenerated = 'true';
+}
+
+/* ============================================================
+   MODE ÉDITION DU PROMPT
+   ============================================================ */
+function setModePrompt(mode) {
+  var apercu  = document.getElementById('apercu-prompt');
+  var editZone= document.getElementById('prompt-edit-zone');
+  var btnAp   = document.getElementById('btn-mode-apercu');
+  var btnEd   = document.getElementById('btn-mode-edit');
+  var textarea= document.getElementById('prompt-edit-textarea');
+
+  if (mode === 'edit') {
+    apercu.style.display   = 'none';
+    editZone.classList.add('visible');
+    textarea.value         = PROMPT;
+    btnAp.style.borderColor= '';
+    btnAp.style.color      = '';
+    btnEd.style.borderColor= 'var(--bleu)';
+    btnEd.style.color      = 'var(--bleu)';
+  } else {
+    apercu.style.display   = 'block';
+    editZone.classList.remove('visible');
+    // Récupérer les modifications manuelles
+    if (textarea.value !== PROMPT) {
+      PROMPT = textarea.value;
+      apercu.textContent = PROMPT;
+      afficherStats();
+    }
+    btnAp.style.borderColor= 'var(--bleu)';
+    btnAp.style.color      = 'var(--bleu)';
+    btnEd.style.borderColor= '';
+    btnEd.style.color      = '';
+  }
+}
+
+function afficherStats() {
+  var chars  = PROMPT.length;
+  var mots   = PROMPT.split(/\s+/).filter(Boolean).length;
+  var tokens = Math.round(chars/4);
+  var lignes = PROMPT.split('\n').length;
+  var el = document.getElementById('stats-prompt');
+  if (el) el.innerHTML =
+    sb(chars.toLocaleString('fr-FR'),'Caractères') +
+    sb(mots.toLocaleString('fr-FR'),'Mots') +
+    sb(tokens.toLocaleString('fr-FR'),'Tokens est.') +
+    sb(lignes.toLocaleString('fr-FR'),'Lignes');
+}
+
+/* ============================================================
+   ÉTAT GLOBAL
+   ============================================================ */
+var DISC    = '';
+var PROMPT  = '';
+
+/* ============================================================
+   DISCIPLINE — SÉLECTION ET RECONFIGURATION
+   ============================================================ */
+function choisirDisc(d) {
+  DISC = d;
+
+  // Cards
+  document.getElementById('card-nsi').className  = 'disc-card' + (d==='nsi'  ? ' selected-nsi'  : '');
+  document.getElementById('card-math').className = 'disc-card' + (d==='math' ? ' selected-math' : '');
+
+  // Sections spécifiques
+  var nsi  = ['ctx-nsi',  'sec-exo-nsi',  'sec-tech-nsi', 'champ-langue-py', 'conseil-nsi'];
+  var math = ['ctx-math', 'sec-exo-math', 'sec-tech-math', 'conseil-math'];
+  var boNsi  = ['bo-nsi'];
+  var boMath = ['bo-math'];
+
+  nsi.forEach(function(id)    { var el=document.getElementById(id); if(el) el.classList.toggle('hidden', d!=='nsi'); });
+  math.forEach(function(id)   { var el=document.getElementById(id); if(el) el.classList.toggle('hidden', d!=='math'); });
+  boNsi.forEach(function(id)  { var el=document.getElementById(id); if(el) el.classList.toggle('hidden', d!=='nsi'); });
+  boMath.forEach(function(id) { var el=document.getElementById(id); if(el) el.classList.toggle('hidden', d!=='math'); });
+
+  // Niveau par défaut
+  var selNiv = document.getElementById('niveau');
+  if (d==='nsi')  selNiv.value = 'Terminale NSI';
+  if (d==='math') selNiv.value = 'Terminale Maths spécialité';
+
+  // Valeurs pré-remplies selon discipline
+  if (d==='nsi')  preRemplirNsi();
+  if (d==='math') preRemplirMath();
+  genererRappelsAuto();
+}
+
+function preRemplirNsi() {
+  set('theme', 'Programmation dynamique');
+  set('sous-titre', 'De la récursion naïve à la solution optimale');
+  set('prerequis', 'Récursivité en Python, listes, dictionnaires, fonctions, POO, arbres, graphes');
+  set('profil', 'Une partie des élèves n\'a pas de spécialité mathématiques. Tous les exemples doivent être concrets et accessibles (jeux, vie quotidienne). Les élèves n\'ont jamais entendu parler du thème avant ce TP.');
+  set('sections', '1. Introduction — Part d\'une situation concrète (rendu de monnaie 6€). Fait ressentir le problème AVANT de le nommer. Animation JS montrant l\'explosion du nombre de chemins. Vocabulaire technique interdit sauf encadré final « Vocabulaire ».\n2. Cours 1 — Mémoïsation (approche descendante) : reprend là où l\'intro s\'est arrêtée, cache dictionnaire, @lru_cache, comparaison naïf vs cache.\n3. Exercice 1 — Escalier (1 ou 2 marches) : mise en situation narrative, mémoïsation appliquée, fonction de test pré-écrite.\n4. Cours 2 — Approche tabulaire (ascendante) : sans récursion, table remplie à la main puis en Python, visualisation interactive pas à pas.\n5. Exercice 2 — Sac à dos 0/1 avec objets concrets nommés, tableau à compléter à la main puis en Python.\n6. Cours 3 — Comparaison mémoïsation vs tabulaire : tableau comparatif, conseil pratique, deux conditions nécessaires.\n7. Exercice 3 — Rendu de monnaie pièces 1/3/4 : deux approches + décomposition + échec de l\'algorithme glouton.\n8. Synthèse — Chemin optimal dans une grille (robot droite/bas) : visualisation statique du chemin optimal, bonus grille aléatoire 5×5.');
+  set('principe', 'Chaque concept est illustré par un exemple concret avant d\'être nommé. L\'élève ressent le problème avant de recevoir la solution. Un concept nouveau maximum par paragraphe. Ton oral, tutoiement, questions rhétoriques.');
+  set('vocab-interdit', 'mémoïsation, sous-problème, récurrence, DP, programmation dynamique, récursion naïve, approche descendante, approche ascendante, tabulaire');
+  set('objectifs', 'À l\'issue de ce TP, l\'élève sera capable de concevoir et implémenter un algorithme de programmation dynamique (mémoïsation et approche tabulaire) pour résoudre un problème d\'optimisation, et d\'expliquer pourquoi cette approche est plus efficace que la récursion naïve.');
+  set('rappels', '1. Chaque fonction Python est suivie d\'une fonction test_ avec minimum 3 assertions et print("Les tests sont validés.").\n2. Aucun attribut id ou class HTML ne contient d\'accent ou de caractère non-ASCII.\n3. L\'introduction n\'utilise aucun terme technique sauf dans l\'encadré final « Vocabulaire ».\n4. Les capacités BO cochées sont toutes couvertes par au moins un exercice ou une section de cours.\n5. PyScript version 2026.3.1 exclusivement.');
+}
+
+function preRemplirMath() {
+  set('theme', 'Suites numériques');
+  set('sous-titre', 'Limites, monotonie et convergence');
+  set('prerequis', 'Calcul algébrique, fonctions de référence, notion intuitive de limite vue en Première');
+  set('profil', 'Classe de Terminale spécialité Maths. Niveau moyen. Quelques élèves envisagent une CPGE, la majorité vise une licence.');
+  set('sections', '1. Rappels et définitions — Définition formelle de la limite d\'une suite, exemples de suites classiques (arithmétiques, géométriques). Distinguer convergence et divergence. Aucune démonstration formelle dans cette section.\n2. Exercices d\'application directe — Calculer des limites de suites simples, déterminer le sens de variation.\n3. Théorèmes de convergence — Théorème des suites monotones bornées, théorème des gendarmes, suites adjacentes. Démonstrations attendues.\n4. Exercices intermédiaires — Prouver la convergence d\'une suite par les théorèmes, déterminer la limite par le raisonnement.\n5. Synthèse — Problème ouvert combinant plusieurs notions : suite définie par récurrence, étude de monotonie, convergence et calcul de la limite.');
+  set('principe', 'Chaque théorème est introduit par un exemple numérique avant d\'être énoncé formellement. Les démonstrations sont guidées étape par étape. Le registre est rigoureux mais accessible, sans jargon inutile.');
+  set('vocab-interdit', '');
+  set('objectifs', 'À l\'issue de cette séquence, l\'élève sera capable de : déterminer si une suite est convergente, calculer sa limite le cas échéant, et rédiger une démonstration rigoureuse à l\'aide des théorèmes du programme.');
+  set('savoirs-maths', 'Définition d\'une suite convergente, limite finie, limite infinie. Théorème des suites monotones bornées. Théorème des gendarmes. Suite adjacente. Lien limite de suite et limite de fonction.');
+  set('savoir-faire-maths', 'Calculer la limite d\'une suite par les opérations sur les limites. Démontrer qu\'une suite est croissante par récurrence. Majorer une suite pour conclure à la convergence. Utiliser le théorème des gendarmes.');
+  set('rappels', '1. Toutes les notations mathématiques respectent les conventions officielles du BO (intervalles français, vecteurs en gras).\n2. Le fichier .tex produit doit être compilable sans fichier externe.\n3. hyperref est chargé EN DERNIER dans le préambule.\n4. Les compétences mathématiques cochées sont mobilisées dans au moins un exercice.\n5. Aucun placeholder % TODO ni section vide dans le document produit.');
+}
+
+function set(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+function g(id) { var el=document.getElementById(id); return el ? el.value.trim() : ''; }
+function ck(id){ var el=document.getElementById(id); return el ? el.checked : false; }
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function allerPage(n) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page'+n).classList.add('active');
+  ['1','2','3'].forEach(function(i){
+    var el = document.getElementById('st'+i);
+    el.classList.remove('active','done');
+    if (+i <  n) el.classList.add('done');
+    if (+i === n) el.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function allerPage1() { allerPage(1); }
+
+function allerPage2() {
+  if (!validerP1()) return;
+  PROMPT = construirePrompt();
+  afficherApercu();
+  allerPage(2);
+}
+
+function allerPage3() {
+  PROMPT = PROMPT || construirePrompt();
+  document.getElementById('apercu-final').textContent = PROMPT;
+  afficherCQ();
+  allerPage(3);
+}
+
+/* ============================================================
+   VALIDATION PAGE 1
+   ============================================================ */
+function validerP1() {
+  var ok = true;
+
+  if (!DISC) {
+    ok = false;
+    document.getElementById('card-nsi').style.border  = '2px solid var(--rouge)';
+    document.getElementById('card-math').style.border = '2px solid var(--rouge)';
+  }
+
+  ['theme','prerequis','sections','principe'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (!el.value.trim()) {
+      el.style.borderColor = 'var(--rouge)';
+      ok = false;
+    } else {
+      el.style.borderColor = '';
+    }
+  });
+
+  document.getElementById('err-p1').classList.toggle('visible', !ok);
+  return ok;
+}
+
+/* ============================================================
+   CONSTRUCTION DU PROMPT
+   ============================================================ */
+function construirePrompt() {
+  var p = '';
+  var isMath = (DISC === 'math');
+  var isNsi  = (DISC === 'nsi');
+
+  var niveau    = g('niveau');
+  var typeRes   = g('type-res');
+  var numRes    = g('num-res');
+  var theme     = g('theme');
+  var sousTitre = g('sous-titre');
+  var prerequis = g('prerequis');
+  var profil    = g('profil');
+  var objectifs = g('objectifs');
+  var sections  = g('sections');
+  var principe  = g('principe');
+  var vocabInter= g('vocab-interdit');
+  var typo      = g('typographie');
+  var ton       = g('ton');
+  var piedPage  = g('pied-page');
+  var rappels   = g('rappels');
+  var autoVerif = g('auto-verif');
+
+  // ---- RÔLE ET CONTEXTE ----
+  p += '## RÔLE ET CONTEXTE\n\n';
+
+  if (isMath) {
+    var themeBo = g('theme-bo-math');
+    p += 'Tu es un professeur de Mathématiques au lycée, spécialisé dans la conception de ressources pédagogiques conformes aux programmes officiels de l\'Éducation nationale française.\n';
+    p += 'Tu maîtrises parfaitement le Bulletin Officiel Mathématiques (spécialité Terminale, arrêté du 17 juillet 2019 modifié en 2020).\n';
+    p += 'Tu as une expérience de la correction d\'épreuves de baccalauréat et tu sais calibrer la difficulté et la rigueur en fonction des attendus officiels.\n';
+    p += 'Ta ressource porte sur le thème : **' + theme + '**';
+    if (sousTitre) p += ' — ' + sousTitre;
+    p += '.\n';
+    p += 'Thème du programme officiel concerné : ' + themeBo + '\n';
+  } else {
+    var themeBo = g('theme-bo-nsi');
+    p += 'Tu es un professeur de NSI (Numérique et Sciences Informatiques) au lycée, expert en conception de ressources pédagogiques interactives sous forme de pages HTML autonomes.\n';
+    p += 'Tu maîtrises parfaitement le Bulletin Officiel NSI (arrêtés du 19 juillet 2019 pour la Première et du 17 juillet 2019 pour la Terminale).\n';
+    p += 'Ton objectif est de produire un ' + typeRes + ' complet et progressif sur le thème : **' + theme + '**';
+    if (sousTitre) p += ' — ' + sousTitre;
+    p += '.\n';
+    p += 'Thème du programme officiel concerné : ' + themeBo + '\n';
+  }
+
+  if (numRes) p += 'Numéro de ressource : ' + numRes + '\n';
+  p += '\n---\n\n';
+
+  // ---- PROFIL DES ÉLÈVES ----
+  p += '## PROFIL DES ÉLÈVES\n\n';
+  p += '- Niveau : ' + niveau + '\n';
+  p += '- Pré-requis validés : ' + prerequis + '\n';
+  if (isNsi) {
+    p += '- Langage de programmation : ' + g('langage') + '\n';
+    p += '- Environnement d\'exécution : ' + g('environnement') + '\n';
+  }
+  if (isMath) {
+    p += '- Outils autorisés : ' + g('outils-maths') + '\n';
+    p += '- Durée de la séance : ' + g('duree-maths') + '\n';
+  }
+  if (profil) p += '- Profil et contraintes particulières : ' + profil + '\n';
+  p += '\n---\n\n';
+
+  // ---- OBJECTIFS PÉDAGOGIQUES & BO ----
+  p += '## OBJECTIFS PÉDAGOGIQUES ET CONFORMITÉ AU BULLETIN OFFICIEL\n\n';
+  p += '[OBLIGATOIRE] Cette section est le référentiel de la ressource. Chaque exercice et chaque section de cours doit contribuer à atteindre au moins un des objectifs listés ci-dessous.\n\n';
+
+  if (objectifs) {
+    p += '### Objectif général\n\n' + objectifs + '\n\n';
+  }
+
+  if (isNsi) {
+    var caps = [];
+    // Capacités pré-définies cochées
+    document.querySelectorAll('#caps-nsi input:checked').forEach(function(el){ caps.push(el.value); });
+    // Capacités extraites du BO uploadé
+    document.querySelectorAll('#caps-extraites-tags input:checked').forEach(function(el){ caps.push(el.value); });
+    if (caps.length) {
+      p += '### Capacités exigibles du BO NSI (à couvrir obligatoirement)\n\n';
+      caps.forEach(function(c){ p += '- ' + c + '\n'; });
+      p += '\n[OBLIGATOIRE] Chaque capacité listée ci-dessus doit être couverte par au moins un exercice ou une section de cours dans la ressource produite.\n\n';
+    }
+  }
+
+  if (isMath) {
+    var comps = [];
+    document.querySelectorAll('#comp-maths input:checked').forEach(function(el){ comps.push(el.value); });
+    // Capacités extraites du BO uploadé
+    document.querySelectorAll('#caps-extraites-tags input:checked').forEach(function(el){ comps.push(el.value); });
+    var savoirs    = g('savoirs-maths');
+    var savoirFaire= g('savoir-faire-maths');
+
+    if (comps.length) {
+      p += '### Compétences mathématiques visées (BO Maths)\n\n';
+      comps.forEach(function(c){ p += '- ' + c + '\n'; });
+      p += '\n[OBLIGATOIRE] Chaque compétence cochée doit être explicitement mobilisée dans au moins un exercice.\n\n';
+    }
+    if (savoirs) {
+      p += '### Savoirs (définitions et théorèmes à connaître)\n\n' + savoirs + '\n\n';
+    }
+    if (savoirFaire) {
+      p += '### Savoir-faire (types de calculs et de démonstrations)\n\n' + savoirFaire + '\n\n';
+    }
+    if (g('notation-maths')) {
+      p += '### [OBLIGATOIRE] Conventions de notation\n\n' + g('notation-maths') + '\n\n';
+    }
+  }
+
+  p += '---\n\n';
+
+  // ---- PRINCIPES PÉDAGOGIQUES ----
+  p += '## PRINCIPES PÉDAGOGIQUES FONDAMENTAUX\n\n';
+  p += 'Ces règles s\'appliquent à chaque section, cours comme exercice, sans exception :\n\n';
+  p += principe + '\n';
+  p += '\n---\n\n';
+
+  // ---- STRUCTURE ----
+  p += '## STRUCTURE DE LA RESSOURCE\n\n';
+  p += 'Le ' + typeRes + ' doit suivre cette progression exacte :\n\n';
+  sections.split('\n').forEach(function(l){ if (l.trim()) p += l.trim() + '\n'; });
+
+  if (vocabInter) {
+    p += '\n### Vocabulaire interdit en introduction\n\n';
+    p += 'Les termes suivants sont INTERDITS dans la section d\'introduction — ils ne peuvent apparaître que dans les sections de cours, après illustration concrète :\n';
+    p += vocabInter + '\n';
+  }
+  p += '\n---\n\n';
+
+  // ---- CONTRAINTES DES EXERCICES ----
+  p += '## CONTRAINTES DES EXERCICES\n\n';
+
+  if (isNsi) {
+    var compos = [];
+    if (ck('cb-sit')) compos.push('Mise en situation narrative');
+    if (ck('cb-eno')) compos.push('Énoncé numéroté');
+    if (ck('cb-ind')) compos.push('Indices progressifs masqués (minimum 2 niveaux)');
+    if (ck('cb-edi')) compos.push('Éditeur de code Python exécutable (PyScript)');
+    if (ck('cb-cor')) compos.push('Correction cachée déverrouillable');
+    if (ck('cb-tst')) compos.push('Fonctions de test pré-écrites [OBLIGATOIRE]');
+
+    p += '### Structure obligatoire de chaque exercice\n\n';
+    compos.forEach(function(c){ p += '- ' + c + '\n'; });
+    p += '\n';
+
+    var regleTests  = g('regle-tests');
+    var exempleTest = g('ex-test');
+    p += '### [OBLIGATOIRE] Fonctions de test dans tous les blocs de code\n\n';
+    p += regleTests + '\n\n';
+    if (exempleTest) {
+      p += 'Exemple de fonction de test attendu :\n\n```python\n' + exempleTest + '\n```\n\n';
+    }
+  }
+
+  if (isMath) {
+    var composM = [];
+    if (ck('cbm-ctx'))  composM.push('Contexte ou mise en situation');
+    if (ck('cbm-quest'))composM.push('Questions numérotées progressives (du plus guidé au plus ouvert)');
+    if (ck('cbm-ind'))  composM.push('Aide ou indication masquable');
+    if (ck('cbm-bar'))  composM.push('Barème par question');
+    if (ck('cbm-cor'))  composM.push('Correction détaillée (LaTeX, développements complets)');
+    if (ck('cbm-comp')) composM.push('Compétences mathématiques mobilisées indiquées en marge');
+
+    var rigueur = g('rigueur-maths');
+    var bareme  = g('bareme-total');
+
+    p += '### Structure obligatoire de chaque exercice\n\n';
+    composM.forEach(function(c){ p += '- ' + c + '\n'; });
+    p += '\n';
+    p += '### Niveau de rigueur\n\n' + rigueur + '\n\n';
+    if (bareme) p += '### Barème total : ' + bareme + ' points\n\n';
+  }
+
+  p += '---\n\n';
+
+  // ---- CONTRAINTES TECHNIQUES ----
+  p += '## CONTRAINTES TECHNIQUES\n\n';
+
+  if (isNsi) {
+    p += '### [OBLIGATOIRE] CDN et versions exactes\n\n';
+    g('cdn').split('\n').forEach(function(l){ if(l.trim()) p += l.trim() + '\n'; });
+    p += '\n### [OBLIGATOIRE] Charte graphique\n\n';
+    g('charte').split('\n').forEach(function(l){ if(l.trim()) p += l.trim() + '\n'; });
+    p += '\n### Polices de caractères\n\n';
+    g('polices').split('\n').forEach(function(l){ if(l.trim()) p += l.trim() + '\n'; });
+    p += '\n### [OBLIGATOIRE] Composants UI\n\n';
+    g('composants').split('\n').forEach(function(l){ if(l.trim()) p += l.trim() + '\n'; });
+    p += '\n### [OBLIGATOIRE] Règles HTML critiques\n\n';
+    g('regles-html').split('\n').forEach(function(l){ if(l.trim()) p += l.trim() + '\n'; });
+  }
+
+  if (isMath) {
+    var classe  = g('latex-classe');
+    var moteur  = g('latex-moteur');
+    var geo     = g('latex-geo');
+    var entete  = g('latex-entete');
+    var regles  = g('latex-regles');
+
+    p += '### Format de sortie LaTeX\n\n';
+    p += '[OBLIGATOIRE] Produire un unique fichier .tex complet et compilable sans fichier externe.\n\n';
+    p += '**Classe :** `\\documentclass{' + classe + '}`\n';
+    p += '**Moteur :** ' + moteur + '\n\n';
+
+    // Packages
+    var pkgs = [];
+    if (ck('pkg-babel')) {
+      if (moteur==='pdflatex') {
+        pkgs.push('\\usepackage[utf8]{inputenc}');
+        pkgs.push('\\usepackage[T1]{fontenc}');
+      } else {
+        pkgs.push('\\usepackage{fontspec}');
+      }
+      pkgs.push('\\usepackage[french]{babel}');
+    }
+    if (ck('pkg-geo'))  pkgs.push('\\usepackage[' + geo + ']{geometry}');
+    if (ck('pkg-ams'))  pkgs.push('\\usepackage{amsmath, amssymb, amsthm}');
+    if (ck('pkg-xcol')) pkgs.push('\\usepackage[dvipsnames,svgnames,x11names]{xcolor}');
+    if (ck('pkg-tcol')) pkgs.push('\\usepackage[most]{tcolorbox}');
+    if (ck('pkg-tikz')) pkgs.push('\\usepackage{tikz}\n\\usepackage{pgfplots}\n\\pgfplotsset{compat=newest}');
+    if (ck('pkg-enum')) pkgs.push('\\usepackage{enumitem}');
+    if (ck('pkg-mdfr')) pkgs.push('\\usepackage{mdframed}');
+    if (ck('pkg-mcol')) pkgs.push('\\usepackage{multicol}');
+    if (ck('pkg-arr'))  pkgs.push('\\usepackage{array, booktabs}');
+    if (ck('pkg-gfx'))  pkgs.push('\\usepackage{graphicx}');
+    if (ck('pkg-href')) pkgs.push('\\usepackage[colorlinks=true,linkcolor=blue]{hyperref} % TOUJOURS EN DERNIER');
+
+    if (pkgs.length) {
+      p += '**Préambule — packages dans cet ordre exact :**\n\n```latex\n\\documentclass{' + classe + '}\n';
+      pkgs.forEach(function(pk){ p += pk + '\n'; });
+      p += '```\n\n';
+    }
+
+    // Environnements
+    var envs = [];
+    if (ck('env-exo'))  envs.push('\\newcounter{exercice}\n\\newenvironment{exercice}[1][]{\\refstepcounter{exercice}\\par\\medskip\\noindent\\textbf{Exercice~\\theexercice~#1.}\\space}{\\par\\medskip}');
+    if (ck('env-sol'))  envs.push('\\newif\\ifshowanswers\\showanswersfalse\n\\newenvironment{solution}{\\ifshowanswers\\par\\textit{Solution :}\\space}{\\fi}');
+    if (ck('env-def'))  envs.push('\\newtheorem{definition}{Définition}[section]');
+    if (ck('env-thm'))  envs.push('\\newtheorem{theoreme}[definition]{Théorème}');
+    if (ck('env-prop')) envs.push('\\newtheorem{propriete}[definition]{Propriété}');
+    if (ck('env-rem'))  envs.push('\\newtheorem*{remarque}{Remarque}');
+    if (ck('env-ex'))   envs.push('\\newtheorem*{exemple}{Exemple}');
+    if (ck('env-meth')) envs.push('\\newtheorem*{methode}{Méthode}');
+
+    if (envs.length) {
+      p += '**Environnements pédagogiques (dans le préambule) :**\n\n```latex\n';
+      envs.forEach(function(e){ p += e + '\n'; });
+      p += '```\n\n';
+    }
+
+    if (entete) {
+      p += '**En-tête :**\n';
+      entete.split('\n').forEach(function(l){ if(l.trim()) p += '- ' + l.trim() + '\n'; });
+      p += '\n';
+    }
+
+    if (regles) {
+      p += '**[OBLIGATOIRE] Règles de compilation critiques :**\n\n';
+      regles.split('\n').forEach(function(l){ var li=l.trim(); if(li) p += '- '+li+'\n'; });
+    }
+  }
+
+  p += '\n---\n\n';
+
+  // ---- LINGUISTIQUE ----
+  p += '## EXIGENCES LINGUISTIQUES\n\n';
+  p += '### Typographie\n\n' + typo + '\n\n';
+  p += '### Ton et registre\n\n' + ton + '\n\n';
+  if (isNsi) p += '### Langue des identifiants Python\n\n' + g('langue-py') + '\n\n';
+  p += '---\n\n';
+
+  // ---- FORMAT DE SORTIE ----
+  p += '## FORMAT DE SORTIE\n\n';
+  if (isNsi) {
+    p += 'Produire une seule page HTML complète et autonome (de <!DOCTYPE html> à </html>).\n';
+    p += '- Fonctionne sans serveur, directement dans un navigateur moderne\n';
+    p += '- Styles dans <style> dans le <head>, scripts JavaScript en fin de <body>\n';
+    p += '- Pied de page : « ' + piedPage + ' »\n';
+  }
+  if (isMath) {
+    p += 'Produire un unique fichier .tex complet (de \\documentclass à \\end{document}).\n';
+    p += '- Compilable sans fichier externe, en une seule passe ' + g('latex-moteur') + '\n';
+    p += '- Colophon/pied de page : « ' + piedPage + ' »\n';
+  }
+  p += '\n**Rappel critique avant de clore la ressource :** ' + autoVerif + '\n';
+  p += '\n---\n\n';
+
+  // ---- CONTRÔLE QUALITÉ ----
+  p += '## CONTRÔLE QUALITÉ FINAL\n\n';
+  p += 'Lire cette checklist AVANT de commencer à générer. La parcourir à nouveau avant de clore la ressource et corriger immédiatement tout point non satisfait.\n\n';
+  p += '### Pédagogie\n';
+  p += '- [ ] L\'introduction ne contient aucun terme technique interdit\n';
+  p += '- [ ] Chaque concept est illustré avant d\'être nommé\n';
+  p += '- [ ] Chaque paragraphe introduit au maximum un concept nouveau\n';
+  p += '- [ ] Ton oral, tutoiement, questions rhétoriques\n';
+  p += '- [ ] Chaque section de cours reprend là où la précédente s\'est arrêtée\n\n';
+
+  p += '### Conformité au Bulletin Officiel\n';
+  p += '- [ ] Toutes les capacités/compétences BO cochées sont couvertes par au moins un exercice\n';
+  p += '- [ ] Le thème du programme est respecté — aucun contenu hors programme\n';
+  if (isMath) {
+    p += '- [ ] Toutes les notations mathématiques respectent les conventions officielles du BO\n';
+    p += '- [ ] Le niveau de rigueur est conforme aux attendus du baccalauréat\n';
+  }
+  p += '\n';
+
+  if (isNsi) {
+    p += '### [OBLIGATOIRE] Fonctions de test\n';
+    p += '- [ ] Chaque bloc de code contenant une fonction est suivi d\'une fonction test_ avec 3 assertions\n';
+    p += '- [ ] Toutes les valeurs attendues sont des littéraux pré-calculés et exacts\n';
+    p += '- [ ] Chaque fonction test_ se termine par print("Les tests sont validés.")\n';
+    p += '- [ ] Chaque fonction test_ est appelée immédiatement après sa définition\n';
+    p += '- [ ] Les éditeurs d\'exercices contiennent la fonction de test pré-écrite\n';
+    p += '- [ ] Les corrections contiennent les mêmes assertions que les énoncés\n\n';
+  }
+
+  if (isMath) {
+    p += '### LaTeX\n';
+    p += '- [ ] Le fichier .tex est compilable sans fichier externe\n';
+    p += '- [ ] Tous les packages sont dans le préambule dans le bon ordre (hyperref en dernier)\n';
+    p += '- [ ] Les environnements personnalisés sont définis dans le préambule\n';
+    p += '- [ ] Aucun placeholder % TODO ni section vide\n\n';
+  }
+
+  p += '### Technique\n';
+  if (isNsi) {
+    p += '- [ ] Aucun id ou class HTML ne contient un caractère non-ASCII\n';
+    p += '- [ ] Les versions exactes des CDN sont utilisées\n';
+    p += '- [ ] Navigation sticky + bouton retour en haut présents\n';
+  }
+  p += '- [ ] Le pied de page correspond exactement à : ' + piedPage + '\n';
+  p += '- [ ] Tous les accents français sont présents dans le texte courant\n';
+  p += '\n---\n\n';
+
+  // ---- RAPPELS ----
+  p += '## RAPPELS DE DERNIÈRE MINUTE\n\n';
+  p += '*Ce bloc est lu juste avant de commencer à générer. Il récapitule les contraintes les plus susceptibles d\'être oubliées.*\n\n';
+  rappels.split('\n').forEach(function(l){
+    var li = l.trim();
+    if (li) {
+      if (!/^\d+\./.test(li)) li = '- ' + li;
+      p += li + '\n';
+    }
+  });
+
+  return p;
+}
+
+/* ============================================================
+   AFFICHAGE APERÇU + STATS
+   ============================================================ */
+function afficherApercu() {
+  document.getElementById('apercu-prompt').textContent = PROMPT;
+  // Réinitialiser le mode édition
+  setModePrompt('apercu');
+  afficherStats();
+}
+
+function sb(v,l){ return '<div class="stat"><span class="stat-v">'+v+'</span><span class="stat-l">'+l+'</span></div>'; }
+
+/* ============================================================
+   GROQ — TEST + ÉVALUATION
+   ============================================================ */
+async function testerAPI() {
+  var cle    = document.getElementById('api-key').value.trim();
+  var statEl = document.getElementById('api-st');
+  var errEl  = document.getElementById('err-api');
+  var okEl   = document.getElementById('ok-api');
+
+  errEl.classList.remove('visible');
+  okEl.classList.remove('visible');
+
+  if (!cle) { statEl.className='api-st ko'; statEl.textContent='Clé manquante'; return; }
+
+  statEl.className='api-st idle'; statEl.textContent='Test…';
+
+  try {
+    var r = await fetch('https://api.groq.com/openai/v1/models',
+      { headers:{ 'Authorization':'Bearer '+cle } });
+    if (r.ok) {
+      statEl.className='api-st ok'; statEl.textContent='Connexion OK';
+      okEl.textContent='Connexion établie. Tu peux évaluer ton prompt.';
+      okEl.classList.add('visible');
+    } else {
+      statEl.className='api-st ko'; statEl.textContent='Clé invalide';
+      errEl.textContent='Clé API invalide ou expirée. Vérifie sur console.groq.com.';
+      errEl.classList.add('visible');
+    }
+  } catch(e) {
+    statEl.className='api-st ko'; statEl.textContent='Erreur réseau';
+    errEl.textContent='Impossible de contacter Groq. Vérifie ta connexion internet.';
+    errEl.classList.add('visible');
+  }
+}
+
+async function evaluerPrompt() {
+  var cle = document.getElementById('api-key').value.trim();
+  if (!cle) {
+    document.getElementById('err-api').textContent='Saisis ta clé API avant d\'évaluer.';
+    document.getElementById('err-api').classList.add('visible');
+    return;
+  }
+
+  document.getElementById('loader-msg').textContent='Évaluation spécialisée en cours…';
+  document.getElementById('loader').classList.add('on');
+  document.getElementById('btn-eval').disabled = true;
+
+  var disc = DISC==='math' ? 'mathématiques (BO Maths Terminale spécialité)' : 'NSI (BO NSI Terminale)';
+
+  var sysPmt = 'Tu es un expert en ingénierie pédagogique et en prompt engineering pour l\'enseignement secondaire français.\n'
+    + 'Tu évalues des prompts destinés à générer des ressources pédagogiques pour des lycéens en ' + disc + '.\n'
+    + 'Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks, sans texte avant ou après.\n'
+    + 'Format exact :\n'
+    + '{"criteres":['
+    + '{"nom":"Clarté pédagogique","note":4,"commentaire":"..."},'
+    + '{"nom":"Conformité au BO","note":3,"commentaire":"..."},'
+    + '{"nom":"Précision technique","note":4,"commentaire":"..."},'
+    + '{"nom":"Qualité des exemples","note":5,"commentaire":"..."},'
+    + '{"nom":"Résistance à l\'oubli (anti lost-in-middle)","note":4,"commentaire":"..."}'
+    + '],"note_globale":4,"resume":"Phrase de résumé global.","suggestions":["Suggestion 1.","Suggestion 2.","Suggestion 3."]}';
+
+  var usrPmt = 'Évalue ce prompt pédagogique pour la discipline ' + disc + ' en analysant :\n'
+    + '1. Clarté pédagogique : les contraintes pédagogiques sont-elles claires et précises ?\n'
+    + '2. Conformité au BO : le prompt ancre-t-il explicitement la ressource dans le programme officiel ?\n'
+    + '3. Précision technique : les contraintes techniques (HTML ou LaTeX) sont-elles suffisamment précises ?\n'
+    + '4. Qualité des exemples : les exemples fournis (few-shot) sont-ils pertinents et corrects ?\n'
+    + '5. Résistance à l\'oubli : le prompt dispose-t-il de mécanismes efficaces contre le phénomène "lost in the middle" ?\n\n'
+    + 'Voici le prompt :\n\n' + PROMPT.substring(0, 6000);
+
+  try {
+    var r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization':'Bearer '+cle, 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 1200,
+        temperature: 0.25,
+        messages: [
+          { role:'system', content: sysPmt },
+          { role:'user',   content: usrPmt }
+        ]
+      })
+    });
+
+    var data = await r.json();
+    if (!r.ok) throw new Error(data.error && data.error.message ? data.error.message : 'Erreur API');
+
+    var txt = data.choices[0].message.content.trim().replace(/```json|```/g,'').trim();
+    var d = JSON.parse(txt);
+    afficherEval(d);
+
+  } catch(e) {
+    document.getElementById('err-api').textContent = 'Erreur : ' + e.message;
+    document.getElementById('err-api').classList.add('visible');
+  } finally {
+    document.getElementById('loader').classList.remove('on');
+    document.getElementById('btn-eval').disabled = false;
+  }
+}
+
+function afficherEval(d) {
+  var critEl = document.getElementById('eval-criteres');
+  critEl.innerHTML = '';
+  d.criteres.forEach(function(c){
+    var cls = 'n' + Math.min(5,Math.max(1,Math.round(c.note)));
+    critEl.innerHTML += '<div class="eval-crit"><div class="eval-note '+cls+'">'+c.note+'/5</div><div class="eval-corps"><h4>'+c.nom+'</h4><p>'+c.commentaire+'</p></div></div>';
+  });
+
+  var n = d.note_globale;
+  document.getElementById('eval-global').innerHTML =
+    '<div class="eval-global"><div class="eval-global-n">'+n+'/5</div><div class="eval-global-t"><strong>Note globale</strong><br>'+(d.resume||'')+'</div></div>';
+
+  if (d.suggestions && d.suggestions.length) {
+    var html = '<div class="eval-sugg"><h4>Suggestions d\'amélioration</h4><ul>';
+    d.suggestions.forEach(function(s){ html += '<li>'+s+'</li>'; });
+    document.getElementById('eval-sugg').innerHTML = html + '</ul></div>';
+  }
+
+  document.getElementById('eval-zone').style.display = 'block';
+  document.getElementById('btn-p2').style.display = 'none';
+}
+
+/* ============================================================
+   CONTRÔLE QUALITÉ — PAGE 3
+   ============================================================ */
+function afficherCQ() {
+  var p       = PROMPT;
+  var isMath  = (DISC === 'math');
+  var isNsi   = (DISC === 'nsi');
+  var has     = function(s){ return p.indexOf(s) !== -1; };
+
+  function li(ok, crit, lbl, conseil) {
+    var ic = ok ? '<span class="ck-ok">✓</span>'
+               : (crit ? '<span class="ck-ko">✗</span>' : '<span class="ck-warn">△</span>');
+    var cs = (!ok && conseil) ? '<span class="cq-conseil">— '+conseil+'</span>' : '';
+    return '<li>'+ic+' '+lbl+cs+'</li>';
+  }
+
+  var critiques = [];
+
+  // --- Volet 1 : Pédagogie ---
+  var v1 = [];
+  v1.push(li(has('PRINCIPES PÉDAGOGIQUES'),false,'Principes pédagogiques fondamentaux présents','Remplis le champ "Principe pédagogique central"'));
+  v1.push(li(has('STRUCTURE'),true,'Structure de la ressource (plan des sections) présente','La section "Sections" est obligatoire'));
+  v1.push(li(has('concept') || has('illustré') || has('AVANT'),false,'Principe "illustrer avant de nommer" mentionné','Ajoute cette règle dans le principe pédagogique central'));
+  v1.push(li(has('tutoiement') || has('"tu"') || has('ton oral'),false,'Consigne de tutoiement et ton oral présente','Précise dans "Ton et registre"'));
+  v1.push(li(has('Vocabulaire interdit') || has('INTERDITS') || has('interdit en introduction'),false,'Contrainte de vocabulaire interdit en introduction définie','Remplis le champ "Vocabulaire interdit en introduction"'));
+  critiques.push(has('STRUCTURE'));
+
+  // --- Volet 2 : Exercices ---
+  var v2 = [];
+  if (isNsi) {
+    document.getElementById('v2-titre').textContent = 'Volet 2 — Fonctions de test [OBLIGATOIRE]';
+    v2.push(li(has('test_') && has('assert'),true,'Convention test_ et assertions présentes','Remplis la règle des fonctions de test'));
+    v2.push(li(has('minimum 3') || has('3 assertions'),true,'Minimum 3 assertions exigé','Précise "minimum 3 assertions" dans la règle'));
+    v2.push(li(has('Les tests sont valid'),true,'print("Les tests sont validés.") requis','Signal de succès indispensable pour l\'élève'));
+    v2.push(li(has('appelée immédiatement') || has('appel') && has('définition'),false,'Appel immédiat après la définition présent','Ajoute "appelée immédiatement après sa définition"'));
+    v2.push(li(has('pré-écrite') || has('fournie'),true,'Fonction de test pré-écrite dans les éditeurs demandée','L\'élève doit trouver la fonction de test déjà écrite'));
+    v2.push(li(has('mêmes assertions') || has('correction') && has('assertion'),false,'Concordance énoncé/correction exigée','Les corrections doivent contenir les mêmes assertions'));
+    v2.push(li(has('```python') && has('def test_'),true,'Exemple few-shot fourni','Un exemple concret double l\'efficacité de la règle'));
+    v2.push(li(has('OBLIGATOIRE') && has('test'),false,'Marquage [OBLIGATOIRE] sur la règle des tests','Le marquage augmente la priorité accordée par le modèle'));
+    critiques.push(has('test_') && has('assert'), has('Les tests sont valid'), has('pré-écrite') || has('fournie'));
+  }
+  if (isMath) {
+    document.getElementById('v2-titre').textContent = 'Volet 2 — Exercices mathématiques';
+    v2.push(li(has('numérotées') || has('numéroté'),false,'Questions numérotées et progressives demandées','Coche "Questions numérotées" dans les composants'));
+    v2.push(li(has('barème') || has('Barème') || has('points'),false,'Barème par question demandé','Active le composant "Barème par question"'));
+    v2.push(li(has('rigueur') || has('démonstration'),false,'Niveau de rigueur précisé','Remplis le champ "Niveau de rigueur"'));
+    v2.push(li(has('notation') || has('BO') && has('convention'),false,'Conventions de notation imposées','Remplis le champ "Règles de notation mathématiques"'));
+    v2.push(li(has('Compétences mathématiques') || has('Chercher') || has('Modéliser'),false,'Compétences mathématiques (BO) référencées','Coche au moins une compétence dans la Section 02'));
+  }
+
+  // --- Volet 3 : Technique ---
+  var v3 = [];
+  if (isNsi) {
+    document.getElementById('v3-titre').textContent = 'Volet 3 — Technique HTML';
+    v3.push(li(has('PyScript') && has('2026'),true,'Version exacte PyScript 2026.3.1 spécifiée','Sans version exacte, l\'IA peut utiliser une version incompatible'));
+    v3.push(li(has('Bootstrap') && has('5.3'),false,'Version Bootstrap spécifiée','Précise la version dans le champ CDN'));
+    v3.push(li(has('ASCII') && (has('id') || has('class')),true,'Règle ASCII sur id et class présente','Règle la plus souvent violée — indispensable'));
+    v3.push(li(has('Rubik Dirt') || has('JetBrains Mono'),false,'Polices de caractères spécifiées','Remplis le champ "Polices de caractères"'));
+    v3.push(li(has('--bg-main') || has('--accent'),false,'Charte graphique (variables CSS) présente','Remplis le champ "Charte graphique"'));
+    v3.push(li(has('sticky') || has('navigation sticky'),false,'Navigation sticky mentionnée','Ajoute ce composant dans "Composants UI"'));
+    critiques.push(has('PyScript') && has('2026'), has('ASCII') && (has('id') || has('class')));
+  }
+  if (isMath) {
+    document.getElementById('v3-titre').textContent = 'Volet 3 — Technique LaTeX';
+    v3.push(li(has('documentclass') || has('\\documentclass'),true,'Classe de document spécifiée','La classe détermine toute la structure'));
+    v3.push(li(has('hyperref') && (has('EN DERNIER') || has('en dernier') || has('dernier')),true,'Règle hyperref en dernier présente','hyperref en mauvais ordre casse la compilation'));
+    v3.push(li(has('inputenc') || has('fontspec'),true,'Package d\'encodage (inputenc ou fontspec) spécifié','Indispensable pour les accents français'));
+    v3.push(li(has('babel') && has('french'),false,'babel avec option french inclus','Sans babel french, la typographie française est incorrecte'));
+    v3.push(li(has('compilable') || has('une seule passe'),true,'Contrainte "compilable sans fichier externe" présente','L\'IA ne doit pas générer de \\include vers des fichiers manquants'));
+    v3.push(li(has('newtheorem') || has('newenvironment') || has('préambule'),false,'Environnements dans le préambule demandés','Les \\newtheorem doivent être dans le préambule'));
+    critiques.push(has('documentclass') || has('\\documentclass'), has('hyperref') && has('dernier'), has('inputenc') || has('fontspec'), has('compilable'));
+  }
+  v3.push(li(has('RAPPELS DE DERNIÈRE MINUTE') || has('RAPPELS DE DERNIERE'),true,'Bloc rappels de dernière minute présent','Ce bloc lutte contre le phénomène lost-in-middle'));
+  v3.push(li(has('auto-vérification') || has('avant de clore') || has('checklist'),false,'Instruction d\'auto-vérification présente','Remplis le champ "Instruction d\'auto-vérification"'));
+  critiques.push(has('RAPPELS DE DERNIÈRE MINUTE') || has('RAPPELS DE DERNIERE'));
+
+  // --- Volet 4 : Conformité BO ---
+  var v4 = [];
+  v4.push(li(has('Bulletin Officiel') || has('BO NSI') || has('BO Maths'),true,'Référence explicite au BO dans le prompt','La référence au BO est la garantie de conformité programme'));
+  v4.push(li(has('Capacités exigibles') || has('Compétences mathématiques visées'),true,'Capacités/compétences BO listées dans le prompt','Coche des capacités dans la Section 02'));
+  v4.push(li(has('hors programme') || has('OBLIGATOIRE') && has('couvert'),false,'Contrainte "aucun contenu hors programme" présente','Ajoute "aucun contenu hors programme" dans les objectifs'));
+  v4.push(li(has('Objectifs pédagogiques') || has('objectif général') || has('sera capable'),false,'Objectifs opérationnels formulés','Remplis le champ "Objectifs opérationnels"'));
+  if (isMath) {
+    v4.push(li(has('notation') && (has('BO') || has('convention') || has('officielle')),false,'Conventions de notation officielles imposées','Remplis "Règles de notation mathématiques"'));
+    v4.push(li(has('rigueur') || has('baccalauréat'),false,'Niveau de rigueur conforme au bac précisé','Précise le niveau de rigueur dans la Section 04'));
+  }
+  critiques.push(has('Bulletin Officiel') || has('BO NSI') || has('BO Maths'),
+                 has('Capacités exigibles') || has('Compétences mathématiques'));
+
+  // --- Rendu ---
+  document.getElementById('cq-v1').innerHTML = v1.join('');
+  document.getElementById('cq-v2').innerHTML = v2.join('');
+  document.getElementById('cq-v3').innerHTML = v3.join('');
+  document.getElementById('cq-v4').innerHTML = v4.join('');
+
+  // Score global
+  var all = v1.concat(v2,v3,v4).join('');
+  var ok  = (all.match(/ck-ok/g)||[]).length;
+  var tot = (all.match(/ck-ok|ck-ko|ck-warn/g)||[]).length;
+  var pct = Math.round(ok/tot*100);
+
+  var col = pct>=85?'var(--vert)':pct>=65?'var(--or)':'var(--rouge)';
+  var lbl = pct>=85?'Prompt de qualité professionnelle':pct>=65?'Prompt correct — améliorations possibles':'Prompt incomplet — points critiques manquants';
+
+  document.getElementById('score-n').textContent     = ok+'/'+tot;
+  document.getElementById('score-n').style.color     = col;
+  document.getElementById('score-label').textContent = lbl;
+  document.getElementById('score-detail').textContent= pct+'% des critères validés — '+(tot-ok)+' point(s) à corriger';
+
+  var critiquesMnq = critiques.filter(function(b){return !b;}).length;
+  var alEl = document.getElementById('cq-alerte');
+  if (critiquesMnq>0) {
+    alEl.textContent = critiquesMnq+' point(s) critique(s) manquant(s). Les points marqués ✗ en rouge doivent être corrigés avant export — retourne à l\'étape 1.';
+    alEl.classList.add('visible');
+  } else {
+    alEl.classList.remove('visible');
+  }
+}
+
+/* ============================================================
+   EXPORT
+   ============================================================ */
+function dlTxt() {
+  var nom = (g('theme')||'prompt').replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
+  var b   = new Blob([PROMPT],{type:'text/plain;charset=utf-8'});
+  var url = URL.createObjectURL(b);
+  var a   = document.createElement('a');
+  a.href = url; a.download = 'prompt-'+DISC+'-'+nom+'.txt';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+async function copier() {
+  try {
+    await navigator.clipboard.writeText(PROMPT);
+    var m = document.getElementById('msg-copie');
+    m.classList.add('visible');
+    setTimeout(function(){ m.classList.remove('visible'); }, 3000);
+  } catch(e) {
+    alert('Copie impossible — sélectionne le texte dans l\'aperçu et copie manuellement (Ctrl+A puis Ctrl+C).');
+  }
+}
+</script>
+</body>
+</html>

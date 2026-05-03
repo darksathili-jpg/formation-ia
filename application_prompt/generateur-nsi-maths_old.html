@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de prompts — NSI &amp; Mathématiques</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-msg" id="loading-msg">…</div>
+  </div>
+  <div class="toast" id="toast">Sauvegardé</div>
+  <div class="modal-overlay" id="modal-rename">
+    <div class="modal-box">
+      <h3>Nommer ce prompt</h3>
+      <div class="field"><label>Nom du prompt</label><input type="text" id="modal-slot-name"
+          placeholder="Ex: TP_Term_ProgDyn" maxlength="40"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="fermerModal()">Annuler</button>
+        <button class="btn btn-success" onclick="confirmerSauvegardeSlot()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LATEX -->
+  <div class="modal-overlay" id="modal-latex">
+    <div class="modal-box" style="width:min(680px,95vw);max-height:90vh;overflow-y:auto;">
+      <h3 style="margin-bottom:.6rem;">Export LaTeX — document compilable</h3>
+      <div class="encart-pedago ep-bleu" style="margin-bottom:.9rem;">
+        <span class="encart-pedago-titre">Compilation</span>
+        <p>Sauvegarde le fichier <code style="color:#93c5fd;">.tex</code> puis compile avec :<br>
+          <code
+            style="color:#ffc107;font-size:.82rem;">lualatex -synctex=1 -interaction=nonstopmode document.tex</code><br>
+          Packages requis : <code style="color:#93c5fd;">amsmath geometry enumitem xcolor pifont fancyhdr</code>
+        </p>
+      </div>
+      <div class="field-row col2" style="margin-bottom:.7rem;">
+        <div class="field"><label>Format de page</label>
+          <select id="latex-format">
+            <option value="a4paper,landscape,twocolumn">A4 paysage 2 colonnes (TP/DS)</option>
+            <option value="a4paper,portrait">A4 portrait (cours, fiche)</option>
+            <option value="a4paper,landscape">A4 paysage 1 colonne (éval longue)</option>
+          </select>
+        </div>
+        <div class="field"><label>Police</label>
+          <select id="latex-police">
+            <option value="iwona">Iwona Light (NSI — ta config)</option>
+            <option value="lmodern">Latin Modern (standard)</option>
+            <option value="libertine">Linux Libertine (élégant)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row col2" style="margin-bottom:.7rem;">
+        <div class="field"><label>Couleur titre</label><input type="color" id="latex-color-titre" value="#D32F2F"
+            style="height:32px;padding:2px;"></div>
+        <div class="field"><label>Couleur encadrés</label><input type="color" id="latex-color-encadre" value="#1976D2"
+            style="height:32px;padding:2px;"></div>
+      </div>
+      <div class="field" style="margin-bottom:.7rem;"><label>Aperçu du code LaTeX généré</label>
+        <div class="code-box" id="latex-preview" style="max-height:320px;font-size:.72rem;color:#a8ffa0;"></div>
+      </div>
+      <div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+        <button class="btn btn-outline" onclick="fermerModalLatex()">Annuler</button>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="genererLatex()">↻ Régénérer</button>
+          <button class="btn btn-warning" onclick="copierLatex()" id="btn-copier-latex">■ Copier .tex</button>
+          <button class="btn btn-success" onclick="telechargerLatex()">↓ Télécharger .tex</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 id="main-title">Générateur de prompts</h1>
+    <p class="subtitle">NSI &amp; Mathématiques · Construit · Évalue · Exporte</p>
+    <div class="util-bar">
+      <button class="btn-util" id="btn-theme" onclick="toggleTheme()" title="Basculer thème clair / sombre">
+        <span id="theme-label">Thème clair</span>
+      </button>
+      <button class="btn btn-warning" id="btn-latex" onclick="ouvrirModalLatex()"
+        title="Exporter en LaTeX compilable LuaLaTeX" style="font-size:.78rem;padding:6px 14px;">
+        📄 Export LaTeX
+      </button>
+    </div>
+    <div class="disc-selector">
+      <button class="disc-btn nsi active" id="btn-disc-nsi" onclick="changerDiscipline('NSI')">
+        NSI
+        <span class="disc-sub">Numérique et Sciences Informatiques</span>
+      </button>
+      <button class="disc-btn maths" id="btn-disc-maths" onclick="changerDiscipline('Maths')">
+        Mathématiques
+        <span class="disc-sub">Terminale · Première · Seconde · Expertes</span>
+      </button>
+    </div>
+    <div class="library-bar">
+      <label>Bibliothèque</label>
+      <div class="library-slots" id="library-slots"></div>
+      <div class="lib-actions">
+        <button class="lib-btn save" onclick="ouvrirModalSauvegarde()">+ Sauvegarder</button>
+        <button class="lib-btn del" onclick="supprimerSlotActif()">Supprimer</button>
+        <button class="lib-btn" onclick="nouveauPrompt()">Nouveau</button>
+      </div>
+    </div>
+    <div class="stepper">
+      <div class="step-item active" id="step-ind-1">
+        <div class="step-num">1</div> Construire
+      </div>
+      <div class="step-sep"></div>
+      <div class="step-item" id="step-ind-2">
+        <div class="step-num">2</div> Aperçu &amp; IA
+      </div>
+      <div class="step-sep"></div>
+      <div class="step-item" id="step-ind-3">
+        <div class="step-num">3</div> Export
+      </div>
+    </div>
+
+    <!-- PAGE 1 -->
+    <div class="page active" id="page1">
+      <!-- SEC 00 : CADRE -->
+      <div class="form-section s-bleu" id="sec-00">
+        <div class="form-section-header">
+          <div class="section-num-badge">00</div>
+          <div class="section-titre-bloc">
+            <h2>Cadre de la ressource</h2>
+            <p class="section-desc">Type · Niveau · Format — ces trois choix reconfigurent tout le formulaire.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field-row col3">
+            <div class="field"><label>Type de ressource <span class="label-requis">*</span></label>
+              <select id="type-ressource" onchange="adapterContexte()">
+                <option value="TP guidé">TP guidé</option>
+                <option value="Cours interactif">Cours interactif</option>
+                <option value="Activité découverte">Activité découverte</option>
+                <option value="Évaluation">Évaluation</option>
+                <option value="Fiche de révision">Fiche de révision</option>
+                <option value="Projet en autonomie">Projet en autonomie</option>
+              </select>
+            </div>
+            <div class="field"><label>Niveau <span class="label-requis">*</span></label>
+              <select id="niveau" onchange="adapterNiveau()"></select>
+            </div>
+            <div class="field"><label>Format de sortie <span class="label-requis">*</span></label>
+              <select id="format-sortie" onchange="adapterContexte()">
+                <option value="HTML interactif">Page HTML interactive</option>
+                <option value="PDF imprimable">PDF / HTML imprimable A4</option>
+                <option value="Markdown">Document Markdown</option>
+                <option value="DOCX">Document Word décrit</option>
+                <option value="Présentation HTML">Présentation HTML (reveal.js)</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row col3">
+            <div class="field"><label>Chapitre du programme</label>
+              <select id="chapitre-preset" onchange="appliquerPresetChapitre()">
+                <option value="">— Sélectionner dans le programme —</option>
+              </select>
+            </div>
+            <div class="field"><label>Thème personnalisé <span class="label-requis">*</span></label>
+              <input type="text" id="theme" placeholder="Ou saisis un thème libre…">
+            </div>
+            <div class="field"><label>N° de ressource</label>
+              <input type="text" id="num-ressource" value="01" placeholder="01">
+            </div>
+          </div>
+          <div class="field-row col2">
+            <div class="field"><label>Sous-titre</label>
+              <input type="text" id="sous-titre" placeholder="Phrase descriptive courte — optionnel">
+            </div>
+            <div class="field"><label>Référence au programme officiel <span class="badge-rec">Recommandé</span></label>
+              <input type="text" id="ref-programme"
+                placeholder="Ex : Programme NSI Terminale — BO 2019 — Algorithmique">
+              <div class="astuce">Ancre la ressource dans le référentiel institutionnel.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 01 : COMPÉTENCES -->
+      <div class="form-section s-violet" id="sec-01">
+        <div class="form-section-header">
+          <div class="section-num-badge">01</div>
+          <div class="section-titre-bloc">
+            <h2 id="sec01-titre">Compétences ciblées</h2>
+            <p class="section-desc" id="sec01-desc">Compétences officielles du programme mobilisées par cette ressource.
+            </p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-01',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-01',this)">Actif</button>
+        </div>
+        <div class="section-body">
+          <div class="comp-grid" id="comp-grid"></div>
+          <div class="field-row" style="margin-top:.75rem;">
+            <div class="field"><label>Objectifs d'apprentissage mesurables <span
+                  class="badge-rec">Recommandé</span></label>
+              <p class="field-explication">À la fin, l'élève doit savoir… Formulés en termes d'action observable.</p>
+              <div id="objectifs-list">
+                <div class="objectif-item"><input type="text" class="objectif-input"
+                    placeholder="À la fin, l'élève sait…"><button onclick="supprimerObjectif(this)">✕</button></div>
+              </div>
+              <button class="add-objectif-btn" onclick="ajouterObjectif()">+ Ajouter un objectif</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 02 : PROFIL -->
+      <div class="form-section s-cyan" id="sec-02">
+        <div class="form-section-header">
+          <div class="section-num-badge">02</div>
+          <div class="section-titre-bloc">
+            <h2>Profil des élèves</h2>
+            <p class="section-desc">Calibre le niveau de langage, les pré-requis et les contraintes de la classe.</p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-02',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-02',this)">Actif</button>
+        </div>
+        <div class="section-body">
+          <div class="field-row col2">
+            <div class="field"><label>Pré-requis validés <span class="label-requis">*</span></label>
+              <textarea id="prerequis" placeholder="Notions maîtrisées par les élèves…"></textarea>
+              <div class="astuce">L'IA ne réexpliquera pas ces notions.</div>
+            </div>
+            <div class="field"><label>Profil &amp; contraintes de la classe</label>
+              <textarea id="profil-eleves"
+                placeholder="Hétérogénéité, difficultés spécifiques, interdits pédagogiques…"></textarea>
+              <div class="avert">Ces contraintes influencent fortement la ressource générée.</div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Différenciation pédagogique</label>
+              <p class="field-explication">L'IA produit plusieurs versions du même contenu selon le niveau des élèves.
+              </p>
+              <div class="diff-selector">
+                <label class="diff-level"><input type="radio" name="differentiation" value="une_version" checked><span
+                    class="diff-label">Une version</span><span class="diff-desc">Niveau
+                    classe unifié</span></label>
+                <label class="diff-level"><input type="radio" name="differentiation" value="deux_versions"><span
+                    class="diff-label">Deux versions</span><span class="diff-desc">Accessible +
+                    Approfondi</span></label>
+                <label class="diff-level"><input type="radio" name="differentiation" value="trois_versions"><span
+                    class="diff-label">Trois versions</span><span class="diff-desc">Guidé / Attendu /
+                    Expert</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="field-row col2" id="row-langage-env">
+            <div class="field"><label>Langage de programmation</label>
+              <select id="langage">
+                <option value="Python uniquement">Python uniquement</option>
+                <option value="Python et JavaScript">Python et JavaScript</option>
+                <option value="JavaScript uniquement">JavaScript uniquement</option>
+              </select>
+            </div>
+            <div class="field"><label>Environnement d'exécution</label>
+              <select id="environnement">
+                <option value="Navigateur — PyScript 2026.3.1">Navigateur — PyScript 2026.3.1</option>
+                <option value="IDE local (Thonny, VSCode)">IDE local (Thonny, VSCode)</option>
+                <option value="Basthon (en ligne)">Basthon (en ligne)</option>
+                <option value="Jupyter Notebook">Jupyter Notebook</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row col2" id="row-maths-specifique" style="display:none;">
+            <div class="field"><label>Niveau de formalisme</label>
+              <select id="formalisme">
+                <option value="Calcul applicatif — application directe des formules et méthodes">Calcul applicatif
+                </option>
+                <option value="Démonstration guidée — raisonnement par étapes avec cadre fourni">Démonstration guidée
+                </option>
+                <option value="Démonstration rédigée autonome — rédaction complète attendue de l'élève">Démonstration
+                  rédigée autonome</option>
+              </select>
+              <div class="field-explication">Conditionne le type de consignes et les réponses attendues.</div>
+            </div>
+            <div class="field"><label>Calculatrice</label>
+              <select id="calculatrice">
+                <option value="Calculatrice autorisée">Calculatrice autorisée</option>
+                <option value="Calculatrice interdite">Calculatrice interdite</option>
+                <option value="Calculatrice autorisée pour vérification uniquement">Pour vérification uniquement
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 03 : STRUCTURE -->
+      <div class="form-section s-or" id="sec-03">
+        <div class="form-section-header">
+          <div class="section-num-badge">03</div>
+          <div class="section-titre-bloc">
+            <h2 id="sec03-titre">Structure pédagogique</h2>
+            <p class="section-desc" id="sec03-desc">Plan détaillé — l'IA suit cet ordre à la lettre.</p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-03',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-03',this)">Actif</button>
+        </div>
+        <div class="section-body">
+          <div class="encart-pedago" id="encart-structure">
+            <span class="encart-pedago-titre" id="encart-structure-titre">Pourquoi être précis ?</span>
+            <p id="encart-structure-texte">«Introduction» produit du générique. «Introduction : situation concrète,
+              problème ressenti avant le vocabulaire technique» produit du précis. Décris chaque section : contenu +
+              approche + interdits éventuels.</p>
+          </div>
+          <div class="field-row">
+            <div class="field"><label id="lbl-sections">Sections (une par ligne) <span
+                  class="label-requis">*</span></label>
+              <textarea class="xtall" id="sections"
+                placeholder="1. Titre — Description, approche, interdits…"></textarea>
+              <div class="astuce" id="astuce-sections">Format : N. Titre — Description + approche + contraintes
+                spécifiques.</div>
+            </div>
+          </div>
+          <div class="field-row col2">
+            <div class="field"><label id="lbl-principe">Principe pédagogique central <span
+                  class="label-requis">*</span></label>
+              <textarea id="principe-central"></textarea>
+              <div class="avert">Contrainte la plus oubliée par l'IA — formule-la explicitement.</div>
+            </div>
+            <div class="field" id="champ-vocab-interdit">
+              <label>Vocabulaire interdit en introduction</label>
+              <textarea id="vocab-interdit"
+                placeholder="Termes réservés aux sections de cours après illustration…"></textarea>
+              <div class="astuce">Ces mots n'apparaissent qu'après illustration concrète.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 04 : CONTRAINTES SPÉCIFIQUES (dynamique) -->
+      <div class="form-section s-vert" id="sec-04">
+        <div class="form-section-header">
+          <div class="section-num-badge">04</div>
+          <div class="section-titre-bloc">
+            <h2 id="sec04-titre">Contraintes spécifiques</h2>
+            <p class="section-desc" id="sec04-desc">Règles propres au type de ressource sélectionné.</p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-04',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-04',this)">Actif</button>
+        </div>
+        <div class="section-body" id="sec04-body"></div>
+      </div>
+
+      <!-- SEC 05 : TECHNIQUE FORMAT (dynamique) -->
+      <div class="form-section" id="sec-05">
+        <div class="form-section-header">
+          <div class="section-num-badge">05</div>
+          <div class="section-titre-bloc">
+            <h2 id="sec05-titre">Contraintes techniques</h2>
+            <p class="section-desc" id="sec05-desc">Charte et règles du format de sortie.</p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-05',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-05',this)">Actif</button>
+        </div>
+        <div class="section-body" id="sec05-body"></div>
+      </div>
+
+      <!-- SEC 06 : LINGUISTIQUE -->
+      <div class="form-section s-or" id="sec-06">
+        <div class="form-section-header">
+          <div class="section-num-badge">06</div>
+          <div class="section-titre-bloc">
+            <h2>Exigences linguistiques</h2>
+            <p class="section-desc">Qualité du français, ton, registre, notations.</p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-06',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-06',this)">Actif</button>
+        </div>
+        <div class="section-body">
+          <div class="field-row col2">
+            <div class="field"><label>Typographie &amp; langue</label>
+              <textarea id="typographie">Français correct avec accents obligatoires : é, è, ê, à, â, î, ô, û, ù, ç, œ.
+Guillemets français : « » pour toutes les citations.
+Apostrophe courbe : ' — tiret demi-cadratin : –.
+Aucune faute d'accord, aucun anglicisme non justifié.</textarea>
+            </div>
+            <div class="field"><label>Ton et registre</label>
+              <textarea id="ton">Ton pédagogique, bienveillant et direct.
+Tutoiement (« tu ») avec les élèves.
+Questions rhétoriques pour maintenir l'attention.
+Un concept nouveau maximum par paragraphe.</textarea>
+            </div>
+          </div>
+          <div class="field-row col2">
+            <div class="field" id="champ-langue-python"><label>Langue des identifiants (code)</label>
+              <select id="langue-python">
+                <option value="Français commentaires et chaînes, ASCII dans les identifiants">Français commentaires /
+                  ASCII identifiants</option>
+                <option value="Tout en français">Tout en français</option>
+                <option value="Tout en anglais">Tout en anglais</option>
+              </select>
+            </div>
+            <div class="field" id="champ-notations-maths" style="display:none;"><label>Notations mathématiques</label>
+              <select id="notations-maths">
+                <option value="LaTeX via MathJax ($$...$$  et $...$)">LaTeX via MathJax — recommandé</option>
+                <option value="Unicode uniquement (≤, ≥, ∑, ∫, →)">Unicode uniquement</option>
+                <option value="Notation textuelle simple (f'(x), sqrt(x))">Notation textuelle simple</option>
+              </select>
+              <div class="field-explication">Le choix LaTeX/MathJax est fortement recommandé pour HTML et Markdown.
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Pied de page de la ressource</label>
+              <input type="text" id="pied-page" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 07 : ANTI-OUBLI -->
+      <div class="form-section s-rouge" id="sec-07">
+        <div class="form-section-header">
+          <div class="section-num-badge">07</div>
+          <div class="section-titre-bloc">
+            <h2>Garde-fous anti-oubli</h2>
+            <p class="section-desc">Mécanismes contre le phénomène « lost in the middle ».</p>
+          </div>
+          <button class="collapse-btn" onclick="toggleCollapse('sec-07',this)">▲</button>
+          <button class="section-toggle-btn" onclick="toggleSection('sec-07',this)">Actif</button>
+        </div>
+        <div class="section-body">
+          <div class="encart-pedago">
+            <span class="encart-pedago-titre">Lost in the middle</span>
+            <p>Le début et la fin du prompt sont mieux mémorisés que le milieu. Trois remèdes : marquer les contraintes
+              critiques avec <strong style="color:white;">[OBLIGATOIRE]</strong>, bloc de rappels en toute fin,
+              auto-vérification avant clôture.</p>
+          </div>
+          <div class="field-row col2">
+            <div class="field"><label>Rappels de dernière minute (5 max)</label>
+              <textarea class="tall" id="rappels"
+                placeholder="1. Contrainte la plus susceptible d'être oubliée…"></textarea>
+              <div class="avert">Limite à 5 — au-delà l'effet de saillance s'érode.</div>
+            </div>
+            <div class="field"><label>Instruction d'auto-vérification</label>
+              <textarea id="auto-verif" placeholder="Avant de clore, vérifier que…"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APERÇU LIVE -->
+      <div class="live-preview-wrap">
+        <div class="live-preview-header">
+          <span>Aperçu en temps réel</span>
+          <span id="live-stats" style="color:rgba(255,255,255,.38);">—</span>
+        </div>
+        <div class="live-preview-body collapsed" id="live-preview">Remplis les champs pour voir le prompt…</div>
+        <div class="live-preview-footer">
+          <button class="btn-voir-tout" id="btn-voir-tout" onclick="toggleApercu()">▼ Voir tout</button>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn-activites" onclick="allerPage2()">Générer l'aperçu complet →</button>
+        <button class="btn btn-outline" onclick="reinitialiser()">Réinitialiser</button>
+      </div>
+      <div class="alert-danger" id="err-page1">Remplis les champs obligatoires avant de continuer.</div>
+    </div><!-- fin page1 -->
+
+    <!-- PAGE 2 -->
+    <div class="page" id="page2">
+      <div class="encart-pedago" style="margin-bottom:1.3rem;">
+        <span class="encart-pedago-titre">Étape 2 — Aperçu et évaluation IA</span>
+        <p>Lis le prompt, vérifie qu'il reflète ta vision, puis fais-le évaluer par Groq. Les suggestions incluent des
+          <strong style="color:white;">liens directs vers les champs à corriger.</strong>
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">Aperçu du prompt généré</div>
+        <div class="stats-prompt" id="stats-prompt"></div>
+        <div class="code-box" id="apercu-prompt"></div>
+      </div>
+      <div class="api-zone">
+        <h3>Évaluation par Groq (gratuit)</h3>
+        <div class="encart-pedago ep-bleu" style="margin-bottom:.85rem;">
+          <span class="encart-pedago-titre">Obtenir une clé Groq</span>
+          <p>Va sur <strong style="color:white;">console.groq.com</strong> → compte gratuit → « API Keys ». Ta clé
+            commence par <code style="color:#93c5fd;">gsk_</code>. Elle reste uniquement dans ton navigateur.</p>
+        </div>
+        <div class="api-row">
+          <div class="field"><label>Clé API Groq</label><input type="password" id="api-key" placeholder="gsk_…"
+              autocomplete="off"></div>
+          <button class="btn btn-outline" onclick="testerAPI()">Tester</button>
+          <span class="api-statut idle" id="api-statut">Non testée</span>
+        </div>
+        <div class="alert-danger" id="err-api"></div>
+        <div class="alert-success" id="ok-api"></div>
+        <div style="margin-top:.85rem;"><button class="btn btn-warning" id="btn-evaluer" onclick="evaluerPrompt()">★
+            Évaluer avec Groq</button></div>
+      </div>
+      <div class="eval-zone" id="eval-zone" style="display:none;">
+        <div class="eval-titre">Résultats de l'évaluation</div>
+        <div id="eval-criteres"></div>
+        <div id="eval-global-bloc"></div>
+        <div id="eval-suggestions-bloc"></div>
+        <div class="btn-group" style="margin-top:1.3rem;">
+          <button class="btn btn-success" onclick="allerPage3()">Exporter →</button>
+          <button class="btn btn-outline" onclick="allerPage1()">← Modifier</button>
+        </div>
+      </div>
+      <div class="btn-group" id="btn-row-p2">
+        <button class="btn btn-success" onclick="allerPage3()">Exporter sans évaluation →</button>
+        <button class="btn btn-outline" onclick="allerPage1()">← Modifier</button>
+      </div>
+    </div><!-- fin page2 -->
+
+    <!-- PAGE 3 -->
+    <div class="page" id="page3">
+      <div class="encart-pedago" style="margin-bottom:1.3rem;">
+        <span class="encart-pedago-titre">Étape 3 — Export</span>
+        <p>Ton prompt est prêt. Copie-le dans Claude, ChatGPT, Mistral ou Gemini pour générer ta ressource.</p>
+      </div>
+      <div class="export-bloc">
+        <div class="card-title">Contrôle qualité final</div>
+        <div id="score-global-bloc">
+          <div id="score-chiffre"
+            style="font-family:'Rubik Dirt',system-ui;font-size:2.3rem;color:#ffc107;line-height:1;white-space:nowrap;">
+          </div>
+          <div>
+            <div id="score-label"
+              style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:white;font-weight:700;"></div>
+            <div id="score-detail" style="font-size:.8rem;color:rgba(255,255,255,.52);margin-top:.16rem;"></div>
+          </div>
+        </div>
+        <div style="margin-bottom:.28rem;">
+          <div
+            style="font-family:'JetBrains Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.52);font-weight:700;padding:.28rem 0 .35rem;">
+            Volet 1 — Pédagogie</div>
+          <ul class="checklist-finale" id="cq-pedago"></ul>
+        </div>
+        <div style="margin-bottom:.28rem;margin-top:.72rem;">
+          <div
+            style="font-family:'JetBrains Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:#4caf50;font-weight:700;padding:.28rem 0 .35rem;">
+            Volet 2 — Discipline &amp; type de ressource</div>
+          <ul class="checklist-finale" id="cq-specifique"></ul>
+        </div>
+        <div style="margin-top:.72rem;">
+          <div
+            style="font-family:'JetBrains Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:#ffc107;font-weight:700;padding:.28rem 0 .35rem;">
+            Volet 3 — Technique &amp; format</div>
+          <ul class="checklist-finale" id="cq-technique"></ul>
+        </div>
+        <div class="alert-danger" id="cq-alerte" style="margin-top:.72rem;"></div>
+      </div>
+      <div class="export-bloc">
+        <div class="card-title">Prompt final</div>
+        <div class="code-box" id="apercu-final" style="max-height:270px;"></div>
+      </div>
+      <div class="export-bloc">
+        <div class="card-title">Télécharger</div>
+        <p class="export-info">Fonctionne avec Claude, ChatGPT, Mistral, Gemini et tout LLM acceptant un long prompt.
+        </p>
+        <div class="btn-group">
+          <button class="btn btn-success" onclick="telechargerTxt()">↓ Télécharger .txt</button>
+          <button class="btn btn-warning" onclick="copierPressePapier()">■ Copier</button>
+          <button class="btn btn-outline" onclick="allerPage2()">← Retour</button>
+        </div>
+        <div class="alert-success" id="msg-copie">Prompt copié !</div>
+      </div>
+      <div class="encart-pedago">
+        <span class="encart-pedago-titre">Utiliser efficacement</span>
+        <p><strong style="color:white;">1.</strong> Colle le prompt en entier — la longueur est intentionnelle.</p>
+        <p><strong style="color:white;">2.</strong> Dis à l'IA : « Génère la ressource complète en une seule réponse. »
+        </p>
+        <p><strong style="color:white;">3.</strong> Si tronqué, envoie « Continue » sans autre texte.</p>
+        <p><strong style="color:white;">4.</strong> Pour HTML &gt;2000 lignes : divise en deux appels (sections 1-4,
+          puis 5-8).</p>
+      </div>
+    </div><!-- fin page3 -->
+
+    <footer>
+      Générateur NSI &amp; Maths · DarkSATHI Li · Lycée Antoine Watteau<br>
+      <span style="color:rgba(255,255,255,.26);">Autonome · Hors-ligne · Aucune donnée envoyée · Bibliothèque locale
+        illimitée</span>
+    </footer>
+  </div><!-- fin container -->
+
+<script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNT — L'IA apprend à deviner !</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.2.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2026.2.1/core.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>L'IA apprend à deviner !</h1>
+  <p class="subtitle">// Activite SNT · Seconde · MSE &amp; Learning Rate · Python + Thonny · 1h30 //</p>
+
+  <div class="container">
+
+    <!-- ===== MISE EN SITUATION ===== -->
+    <div class="section-head">
+      <h2>Mise en situation</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Le defi : apprendre a deviner un nombre cache
+        <span>// Comment une machine apprend-elle de ses erreurs ?</span>
+      </div>
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:14px;">
+        Imagine qu'une IA doit deviner un nombre secret entre 0 et 100. Elle commence par une valeur au hasard,
+        regarde a quel point elle s'est trompee, puis <strong style="color:white">corrige un peu sa reponse</strong>
+        a chaque essai. C'est exactement comme ca que les vraies IA apprennent — en mesurant leur erreur
+        et en s'ameliorant pas a pas.
+      </p>
+
+      <div class="rctf-grid">
+        <div class="rctf-item">
+          <div class="label">Le nombre cache</div>
+          <div class="example">La "verite" que l'IA cherche a trouver</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">L'erreur (MSE)</div>
+          <div class="example">A quel point la devinette est mauvaise ?</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Learning Rate</div>
+          <div class="example">De combien on corrige a chaque etape ?</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Iterations</div>
+          <div class="example">Combien de fois on recommence ?</div>
+        </div>
+      </div>
+
+      <div class="alert-info">
+        <strong>Prerequis maths :</strong> tu sais ce qu'est une fonction f(x), un carre (x²) et une moyenne.
+        C'est tout ce dont tu as besoin !
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 1 ===== -->
+    <div class="section-head">
+      <h2>Partie 1 — Mesurer l'erreur</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">C'est quoi le MSE ?
+        <span>Mean Squared Error — Erreur Quadratique Moyenne</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        Le <strong style="color:white">nombre secret est 42</strong>. L'IA propose des valeurs. Pour chaque proposition,
+        on calcule l'erreur : <code style="color:#ffc107">(proposition - secret)²</code>. On met au carre pour que
+        les erreurs soient toujours positives et pour penaliser les grosses erreurs davantage.
+      </p>
+
+      <div class="etape-row">
+        <div class="etape-badge">1</div>
+        <div class="etape-content">
+          <div class="etape-title">Calculer une erreur a la main</div>
+          <div class="etape-desc">Complete le tableau suivant avant d'ecrire du code.</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">EXERCICE 1 — Calcul mental</div>
+        <p>Le nombre secret est <strong style="color:#ffc107">42</strong>. Calcule l'erreur (proposition - 42)² pour
+          chaque cas :</p>
+        <p style="margin-top:8px;">
+          → L'IA propose <strong style="color:white">42</strong> : erreur = &#8230;&#8230;&#8230; <br>
+          → L'IA propose <strong style="color:white">50</strong> : erreur = &#8230;&#8230;&#8230; <br>
+          → L'IA propose <strong style="color:white">10</strong> : erreur = &#8230;&#8230;&#8230; <br>
+          → L'IA propose <strong style="color:white">100</strong> : erreur = &#8230;&#8230;&#8230;
+        </p>
+        <textarea placeholder="Ecris tes calculs ici..."></textarea>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 1</div>
+        <p>Pourquoi dit-on que proposer 10 est "pire" que proposer 50, meme si les deux sont faux ? Comment le carre
+          accentue-t-il cette difference ?</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">2</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder la fonction MSE dans Thonny</div>
+          <div class="etape-desc">Recopie et execute ce code. Verifie que tes calculs du tableau correspondent.</div>
+          <div class="etape-time">10 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur" env="mse" target="editeur-nsi" worker>
+# --- Partie 1 : Calculer l'erreur MSE ---
+
+# Le nombre que l'IA doit trouver
+secret = 42
+
+def mse(proposition, secret):
+    """Calcule l'erreur au carre entre la proposition et le secret."""
+    erreur = (proposition - secret) ** 2
+    return erreur
+
+# Tests
+print("Proposition 42 → erreur :", mse(42, secret))
+print("Proposition 50 → erreur :", mse(50, secret))
+print("Proposition 10 → erreur :", mse(10, secret))
+print("Proposition 100 → erreur :", mse(100, secret))
+        </script>
+      <div id="editeur-nsi"></div>
+
+    </div>
+
+    <!-- ===== PARTIE 2 ===== -->
+    <div class="section-head">
+      <h2>Partie 2 — Le Learning Rate</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Comment l'IA corrige-t-elle sa reponse ?
+        <span>La regle de correction pas a pas</span>
+      </div>
+
+      <p style="color:#e0e0e0; font-size:0.85rem; line-height:1.6; margin-bottom:12px;">
+        A chaque etape, l'IA ne corrige pas d'un coup — elle avance <strong style="color:white">un tout petit
+          peu</strong>
+        dans la bonne direction. Ce "petit peu" s'appelle le <strong style="color:#ffc107">learning rate</strong>
+        (ou taux d'apprentissage). Trop grand → elle rate la cible. Trop petit → elle met trop longtemps.
+      </p>
+
+      <div class="alert-info">
+        <strong>La regle de correction :</strong><br>
+        <code
+          style="color:#ffc107">nouvelle_valeur = ancienne_valeur - learning_rate &times; (ancienne_valeur - secret)</code><br><br>
+        On soustrait une fraction de l'erreur a chaque etape pour se rapprocher du secret.
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">3</div>
+        <div class="etape-content">
+          <div class="etape-title">Simuler l'apprentissage a la main</div>
+          <div class="etape-desc">Secret = 42, depart = 0, learning_rate = 0.1</div>
+          <div class="etape-time">5 min</div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">EXERCICE 2 — Simulation manuelle</div>
+        <p>Complete les 3 premieres etapes :<br>
+          <code style="color:#ffc107">nouvelle = ancienne - 0.1 &times; (ancienne - 42)</code>
+        </p>
+        <p style="margin-top:8px; font-family:'Courier New',monospace; font-size:0.8rem;">
+          Etape 0 : valeur = <strong style="color:white">0</strong><br>
+          Etape 1 : valeur = 0 - 0.1 &times; (0 - 42) = &#8230;&#8230;&#8230;<br>
+          Etape 2 : valeur = &#8230;&#8230;&#8230; - 0.1 &times; (&#8230;&#8230;&#8230; - 42) =
+          &#8230;&#8230;&#8230;<br>
+          Etape 3 : valeur = &#8230;&#8230;&#8230;- 0.1 &times; (&#8230;&#8230;&#8230; - 42) = &#8230;&#8230;&#8230;
+        </p>
+        <textarea placeholder="Montre tes calculs..."></textarea>
+      </div>
+
+      <div class="etape-row" style="margin-top:12px;">
+        <div class="etape-badge">4</div>
+        <div class="etape-content">
+          <div class="etape-title">Coder la boucle d'apprentissage dans Thonny</div>
+          <div class="etape-time">15 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_2" env="mse" target="editeur-nsi_2" worker>
+# --- Partie 2 : La boucle d'apprentissage ---
+
+secret = 42
+valeur = 0 # point de depart de l'IA
+learning_rate = 0.1 # taux d'apprentissage
+nb_etapes = 20 # nombre d'essais
+
+print(f"Secret a trouver : {secret}")
+print("-" * 40)
+
+for etape in range(nb_etapes):
+    erreur = (valeur - secret) ** 2
+    valeur = valeur - learning_rate * (valeur - secret)
+    print(f"Etape {etape+1:2d} | valeur = {valeur:6.2f} | erreur =  {erreur:8.2f}")
+
+    print("-" * 40)
+    print(f"Valeur finale : {valeur:.2f}")
+        </script>
+      <div id="editeur-nsi_2"></div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 2</div>
+        <p>Observe la colonne "erreur" dans la console. Que se passe-t-il au fur et a mesure des etapes ? Est-ce que
+          l'IA se rapproche bien du nombre 42 ?</p>
+        <textarea placeholder="Decris ce que tu observes..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 3 ===== -->
+    <div class="section-head">
+      <h2>Partie 3 — Experimenter</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Que se passe-t-il si on change le learning rate ?
+        <span>C'est toi le chercheur !</span>
+      </div>
+
+      <div class="etape-row">
+        <div class="etape-badge">5</div>
+        <div class="etape-content">
+          <div class="etape-title">Tester differentes valeurs de learning rate</div>
+          <div class="etape-desc">Modifie uniquement la ligne <code style="color:#ffc107">learning_rate = ...</code> et
+            note ce qui change.</div>
+          <div class="etape-time">15 min</div>
+        </div>
+      </div>
+
+      <script type="py-editor" id="editeur_3" env="mse" target="editeur-nsi_3" worker>
+# --- Partie 3 : Que se passe-t-il selon le learning rate ? ---
+# Teste chacune de ces valeurs une par une :
+
+learning_rate = 0.01 # tres lent
+learning_rate = 0.1 # equilibre
+learning_rate = 0.5 # rapide
+learning_rate = 1.0 # que va-t-il se passer ?
+learning_rate = 2.0 # et la ?!
+        </script>
+      <div id="editeur-nsi_3"></div>
+
+      <table class="lr-table">
+        <thead>
+          <tr>
+            <th>Learning Rate</th>
+            <th>Valeur a l'etape 5</th>
+            <th>Valeur a l'etape 20</th>
+            <th>Observation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>0.01</code></td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td class="bad">Trop lent !</td>
+          </tr>
+          <tr>
+            <td><code>0.1</code></td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td class="good">Bien</td>
+          </tr>
+          <tr>
+            <td><code>0.5</code></td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td class="warn">A completer</td>
+          </tr>
+          <tr>
+            <td><code>1.0</code></td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td class="warn">A completer</td>
+          </tr>
+          <tr>
+            <td><code>2.0</code></td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td>&#8230;&#8230;&#8230;</td>
+            <td class="bad">Catastrophe !</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 3</div>
+        <p>Avec <code style="color:#ffc107">learning_rate = 2.0</code>, que se passe-t-il ? L'IA converge-t-elle vers 42
+          ? Essaie d'expliquer pourquoi avec tes propres mots.</p>
+        <textarea placeholder="Ta reponse..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== VISUALISATION INTERACTIVE ===== -->
+    <div class="section-head">
+      <h2>Visualisation interactive</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Simulateur interactif
+        <span>// Graphique genere par Python (matplotlib) directement dans le navigateur</span>
+      </div>
+
+      <div id="pyscript-status">Chargement de Python dans le navigateur... (5-10 secondes)</div>
+
+      <div class="controls">
+        <div class="ctrl-group">
+          <div class="ctrl-label">Nombre secret : <span id="secretVal">42</span></div>
+          <input type="range" id="secretSlider" min="1" max="100" value="42"
+            oninput="document.getElementById('secretVal').textContent=this.value">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">Learning rate : <span id="lrVal">0.10</span></div>
+          <input type="range" id="lrSlider" min="1" max="200" value="10"
+            oninput="document.getElementById('lrVal').textContent=(this.value/100).toFixed(2)">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">Depart IA : <span id="startVal">0</span></div>
+          <input type="range" id="startSlider" min="0" max="100" value="0"
+            oninput="document.getElementById('startVal').textContent=this.value">
+        </div>
+        <button class="run-btn" id="runBtn" disabled>Chargement...</button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <span class="stat-val" id="statFinal">—</span>
+          <span class="stat-lbl">Valeur finale</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val" id="statErr">—</span>
+          <span class="stat-lbl">Erreur finale</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val" id="statEtapes">—</span>
+          <span class="stat-lbl">Etapes pour err &lt; 1</span>
+        </div>
+      </div>
+
+      <div id="graphique">
+        <div class="loading-msg">Lance la simulation pour voir la courbe</div>
+      </div>
+
+      <div class="alert-info">
+        <strong>Ce graphique est 100% Python !</strong>
+        Le code <code>matplotlib</code> qui tourne ici est identique a celui que tu tapes dans Thonny.
+        PyScript fait tourner Python dans le navigateur grace a WebAssembly (Pyodide).
+      </div>
+
+      <div class="question-block">
+        <div class="q-label">QUESTION 4</div>
+        <p>En jouant avec le simulateur, quelle valeur de learning rate te semble la meilleure pour ce probleme ?
+          Justifie ta reponse en observant la courbe.</p>
+        <textarea placeholder="Learning rate ideal selon moi : ...  Parce que..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== PARTIE 4 : DEFI ===== -->
+    <div class="section-head">
+      <h2>Partie 4 — Defi final</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="niveau-card n2">
+        <span class="badge-niveau"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"> DEFI niveau 2</span>
+        <h3>Afficher un graphique</h3>
+        <div class="meta">matplotlib · 15 min</div>
+        <ul>
+          <li>Stocker l'erreur a chaque etape dans une liste</li>
+          <li>Tracer la courbe avec <code>matplotlib</code></li>
+          <li>Ajouter un titre et des labels aux axes</li>
+          <li>Comparer deux courbes (lr=0.1 vs lr=0.5)</li>
+        </ul>
+      </div>
+      <div class="niveau-card n3">
+        <span class="badge-niveau"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="13"
+            alt="Python"> DEFI niveau 3</span>
+        <h3>Plusieurs secrets</h3>
+        <div class="meta">Generalisation · 20 min</div>
+        <ul>
+          <li>Creer une liste de 5 nombres secrets</li>
+          <li>Calculer la MSE moyenne sur tous les secrets</li>
+          <li>L'IA doit trouver la meilleure valeur unique</li>
+          <li>C'est le vrai MSE utilise en machine learning !</li>
+        </ul>
+      </div>
+    </div>
+ <div class="card">
+          <script type="py-editor" id="editeur_4" env="mse" target="editeur-nsi_4" worker>
+# Defi niveau 2 — Tracer la courbe d'erreur avec matplotlib
+import matplotlib.pyplot as plt
+
+secret = 42
+valeur = 0
+learning_rate = 0.1
+nb_etapes = 30
+
+historique_erreurs = [] # liste pour stocker les
+  erreurs
+
+for etape in range(nb_etapes):
+    erreur = (valeur - secret) ** 2
+    historique_erreurs.append(erreur)
+    valeur = valeur - learning_rate * (valeur - secret)
+
+# A TOI : trace le graphique avec plt.plot()
+plt.plot(historique_erreurs)
+plt.title("...") # complete le titre
+plt.xlabel("...") # complete le label axe x
+plt.ylabel("...") # complete le label axe y
+plt.grid(True)
+plt.show()
+        </script>
+      <div id="editeur-nsi_4"></div>
+</div>
+
+
+    <!-- ===== BILAN ===== -->
+    <div class="section-head">
+      <h2>Bilan</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ce que tu as compris aujourd'hui</div>
+      <div class="rctf-grid">
+        <div class="rctf-item">
+          <div class="label">MSE</div>
+          <div class="example">Mesure a quel point on est loin de la bonne reponse</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Learning Rate</div>
+          <div class="example">Controle la vitesse de correction de l'IA</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Iteration</div>
+          <div class="example">Repeter la correction jusqu'a trouver</div>
+        </div>
+        <div class="rctf-item">
+          <div class="label">Equilibre</div>
+          <div class="example">Ni trop grand ni trop petit : trouver le bon reglage</div>
+        </div>
+      </div>
+
+      <div class="question-block" style="margin-top:14px;">
+        <div class="q-label">SYNTHESE FINALE</div>
+        <p>En 3 phrases maximum, explique a un camarade qui n'a pas fait SNT ce que fait un learning rate et pourquoi
+          c'est important pour une IA.</p>
+        <textarea style="min-height:80px;" placeholder="Ma synthese..."></textarea>
+      </div>
+
+      <div class="alert-success">
+        <strong>Connexion avec la vraie IA :</strong> ce mecanisme que tu viens de coder est exactement
+        ce qui se passe a l'interieur de ChatGPT, des IA de reconnaissance d'image, et de tous les modeles
+        modernes — mais avec des millions de parametres au lieu d'un seul !
+      </div>
+
+    </div>
+
+  </div><!-- /container -->
+
+  <footer>
+    Activite SNT · MSE &amp; Learning Rate · Python · Seconde &nbsp;—&nbsp;
+    <a href="#">Retour au cours</a>
+  </footer>
+
+  <!-- ===== CODE PYSCRIPT ===== -->
+  <script type="py" src="visualisation.py" config='{"packages": ["matplotlib"]}'></script>
+
+</body>
+
+</html>

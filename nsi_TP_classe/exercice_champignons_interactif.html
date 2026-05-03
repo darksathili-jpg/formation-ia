@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSI Bac 2025 – Exercice 2 : SQL &amp; POO Champignons</title>
+<link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css" />
+<script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2235;--border:#2a3050;--accent:#5dde8a;--accent2:#f7c948;--accent3:#6eb3ff;--text:#dde3f0;--muted:#7a849a;--sql:#f7c948;--py:#5dde8a;--radius:10px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;font-size:15px;line-height:1.65}
+    header{background:linear-gradient(135deg,#0d1a2e 0%,#142040 50%,#0f1a10 100%);border-bottom:2px solid var(--border);padding:2rem 2.5rem 1.5rem;position:relative;overflow:hidden}
+    header::before{content:'NSI';position:absolute;font-family:'Syne',sans-serif;font-size:8rem;font-weight:800;opacity:.03;right:2rem;top:-.5rem;pointer-events:none;color:#fff}
+    .label{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+    header h1{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:#fff;line-height:1.2}
+    header h1 span{color:var(--accent2)}
+    header .subtitle{margin-top:.4rem;color:var(--muted);font-size:.88rem}
+    .progress-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2.5rem;display:flex;align-items:center;gap:1rem;font-size:.8rem;color:var(--muted)}
+    .progress-bar-bg{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+    .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .5s;width:0%}
+    #score-label{font-family:'IBM Plex Mono',monospace;color:var(--accent2);font-size:.85rem;min-width:3rem;text-align:right}
+    main{max-width:980px;margin:0 auto;padding:2rem 1.5rem 4rem}
+    .part-header{display:flex;align-items:center;gap:1rem;margin:2.5rem 0 1.2rem}
+    .part-badge{font-family:'Syne',sans-serif;font-weight:800;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding:.25rem .75rem;border-radius:99px}
+    .badge-sql{background:rgba(247,201,72,.15);color:var(--sql);border:1px solid rgba(247,201,72,.3)}
+    .badge-py{background:rgba(93,222,138,.12);color:var(--py);border:1px solid rgba(93,222,138,.3)}
+    .part-header h2{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:#fff}
+    .cours-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.5rem;overflow:hidden}
+    .cours-toggle{width:100%;background:none;border:none;cursor:pointer;padding:.85rem 1.2rem;display:flex;align-items:center;gap:.7rem;color:var(--text);font-size:.9rem;font-family:'Syne',sans-serif;font-weight:700;transition:background .2s}
+    .cours-toggle:hover{background:rgba(255,255,255,.03)}
+    .cours-toggle .chevron{margin-left:auto;transition:transform .3s;color:var(--muted);font-size:.8rem}
+    .cours-toggle.open .chevron{transform:rotate(180deg)}
+    .cours-body{display:none;padding:0 1.2rem 1.2rem;border-top:1px solid var(--border)}
+    .cours-body.visible{display:block}
+    .cours-body p{color:#aab4cc;font-size:.88rem;line-height:1.7}
+    .cours-body ul{padding-left:1.3rem;margin-top:.4rem}
+    .cours-body li{color:#aab4cc;font-size:.88rem;line-height:1.7;margin-bottom:.25rem}
+    .highlight{background:rgba(93,222,138,.08);border-left:3px solid var(--accent);padding:.6rem .9rem;margin:.8rem 0;border-radius:0 6px 6px 0}
+    .highlight.sql-hl{background:rgba(247,201,72,.08);border-left-color:var(--sql)}
+    .table-label{font-size:.78rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:.35rem;margin-top:.8rem;display:block}
+    .db-table-wrap{overflow-x:auto;margin-bottom:.5rem}
+    .db-table{border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:.78rem;width:100%}
+    .db-table th{background:var(--border);color:var(--sql);text-align:left;padding:.4rem .75rem;font-weight:600;white-space:nowrap}
+    .db-table td{padding:.35rem .75rem;border-bottom:1px solid var(--border);color:#aab4cc;white-space:nowrap}
+    .db-table tr:last-child td{border-bottom:none}
+    .db-table tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+    .question-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.3rem;overflow:hidden;transition:border-color .3s}
+    .question-card.answered-ok{border-color:rgba(93,222,138,.5)}
+    .question-card.answered-err{border-color:rgba(255,107,107,.4)}
+    .question-header{padding:1rem 1.2rem .5rem;display:flex;align-items:flex-start;gap:.8rem}
+    .q-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600}
+    .q-num-sql{background:rgba(247,201,72,.15);color:var(--sql)}
+    .q-num-py{background:rgba(93,222,138,.12);color:var(--py)}
+    .q-num-text{background:rgba(110,179,255,.12);color:var(--accent3)}
+    .q-body{flex:1}
+    .q-body h3{font-size:.95rem;font-weight:700;color:#e8eef8;margin-bottom:.3rem}
+    .q-body p{font-size:.88rem;color:#8a97b5;line-height:1.6}
+    .answer-zone{padding:.3rem 1.2rem 1rem}
+    textarea.code-input,input.text-input{width:100%;background:#10131e;border:1px solid var(--border);border-radius:6px;color:#e0e9ff;font-family:'IBM Plex Mono',monospace;font-size:.82rem;padding:.7rem .9rem;resize:vertical;outline:none;transition:border-color .2s}
+    textarea.code-input:focus,input.text-input:focus{border-color:var(--accent)}
+    textarea.code-input{min-height:66px}
+    .btn-row{display:flex;gap:.6rem;margin-top:.6rem;flex-wrap:wrap}
+    .btn{padding:.42rem 1.05rem;border-radius:6px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;transition:opacity .15s,transform .1s}
+    .btn:active{transform:scale(.97)}
+    .btn-validate{background:var(--accent);color:#0a1a10}
+    .btn-run{background:var(--accent3);color:#06111e}
+    .btn-hint{background:transparent;border:1px solid var(--border);color:var(--muted)}
+    .btn-hint:hover{border-color:var(--accent2);color:var(--accent2)}
+    .feedback{margin-top:.7rem;border-radius:6px;padding:.6rem .9rem;font-size:.84rem;display:none;font-family:'IBM Plex Mono',monospace}
+    .feedback.visible{display:block}
+    .feedback.ok{background:rgba(93,222,138,.1);color:#6ef5a2;border:1px solid rgba(93,222,138,.3)}
+    .feedback.err{background:rgba(255,107,107,.1);color:#ff9090;border:1px solid rgba(255,107,107,.3)}
+    .feedback.info{background:rgba(110,179,255,.1);color:#a0ccff;border:1px solid rgba(110,179,255,.3)}
+    .py-output{background:#080b14;border:1px solid var(--border);border-radius:6px;margin-top:.6rem;padding:.65rem .9rem;font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:#8af5aa;min-height:36px;white-space:pre-wrap;display:none}
+    .py-output.visible{display:block}
+    .py-output.err-out{color:#ff9090}
+    .hint-box{display:none;margin-top:.7rem;background:rgba(247,201,72,.06);border:1px dashed rgba(247,201,72,.3);border-radius:6px;padding:.65rem .9rem;font-size:.84rem;color:#e8c96a;line-height:1.65}
+    .hint-box.visible{display:block}
+    code{font-family:'IBM Plex Mono',monospace;font-size:.82em;background:rgba(255,255,255,.07);padding:.1em .35em;border-radius:3px;color:#c8d8ff}
+    pre.code-block{background:#10131e;border:1px solid var(--border);border-radius:6px;padding:.7rem 1rem;font-size:.8rem;font-family:'IBM Plex Mono',monospace;color:#b0c8e8;overflow-x:auto;margin:.5rem 0;line-height:1.6}
+    pre.code-block .kw{color:#f7c948}
+    pre.code-block .fn{color:#5dde8a}
+    pre.code-block .st{color:#f5a97f}
+    pre.code-block .cm{color:#5a6480;font-style:italic}
+    #pyscript-loading{position:fixed;inset:0;z-index:999;background:#0a0d16;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;transition:opacity .5s}
+    #pyscript-loading.hidden{opacity:0;pointer-events:none}
+    .loader-ring{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #pyscript-loading p{color:var(--muted);font-size:.85rem;font-family:'IBM Plex Mono',monospace}
+    footer{text-align:center;padding:2rem;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);margin-top:2rem}
+  </style>
+</head>
+<body>
+
+<div id="pyscript-loading">
+  <div class="loader-ring"></div>
+  <p>Chargement de l'environnement Python...</p>
+</div>
+
+<header>
+  <div class="label">NSI · Terminale · Bac 2025 · Polynesie J2 · Exercice 2</div>
+  <h1>Bases de données <span>&amp;</span> Programmation objet</h1>
+  <p class="subtitle">SQL · Python POO · Champignons 🍄 — 11 questions interactives</p>
+</header>
+
+<div class="progress-wrap">
+  <span>Progression</span>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  <span id="score-label">0 / 11</span>
+</div>
+
+<main>
+
+<!-- ===================== PARTIE A : SQL ===================== -->
+<div class="part-header">
+  <span class="part-badge badge-sql">Partie A</span>
+  <h2>Requêtes SQL — Base de données Champignons</h2>
+</div>
+
+<div class="cours-box">
+  <button class="cours-toggle" onclick="toggleCours(this)">
+    📖 Rappels de cours — Bases de données &amp; SQL
+    <span class="chevron">▼</span>
+  </button>
+  <div class="cours-body">
+    <p style="margin-top:.8rem">Une <strong>base de données relationnelle</strong> stocke des données dans des <strong>tables</strong> (attributs = colonnes, tuples = lignes).</p>
+    <div class="highlight sql-hl" style="margin-top:.7rem">
+      <strong>Clé primaire :</strong> identifie de façon unique chaque ligne — soulignée dans le schéma.<br>
+      <strong>Clé étrangère (#) :</strong> référence la clé primaire d'une autre table.
+    </div>
+    <p style="margin-top:.9rem;color:#aab4cc;font-size:.88rem"><strong>SELECT — lire et filtrer :</strong></p>
+    <pre class="code-block"><span class="kw">SELECT</span> nom <span class="kw">FROM</span> champignon <span class="kw">WHERE</span> lamelle = <span class="st">'oui'</span> <span class="kw">AND</span> couleur = <span class="st">'orange'</span>;</pre>
+    <p style="color:#aab4cc;font-size:.88rem"><strong>JOIN — jointure entre deux tables :</strong></p>
+    <pre class="code-block"><span class="kw">SELECT</span> c.nom
+<span class="kw">FROM</span>   champignon c
+<span class="kw">JOIN</span>   ordre o <span class="kw">ON</span> c.id_ordre = o.id
+<span class="kw">WHERE</span>  o.classe = <span class="st">'agaricomycetes'</span>;</pre>
+    <p style="color:#aab4cc;font-size:.88rem"><strong>JOIN double — jointure entre trois tables :</strong></p>
+    <pre class="code-block"><span class="kw">SELECT</span> c.nom
+<span class="kw">FROM</span>   champignon c
+<span class="kw">JOIN</span>   ordre o    <span class="kw">ON</span> c.id_ordre    = o.id
+<span class="kw">JOIN</span>   toxicite t <span class="kw">ON</span> c.id_toxicite = t.id_tox
+<span class="kw">WHERE</span>  o.nom = <span class="st">'amanitales'</span> <span class="kw">AND</span> t.type = <span class="st">'tres toxique'</span>;</pre>
+    <p style="color:#aab4cc;font-size:.88rem"><strong>INSERT INTO — ajouter une ligne :</strong></p>
+    <pre class="code-block"><span class="kw">INSERT INTO</span> champignon(id, nom, id_ordre, lamelle, couleur, chapeau_min, chapeau_max, pied_min, pied_max)
+<span class="kw">VALUES</span> (56, <span class="st">'amanite solitaire'</span>, 4, <span class="st">'oui'</span>, <span class="st">'blanc'</span>, 6, 20, 4, 10);</pre>
+    <p style="color:#aab4cc;font-size:.88rem"><strong>UPDATE — modifier une valeur :</strong></p>
+    <pre class="code-block"><span class="kw">UPDATE</span> champignon
+<span class="kw">SET</span>    id_toxicite = 1
+<span class="kw">WHERE</span>  nom = <span class="st">'amanite citrine'</span>; <span class="cm">-- sans WHERE : TOUTES les lignes seraient modifiees !</span></pre>
+    <div class="highlight sql-hl">
+      <strong>Opérateurs utiles :</strong>
+      <code>AND</code> &nbsp;·&nbsp; <code>OR</code> &nbsp;·&nbsp; <code>IS NULL</code> &nbsp;·&nbsp;
+      <code>BETWEEN a AND b</code> &nbsp;·&nbsp; <code>&lt;= / &gt;=</code>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE CHAMPIGNON — colonnes exactes du PDF -->
+<span class="table-label">table champignon — extrait du résultat de <code>SELECT * FROM champignon;</code></span>
+<div class="db-table-wrap" style="margin-bottom:.6rem">
+  <table class="db-table">
+    <tr><th>id</th><th>nom</th><th>id_ordre</th><th>lamelle</th><th>couleur</th><th>chapeau_min</th><th>chapeau_max</th><th>pied_min</th><th>pied_max</th></tr>
+    <tr><td>1</td><td>champignon de Paris</td><td>1</td><td>oui</td><td>blanc</td><td>4</td><td>10</td><td>2</td><td>5</td></tr>
+    <tr><td>2</td><td>champignon noir</td><td>2</td><td>non</td><td>noir</td><td>2</td><td>10</td><td>0</td><td>0</td></tr>
+    <tr><td>3</td><td>coprin chevelu</td><td>1</td><td>oui</td><td>blanc</td><td>5</td><td>20</td><td>10</td><td>40</td></tr>
+    <tr><td>4</td><td>bolet a pied rouge</td><td>3</td><td>non</td><td>jaune</td><td>7</td><td>19</td><td>5</td><td>15</td></tr>
+    <tr><td>5</td><td>amanite des Cesars</td><td>4</td><td>oui</td><td>orange</td><td>8</td><td>20</td><td>8</td><td>15</td></tr>
+  </table>
+</div>
+<p style="font-size:.82rem;color:var(--muted);margin-bottom:1.3rem;font-style:italic">
+  Les attributs <code>nom</code>, <code>lamelle</code> et <code>couleur</code> sont des chaînes de caractères.
+  La taille du chapeau et la longueur du pied sont exprimées en centimètres.
+</p>
+
+<!-- Q1 -->
+<div class="question-card" id="card-q1">
+  <div class="question-header">
+    <div class="q-num q-num-sql">1</div>
+    <div class="q-body">
+      <h3>Requête de Mathilde</h3>
+      <p>Mathilde vient de trouver un champignon <strong>avec des lamelles</strong> et de <strong>couleur orange</strong>.
+         Écrire la requête SQL pour obtenir la liste des <em>noms</em> des champignons possibles.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q1-input" rows="3" placeholder="SELECT ..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSQL(1)">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q1')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q1">
+      Deux conditions avec <code>AND</code> : <code>lamelle = 'oui'</code> et <code>couleur = 'orange'</code>. Sélectionne uniquement la colonne <code>nom</code>.
+    </div>
+    <div class="feedback" id="fb-q1"></div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="question-card" id="card-q2">
+  <div class="question-header">
+    <div class="q-num q-num-sql">2</div>
+    <div class="q-body">
+      <h3>Requête de Romain</h3>
+      <p>Romain a trouvé un champignon <strong>sans pied</strong> et avec un <strong>chapeau de 15 cm</strong>.<br>
+         Dans la table, un champignon sans pied a <code>pied_min = 0</code> <strong>et</strong> <code>pied_max = 0</code>.<br>
+         Un chapeau de 15 cm vérifie <code>chapeau_min &le; 15</code> <strong>et</strong> <code>chapeau_max &ge; 15</code>.<br>
+         Écrire la requête permettant d'obtenir la liste des noms des champignons possibles.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q2-input" rows="4" placeholder="SELECT ..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSQL(2)">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q2')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q2">
+      Sans pied : <code>pied_min = 0 AND pied_max = 0</code><br>
+      Chapeau compatible 15 cm : <code>chapeau_min &lt;= 15 AND chapeau_max &gt;= 15</code><br>
+      Combine les 4 conditions avec <code>AND</code>.
+    </div>
+    <div class="feedback" id="fb-q2"></div>
+  </div>
+</div>
+
+<!-- TABLE ORDRE — données exactes du PDF -->
+<span class="table-label">table ordre</span>
+<div class="db-table-wrap" style="margin-bottom:1.3rem">
+  <table class="db-table">
+    <tr><th>id</th><th>nom</th><th>classe</th></tr>
+    <tr><td>1</td><td>agaricales</td><td>agaricomycetes</td></tr>
+    <tr><td>2</td><td>tremellales</td><td>phragmabasidiomycetes</td></tr>
+    <tr><td>3</td><td>boletales</td><td>agaricomycetes</td></tr>
+    <tr><td>4</td><td>amanitales</td><td>agaricomycetes</td></tr>
+    <tr><td>5</td><td>cantharellales</td><td>agaricomycetes</td></tr>
+    <tr><td>6</td><td>polyporales</td><td>basidiomycetes</td></tr>
+    <tr><td>7</td><td>clavariales</td><td>homobasidiomycetes</td></tr>
+    <tr><td>8</td><td>tricholomatales</td><td>agaricomycetes</td></tr>
+  </table>
+</div>
+
+<!-- Q3 -->
+<div class="question-card" id="card-q3">
+  <div class="question-header">
+    <div class="q-num q-num-sql">3</div>
+    <div class="q-body">
+      <h3>Clé étrangère</h3>
+      <p>Donner la clé étrangère de la table <code>champignon</code> faisant référence à la clé primaire <code>id</code> de la table <code>ordre</code>.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <input type="text" class="text-input" id="q3-input" placeholder="Nom de l'attribut..." />
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateText(3, ['id_ordre'])">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q3')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q3">Regarde les colonnes de la table <code>champignon</code> : laquelle fait le lien avec la table <code>ordre</code> ?</div>
+    <div class="feedback" id="fb-q3"></div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="question-card" id="card-q4">
+  <div class="question-header">
+    <div class="q-num q-num-sql">4</div>
+    <div class="q-body">
+      <h3>Jointure — Agaricomycètes</h3>
+      <p>Écrire la requête permettant d'obtenir la liste des <em>noms</em> des champignons appartenant à la <strong>classe des agaricomycètes</strong>. Cette requête nécessite une jointure entre <code>champignon</code> et <code>ordre</code>.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q4-input" rows="4" placeholder="SELECT ..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSQL(4)">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q4')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q4">
+      <code>SELECT c.nom FROM champignon c</code><br>
+      <code>JOIN ordre o ON c.id_ordre = o.id</code><br>
+      <code>WHERE o.classe = 'agaricomycetes';</code>
+    </div>
+    <div class="feedback" id="fb-q4"></div>
+  </div>
+</div>
+
+<!-- Q5 — INSERT avec les vraies colonnes et valeurs du PDF -->
+<div class="question-card" id="card-q5">
+  <div class="question-header">
+    <div class="q-num q-num-sql">5</div>
+    <div class="q-body">
+      <h3>INSERT — Amanite solitaire</h3>
+      <p>Le champignon <em>amanite solitaire</em> est <strong>blanc</strong>, appartient à l'ordre des <strong>amanitales</strong> (<code>id_ordre = 4</code>),
+         possède des <strong>lamelles</strong>, un chapeau entre <strong>6 et 20 cm</strong> et un pied entre <strong>4 et 10 cm</strong>.
+         Écrire la requête pour l'ajouter avec <code>id = 56</code>.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q5-input" rows="4" placeholder="INSERT INTO ..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSQL(5)">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q5')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q5">
+      <code>INSERT INTO champignon(id, nom, id_ordre, lamelle, couleur, chapeau_min, chapeau_max, pied_min, pied_max)</code><br>
+      <code>VALUES (56, 'amanite solitaire', 4, 'oui', 'blanc', 6, 20, 4, 10);</code>
+    </div>
+    <div class="feedback" id="fb-q5"></div>
+  </div>
+</div>
+
+<!-- Q6 — Schema avec table toxicite -->
+<div class="question-card" id="card-q6">
+  <div class="question-header">
+    <div class="q-num q-num-sql">6</div>
+    <div class="q-body">
+      <h3>Schéma relationnel — 3 tables</h3>
+      <p>On ajoute un attribut <code>id_toxicite</code> dans <code>champignon</code> et une table <code>toxicite</code> (ci-dessous).
+         Écrire le schéma relationnel complet des 3 tables : clés primaires <u>soulignées</u> (écrites ici en MAJUSCULES), clés étrangères précédées de <code>#</code>.</p>
+      <span class="table-label" style="margin-top:.6rem">table toxicite</span>
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <tr><th>id_tox</th><th>type</th><th>effets</th></tr>
+          <tr><td>1</td><td>tres toxique</td><td>Entrainant la mort</td></tr>
+          <tr><td>2</td><td>toxique</td><td>Entrainant des problemes digestifs ou nerveux</td></tr>
+          <tr><td>3</td><td>a rejeter</td><td>Champignons suspects ou ayant un mauvais gout</td></tr>
+          <tr><td>4</td><td>comestible</td><td>Champignons pouvant etre consommes</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q6-input" rows="5" placeholder="champignon(ID, nom, ...)&#10;ordre(ID, nom, classe)&#10;toxicite(ID_TOX, ...)"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSchema()">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q6')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q6">
+      <code>champignon(ID, nom, #id_ordre, lamelle, couleur, chapeau_min, chapeau_max, pied_min, pied_max, #id_toxicite)</code><br>
+      <code>ordre(ID, nom, classe)</code><br>
+      <code>toxicite(ID_TOX, type, effets)</code>
+    </div>
+    <div class="feedback" id="fb-q6"></div>
+  </div>
+</div>
+
+<!-- Q7 UPDATE -->
+<div class="question-card" id="card-q7">
+  <div class="question-header">
+    <div class="q-num q-num-sql">7</div>
+    <div class="q-body">
+      <h3>UPDATE — Correction toxicité</h3>
+      <p>Une erreur s'est glissée dans la table : l'<em>amanite citrine</em> est en réalité <strong>très toxique</strong>,
+         son ingestion peut entraîner la mort (<code>id_toxicite = 1</code>).
+         Écrire la requête permettant de corriger cette erreur dans la table <code>champignon</code>.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q7-input" rows="3" placeholder="UPDATE ..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSQL(7)">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q7')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q7"><code>UPDATE champignon SET id_toxicite = 1 WHERE nom = 'amanite citrine';</code></div>
+    <div class="feedback" id="fb-q7"></div>
+  </div>
+</div>
+
+<!-- Q8 SELECT jointure triple -->
+<div class="question-card" id="card-q8">
+  <div class="question-header">
+    <div class="q-num q-num-sql">8</div>
+    <div class="q-body">
+      <h3>SELECT — Amanitales très toxiques</h3>
+      <p>Écrire une requête permettant d'obtenir les <em>noms</em> des champignons de l'<strong>ordre des amanitales</strong>
+         de toxicité <strong>tres toxique</strong>. Cette requête nécessite une jointure des <strong>3 tables</strong>.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q8-input" rows="6" placeholder="SELECT ..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateSQL(8)">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q8')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q8">
+      Deux jointures successives :<br>
+      <code>FROM champignon c</code><br>
+      <code>JOIN ordre o ON c.id_ordre = o.id</code><br>
+      <code>JOIN toxicite t ON c.id_toxicite = t.id_tox</code><br>
+      Filtre : <code>WHERE o.nom = 'amanitales' AND t.type = 'tres toxique'</code>
+    </div>
+    <div class="feedback" id="fb-q8"></div>
+  </div>
+</div>
+
+<!-- ===================== PARTIE B : PYTHON ===================== -->
+<div class="part-header" style="margin-top:3rem">
+  <span class="part-badge badge-py">Partie B</span>
+  <h2>Programmation objet — Classe Champignon</h2>
+</div>
+
+<div class="cours-box">
+  <button class="cours-toggle" onclick="toggleCours(this)">
+    🐍 Rappels de cours — Programmation orientée objet (POO)
+    <span class="chevron">▼</span>
+  </button>
+  <div class="cours-body">
+    <p style="margin-top:.8rem">La <strong>POO</strong> regroupe données (attributs) et comportements (méthodes) dans des <strong>objets</strong> créés à partir d'une <strong>classe</strong>.</p>
+    <pre class="code-block" style="margin-top:.7rem"><span class="kw">class</span> <span class="fn">Animal</span>():
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nom, age):
+        self.nom = nom      <span class="cm"># attribut d'instance</span>
+        self.age = age
+
+chat = <span class="fn">Animal</span>(<span class="st">'Felix'</span>, 3)
+<span class="kw">print</span>(chat.nom)   <span class="cm"># -&gt; Felix</span></pre>
+    <div class="highlight" style="margin-top:.7rem">
+      <strong>Points de vigilance pour cet exercice :</strong>
+      <ul style="margin-top:.5rem">
+        <li>Le nom du <strong>paramètre</strong> peut différer du nom de l'<strong>attribut</strong> :
+          <code>__init__(self, lieu)</code> stocke <code>self.localisation = lieu</code>.
+          On accède à <code>obj.localisation</code>, jamais <code>obj.lieu</code>.</li>
+        <li><code>return</code> est réservé aux <strong>fonctions</strong>. Dans une boucle hors d'une fonction, Python lève une <code>SyntaxError</code>.</li>
+        <li>Comparaison de chaînes : <code>c.cuisson</code> vaut <code>'12 minutes a feu moyen'</code>, pas <code>'feu moyen'</code> seul. L'opérateur <code>==</code> exige l'égalité exacte.</li>
+      </ul>
+    </div>
+    <div class="highlight" style="margin-top:.6rem">
+      <strong>Fonction recherche_textuelle(texte, mot)</strong> fournie par Iris :<br>
+      Renvoie <code>True</code> si <em>mot</em> est un mot entier contenu dans <em>texte</em>.<br><br>
+      <code>recherche_textuelle('dans une foret', 'foret')</code> &rarr; <code>True</code><br>
+      <code>recherche_textuelle('pres de la mer', 'mare')</code> &rarr; <code>False</code>
+    </div>
+  </div>
+</div>
+
+<!-- Classe fournie dans le sujet -->
+<span class="table-label">Classe Champignon fournie dans le sujet (Partie B)</span>
+<pre class="code-block" style="margin-bottom:.5rem"><span class="kw">class</span> <span class="fn">Champignon</span>():
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nom, lieu, saison, recette, cuisson):
+        self.nom          = nom
+        self.localisation = lieu      <span class="cm"># parametre 'lieu' -> attribut 'localisation'</span>
+        self.saison       = saison
+        self.recette      = recette
+        self.cuisson      = cuisson</pre>
+
+<span class="table-label">Instanciation exemple donnée dans le sujet</span>
+<pre class="code-block" style="margin-bottom:1.3rem">champignon1 = <span class="fn">Champignon</span>(<span class="st">'Lactaire delicieux'</span>, <span class="st">'Sous les pins'</span>,
+    <span class="st">'ete'</span>, <span class="st">"Lactaires grilles a l'huile d'olive"</span>, <span class="st">'12 minutes a feu moyen'</span>)</pre>
+
+<!-- Q9 -->
+<div class="question-card" id="card-q9">
+  <div class="question-header">
+    <div class="q-num q-num-py">9</div>
+    <div class="q-body">
+      <h3>Compléter la boucle — Champignons d'été</h3>
+      <p>Recopier et compléter le programme ci-dessous permettant d'afficher le(s) nom(s) des champignons que l'on trouve lors de la saison <strong>été</strong>.
+         La liste <code>liste_champi</code> est déjà disponible.</p>
+      <pre class="code-block" style="margin-top:.5rem"><span class="kw">for</span> e <span class="kw">in</span> liste_champi:
+    <span class="kw">if</span> ...... == <span class="st">'ete'</span>:
+        <span class="kw">print</span>(...)</pre>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q9-input" rows="4" spellcheck="false">for e in liste_champi:
+    if ...... == 'ete':
+        print(...)</textarea>
+    <div class="btn-row">
+      <button class="btn btn-run" id="btn-run-9" py-click="run_q9">▶ Tester</button>
+      <button class="btn btn-validate" onclick="validatePy9()">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q9')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q9">
+      <code>e</code> est une instance de <code>Champignon</code>.<br>
+      Accès à la saison : <code>e.saison</code> (l'attribut s'appelle <code>saison</code> dans le constructeur).<br>
+      Affichage du nom : <code>print(e.nom)</code>.
+    </div>
+    <div class="py-output" id="out-q9"></div>
+    <div class="feedback" id="fb-q9"></div>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="question-card" id="card-q10">
+  <div class="question-header">
+    <div class="q-num q-num-text">10</div>
+    <div class="q-body">
+      <h3>Analyse d'un bug — Explication</h3>
+      <p>Quentin écrit ce programme pour savoir s'il peut cuire ses champignons à feu moyen :</p>
+      <pre class="code-block" style="margin-top:.5rem"><span class="kw">for</span> c <span class="kw">in</span> liste_champi:
+    <span class="kw">if</span> c.nom == <span class="st">'Lactaire delicieux'</span>:
+        <span class="kw">return</span> c.cuisson == <span class="st">'feu moyen'</span></pre>
+      <p style="margin-top:.4rem">Ce programme renvoie <code>False</code>, alors que le Lactaire délicieux se cuisine bien à feu moyen, et Quentin n'a fait <strong>aucune erreur</strong> dans sa liste. Expliquer pourquoi il n'obtient pas le résultat attendu.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q10-input" rows="5" placeholder="Expliquer les deux raisons..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-validate" onclick="validateExplication()">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q10')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q10">
+      Il y a <strong>deux problèmes distincts</strong> :<br>
+      (1) Que vaut exactement <code>c.cuisson</code> ? Est-ce identique à <code>'feu moyen'</code> ?<br>
+      (2) <code>return</code> peut-il s'utiliser ici, en dehors de toute fonction ?
+    </div>
+    <div class="feedback" id="fb-q10"></div>
+  </div>
+</div>
+
+<!-- Q11 -->
+<div class="question-card" id="card-q11">
+  <div class="question-header">
+    <div class="q-num q-num-py">11</div>
+    <div class="q-body">
+      <h3>Corriger avec <code>recherche_textuelle</code></h3>
+      <p>Quentin ne souhaite pas modifier sa liste. Son ami Iris lui fournit la fonction
+         <code>recherche_textuelle(texte, mot)</code> (disponible ici). Corriger le programme précédent en l'utilisant.
+         Le programme doit afficher <code>True</code> si le Lactaire délicieux se cuisine à feu moyen.</p>
+    </div>
+  </div>
+  <div class="answer-zone">
+    <textarea class="code-input" id="q11-input" rows="5" spellcheck="false">for c in liste_champi:
+    if c.nom == 'Lactaire delicieux':
+        ...</textarea>
+    <div class="btn-row">
+      <button class="btn btn-run" id="btn-run-11" py-click="run_q11">▶ Tester</button>
+      <button class="btn btn-validate" onclick="validatePy11()">✔ Valider</button>
+      <button class="btn btn-hint" onclick="toggleHint('q11')">💡 Indice</button>
+    </div>
+    <div class="hint-box" id="hint-q11">
+      Remplace le <code>return</code> par :<br>
+      <code>print(recherche_textuelle(c.cuisson, 'feu moyen'))</code>
+    </div>
+    <div class="py-output" id="out-q11"></div>
+    <div class="feedback" id="fb-q11"></div>
+  </div>
+</div>
+
+</main>
+<footer>Bac NSI 2025 · Polynésie J2 · Exercice 2 — Page interactive PyScript 2024.11.1</footer>
+
+<!-- ============================
+  PYSCRIPT : py-click sur les boutons triangulaires.
+  Python lit les textareas et ecrit dans le DOM via js.document.
+  ============================ -->
+<script type="py">
+import sys, re
+from io import StringIO
+from js import document
+
+class Champignon:
+    def __init__(self, nom, lieu, saison, recette, cuisson):
+        self.nom          = nom
+        self.localisation = lieu
+        self.saison       = saison
+        self.recette      = recette
+        self.cuisson      = cuisson
+
+liste_champi = [
+    Champignon("Lactaire delicieux",  "Sous les pins",     "ete",       "Lactaires grilles a l'huile d'olive", "12 minutes a feu moyen"),
+    Champignon("Chanterelle",         "Foret de feuillus", "ete",       "Poelee a l'ail et au persil",         "8 minutes a feu vif"),
+    Champignon("Cepe de Bordeaux",    "Foret de chenes",   "automne",   "Cepes a la bordelaise",               "15 minutes a feu moyen"),
+    Champignon("Morille",             "Prairies humides",  "printemps", "Sauce morilles et creme",             "20 minutes a feu doux"),
+    Champignon("Girolle",             "Foret de sapins",   "ete",       "Omelette aux girolles",               "6 minutes a feu vif"),
+    Champignon("Pied de mouton",      "Foret mixte",       "automne",   "Fricassee de pieds de mouton",        "10 minutes a feu moyen"),
+    Champignon("Trompette des morts", "Sous les hetres",   "automne",   "Risotto aux trompettes",              "5 minutes a feu vif"),
+]
+
+def recherche_textuelle(texte, mot):
+    pattern = r'\b' + re.escape(mot) + r'\b'
+    return bool(re.search(pattern, texte))
+
+def _execute(input_id, output_id):
+    code = document.getElementById(input_id).value
+    g = {
+        'Champignon': Champignon,
+        'liste_champi': liste_champi,
+        'recherche_textuelle': recherche_textuelle,
+        '__builtins__': __builtins__,
+    }
+    old_stdout = sys.stdout
+    sys.stdout = buf = StringIO()
+    err = None
+    try:
+        exec(compile(code, '<input>', 'exec'), g)
+    except Exception as e:
+        err = str(e)
+    finally:
+        sys.stdout = old_stdout
+    out = document.getElementById(output_id)
+    out.classList.add("visible")
+    out.classList.remove("err-out")
+    if err:
+        out.classList.add("err-out")
+        out.textContent = "Erreur : " + err
+    else:
+        result = buf.getvalue()
+        out.textContent = result if result else "(aucune sortie)"
+
+def run_q9(event):
+    _execute("q9-input", "out-q9")
+
+def run_q11(event):
+    _execute("q11-input", "out-q11")
+
+document.getElementById("pyscript-loading").classList.add("hidden")
+</script>
+
+<!-- ============================  JAVASCRIPT  ============================ -->
+<script>
+  var TOTAL = 11;
+  var validated = new Set();
+
+  function updateScore() {
+    var n = validated.size;
+    document.getElementById('score-label').textContent = n + ' / ' + TOTAL;
+    document.getElementById('progress-fill').style.width = ((n / TOTAL) * 100) + '%';
+  }
+  function markOk(num) {
+    validated.add(num);
+    document.getElementById('card-q' + num).classList.remove('answered-err');
+    document.getElementById('card-q' + num).classList.add('answered-ok');
+    updateScore();
+  }
+  function markErr(num) {
+    var c = document.getElementById('card-q' + num);
+    c.classList.add('answered-err');
+    setTimeout(function(){ c.classList.remove('answered-err'); }, 1800);
+  }
+  function setFb(id, cls, msg) {
+    var el = document.getElementById('fb-' + id);
+    el.className = 'feedback ' + cls + ' visible';
+    el.textContent = msg;
+  }
+  function toggleCours(btn) {
+    btn.classList.toggle('open');
+    btn.nextElementSibling.classList.toggle('visible');
+  }
+  function toggleHint(id) {
+    document.getElementById('hint-' + id).classList.toggle('visible');
+  }
+
+  /* ---- Validateurs SQL ---- */
+  /* Mots-cles obligatoires par question (en minuscules, sans accents critiques) */
+  var SQL_CHECKS = {
+    1:  ['select', 'nom', 'champignon', 'lamelle', 'oui', 'couleur', 'orange', 'where', 'and'],
+    2:  ['select', 'nom', 'champignon', 'pied_min', 'pied_max', '0', 'chapeau', '15', 'where', 'and'],
+    4:  ['select', 'nom', 'champignon', 'join', 'ordre', 'on', 'id_ordre', 'classe', 'agaricomyc'],
+    5:  ['insert into', 'champignon', '56', 'amanite solitaire', '4', 'oui', 'blanc', '6', '20'],
+    7:  ['update', 'champignon', 'set', 'id_toxicite', '1', 'where', 'amanite citrine'],
+    8:  ['select', 'nom', 'champignon', 'join', 'ordre', 'toxicite', 'amanitales', 'toxique']
+  };
+
+  function validateSQL(num) {
+    var val = document.getElementById('q' + num + '-input').value.trim().toLowerCase();
+    var checks = SQL_CHECKS[num];
+    var seen = {};
+    var missing = [];
+    for (var i = 0; i < checks.length; i++) {
+      var k = checks[i];
+      if (!val.includes(k) && !seen[k]) {
+        missing.push(k);
+        seen[k] = true;
+      }
+    }
+    if (missing.length === 0) {
+      setFb('q' + num, 'ok', 'Bonne requete ! Tous les elements attendus sont presents.');
+      markOk(num);
+    } else {
+      setFb('q' + num, 'err', 'Element(s) manquant(s) ou incorrect(s) : ' + missing.join(', '));
+      markErr(num);
+    }
+  }
+
+  function validateText(num, accepted) {
+    var val = document.getElementById('q' + num + '-input').value.trim().toLowerCase();
+    var ok = accepted.some(function(a){ return a.toLowerCase() === val; });
+    if (ok) {
+      setFb('q' + num, 'ok', 'Correct !');
+      markOk(num);
+    } else {
+      setFb('q' + num, 'err', 'Ce n\'est pas la bonne reponse. Observe les colonnes de la table champignon.');
+      markErr(num);
+    }
+  }
+
+  function validateSchema() {
+    var val = document.getElementById('q6-input').value.toLowerCase();
+    var checks = ['champignon', 'ordre', 'toxicite', '#id_ordre', '#id_toxicite', 'id_tox'];
+    var miss = checks.filter(function(c){ return !val.includes(c); });
+    if (miss.length === 0) {
+      setFb('q6', 'ok', 'Schema correct ! Cles primaires soulignees, cles etrangeres avec #.');
+      markOk(6);
+    } else {
+      setFb('q6', 'err', 'Verifie : ' + miss.join(', '));
+      markErr(6);
+    }
+  }
+
+  /* ---- Validateurs Python ---- */
+  function validatePy9() {
+    var v = document.getElementById('q9-input').value.toLowerCase();
+    var ok = v.includes('e.saison') && (v.includes("'ete'") || v.includes('"ete"')) && v.includes('e.nom');
+    if (ok) {
+      setFb('q9', 'ok', 'Correct ! Lance le test pour voir le resultat.');
+      markOk(9);
+    } else {
+      setFb('q9', 'err', 'Verifie : e.saison pour tester la saison, e.nom pour afficher le nom.');
+      markErr(9);
+    }
+  }
+
+  function validateExplication() {
+    var val = document.getElementById('q10-input').value.toLowerCase();
+    /* Probleme 1 : c.cuisson = '12 minutes a feu moyen' != 'feu moyen' */
+    var p1 = (val.includes('cuisson') || val.includes('chaine') || val.includes('valeur'))
+          && (val.includes('feu moyen') || val.includes('12 min') || val.includes('different')
+              || val.includes('contient') || val.includes('complet') || val.includes('egal'));
+    /* Probleme 2 : return hors d'une fonction */
+    var p2 = val.includes('return')
+          && (val.includes('fonction') || val.includes('hors') || val.includes('erreur')
+              || val.includes('syntaxe') || val.includes('boucle') || val.includes('interdit'));
+    if (p1 && p2) {
+      setFb('q10', 'ok', 'Les deux raisons sont bien identifiees !');
+      markOk(10);
+    } else if (p1 || p2) {
+      setFb('q10', 'info', 'Tu as trouve l\'une des deux raisons. Cherche l\'autre...');
+    } else {
+      setFb('q10', 'err', 'Pense a : (1) la valeur exacte de c.cuisson et (2) l\'utilisation de return hors d\'une fonction.');
+      markErr(10);
+    }
+  }
+
+  function validatePy11() {
+    var v = document.getElementById('q11-input').value.toLowerCase();
+    var ok = v.includes('recherche_textuelle') && v.includes('c.cuisson') && v.includes('print');
+    if (ok) {
+      setFb('q11', 'ok', 'Correct ! Lance le test pour verifier le resultat.');
+      markOk(11);
+    } else {
+      setFb('q11', 'err', "Utilise print(recherche_textuelle(c.cuisson, 'feu moyen')).");
+      markErr(11);
+    }
+  }
+
+  /* ---- Loading fallback ---- */
+  document.addEventListener('py:ready', function() {
+    var l = document.getElementById('pyscript-loading');
+    if (l) l.classList.add('hidden');
+  });
+  setTimeout(function() {
+    var l = document.getElementById('pyscript-loading');
+    if (l) l.classList.add('hidden');
+  }, 15000);
+</script>
+
+</body>
+</html>

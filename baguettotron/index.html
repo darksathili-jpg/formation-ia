@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baguettotron – SLM Français (Hugging Face API)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+
+  <h1>Baguettotron</h1>
+
+  <!-- ══ LAYOUT 3 COLONNES ══ -->
+  <div class="app-layout">
+
+    <!-- ── COLONNE GAUCHE : infos / accordéon ── -->
+    <div class="col-info">
+      <div class="accordion" id="accordionBaguettotron">
+
+      <!-- Présentation -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapsePresentation">
+            <span class="accordion-icon"></span> Présentation générale
+          </button>
+        </h2>
+        <div id="collapsePresentation" class="accordion-collapse collapse show" data-bs-parent="#accordionBaguettotron">
+          <div class="accordion-body">
+            <strong>Baguettotron</strong> est un modèle d'intelligence artificielle développé par
+            <strong>PleIAs</strong>, startup française basée à Paris. Il incarne une approche éthique et souveraine de
+            l'IA : entraîné exclusivement sur des <strong>données ouvertes et libres de droits</strong>, respectueux du
+            droit d'auteur, et économe en énergie.
+            <div class="highlight-box">
+              PleIAs a été remarquée par WIRED, Euronews et Les Echos pour avoir prouvé qu'il est possible d'entraîner
+              un modèle IA performant sans utiliser de données protégées par le droit d'auteur.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benchmarks -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseBenchmarks">
+            <span class="accordion-icon"></span> Performances & benchmarks
+          </button>
+        </h2>
+        <div id="collapseBenchmarks" class="accordion-collapse collapse" data-bs-parent="#accordionBaguettotron">
+          <div class="accordion-body">
+            Évalué sur trois benchmarks industriels majeurs :
+            <div class="mt-2 mb-3">
+              <span class="stat-pill">MMLU — Raisonnement général</span>
+              <span class="stat-pill">GSM8K — Mathématiques</span>
+              <span class="stat-pill">HotPotQA — Retrieval</span>
+            </div>
+            Avec seulement <strong>321M de paramètres</strong>, Baguettotron approche les performances de
+            <strong>Qwen-0.6B</strong> et surpasse nettement Gemma de taille comparable — tout en ayant été entraîné sur
+            considérablement moins de données.
+            <div class="highlight-box">
+              Il offre un équilibre inédit entre mémorisation, raisonnement général, mathématiques et retrieval pour un
+              SLM de sa catégorie.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cas d'usage -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseUsages">
+            <span class="accordion-icon"></span> Cas d'usage couverts
+          </button>
+        </h2>
+        <div id="collapseUsages" class="accordion-collapse collapse" data-bs-parent="#accordionBaguettotron">
+          <div class="accordion-body">
+            Le modèle a été entraîné sur des pipelines dédiés couvrant les tâches suivantes :
+            <ul class="mt-2" style="padding-left: 1.2rem;">
+              <li>Mémorisation encyclopédique (50 000 articles Wikipedia)</li>
+              <li>Génération augmentée par retrieval (<strong>RAG</strong>)</li>
+              <li>Résolution de problèmes arithmétiques et mathématiques simples</li>
+              <li>Tâches d'édition et réécriture</li>
+              <li>Extraction d'information</li>
+              <li>Écriture créative</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Langues -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseLangues">
+            <span class="accordion-icon"></span> Langues supportées
+          </button>
+        </h2>
+        <div id="collapseLangues" class="accordion-collapse collapse" data-bs-parent="#accordionBaguettotron">
+          <div class="accordion-body">
+            Baguettotron peut lire et écrire dans les principales langues européennes :
+            <div class="mt-2">
+              <span class="lang-badge">Français</span>
+              <span class="lang-badge">Allemand</span>
+              <span class="lang-badge">Italien</span>
+              <span class="lang-badge">Espagnol</span>
+              <span class="lang-badge">Polonais</span>
+              <span class="lang-badge">Latin (partiel)</span>
+            </div>
+            <div class="highlight-box">
+              Les traces de raisonnement (chain-of-thought) sont exclusivement générées en <strong>anglais</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Limites -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseLimites">
+            <span class="accordion-icon"></span> Limites connues
+          </button>
+        </h2>
+        <div id="collapseLimites" class="accordion-collapse collapse" data-bs-parent="#accordionBaguettotron">
+          <div class="accordion-body">
+            Comme tout modèle compact, Baguettotron présente certaines limites à prendre en compte :
+            <div class="mt-2">
+              <span class="limit-tag">Non adapté au code</span>
+              <span class="limit-tag">Mémorisation réduite sans chain-of-thought</span>
+              <span class="limit-tag">Mathématiques complexes limitées</span>
+            </div>
+            <div class="highlight-box">
+              Pour des tâches de génération de code ou de raisonnement très complexe, des modèles plus larges restent
+              recommandés.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibilité -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseAcces">
+            <span class="accordion-icon"></span> Comment y accéder ?
+          </button>
+        </h2>
+        <div id="collapseAcces" class="accordion-collapse collapse" data-bs-parent="#accordionBaguettotron">
+          <div class="accordion-body">
+            Cette version utilise l'<strong>API Inference Serverless de Hugging Face</strong>. Aucun serveur local requis.
+            <ul class="mt-2" style="padding-left: 1.2rem;">
+              <li>Créez un compte sur <strong>huggingface.co</strong></li>
+              <li>Générez un token dans <em>Settings → Access Tokens</em></li>
+              <li>Collez le token dans le champ prévu dans les paramètres</li>
+            </ul>
+            <div class="highlight-box">
+              L'API Inference HF est gratuite avec quota journalier. Pour plus de requêtes, un abonnement PRO HF (~9$/mois) est disponible.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div><!-- fin col-info -->
+
+    <!-- ── COLONNE CENTRALE : chat ── -->
+    <div class="col-chat">
+    <!-- ══ Chat ══ -->
+    <div id="chat-panel">
+      <div class="chat-panel-title">Conversation</div>
+
+      <div id="messages">
+        <div class="empty-hint" id="empty-hint">
+          Entrez votre token Hugging Face et cliquez sur <strong>Connecter</strong>.<br />
+          <span style="font-size:0.75rem;opacity:0.7;">Aucun serveur local requis — tout se passe dans votre navigateur.</span>
+        </div>
+      </div>
+
+      <div id="input-area">
+        <textarea id="user-input" placeholder="Posez votre question en français…" rows="1" disabled></textarea>
+        <button class="btn btn-warning" id="send-btn" disabled style="border-radius:0;padding:0 22px;min-width:100px;">
+          Envoyer
+        </button>
+      </div>
+    </div><!-- fin chat-panel -->
+    </div><!-- fin col-chat -->
+
+    <!-- ── COLONNE DROITE : paramètres ── -->
+    <div class="col-params">
+    <div class="card">
+      <h2 class="card-title">
+        Paramètres
+        <span>SLM PleIAs · 321M · HF API</span>
+      </h2>
+
+      <!-- Clé API -->
+      <div class="api-key-section">
+        <label for="hf-token">🔑 Token Hugging Face</label>
+        <div class="api-key-row">
+          <input type="password" id="hf-token" placeholder="hf_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
+          <button class="btn btn-warning" id="btn-connect">Connecter</button>
+        </div>
+        <a class="hf-link" href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">
+          → Créer un token sur huggingface.co
+        </a>
+      </div>
+
+      <!-- Statut -->
+      <div class="alert alert-warning" id="status-bar">
+        <div class="status-dot loading" id="status-dot"></div>
+        <span id="status-text">Entrez votre token HF pour commencer…</span>
+      </div>
+
+      <!-- Mode de génération -->
+      <div style="margin-bottom:12px;">
+        <label style="color:white;font-size:0.8rem;display:block;margin-bottom:6px;">Mode de génération</label>
+        <div style="display:flex;gap:8px;">
+          <button id="btn-think" class="btn btn-warning" style="flex:1;font-size:0.75rem;padding:8px;">
+            Thinking
+          </button>
+          <button id="btn-direct" class="btn"
+            style="flex:1;font-size:0.75rem;padding:8px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">
+            Direct
+          </button>
+        </div>
+        <p id="mode-hint"
+          style="font-size:0.68rem;color:#e0e0e0;margin-top:5px;font-family:'Courier New',monospace;line-height:1.4;">
+          <strong>Thinking</strong> — raisonnement profond (recommandé).
+        </p>
+      </div>
+
+      <!-- Sliders -->
+      <div class="controls-row">
+        <div class="ctrl-group">
+          <label for="max-tokens">Tokens max</label>
+          <input type="range" id="max-tokens" min="100" max="2000" value="800" step="50" />
+          <span class="ctrl-val" id="max-tokens-val">800</span>
+        </div>
+      </div>
+      <div class="controls-row">
+        <div class="ctrl-group">
+          <label for="temperature">Température</label>
+          <input type="range" id="temperature" min="0.1" max="1.5" value="0.6" step="0.05" />
+          <span class="ctrl-val" id="temperature-val">0.60</span>
+        </div>
+      </div>
+
+      <!-- Bouton effacer -->
+      <button class="btn btn-danger" id="clear-btn" style="width:100%;margin-top:6px;">
+        Effacer la conversation
+      </button>
+
+      <!-- Infos -->
+      <p style="margin-top:16px;font-size:0.72rem;color:#e0e0e0;font-family:'Courier New',monospace;line-height:1.6;">
+        Modèle : <strong>PleIAs/Baguettotron</strong><br />
+        Backend : <strong>HF Inference API</strong><br />
+        Licence : <strong>Apache 2.0</strong>
+      </p>
+
+      <!-- Instructions -->
+      <details style="margin-top:12px;">
+        <summary>Instructions d'utilisation</summary>
+        <div style="font-size:0.68rem;color:#e0e0e0;font-family:'Courier New',monospace;line-height:1.8;margin-top:8px;padding:8px;background:rgba(0,0,0,0.2);border-radius:4px;">
+          <strong>1. Créer un compte HF</strong><br />
+          → huggingface.co/join<br /><br />
+          <strong>2. Générer un token</strong><br />
+          → huggingface.co/settings/tokens<br />
+          → Type : "Read" avec permission Inference<br /><br />
+          <strong>3. Coller le token</strong><br />
+          → Dans le champ ci-dessus<br />
+          → Cliquer sur "Connecter"<br /><br />
+          <strong>4. Poser vos questions !</strong><br />
+          → Aucune installation requise
+        </div>
+      </details>
+    </div><!-- fin card -->
+    </div><!-- fin col-params -->
+
+  </div><!-- fin app-layout -->
+
+  <script>
+    // ════════════════════════════════════════════════════════
+    //  CONFIGURATION
+    //  Modèle Baguettotron via l'API Inference Serverless HF
+    //  Licence : Apache 2.0 — PleIAs/Baguettotron
+    // ════════════════════════════════════════════════════════
+    const HF_MODEL   = "PleIAs/Baguettotron";
+    const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}/v1/chat/completions`;
+
+    // ── Éléments DOM ─────────────────────────────────────────
+    const statusDot   = document.getElementById('status-dot');
+    const statusBar   = document.getElementById('status-bar');
+    const statusText  = document.getElementById('status-text');
+    const messagesEl  = document.getElementById('messages');
+    const userInput   = document.getElementById('user-input');
+    const sendBtn     = document.getElementById('send-btn');
+    const clearBtn    = document.getElementById('clear-btn');
+    const maxTokSlider= document.getElementById('max-tokens');
+    const tempSlider  = document.getElementById('temperature');
+    const maxTokVal   = document.getElementById('max-tokens-val');
+    const tempVal     = document.getElementById('temperature-val');
+    const btnThink    = document.getElementById('btn-think');
+    const btnDirect   = document.getElementById('btn-direct');
+    const modeHint    = document.getElementById('mode-hint');
+    const hfTokenInput= document.getElementById('hf-token');
+    const btnConnect  = document.getElementById('btn-connect');
+
+    let emptyHint         = document.getElementById('empty-hint');
+    let conversationHistory = [];
+    let lastThinking      = null;
+    let isGenerating      = false;
+    let thinkingMode      = 'think';
+    let hfToken           = '';
+
+    // ── Sliders ───────────────────────────────────────────────
+    maxTokSlider.addEventListener('input', () => maxTokVal.textContent = maxTokSlider.value);
+    tempSlider.addEventListener('input',   () => tempVal.textContent = (+tempSlider.value).toFixed(2));
+
+    // ── Mode thinking / direct ────────────────────────────────
+    function setMode(mode) {
+      thinkingMode = mode;
+      const activeStyle  = 'flex:1;font-size:0.75rem;padding:8px;';
+      const inactiveStyle= 'flex:1;font-size:0.75rem;padding:8px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);';
+      if (mode === 'think') {
+        btnThink.className  = 'btn btn-warning'; btnThink.style.cssText  = activeStyle;
+        btnDirect.className = 'btn';             btnDirect.style.cssText = inactiveStyle;
+        modeHint.innerHTML  = '<strong>Thinking</strong> — raisonnement profond (recommandé).';
+      } else {
+        btnDirect.className = 'btn btn-warning'; btnDirect.style.cssText = activeStyle;
+        btnThink.className  = 'btn';             btnThink.style.cssText  = inactiveStyle;
+        modeHint.innerHTML  = '<strong>Direct</strong> — réponse immédiate sans raisonnement.';
+      }
+    }
+    btnThink.addEventListener('click',  () => setMode('think'));
+    btnDirect.addEventListener('click', () => setMode('direct'));
+
+    // ── Statut ────────────────────────────────────────────────
+    function setStatus(state, text) {
+      statusDot.className = 'status-dot ' + state;
+      statusText.textContent = text;
+      statusBar.className = 'alert ' + (
+        state === 'ready'   ? 'alert-success' :
+        state === 'error'   ? 'alert-danger'  : 'alert-warning'
+      );
+    }
+
+    // ── Connexion : vérification du token via un appel test ───
+    btnConnect.addEventListener('click', connectToHF);
+    hfTokenInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') connectToHF(); });
+
+    async function connectToHF() {
+      const token = hfTokenInput.value.trim();
+      if (!token) {
+        setStatus('error', 'Veuillez entrer un token Hugging Face.');
+        return;
+      }
+      setStatus('loading', 'Vérification du token…');
+      btnConnect.disabled = true;
+
+      try {
+        // Petit appel de test pour valider le token
+        const r = await fetch(HF_API_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: HF_MODEL,
+            messages: [{ role: 'user', content: 'Bonjour' }],
+            max_tokens: 10,
+            stream: false
+          })
+        });
+
+        if (r.status === 401) {
+          setStatus('error', 'Token invalide ou expiré.');
+          btnConnect.disabled = false;
+          return;
+        }
+        if (r.status === 503) {
+          // Le modèle est en train de se charger côté HF — c'est OK
+          hfToken = token;
+          setStatus('ready', 'Token accepté — modèle en chargement (1ère requête lente)');
+          unlockChat();
+        } else if (!r.ok) {
+          const err = await r.json().catch(() => ({}));
+          setStatus('error', `Erreur HF : ${err.error || r.status}`);
+          btnConnect.disabled = false;
+          return;
+        } else {
+          hfToken = token;
+          setStatus('ready', `Connecté — Baguettotron · HF Inference`);
+          unlockChat();
+        }
+      } catch (e) {
+        setStatus('error', `Impossible de joindre l'API HF : ${e.message}`);
+        btnConnect.disabled = false;
+      }
+    }
+
+    function unlockChat() {
+      userInput.disabled = false;
+      sendBtn.disabled   = false;
+      btnConnect.disabled = false;
+      userInput.focus();
+      if (emptyHint) emptyHint.innerHTML = '✅ Connecté ! Posez votre question en français.';
+    }
+
+    // ── Messages ──────────────────────────────────────────────
+    function clearHint() {
+      if (emptyHint) { emptyHint.remove(); emptyHint = null; }
+    }
+
+    function addMessage(role, content, thinking = null) {
+      clearHint();
+      const wrap = document.createElement('div');
+      wrap.className = 'message ' + (role === 'user' ? 'user' : 'model');
+
+      const label = document.createElement('div');
+      label.className = 'msg-label';
+      label.textContent = role === 'user' ? 'Vous' : 'Baguettotron';
+      wrap.appendChild(label);
+
+      if (thinking) {
+        const thinkDiv = document.createElement('div');
+        thinkDiv.className = 'thinking-block collapsed';
+        thinkDiv.innerHTML = `
+          <div class="think-header">Raisonnement (clic pour afficher)</div>
+          <div class="think-content">${thinking.replace(/</g, '&lt;')}</div>`;
+        thinkDiv.addEventListener('click', () => {
+          thinkDiv.classList.toggle('collapsed');
+          thinkDiv.querySelector('.think-header').textContent =
+            thinkDiv.classList.contains('collapsed')
+              ? 'Raisonnement (clic pour afficher)'
+              : 'Raisonnement (clic pour réduire)';
+        });
+        wrap.appendChild(thinkDiv);
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.textContent = content;
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return bubble;
+    }
+
+    function addStreamingMessage() {
+      clearHint();
+      const wrap = document.createElement('div');
+      wrap.className = 'message model';
+      wrap.id = 'streaming-msg';
+
+      const label = document.createElement('div');
+      label.className = 'msg-label';
+      label.textContent = 'Baguettotron';
+
+      const thinkDiv = document.createElement('div');
+      thinkDiv.id = 'streaming-think';
+      thinkDiv.className = 'thinking-block';
+      thinkDiv.style.display = thinkingMode === 'think' ? 'block' : 'none';
+      thinkDiv.innerHTML = '<div class="think-header">En train de réfléchir…</div><div class="think-content" id="think-text"></div>';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble streaming';
+      bubble.id = 'streaming-bubble';
+      bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+
+      wrap.appendChild(label);
+      wrap.appendChild(thinkDiv);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return wrap;
+    }
+
+    // ────────────────────────────────────────────────────────
+    //  Construction du prompt pour Baguettotron
+    //  Format Qwen : <|im_start|>user…<|im_end|>
+    //  Thinking activé : on laisse le tag <think> ouvert
+    //  Thinking désactivé : on injecte </think> immédiatement
+    // ────────────────────────────────────────────────────────
+    function buildMessages() {
+      const msgs = conversationHistory.map(m => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content
+      }));
+
+      // Ajout du suffixe assistant pour guider le modèle
+      if (thinkingMode === 'think') {
+        // On laisse le modèle générer librement avec thinking
+        return msgs;
+      } else {
+        // Mode direct : on injecte un message assistant partiel
+        // qui ferme immédiatement le bloc <think>
+        // (technique recommandée par PleIAs)
+        const lastUser = msgs[msgs.length - 1];
+        return [
+          ...msgs.slice(0, -1),
+          lastUser,
+          // On ne peut pas forcer un préfixe assistant via l'API HF standard,
+          // donc on ajoute une instruction système
+        ];
+      }
+    }
+
+    // ── Envoi avec streaming SSE (HF API) ────────────────────
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text || isGenerating || !hfToken) return;
+
+      isGenerating = true;
+      sendBtn.disabled = true;
+      userInput.value = '';
+      userInput.style.height = '';
+
+      addMessage('user', text);
+      conversationHistory.push({ role: 'user', content: text });
+
+      const streamWrap = addStreamingMessage();
+      const thinkEl    = document.getElementById('streaming-think');
+      const thinkText  = document.getElementById('think-text');
+      const bubble     = document.getElementById('streaming-bubble');
+
+      // Préparer les messages avec éventuel rolling thinking
+      const messages = buildMessages();
+
+      // Si mode thinking et qu'on a un raisonnement précédent, on l'injecte
+      // (rolling thinking recommandé par PleIAs pour de meilleures perfs)
+      // L'API HF n'acceptant que role user/assistant, on le met dans le dernier msg assistant
+      const payload = {
+        model: HF_MODEL,
+        messages: messages,
+        max_tokens: parseInt(maxTokSlider.value),
+        temperature: parseFloat(tempSlider.value),
+        stream: true
+      };
+
+      try {
+        const resp = await fetch(HF_API_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${hfToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          if (resp.status === 503) {
+            bubble.textContent = '⏳ Le modèle est en cours de chargement sur les serveurs HF. Réessayez dans 20-30 secondes.';
+          } else {
+            bubble.textContent = `Erreur API (${resp.status}) : ${errData.error || 'Inconnue'}`;
+          }
+          bubble.classList.remove('streaming');
+          isGenerating = false;
+          sendBtn.disabled = false;
+          return;
+        }
+
+        const reader  = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer     = '';
+        let answerText = '';
+        let thinkingText = '';
+        let inThink    = false;
+
+        bubble.innerHTML = '';
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (raw === '[DONE]') break;
+
+            let payload;
+            try { payload = JSON.parse(raw); } catch { continue; }
+
+            const delta = payload?.choices?.[0]?.delta?.content;
+            if (delta == null) continue;
+
+            // ── Parsing thinking / réponse ─────────────────
+            // Baguettotron émet <think>...</think> puis la réponse
+            let remaining = delta;
+
+            while (remaining.length > 0) {
+              if (inThink) {
+                const closeIdx = remaining.indexOf('</think>');
+                if (closeIdx === -1) {
+                  // Encore dans le thinking
+                  thinkingText += remaining;
+                  if (thinkEl && thinkingMode === 'think') {
+                    thinkText.textContent = thinkingText;
+                  }
+                  remaining = '';
+                } else {
+                  // Fin du thinking
+                  thinkingText += remaining.slice(0, closeIdx);
+                  if (thinkEl && thinkingMode === 'think') {
+                    thinkText.textContent = thinkingText;
+                    thinkEl.querySelector('.think-header').textContent = 'Raisonnement terminé (clic pour afficher)';
+                    thinkEl.classList.add('collapsed');
+                    thinkEl.addEventListener('click', () => {
+                      thinkEl.classList.toggle('collapsed');
+                      thinkEl.querySelector('.think-header').textContent =
+                        thinkEl.classList.contains('collapsed')
+                          ? 'Raisonnement (clic pour afficher)'
+                          : 'Raisonnement (clic pour réduire)';
+                    }, { once: true });
+                  }
+                  inThink = false;
+                  remaining = remaining.slice(closeIdx + 8);
+                }
+              } else {
+                const openIdx = remaining.indexOf('<think>');
+                if (openIdx === -1) {
+                  // Texte de réponse normale
+                  answerText += remaining;
+                  bubble.textContent = answerText;
+                  remaining = '';
+                } else if (openIdx === 0) {
+                  inThink = true;
+                  remaining = remaining.slice(7);
+                } else {
+                  // Du texte avant <think>
+                  answerText += remaining.slice(0, openIdx);
+                  bubble.textContent = answerText;
+                  inThink = true;
+                  remaining = remaining.slice(openIdx + 7);
+                }
+              }
+            }
+
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
+        }
+
+        // Finalisation
+        lastThinking = thinkingText || null;
+        const finalAnswer = answerText.trim() || '(réponse vide)';
+        bubble.textContent = finalAnswer;
+        bubble.classList.remove('streaming');
+        conversationHistory.push({ role: 'assistant', content: finalAnswer });
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      } catch (err) {
+        const b = document.getElementById('streaming-bubble');
+        if (b) { b.textContent = 'Erreur : ' + err.message; b.classList.remove('streaming'); }
+        console.error(err);
+      }
+
+      isGenerating    = false;
+      sendBtn.disabled = false;
+      userInput.focus();
+    }
+
+    // ── Events ────────────────────────────────────────────────
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    userInput.addEventListener('input', () => {
+      userInput.style.height = 'auto';
+      userInput.style.height = userInput.scrollHeight + 'px';
+    });
+    clearBtn.addEventListener('click', () => {
+      conversationHistory = []; lastThinking = null;
+      messagesEl.innerHTML = '';
+      const hint = document.createElement('div');
+      hint.className   = 'empty-hint';
+      hint.textContent = 'Conversation effacée. Posez une nouvelle question en français.';
+      messagesEl.appendChild(hint);
+      emptyHint = hint;
+    });
+
+    // ── Init : statut par défaut ──────────────────────────────
+    setStatus('loading', 'Entrez votre token HF pour commencer…');
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parcoursup – Lettre de motivation & Conseils</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Rubik:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ============================================
+           VARIABLES & BASE
+        ============================================ */
+        :root {
+            --bleu:      #8ca5b4;
+            --bleu-dark: #5f7e91;
+            --bleu-light:#b8cdd8;
+            --jaune:     #ffc107;
+            --jaune-dark:#ffb300;
+            --vert:      #28a745;
+            --rouge:     #e74c3c;
+            --blanc:     #ffffff;
+            --gris-clair:#f5f7f9;
+            --shadow:    rgba(0,0,0,0.18);
+        }
+
+        body {
+            background: linear-gradient(135deg, #8ca5b4 0%, #6d8fa0 50%, #7fa3b2 100%);
+            min-height: 100vh;
+            padding: 20px 20px 60px;
+        }
+
+        /* ============================================
+           TITRE
+        ============================================ */
+        h1 .subtitle {
+            display: block;
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(0.75rem, 1.8vw, 1rem);
+            color: #ddeaf0;
+            font-weight: 400;
+            margin-top: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        /* ============================================
+           GRILLE PRINCIPALE
+        ============================================ */
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            gap: 22px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .row .card {
+            flex: 1 1 calc(50% - 11px);
+            min-width: 280px;
+        }
+
+        /* ============================================
+           CARTE
+        ============================================ */
+        .card {
+            background: linear-gradient(160deg, #9bb5c2 0%, #8ca5b4 100%);
+            border: none;
+            border-radius: 14px;
+            padding: 26px 28px;
+            box-shadow: 6px 8px 24px rgba(0,0,0,0.22);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 100px; height: 100px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 8px 14px 32px rgba(0,0,0,0.28);
+        }
+
+        .card-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            color: white;
+            font-family: "Rubik Dirt", system-ui;
+        }
+
+        .card-title .icon {
+            font-size: 1.4em;
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           BADGE
+        ============================================ */
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            color: white;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           ÉTAPES (LETTRE DE MOTIVATION)
+        ============================================ */
+        .steps {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .steps li {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: var(--jaune);
+            color: white;
+            font-family: 'Rubik Dirt', system-ui;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(255,193,7,0.4);
+            margin-top: 1px;
+        }
+
+        .step-content strong {
+            display: block;
+            color: white;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .step-content p {
+            margin: 0;
+            color: #ddeaf0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           ACCORDION
+        ============================================ */
+        .structure-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .acc-item {
+            background: rgba(255,255,255,0.12);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
+
+        .acc-item:hover { background: rgba(255,255,255,0.18); }
+
+        .acc-header {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 11px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .acc-header .part-label {
+            background: var(--jaune);
+            color: white;
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+
+        .acc-header .chevron {
+            transition: transform 0.3s ease;
+            font-size: 0.85rem;
+            color: #ddeaf0;
+        }
+
+        .acc-item.open .chevron { transform: rotate(180deg); }
+
+        .acc-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.2s ease;
+            padding: 0 16px;
+            color: #ddeaf0;
+            font-size: 0.86rem;
+            line-height: 1.6;
+        }
+
+        .acc-item.open .acc-body {
+            max-height: 300px;
+            padding: 0 16px 12px;
+        }
+
+        .phrase-exemple {
+            background: rgba(255,255,255,0.1);
+            border-left: 3px solid var(--jaune);
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.82rem;
+            color: #eef5f8;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* ============================================
+           TIMELINE
+        ============================================ */
+        .timeline {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px; top: 6px; bottom: 6px;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--jaune), rgba(255,193,7,0.2));
+            border-radius: 2px;
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -22px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--jaune);
+            border: 2px solid white;
+            box-shadow: 0 0 0 3px rgba(255,193,7,0.25);
+        }
+
+        .tl-date {
+            font-family: 'Courier Prime', monospace;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--jaune);
+            letter-spacing: 0.04em;
+            margin-bottom: 2px;
+        }
+
+        .tl-label {
+            color: white;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .tl-desc {
+            color: #ddeaf0;
+            font-size: 0.83rem;
+            margin-top: 2px;
+        }
+
+        .tl-item.urgent::before {
+            background: var(--rouge);
+            box-shadow: 0 0 0 3px rgba(231,76,60,0.3);
+        }
+
+        .tl-item.urgent .tl-date { color: #ff8f85; }
+
+        /* ============================================
+           CONSEILS GRILLE
+        ============================================ */
+        .conseils-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .conseil-chip {
+            background: rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 13px 14px;
+            transition: background 0.2s, transform 0.2s;
+            cursor: default;
+        }
+
+        .conseil-chip:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        .conseil-chip .emoji {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .conseil-chip strong {
+            display: block;
+            color: white;
+            font-size: 0.88rem;
+            margin-bottom: 3px;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        .conseil-chip span {
+            color: #ddeaf0;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            display: block;
+        }
+
+        /* ============================================
+           MOTS CLÉS
+        ============================================ */
+        .word-lists {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .word-list {
+            flex: 1 1 calc(50% - 7px);
+            min-width: 180px;
+        }
+
+        .word-list h4 {
+            color: white;
+            font-size: 0.85rem;
+            font-family: 'Rubik', sans-serif;
+            margin: 0 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .tag.good {
+            background: rgba(40,167,69,0.25);
+            color: #a8f0bb;
+            border: 1px solid rgba(40,167,69,0.4);
+        }
+
+        .tag.bad {
+            background: rgba(231,76,60,0.2);
+            color: #ffa8a0;
+            border: 1px solid rgba(231,76,60,0.35);
+            text-decoration: line-through;
+        }
+
+        /* ============================================
+           CHECKLIST
+        ============================================ */
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #ddeaf0;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        .check-box {
+            width: 20px; height: 20px;
+            flex-shrink: 0;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            margin-top: 1px;
+            font-size: 0.75rem;
+            color: white;
+            user-select: none;
+        }
+
+        .check-box.checked {
+            background: var(--vert);
+            border-color: var(--vert);
+        }
+
+        /* ============================================
+           NOTE INFO
+        ============================================ */
+        .note-info {
+            background: rgba(255,193,7,0.12);
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 14px;
+            color: #ffe080;
+            font-size: 0.82rem;
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media screen and (max-width: 760px) {
+            .row { flex-direction: column; }
+            .row .card { flex: 1 1 100%; }
+            .conseils-grid { grid-template-columns: 1fr; }
+            .word-list { flex: 1 1 100%; }
+            h1::before { display: none; }
+            h1 { padding: 12px 16px; }
+            .checklist-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>
+    Parcoursup 2026
+    <span class="subtitle">Lettre de motivation · Dates importantes · Conseils orientation</span>
+</h1>
+
+<div class="container">
+
+    <!-- ======== ROW 1 : Méthode + Structure ======== -->
+    <div class="row">
+
+        <!-- Carte : Méthode de rédaction -->
+        <div class="card">
+            <div class="card-title"> Rédiger sa lettre de motivation</div>
+            <ul class="steps">
+                <li>
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <strong>Se renseigner sur la formation</strong>
+                        <p>Programme, débouchés, valeurs de l'établissement. La lettre doit montrer que tu <em>connais</em> ce que tu demandes.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <strong>Faire le point sur soi</strong>
+                        <p>Liste tes points forts, projets, expériences, passions et compétences en lien avec le domaine visé.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <strong>Construire un argumentaire</strong>
+                        <p>Réponds à : <em>Pourquoi cette formation ? Pourquoi toi ? Quel est ton projet ?</em></p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <strong>Rédiger, relire, corriger</strong>
+                        <p>Pas de fautes d'orthographe. Fais relire par quelqu'un. Sois concis·e : la lettre doit tenir en 1 500 signes.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <strong>Personnaliser pour chaque vœu</strong>
+                        <p>Ne copie-colle pas la même lettre. Adapte-la à chaque établissement et chaque filière.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Carte : Structure de la lettre -->
+        <div class="card">
+            <div class="card-title">Structure de la lettre</div>
+            <p style="color:#ddeaf0; font-size:0.85rem; margin:0 0 14px;">Clique sur chaque partie pour voir les détails et un exemple de phrase.</p>
+            <div class="structure-accordion" id="accordion">
+
+                <div class="acc-item open" data-index="0">
+                    <button class="acc-header">
+                        <span>Accroche / Introduction</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span class="part-label">~2 phrases</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </button>
+                    <div class="acc-body">
+                        Présente-toi brièvement et indique clairement la formation demandée. Montre d'emblée ta motivation et ton intérêt pour le domaine.
+                        <div class="phrase-exemple">« Élève de Terminale générale passionné par l'informatique, je souhaite intégrer votre BUT Informatique afin de me former aux métiers du développement logiciel. »</div>
+                    </div>
+                </div>
+
+                <div class="acc-item" data-index="1">
+                    <button class="acc-header">
+                        <span>Ton parcours & tes compétences</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span class="part-label">~3-4 phrases</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </button>
+                    <div class="acc-body">
+                        Mets en valeur tes résultats scolaires, tes spécialités, tes projets (TPE, oral, projet perso), tes stages ou activités extra-scolaires en lien avec la filière visée.
+                        <div class="phrase-exemple">« Ma spécialité NSI m'a permis de développer des projets en Python, notamment un chatbot pédagogique présenté lors de la journée portes ouvertes du lycée. »</div>
+                    </div>
+                </div>
+
+                <div class="acc-item" data-index="2">
+                    <button class="acc-header">
+                        <span>Pourquoi CETTE formation ?</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span class="part-label">~3-4 phrases</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </button>
+                    <div class="acc-body">
+                        Montre que tu connais la formation : ses modules, ses valeurs, son alternance ou ses partenariats. C'est la partie la plus personnalisée.
+                        <div class="phrase-exemple">« Votre BUT Informatique me séduit notamment par son approche par projets et son partenariat avec des entreprises régionales du secteur du numérique. »</div>
+                    </div>
+                </div>
+
+                <div class="acc-item" data-index="3">
+                    <button class="acc-header">
+                        <span>Ton projet professionnel</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span class="part-label">~2-3 phrases</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </button>
+                    <div class="acc-body">
+                        Explique ce que tu veux faire après la formation. Même si le projet n'est pas encore précis, montre une direction cohérente.
+                        <div class="phrase-exemple">« À terme, je souhaite travailler comme développeur full-stack ou me spécialiser en intelligence artificielle, deux domaines en forte croissance. »</div>
+                    </div>
+                </div>
+
+                <div class="acc-item" data-index="4">
+                    <button class="acc-header">
+                        <span>Conclusion</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span class="part-label">~1-2 phrases</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </button>
+                    <div class="acc-body">
+                        Réaffirme ta motivation et invite à un échange (entretien, journée portes ouvertes...).
+                        <div class="phrase-exemple">« Convaincu que votre formation correspond pleinement à mon projet, je reste disponible pour tout entretien que vous jugeriez utile. »</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ======== ROW 2 : Dates + Mots clés ======== -->
+    <div class="row">
+
+        <!-- Carte : Dates importantes -->
+        <div class="card">
+            <div class="card-title">Dates importantes Parcoursup 2026</div>
+            <div class="timeline">
+
+                <div class="tl-item">
+                    <div class="tl-date">Oct. 2025 → janv. 2026</div>
+                    <div class="tl-label">Phase d'information</div>
+                    <div class="tl-desc">Consulte parcoursup.gouv.fr, onisep.fr et monprojetsup.fr. Échange avec ton professeur principal et le Psy-EN.</div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">Mercredi 17 décembre 2025</div>
+                    <div class="tl-label">Ouverture de la carte des formations 2026</div>
+                    <div class="tl-desc">Les fiches formations sont disponibles sur parcoursup.gouv.fr. Tu peux commencer à explorer les offres et préparer tes vœux.</div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">Lundi 19 janvier 2026</div>
+                    <div class="tl-label">Ouverture des inscriptions</div>
+                    <div class="tl-desc">Début de la saisie des vœux. Tu peux formuler jusqu'à 10 vœux (+ 10 supplémentaires pour les formations en apprentissage), sans les classer.</div>
+                </div>
+
+                <div class="tl-item urgent">
+                    <div class="tl-date">Jeudi 12 mars 2026</div>
+                    <div class="tl-label">Dernier jour pour formuler les vœux</div>
+                    <div class="tl-desc">Plus aucun vœu ne peut être ajouté après cette date. <strong style="color:#ff8f85">Ne pas attendre le dernier moment !</strong></div>
+                </div>
+
+                <div class="tl-item urgent">
+                    <div class="tl-date">Mercredi 1er avril 2026</div>
+                    <div class="tl-label">Clôture du dossier</div>
+                    <div class="tl-desc">Dernier jour pour compléter ton dossier et confirmer tes vœux. Les lettres de motivation doivent être finalisées. <em>(Les vœux en apprentissage restent modifiables après cette date.)</em></div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">Mardi 2 juin 2026</div>
+                    <div class="tl-label">Début de la phase d'admission principale</div>
+                    <div class="tl-desc">Les propositions des formations arrivent (Oui / Oui-si). Tu dois répondre dans les délais à chaque proposition reçue.</div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">5 – 8 juin 2026</div>
+                    <div class="tl-label">Classement des vœux en attente</div>
+                    <div class="tl-desc">Tu dois classer tes vœux restés en attente pour faciliter le traitement de ta candidature.</div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">Jeudi 11 juin 2026</div>
+                    <div class="tl-label">Début de la phase complémentaire</div>
+                    <div class="tl-desc">Tu peux formuler jusqu'à 10 nouveaux vœux pour des formations ayant encore des places disponibles.</div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">Samedi 11 juillet 2026</div>
+                    <div class="tl-label">Fin de la phase principale</div>
+                    <div class="tl-desc">Les admissions de la phase principale sont clôturées.</div>
+                </div>
+
+                <div class="tl-item">
+                    <div class="tl-date">Jeudi 10 septembre 2026</div>
+                    <div class="tl-label">Fin de la phase complémentaire</div>
+                    <div class="tl-desc">Dernière chance pour obtenir une proposition via la phase complémentaire. Reste actif·ve jusqu'au bout !</div>
+                </div>
+
+            </div>
+            <div class="note-info">
+                Consulte régulièrement <strong>parcoursup.gouv.fr</strong> pour les mises à jour officielles.
+            </div>
+        </div>
+
+        <!-- Carte : Mots à utiliser / éviter -->
+        <div class="card">
+            <div class="badge">Vocabulaire</div>
+            <div class="card-title"> Mots clés pour ta lettre</div>
+            <div class="word-lists">
+                <div class="word-list">
+                    <h4>À utiliser</h4>
+                    <div class="tags">
+                        <span class="tag good">Projet</span>
+                        <span class="tag good">Curiosité</span>
+                        <span class="tag good">Autonomie</span>
+                        <span class="tag good">Rigueur</span>
+                        <span class="tag good">Investissement</span>
+                        <span class="tag good">Compétences</span>
+                        <span class="tag good">Démarche</span>
+                        <span class="tag good">Expérience</span>
+                        <span class="tag good">Cohérence</span>
+                        <span class="tag good">Ambition</span>
+                        <span class="tag good">Esprit d'équipe</span>
+                        <span class="tag good">Créativité</span>
+                    </div>
+                </div>
+                <div class="word-list">
+                    <h4>À éviter</h4>
+                    <div class="tags">
+                        <span class="tag bad">Je veux juste</span>
+                        <span class="tag bad">Toujours voulu</span>
+                        <span class="tag bad">Ma passion depuis petit</span>
+                        <span class="tag bad">Je pense que</span>
+                        <span class="tag bad">Très motivé</span>
+                        <span class="tag bad">C'est ma vocation</span>
+                        <span class="tag bad">J'aime bien</span>
+                        <span class="tag bad">No stress</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:20px">
+                <div class="badge">Erreurs fréquentes</div>
+                <ul style="margin:10px 0 0;padding-left:20px;color:#ddeaf0;font-size:0.86rem;line-height:1.7;">
+                    <li>Copier-coller la même lettre pour tous les vœux</li>
+                    <li>Écrire "je suis fait pour cette formation" sans argument</li>
+                    <li>Parler de sa vie personnelle sans lien avec le projet</li>
+                    <li>Dépasser le nombre de caractères autorisé</li>
+                    <li>Oublier de relire (fautes = mauvaise impression immédiate)</li>
+                    <li>Mentionner le nom d'un autre établissement par erreur</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ======== ROW 3 : Conseils orientation (pleine largeur) ======== -->
+    <div class="row">
+        <div class="card" style="flex:1 1 100%">
+            <div class="badge">Orientation</div>
+            <div class="card-title">Conseils pour bien choisir son orientation</div>
+            <div class="conseils-grid">
+
+                <div class="conseil-chip">
+                    <strong>Explore avant de décider</strong>
+                    <span>Journées portes ouvertes, salons de l'étudiant, forums en ligne : rien ne vaut une immersion réelle dans la formation envisagée.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Parle à des étudiants</strong>
+                    <span>Les réseaux sociaux (LinkedIn, Discord) te permettent de contacter des étudiant·e·s actuels qui peuvent te décrire la réalité du quotidien.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Analyse les débouchés</strong>
+                    <span>Sur Parcoursup, chaque fiche formation indique les taux de réussite et d'insertion. Compare les données avant de te décider.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Pense au lieu de vie</strong>
+                    <span>Logement, coût de la vie, éloignement familial… ces facteurs impactent ton quotidien et ta réussite. Ne les néglige pas.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Vœux : stratégie et réalisme</strong>
+                    <span>Mets des vœux "rêve", des vœux "réalistes" et des vœux "sécurité". Ne mets pas uniquement des formations très sélectives.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Écoute-toi aussi</strong>
+                    <span>Les statistiques et les conseils sont utiles, mais la motivation personnelle reste le moteur n°1 de la réussite. Choisis quelque chose qui t'intéresse vraiment.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Consulte le/la PP et le Psy-EN</strong>
+                    <span>Ton professeur principal et le conseiller d'orientation (Psy-EN) peuvent te guider, analyser ton dossier et t'aider à formuler ton projet.</span>
+                </div>
+
+                <div class="conseil-chip">
+                    <strong>Une orientation n'est pas définitive</strong>
+                    <span>Beaucoup d'étudiant·e·s changent de voie après leur Bac. Une erreur de parcours se corrige — l'immobilisme non.</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ======== ROW 4 : Checklist finale ======== -->
+    <div class="row">
+        <div class="card" style="flex:1 1 100%">
+            <div class="badge">Vérification</div>
+            <div class="card-title">Checklist avant de valider ta lettre</div>
+            <div class="checklist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;">
+                <ul class="checklist" id="checklist-left">
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>J'ai personnalisé la lettre pour cette formation précise</span></li>
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>Je réponds aux 3 questions : Pourquoi moi ? Pourquoi cette formation ? Quel projet ?</span></li>
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>J'ai vérifié l'orthographe et la grammaire</span></li>
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>La lettre respecte le format imposé (1 500 signes max)</span></li>
+                </ul>
+                <ul class="checklist" id="checklist-right">
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>Je n'ai pas mentionné le nom d'un autre établissement par erreur</span></li>
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>J'ai fait relire par une personne de confiance</span></li>
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>Mon projet professionnel est cohérent avec la formation demandée</span></li>
+                    <li><div class="check-box" onclick="toggle(this)"></div><span>J'ai validé mes vœux avant la date de clôture (12 mars 2026)</span></li>
+                </ul>
+            </div>
+            <p id="checklist-msg" style="color:#a8f0bb;font-family:'Courier Prime',monospace;font-size:0.88rem;margin-top:14px;min-height:1.2em;text-align:center;"></p>
+        </div>
+    </div>
+
+</div><!-- fin .container -->
+
+<script>
+    // Accordion
+    document.querySelectorAll('.acc-header').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.acc-item').forEach(el => el.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    // Checklist interactive
+    function toggle(box) {
+        box.classList.toggle('checked');
+        box.textContent = box.classList.contains('checked') ? '✓' : '';
+        const total = document.querySelectorAll('.check-box').length;
+        const checked = document.querySelectorAll('.check-box.checked').length;
+        const msg = document.getElementById('checklist-msg');
+        if (checked === total) {
+            msg.textContent = 'Parfait ! Ta lettre est prête à être déposée sur Parcoursup.';
+        } else if (checked >= total / 2) {
+            msg.textContent = `${checked}/${total} points validés — encore un peu !`;
+        } else if (checked > 0) {
+            msg.textContent = `${checked}/${total} points validés.`;
+        } else {
+            msg.textContent = '';
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formation IA — NSI · Niveau 1 · Découverte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   DESIGN SYSTEM — FORMATION IA NSI N1
+   Aesthetic: Éditorial académique / Typographie-first
+   Couleurs dominantes : ardoise · ivoire · accent cyan-acier
+   ============================================= */
+
+:root {
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
+
+  /* Light mode */
+  --bg-page:        #F5F2EC;
+  --bg-card:        #FDFAF4;
+  --bg-code:        #EDE9E0;
+  --bg-accent:      #1A2B3C;
+  --text-primary:   #0F1C28;
+  --text-secondary: #3A4D5C;
+  --text-muted:     #6B7D8C;
+  --text-inverse:   #F5F2EC;
+  --accent-cyan:    #0D6E8A;
+  --accent-cyan-lt: #C9E8F0;
+  --accent-gold:    #B5803A;
+  --accent-gold-lt: #F0E0C0;
+  --border:         rgba(15,28,40,0.12);
+  --border-strong:  rgba(15,28,40,0.25);
+  --shadow:         0 2px 16px rgba(15,28,40,0.08);
+  --shadow-lg:      0 8px 40px rgba(15,28,40,0.12);
+
+  --level-color:    #0D6E8A;
+  --level-bg:       #C9E8F0;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+[data-theme="dark"] {
+  --bg-page:        #0C1520;
+  --bg-card:        #132030;
+  --bg-code:        #0A1018;
+  --bg-accent:      #1E3448;
+  --text-primary:   #EBE8E0;
+  --text-secondary: #A8B8C8;
+  --text-muted:     #6A8098;
+  --text-inverse:   #0C1520;
+  --accent-cyan:    #38B4D4;
+  --accent-cyan-lt: #0D3A4A;
+  --accent-gold:    #D4A050;
+  --accent-gold-lt: #2A1A08;
+  --border:         rgba(235,232,224,0.10);
+  --border-strong:  rgba(235,232,224,0.22);
+  --shadow:         0 2px 16px rgba(0,0,0,0.30);
+  --shadow-lg:      0 8px 40px rgba(0,0,0,0.45);
+  --level-color:    #38B4D4;
+  --level-bg:       #0D3A4A;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.65;
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* ---- THEME TOGGLE ---- */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 100;
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 40px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-toggle:hover { background: var(--bg-accent); color: var(--text-inverse); border-color: var(--bg-accent); }
+.theme-toggle .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent-cyan);
+  transition: background 0.3s;
+}
+
+/* ---- NAV BAR ---- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 var(--border);
+}
+.navbar-brand {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.navbar-nav {
+  display: flex;
+  gap: 0;
+  list-style: none;
+}
+.navbar-nav a {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 14px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+.navbar-nav a:hover { color: var(--text-primary); background: var(--bg-accent); color: var(--text-inverse); }
+.navbar-nav a.active { color: var(--accent-cyan); background: var(--accent-cyan-lt); }
+.level-badge-nav {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--level-color);
+  background: var(--level-bg);
+  padding: 3px 12px;
+  border-radius: 20px;
+}
+
+/* ---- HERO ---- */
+.hero {
+  padding: 80px 48px 64px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  align-items: start;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--accent-cyan);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 52px;
+  line-height: 1.10;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent-cyan);
+}
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-weight: 300;
+  max-width: 520px;
+  margin-bottom: 40px;
+}
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.meta-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.meta-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Sidebar objectives */
+.hero-sidebar {
+  background: var(--bg-accent);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  color: var(--text-inverse);
+}
+[data-theme="dark"] .hero-sidebar { color: var(--text-primary); }
+.sidebar-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 20px;
+}
+.obj-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.obj-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #BED4E4;
+}
+[data-theme="dark"] .obj-item { color: var(--text-secondary); }
+.obj-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.obj-icon svg { width: 10px; height: 10px; fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- SECTION WRAPPER ---- */
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px 72px;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 40px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--font-display);
+  font-size: 48px;
+  color: var(--border-strong);
+  line-height: 1;
+  font-style: italic;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin-top: 4px;
+}
+
+/* ---- PROGRESSION ---- */
+.progression-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.prog-col {
+  background: var(--bg-card);
+  padding: 28px 24px;
+}
+.prog-col.active { background: var(--bg-accent); }
+.prog-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.prog-col:not(.active) .prog-label { color: var(--text-muted); }
+.prog-col.active .prog-label { color: var(--accent-cyan); }
+.prog-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+.prog-col:not(.active) .prog-name { color: var(--text-primary); }
+.prog-col.active .prog-name { color: var(--text-inverse); }
+[data-theme="dark"] .prog-col.active .prog-name { color: var(--text-primary); }
+.prog-items { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.prog-item {
+  font-size: 13px;
+  line-height: 1.45;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.prog-col:not(.active) .prog-item { color: var(--text-secondary); }
+.prog-col.active .prog-item { color: #A8C4D8; }
+[data-theme="dark"] .prog-col.active .prog-item { color: var(--text-secondary); }
+.prog-dot {
+  width: 6px;
+  height: 6px;
+  min-width: 6px;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+.prog-col:not(.active) .prog-dot { background: var(--border-strong); }
+.prog-col.active .prog-dot { background: var(--accent-cyan); }
+.prog-badge {
+  margin-top: 20px;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--accent-cyan);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* ---- CARD GRID ---- */
+.card-grid { display: grid; gap: 20px; }
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+.card-accent { border-top: 3px solid var(--accent-cyan); }
+.card-accent-gold { border-top: 3px solid var(--accent-gold); }
+.card-dark { background: var(--bg-accent); border-color: transparent; }
+.card-dark .card-title,
+.card-dark .card-body { color: var(--text-inverse); }
+[data-theme="dark"] .card-dark .card-title,
+[data-theme="dark"] .card-dark .card-body { color: var(--text-primary); }
+
+.card-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.tag-cyan { background: var(--accent-cyan-lt); color: var(--accent-cyan); }
+.tag-gold { background: var(--accent-gold-lt); color: var(--accent-gold); }
+.tag-dark { background: var(--bg-accent); color: var(--text-inverse); }
+[data-theme="dark"] .tag-dark { color: var(--text-primary); }
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.card-body {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+.card-body strong { font-weight: 600; color: var(--text-primary); }
+
+/* ---- CODE BLOCK ---- */
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.code-block .kw { color: var(--accent-cyan); font-weight: 600; }
+.code-block .str { color: var(--accent-gold); }
+.code-block .comment { color: var(--text-muted); font-style: italic; }
+
+/* ---- RCTF BLOCK ---- */
+.rctf-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.rctf-cell {
+  background: var(--bg-card);
+  padding: 24px 20px;
+  position: relative;
+}
+.rctf-letter {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  color: var(--border-strong);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.rctf-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.rctf-content {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.rctf-cell::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 20px; right: 20px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent-cyan);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.rctf-cell:hover::after { opacity: 1; }
+
+/* ---- TABLE ---- */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.styled-table thead tr {
+  background: var(--bg-accent);
+  color: var(--text-inverse);
+}
+[data-theme="dark"] .styled-table thead tr { color: var(--text-primary); }
+.styled-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.styled-table th:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.styled-table th:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.styled-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.styled-table tr:last-child td { border-bottom: none; }
+.styled-table tr:hover td { background: var(--bg-code); }
+.styled-table .hl { font-weight: 600; color: var(--text-primary); }
+.badge-rgpd {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.badge-eu { background: var(--accent-cyan-lt); color: var(--accent-cyan); }
+.badge-us { background: var(--accent-gold-lt); color: var(--accent-gold); }
+.badge-free { background: var(--bg-code); color: var(--text-muted); border: 1px solid var(--border); }
+
+/* ---- ATELIER STEPS ---- */
+.atelier-steps { display: flex; flex-direction: column; gap: 2px; }
+.step {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.step:hover { box-shadow: var(--shadow); }
+.step-num {
+  background: var(--bg-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: var(--accent-cyan);
+  font-style: italic;
+}
+.step-content { padding: 20px 24px; }
+.step-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.step-duration {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-lt);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+.step-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ---- ETHICS GRID ---- */
+.ethics-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+.ethics-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-cyan);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 22px 22px 22px 24px;
+}
+.ethics-card.warning { border-left-color: var(--accent-gold); }
+.ethics-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.ethics-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ---- PROMPT BANK ---- */
+.prompt-bank { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.prompt-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.prompt-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.prompt-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.prompt-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+}
+
+/* ---- RESOURCES ---- */
+.resources-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.res-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  display: block;
+}
+.res-card:hover { background: var(--accent-cyan-lt); border-color: var(--accent-cyan); box-shadow: var(--shadow); }
+.res-type {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 6px;
+}
+.res-name { font-weight: 600; font-size: 13px; color: var(--text-primary); margin-bottom: 4px; }
+.res-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* ---- FOOTER BAR ---- */
+.footer-bar {
+  background: var(--bg-accent);
+  padding: 24px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+.footer-left { font-size: 13px; color: #A8C4D8; }
+[data-theme="dark"] .footer-left { color: var(--text-muted); }
+.footer-center {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text-inverse);
+  font-style: italic;
+}
+[data-theme="dark"] .footer-center { color: var(--text-primary); }
+.footer-right { display: flex; gap: 12px; }
+.footer-link {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent-cyan);
+  padding: 6px 14px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+.footer-link:hover { background: var(--accent-cyan); color: #fff; }
+
+/* ---- SEPARATOR ---- */
+.sep { width: 48px; height: 2px; background: var(--accent-cyan); margin: 0 auto 40px; border-radius: 1px; }
+
+/* ---- CALLOUT ---- */
+.callout {
+  background: var(--accent-cyan-lt);
+  border-left: 4px solid var(--accent-cyan);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.callout-body { font-size: 14px; color: var(--text-primary); line-height: 1.65; }
+.callout-body strong { font-weight: 600; color: var(--accent-cyan); }
+.callout.warning { background: var(--accent-gold-lt); border-left-color: var(--accent-gold); }
+.callout.warning .callout-body { color: var(--text-primary); }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 48px 24px 40px; }
+  .hero h1 { font-size: 36px; }
+  .section { padding: 0 24px 48px; }
+  .card-grid-4, .card-grid-3, .card-grid-2 { grid-template-columns: 1fr; }
+  .rctf-grid { grid-template-columns: repeat(2,1fr); }
+  .progression-grid { grid-template-columns: 1fr; }
+  .prompt-bank { grid-template-columns: 1fr; }
+  .resources-grid { grid-template-columns: 1fr; }
+  .ethics-grid { grid-template-columns: 1fr; }
+  .navbar { padding: 0 24px; }
+  .footer-bar { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+/* ---- PRINT / PROJECTOR ---- */
+@media print {
+  .theme-toggle, .navbar { display: none; }
+  body { background: #fff; color: #000; }
+  .hero, .section { padding-left: 24px; padding-right: 24px; }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Basculer thème">
+  <span class="dot"></span>
+  <span id="theme-label">Mode sombre</span>
+</button>
+
+<nav class="navbar">
+  <span class="navbar-brand">Formation IA — NSI · 2025–2026</span>
+  <ul class="navbar-nav">
+    <li><a href="niveau1.html" class="active">Niveau 1</a></li>
+    <li><a href="niveau2.html">Niveau 2</a></li>
+    <li><a href="niveau3.html">Niveau 3</a></li>
+  </ul>
+  <span class="level-badge-nav">Découverte</span>
+</nav>
+
+<!-- ======== HERO ======== -->
+<header class="hero">
+  <div>
+    <p class="hero-eyebrow">Niveau 1 · Débutant</p>
+    <h1>L'Intelligence Artificielle<br>au <em>service</em> de l'enseignement</h1>
+    <p class="hero-sub">Formation pratique pour enseignants de NSI. Comprendre les grands modèles de langage, maîtriser la construction de prompts efficaces, générer des ressources pédagogiques de qualité.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Durée</span>
+        <span class="meta-value">3h30</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Niveau</span>
+        <span class="meta-value">Aucun prérequis</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Format</span>
+        <span class="meta-value">Ateliers pratiques</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Public</span>
+        <span class="meta-value">Enseignants NSI</span>
+      </div>
+    </div>
+  </div>
+  <aside class="hero-sidebar">
+    <p class="sidebar-title">Objectifs de la session</p>
+    <ul class="obj-list">
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Comprendre le fonctionnement d'un LLM (prédiction de tokens, pas de compréhension)
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Maîtriser la structure RCTF pour des prompts pédagogiques fiables
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Générer exercices, corrigés et quiz adaptés au programme NSI
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Identifier hallucinations, biais et contraintes RGPD
+      </li>
+      <li class="obj-item">
+        <span class="obj-icon"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></span>
+        Choisir l'outil adapté selon le contexte (conformité européenne)
+      </li>
+    </ul>
+  </aside>
+</header>
+
+<!-- ======== PROGRESSION ======== -->
+<section class="section" id="progression">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <div>
+      <h2 class="section-title">Parcours de formation</h2>
+      <p class="section-subtitle">Trois niveaux progressifs — du débutant au référent établissement</p>
+    </div>
+  </div>
+
+  <div class="progression-grid">
+    <div class="prog-col active">
+      <p class="prog-label">En cours</p>
+      <h3 class="prog-name">Niveau 1<br>Découverte</h3>
+      <ul class="prog-items">
+        <li class="prog-item"><span class="prog-dot"></span>Comprendre les LLM</li>
+        <li class="prog-item"><span class="prog-dot"></span>Prompts RCTF basiques</li>
+        <li class="prog-item"><span class="prog-dot"></span>Exercices simples NSI</li>
+        <li class="prog-item"><span class="prog-dot"></span>Hallucinations et RGPD</li>
+        <li class="prog-item"><span class="prog-dot"></span>Panorama des outils</li>
+      </ul>
+      <span class="prog-badge">3h30</span>
+    </div>
+    <div class="prog-col">
+      <p class="prog-label">Niveau suivant</p>
+      <h3 class="prog-name">Niveau 2<br>Intermédiaire</h3>
+      <ul class="prog-items">
+        <li class="prog-item"><span class="prog-dot"></span>Few-shot et Chain-of-Thought</li>
+        <li class="prog-item"><span class="prog-dot"></span>Séquences pédagogiques complètes</li>
+        <li class="prog-item"><span class="prog-dot"></span>BDD, réseaux, algorithmes</li>
+        <li class="prog-item"><span class="prog-dot"></span>Différenciation A/B/C</li>
+        <li class="prog-item"><span class="prog-dot"></span>Vérification systématique</li>
+      </ul>
+      <span class="prog-badge">7h</span>
+    </div>
+    <div class="prog-col">
+      <p class="prog-label">Niveau avancé</p>
+      <h3 class="prog-name">Niveau 3<br>Expert</h3>
+      <ul class="prog-items">
+        <li class="prog-item"><span class="prog-dot"></span>Mécanisme des transformers</li>
+        <li class="prog-item"><span class="prog-dot"></span>Fine-tuning, RAG, agents IA</li>
+        <li class="prog-item"><span class="prog-dot"></span>Projets élèves autonomes</li>
+        <li class="prog-item"><span class="prog-dot"></span>IA Act et cadre légal UE</li>
+        <li class="prog-item"><span class="prog-dot"></span>Devenir formateur référent</li>
+      </ul>
+      <span class="prog-badge">7h</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======== IA GENERATIVE ======== -->
+<section class="section" id="ia-generative">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <div>
+      <h2 class="section-title">Qu'est-ce que l'IA générative ?</h2>
+      <p class="section-subtitle">Comprendre le mécanisme fondamental — sans les mathématiques</p>
+    </div>
+  </div>
+
+  <div class="card-grid card-grid-2" style="margin-bottom:28px;">
+    <div class="card card-accent">
+      <span class="card-tag tag-cyan">Définition essentielle</span>
+      <h3 class="card-title">Prédiction, pas compréhension</h3>
+      <p class="card-body">Un modèle d'IA générative apprend à partir de quantités massives de textes pour produire du contenu nouveau et cohérent. Il ne <strong>«&nbsp;pense&nbsp;»</strong> pas : il prédit statistiquement le token (unité lexicale) le plus probable en fonction du contexte donné.</p>
+      <p class="card-body" style="margin-top:12px;">Cette distinction est capitale pour l'enseignant : un prompt mal formulé produira une sortie incohérente non pas parce que le modèle est «&nbsp;distrait&nbsp;», mais parce que la distribution de probabilités ne peut pas converger vers la bonne réponse.</p>
+    </div>
+    <div class="card card-dark">
+      <span class="card-tag tag-dark">L'analogie de complétion</span>
+      <h3 class="card-title" style="color:var(--accent-cyan);">La mécanique en trois temps</h3>
+      <div class="code-block" style="margin-top:16px;">
+<span class="comment">-- Vous écrivez (le prompt) :</span>
+<span class="kw">"Crée un exercice sur…"</span>
+
+<span class="comment">-- Le modèle analyse :</span>
+contexte + <span class="str">milliards de paramètres</span>
+
+<span class="comment">-- Il génère :</span>
+<span class="kw">le texte le plus pertinent</span>
+<span class="comment">statistiquement</span>
+      </div>
+      <p class="card-body" style="color:#A8C4D8;font-style:italic;font-size:13px;">Ce n'est pas de la compréhension — c'est de la prédiction probabiliste guidée par l'intention de l'auteur du prompt.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p class="callout-body"><strong>Implication pédagogique directe :</strong> La qualité de la sortie est proportionnelle à la qualité du prompt. Un enseignant qui comprend ce mécanisme peut diagnostiquer pourquoi une sortie est médiocre et corriger sa demande — c'est l'objet des sections suivantes.</p>
+  </div>
+</section>
+
+<!-- ======== OUTILS ======== -->
+<section class="section" id="outils">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <div>
+      <h2 class="section-title">Panorama des outils disponibles</h2>
+      <p class="section-subtitle">Comparatif pour enseignants NSI — critères : capacités, conformité RGPD, coût</p>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Outil</th>
+          <th>Éditeur</th>
+          <th>Atouts pour NSI</th>
+          <th>Accès</th>
+          <th>Hébergement RGPD</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="hl">Le Chat (Mistral)</td>
+          <td>Mistral AI</td>
+          <td>Qualité éducative, français natif, conforme UE</td>
+          <td>Gratuit</td>
+          <td><span class="badge-rgpd badge-eu">UE / France</span></td>
+        </tr>
+        <tr>
+          <td class="hl">Claude (Sonnet)</td>
+          <td>Anthropic</td>
+          <td>Raisonnement long, éthique, code Python solide</td>
+          <td>Gratuit / Pro</td>
+          <td><span class="badge-rgpd badge-us">USA</span></td>
+        </tr>
+        <tr>
+          <td class="hl">ChatGPT (GPT-4o)</td>
+          <td>OpenAI</td>
+          <td>Polyvalent, plugins, large communauté</td>
+          <td>Gratuit / Plus</td>
+          <td><span class="badge-rgpd badge-us">USA</span></td>
+        </tr>
+        <tr>
+          <td class="hl">Llama 3 (local)</td>
+          <td>Meta / Ollama</td>
+          <td>Déploiement sur poste, aucune donnée externe</td>
+          <td>Gratuit (local)</td>
+          <td><span class="badge-rgpd badge-eu">Local — optimal</span></td>
+        </tr>
+        <tr>
+          <td class="hl">GitHub Copilot</td>
+          <td>Microsoft / OpenAI</td>
+          <td>Complétion de code Python/SQL en temps réel</td>
+          <td>Gratuit (éducation)</td>
+          <td><span class="badge-rgpd badge-us">USA</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warning">
+    <p class="callout-body"><strong>Recommandation RGPD :</strong> Pour tout usage en milieu scolaire impliquant des données élèves (même indirectement), privilégiez <strong>Le Chat (Mistral AI)</strong> dont les serveurs sont hébergés en Europe, ou un déploiement local via <strong>Ollama</strong>. Ne saisissez jamais de nom d'élève, de note ou de donnée personnelle dans un outil hébergé hors UE.</p>
+  </div>
+</section>
+
+<!-- ======== PROMPT RCTF ======== -->
+<section class="section" id="prompt">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <div>
+      <h2 class="section-title">L'art du prompt efficace</h2>
+      <p class="section-subtitle">La structure RCTF — Rôle, Contexte, Tâche, Format</p>
+    </div>
+  </div>
+
+  <div class="rctf-grid" style="margin-bottom:32px;">
+    <div class="rctf-cell">
+      <div class="rctf-letter">R</div>
+      <p class="rctf-name">Rôle</p>
+      <p class="rctf-content">Définissez qui est l'IA pour cette tâche.<br><br>«&nbsp;Tu es un professeur de NSI en Terminale spécialisé en algorithmique…&nbsp;»</p>
+    </div>
+    <div class="rctf-cell">
+      <div class="rctf-letter">C</div>
+      <p class="rctf-name">Contexte</p>
+      <p class="rctf-content">Précisez la situation pédagogique.<br><br>«&nbsp;…pour une classe de 25 élèves de niveau intermédiaire qui vient de découvrir les graphes…&nbsp;»</p>
+    </div>
+    <div class="rctf-cell">
+      <div class="rctf-letter">T</div>
+      <p class="rctf-name">Tâche</p>
+      <p class="rctf-content">Décrivez l'objectif précis et complet.<br><br>«&nbsp;…génère un exercice progressif en 3 parties sur l'algorithme BFS avec un graphe ASCII de 6 nœuds…&nbsp;»</p>
+    </div>
+    <div class="rctf-cell">
+      <div class="rctf-letter">F</div>
+      <p class="rctf-name">Format</p>
+      <p class="rctf-content">Spécifiez la sortie attendue.<br><br>«&nbsp;…avec énoncé, questions guidées et corrigé commenté en Python 3. Indiquer la complexité temporelle.&nbsp;»</p>
+    </div>
+  </div>
+
+  <div class="card card-dark" style="margin-bottom:20px;">
+    <span class="card-tag tag-dark">Exemple complet — Prompt RCTF sur Dijkstra</span>
+    <div class="code-block" style="margin-top:12px;">
+<span class="comment">-- Prompt complet (copiez-collez dans votre outil) :</span>
+
+<span class="kw">Tu es un professeur de NSI en Terminale.</span>
+Génère un exercice de niveau moyen sur l'algorithme de Dijkstra.
+Inclus :
+  <span class="str">- Un graphe pondéré de 6 nœuds représenté en ASCII</span>
+  <span class="str">- Une question guidée en 3 étapes progressives</span>
+  <span class="str">- Un corrigé complet commenté en Python 3</span>
+  <span class="str">- La complexité temporelle O((V+E)logV) expliquée</span>
+
+Public : lycéens de Terminale, première rencontre avec Dijkstra.
+Format : Markdown structuré, sections claires.
+
+<span class="comment">-- Astuce : si le résultat ne convient pas, précisez :</span>
+<span class="comment">  "Le graphe doit contenir un nœud isolé"</span>
+<span class="comment">  "Le corrigé doit utiliser heapq"</span>
+    </div>
+  </div>
+
+  <div class="card-grid card-grid-2">
+    <div class="card card-accent">
+      <span class="card-tag tag-cyan">Bonne pratique</span>
+      <h3 class="card-title">Itérer pour affiner</h3>
+      <p class="card-body">L'IA améliore sa réponse à chaque itération. Ne relancez pas une nouvelle conversation : précisez dans le fil en cours. «&nbsp;Rends l'exercice plus difficile en ajoutant des arêtes négatives&nbsp;» est plus efficace qu'un nouveau prompt from scratch.</p>
+    </div>
+    <div class="card card-accent-gold">
+      <span class="card-tag tag-gold">Point de vigilance</span>
+      <h3 class="card-title">Toujours vérifier le code</h3>
+      <p class="card-body">Testez systématiquement le code Python généré dans Thonny ou un notebook Jupyter avant de le distribuer. En moyenne, <strong>1 exercice sur 3</strong> contient un bug (indentation, cas limite non traité, import manquant).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======== BANQUE DE PROMPTS ======== -->
+<section class="section" id="prompts">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <div>
+      <h2 class="section-title">Banque de prompts NSI</h2>
+      <p class="section-subtitle">Prêts à l'emploi — copiez, adaptez, réutilisez</p>
+    </div>
+  </div>
+
+  <div class="prompt-bank">
+    <div>
+      <p class="prompt-section-title">Algorithmique</p>
+      <ul class="prompt-list">
+        <li class="prompt-item">Exercice Dijkstra — graphe ASCII 6 nœuds + corrigé Python avec <code>heapq</code></li>
+        <li class="prompt-item">Série progressive arbres binaires — 3 niveaux de difficulté, squelette de code fourni</li>
+        <li class="prompt-item">TP BFS/DFS — jeu de tests unitaires + analyse de complexité O(V+E)</li>
+        <li class="prompt-item">Tri fusion vs tri rapide — comparatif pédagogique + visualisation ASCII de la récursion</li>
+        <li class="prompt-item">Programmation dynamique — problème du sac à dos guidé en 4 étapes</li>
+      </ul>
+    </div>
+    <div>
+      <p class="prompt-section-title">Cybersécurité</p>
+      <ul class="prompt-list">
+        <li class="prompt-item">Protocole RSA — exercice dirigé p=17, q=11, calcul de n, φ(n), e, d avec corrigé sympy</li>
+        <li class="prompt-item">QCM 5 questions sur le chiffrement asymétrique, niveau Terminale, corrigé détaillé</li>
+        <li class="prompt-item">Exercice XOR — chiffrement/déchiffrement commenté, cas d'usage réel</li>
+        <li class="prompt-item">Schéma pédagogique attaque MITM — représentation ASCII annotée + questions</li>
+        <li class="prompt-item">Injection SQL — analyse de log d'attaque fourni, correction paramétrique guidée</li>
+      </ul>
+    </div>
+    <div>
+      <p class="prompt-section-title">Réseaux et bases de données</p>
+      <ul class="prompt-list">
+        <li class="prompt-item">Comparatif TCP vs UDP — tableau 5 critères avec exemples concrets lycée</li>
+        <li class="prompt-item">Fragmentation IP — scénario réseau, calcul de fragments, corrigé étape par étape</li>
+        <li class="prompt-item">Quiz SQL 10 questions — niveau Terminale, SELECT/JOIN/GROUP BY, corrigé enseignant</li>
+        <li class="prompt-item">Schéma relationnel bibliothèque — 4 tables, clés primaires/étrangères, 3 niveaux de requêtes</li>
+        <li class="prompt-item">Modèle OSI vs TCP/IP — tableau comparatif exportable Markdown, QCM intégré</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ATELIER ======== -->
+<section class="section" id="atelier">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <div>
+      <h2 class="section-title">Atelier pratique — Génération d'exercices</h2>
+      <p class="section-subtitle">Mise en œuvre guidée · 45 minutes · Format binômes</p>
+    </div>
+  </div>
+
+  <div class="atelier-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <p class="step-duration">10 min — Animateur</p>
+        <p class="step-title">Démonstration live commentée</p>
+        <p class="step-body">L'animateur réalise en direct la génération d'un exercice sur TCP/IP avec Le Chat Mistral. Chaque décision de prompt est expliquée. Le résultat est analysé collectivement : pertinence, exactitude technique, calibrage pédagogique.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <p class="step-duration">20 min — Binômes en autonomie</p>
+        <p class="step-title">Production guidée par binômes</p>
+        <p class="step-body">Chaque binôme choisit une notion NSI de son cours actuel, rédige un prompt RCTF complet et génère un exercice accompagné de son corrigé. Si le résultat n'est pas satisfaisant, un second prompt d'affinement est rédigé et soumis dans la même conversation.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <p class="step-duration">15 min — Restitution collective</p>
+        <p class="step-title">Analyse critique et débat</p>
+        <p class="step-body">Trois binômes partagent leurs prompts et résultats. Discussion structurée : fiabilité du code produit, biais détectés, erreurs factuelles identifiées, pertinence pédagogique. Construction collective d'une checklist de vérification réutilisable.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:28px;">
+    <p class="callout-body"><strong>Livrable de l'atelier :</strong> Chaque participant repart avec au moins un exercice NSI testé et validé, le prompt correspondant documenté, et une première liste d'erreurs types de l'IA à surveiller dans sa discipline.</p>
+  </div>
+</section>
+
+<!-- ======== ETHIQUE ======== -->
+<section class="section" id="ethique">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <div>
+      <h2 class="section-title">Limites et enjeux éthiques</h2>
+      <p class="section-subtitle">Ce que tout enseignant doit savoir avant d'utiliser l'IA avec ses élèves</p>
+    </div>
+  </div>
+
+  <div class="ethics-grid" style="margin-bottom:28px;">
+    <div class="ethics-card">
+      <p class="ethics-title">Hallucinations et exactitude</p>
+      <p class="ethics-body">L'IA peut produire des erreurs factuelles présentées avec assurance. Pour NSI : des algorithmes inexistants, des complexités fausses, des fonctions Python inventées. Vérifiez toujours formules, algorithmes et références avant distribution aux élèves.</p>
+    </div>
+    <div class="ethics-card warning">
+      <p class="ethics-title">Biais algorithmiques</p>
+      <p class="ethics-body">Les modèles reproduisent les biais de leurs données d'entraînement. Exemples NSI : meilleure qualité en Python qu'en OCaml, contextes occidentaux/anglophones surreprésentés, algorithmes récents mieux couverts que ceux des années 1990–2000.</p>
+    </div>
+    <div class="ethics-card warning">
+      <p class="ethics-title">Protection des données — RGPD</p>
+      <p class="ethics-body">Ne saisissez jamais de données personnelles d'élèves dans un outil externe. Noms, notes, appréciations, situations particulières sont hors scope. Préférez Le Chat (Mistral) ou un déploiement local Ollama pour les usages en classe.</p>
+    </div>
+    <div class="ethics-card">
+      <p class="ethics-title">Dépendance cognitive et autonomie</p>
+      <p class="ethics-body">L'IA doit rester un outil d'assistance, jamais un substitut à la réflexion pédagogique. Favorisez la pensée critique sur les sorties IA. Un élève ou un enseignant qui délègue entièrement sa réflexion à un LLM perd une compétence fondamentale.</p>
+    </div>
+  </div>
+
+  <div class="card card-dark">
+    <div class="card-grid card-grid-2" style="gap:24px;">
+      <div>
+        <p class="card-tag tag-cyan">Ce que l'IA fait bien</p>
+        <ul style="list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--accent-cyan);">+</span> Générer des variantes d'exercices sur un même concept</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--accent-cyan);">+</span> Produire rapidement un corrigé-type à partir d'un énoncé</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--accent-cyan);">+</span> Adapter le niveau de difficulté (simplifié / enrichi)</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--accent-cyan);">+</span> Générer des questions flash de révision (flashcards)</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:var(--accent-cyan);">+</span> Produire des exemples concrets pour illustrer l'abstrait</li>
+        </ul>
+      </div>
+      <div>
+        <p class="card-tag tag-dark">Ne pas déléguer à l'IA</p>
+        <ul style="list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:#D4A050;">—</span> La vérification finale : toujours relire et tester</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:#D4A050;">—</span> Le choix pédagogique : quoi enseigner, dans quel ordre</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:#D4A050;">—</span> L'évaluation officielle : la concevoir soi-même</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:#D4A050;">—</span> Les preuves mathématiques formelles</li>
+          <li style="font-size:13px;color:#A8C4D8;padding-left:14px;position:relative;"><span style="position:absolute;left:0;color:#D4A050;">—</span> Le jugement sur la compréhension d'un élève</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== RESOURCES ======== -->
+<section class="section" id="ressources">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <div>
+      <h2 class="section-title">Ressources pour aller plus loin</h2>
+      <p class="section-subtitle">Sélection pour enseignants NSI débutants en IA</p>
+    </div>
+  </div>
+
+  <div class="resources-grid">
+    <a href="https://chat.mistral.ai" class="res-card" target="_blank" rel="noopener">
+      <p class="res-type">Outil · RGPD EU</p>
+      <p class="res-name">Le Chat — Mistral AI</p>
+      <p class="res-desc">Accès gratuit, hébergement européen, interface française. Point d'entrée recommandé.</p>
+    </a>
+    <a href="https://learn.deeplearning.ai" class="res-card" target="_blank" rel="noopener">
+      <p class="res-type">Formation · Gratuit</p>
+      <p class="res-name">DeepLearning.AI — Short Courses</p>
+      <p class="res-desc">Cours courts sur les LLM, le prompting et l'IA générative. En anglais, accessibles sans base ML.</p>
+    </a>
+    <a href="https://pixees.fr" class="res-card" target="_blank" rel="noopener">
+      <p class="res-type">Ressources · NSI officiel</p>
+      <p class="res-name">Pixees.fr</p>
+      <p class="res-desc">Site officiel NSI — dossier IA, ressources pédagogiques, communauté nationale d'enseignants.</p>
+    </a>
+    <a href="https://eduscol.education.fr" class="res-card" target="_blank" rel="noopener">
+      <p class="res-type">Institutionnel · Ministère</p>
+      <p class="res-name">Eduscol — IA et éducation</p>
+      <p class="res-desc">Vademecum officiel «&nbsp;IA et éducation&nbsp;» du Ministère de l'Éducation nationale.</p>
+    </a>
+    <a href="https://www.cnil.fr/fr/les-ia-generatives" class="res-card" target="_blank" rel="noopener">
+      <p class="res-type">Légal · RGPD</p>
+      <p class="res-name">CNIL — IA générative</p>
+      <p class="res-desc">Guide CNIL sur l'usage des IA génératives et la protection des données en milieu professionnel.</p>
+    </a>
+    <a href="https://ai4k12.org" class="res-card" target="_blank" rel="noopener">
+      <p class="res-type">Pédagogie · K-12</p>
+      <p class="res-name">AI4K12.org</p>
+      <p class="res-desc">Progression K-12 sur les 5 grands concepts IA — applicable au programme NSI français.</p>
+    </a>
+  </div>
+</section>
+
+<!-- ======== BILAN ======== -->
+<section class="section" id="bilan">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <div>
+      <h2 class="section-title">Bilan de la session</h2>
+      <p class="section-subtitle">Ce que vous maîtrisez — Autoévaluation niveau 1</p>
+    </div>
+  </div>
+
+  <div class="card-grid card-grid-2" style="margin-bottom:28px;">
+    <div class="card card-accent">
+      <span class="card-tag tag-cyan">Acquis de la session</span>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent-cyan);font-weight:700;min-width:18px;">01</span>Comprendre ce qu'est (et n'est pas) une IA générative</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent-cyan);font-weight:700;min-width:18px;">02</span>Maîtriser la structure RCTF et ses quatre composantes</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent-cyan);font-weight:700;min-width:18px;">03</span>Générer exercices, corrigés et quiz pour NSI Terminale</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent-cyan);font-weight:700;min-width:18px;">04</span>Identifier les risques et adopter une posture critique</li>
+        <li style="font-size:14px;color:var(--text-secondary);display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--accent-cyan);font-weight:700;min-width:18px;">05</span>Choisir un outil conforme RGPD selon le contexte</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="card-tag tag-gold">Grille d'autoévaluation</span>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">Évaluez votre niveau sur chacun des acquis (1 = à consolider / 3 = maîtrisé) :</p>
+      <div id="eval-grid" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="eval-row" data-item="LLM et prédiction de tokens">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;color:var(--text-primary);">LLM et prédiction de tokens</span>
+            <span class="eval-score" style="font-size:11px;font-weight:700;color:var(--accent-cyan);">— / 3</span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button onclick="setEval(this,1)" class="eval-btn">1</button>
+            <button onclick="setEval(this,2)" class="eval-btn">2</button>
+            <button onclick="setEval(this,3)" class="eval-btn">3</button>
+          </div>
+        </div>
+        <div class="eval-row" data-item="Structure RCTF">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;color:var(--text-primary);">Construction d'un prompt RCTF</span>
+            <span class="eval-score" style="font-size:11px;font-weight:700;color:var(--accent-cyan);">— / 3</span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button onclick="setEval(this,1)" class="eval-btn">1</button>
+            <button onclick="setEval(this,2)" class="eval-btn">2</button>
+            <button onclick="setEval(this,3)" class="eval-btn">3</button>
+          </div>
+        </div>
+        <div class="eval-row" data-item="Vérification des sorties">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;color:var(--text-primary);">Vérification critique des sorties IA</span>
+            <span class="eval-score" style="font-size:11px;font-weight:700;color:var(--accent-cyan);">— / 3</span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button onclick="setEval(this,1)" class="eval-btn">1</button>
+            <button onclick="setEval(this,2)" class="eval-btn">2</button>
+            <button onclick="setEval(this,3)" class="eval-btn">3</button>
+          </div>
+        </div>
+      </div>
+      <style>
+        .eval-btn {
+          width:32px;height:32px;border-radius:50%;border:1px solid var(--border-strong);
+          background:var(--bg-page);color:var(--text-primary);font-weight:600;font-size:13px;
+          cursor:pointer;transition:all 0.15s;font-family:var(--font-body);
+        }
+        .eval-btn:hover { background:var(--accent-cyan-lt);border-color:var(--accent-cyan);color:var(--accent-cyan); }
+        .eval-btn.selected { background:var(--accent-cyan);border-color:var(--accent-cyan);color:#fff; }
+      </style>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FOOTER ======== -->
+<footer class="footer-bar">
+  <span class="footer-left">Formation IA — NSI · 2025–2026 · Niveau 1 terminé</span>
+  <span class="footer-center">Rendez-vous pour le Niveau 2</span>
+  <div class="footer-right">
+    <a href="niveau2.html" class="footer-link">Niveau 2 »</a>
+    <a href="niveau3.html" class="footer-link">Niveau 3 »</a>
+  </div>
+</footer>
+
+<script>
+// Theme
+const saved = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', saved);
+document.getElementById('theme-label').textContent = saved === 'dark' ? 'Mode clair' : 'Mode sombre';
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-label').textContent = next === 'dark' ? 'Mode clair' : 'Mode sombre';
+}
+
+// Eval buttons
+function setEval(btn, score) {
+  const row = btn.closest('.eval-row');
+  row.querySelectorAll('.eval-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  row.querySelector('.eval-score').textContent = score + ' / 3';
+}
+</script>
+</body>
+</html>

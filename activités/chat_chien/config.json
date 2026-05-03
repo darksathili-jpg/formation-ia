@@ -1,0 +1,5 @@
+ {"packages": ["pillow", "matplotlib", "numpy", "micropip"], 
+ "files":{
+    "./PetImages.zip": "./PetImages/*"
+ }
+ }

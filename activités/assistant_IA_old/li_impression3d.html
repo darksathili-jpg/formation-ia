@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Li — Fiche Impression 3D Boîtier</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #8ca5b499;
+      min-height: 100vh;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    h1 {
+      display: block; width: fit-content;
+      margin: 20px auto 6px; padding: 0 20px;
+      min-height: clamp(44px, 6.5vw, 88px);
+      line-height: clamp(44px, 6.5vw, 88px);
+      font-family: "Rubik Dirt", system-ui;
+      color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      text-align: center; position: relative;
+      font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    }
+    .subtitle {
+      text-align: center; color: #e0e0e0; font-size: 0.9rem;
+      margin-bottom: 24px; font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+    }
+    .container {
+      max-width: 1000px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .card {
+      background-color: #8ca5b4; border: 1px solid #ddd;
+      border-radius: 8px; padding: 20px;
+      box-shadow: 8px 8px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 10px 10px 20px rgba(0,0,0,0.3); }
+    .card-title {
+      color: white; font-family: "Rubik Dirt", system-ui;
+      margin-bottom: 12px; font-size: 1.05rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    .card-title span {
+      display: block; font-size: 0.8rem; color: #e0e0e0;
+      font-family: 'Courier New', monospace; font-weight: normal; margin-top: 3px;
+    }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+    .section-head h2 {
+      font-family: "Rubik Dirt", system-ui; color: white;
+      font-size: 1.15rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); white-space: nowrap;
+    }
+    .section-head .line {
+      flex: 1; height: 2px;
+      background: linear-gradient(to right, rgba(255,255,255,0.4), transparent);
+      border-radius: 2px;
+    }
+    .animated-sep {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ffc107, #ff6b00, transparent);
+      border-radius: 2px; margin: 6px 0 18px;
+      animation: sep-shine 3s linear infinite; background-size: 200% auto;
+    }
+    @keyframes sep-shine {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+
+    /* Nav */
+    .nav-parts {
+      display: flex; gap: 6px; justify-content: center;
+      margin: 10px 0 24px; flex-wrap: wrap;
+    }
+    .progress-step {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; padding: 5px 14px;
+      font-size: 0.72rem; font-family: 'Courier New', monospace;
+      color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s;
+    }
+    .progress-step.active { background: #ffc107; border-color: #ffc107; color: #1a2a35; font-weight: 700; }
+    .progress-step:hover:not(.active) { background: rgba(255,255,255,0.25); color: white; }
+
+    /* Étapes */
+    .etape-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(0,0,0,0.12); border-radius: 8px;
+      padding: 12px; margin-bottom: 10px;
+    }
+    .etape-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; background: #ffc107; color: #1a2a35;
+      border-radius: 50%; font-family: "Rubik Dirt", system-ui;
+      font-size: 1rem; flex-shrink: 0;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+    .etape-content { flex: 1; }
+    .etape-title { color: white; font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .etape-desc { color: #e0e0e0; font-size: 0.8rem; line-height: 1.5; }
+    .etape-time { font-family: 'Courier New', monospace; font-size: 0.68rem; color: #ffc107; margin-top: 4px; }
+
+    /* Alerts */
+    .alert-info {
+      background: rgba(255,255,255,0.12); border-left: 4px solid #ffc107;
+      border-radius: 0 6px 6px 0; padding: 10px 14px;
+      font-size: 0.82rem; color: #e0e0e0; line-height: 1.6; margin-top: 10px;
+    }
+    .alert-info strong { color: white; }
+    .alert-success {
+      background: rgba(40,167,69,0.2); border-left: 4px solid #28a745;
+      border-radius: 0 6px 6px 0; padding: 10px 14px;
+      font-size: 0.82rem; color: #e0e0e0; line-height: 1.6; margin-top: 10px;
+    }
+    .alert-danger {
+      background: rgba(220,53,69,0.2); border-left: 4px solid #dc3545;
+      border-radius: 0 6px 6px 0; padding: 10px 14px;
+      font-size: 0.82rem; color: #e0e0e0; line-height: 1.6; margin-top: 10px;
+    }
+    .alert-danger strong { color: #ff8080; }
+
+    /* Diff banner */
+    .diff-banner {
+      background: linear-gradient(135deg, rgba(74,26,154,0.4), rgba(112,64,192,0.4));
+      border: 1px solid rgba(201,169,255,0.3);
+      border-radius: 8px; padding: 12px 16px; margin-top: 12px;
+      font-size: 0.8rem; color: #c9a9ff; line-height: 1.6;
+    }
+    .diff-banner p { margin: 0; font-size: 0.8rem; color: #c9a9ff; line-height: 1.6; }
+
+    /* Code box */
+    .code-box {
+      background: rgba(0,0,0,0.35); border-radius: 6px;
+      padding: 12px 14px; margin-top: 10px;
+      font-family: 'Courier New', monospace; font-size: 0.78rem;
+      color: #a8ffa0; line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+    }
+    .c-yellow { color: #ffc107; }
+    .c-white  { color: #ffffff; }
+    .c-muted  { color: rgba(255,255,255,0.4); }
+    .c-blue   { color: #7dd3fc; }
+    .c-pink   { color: #f9a8d4; }
+    .c-orange { color: #fdba74; }
+    .c-green  { color: #a8ffa0; }
+
+    /* Niveau cards */
+    .niveau-card {
+      border-radius: 8px; padding: 18px;
+      box-shadow: 8px 8px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s; position: relative;
+    }
+    .niveau-card:hover { transform: translateY(-2px); }
+    .niveau-card .badge-niveau {
+      display: inline-block; font-family: 'Courier New', monospace;
+      font-size: 0.7rem; padding: 3px 10px; border-radius: 20px;
+      margin-bottom: 10px; letter-spacing: 0.08em;
+    }
+    .niveau-card h3 { font-family: "Rubik Dirt", system-ui; font-size: 1rem; color: white; margin-bottom: 6px; }
+    .niveau-card .meta { font-family: 'Courier New', monospace; font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-bottom: 10px; }
+    .niveau-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+    .niveau-card ul li { font-size: 0.8rem; color: rgba(255,255,255,0.9); padding-left: 1.1em; position: relative; }
+    .niveau-card ul li::before { content: '›'; position: absolute; left: 0; color: rgba(255,255,255,0.6); }
+    .n1 { background: linear-gradient(135deg,#1a6b4a,#25a06e); }
+    .n1 .badge-niveau { background: rgba(0,0,0,0.25); color: #7effc8; }
+    .n2 { background: linear-gradient(135deg,#b87b00,#e09a00); }
+    .n2 .badge-niveau { background: rgba(0,0,0,0.25); color: #ffe89e; }
+    .n3 { background: linear-gradient(135deg,#4a1a9a,#7040c0); }
+    .n3 .badge-niveau { background: rgba(0,0,0,0.25); color: #c9a9ff; }
+
+    /* Summary table */
+    .summary-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+    .summary-table th {
+      background: rgba(0,0,0,0.3); color: #ffc107;
+      font-family: "Rubik Dirt", system-ui; padding: 9px 12px;
+      text-align: left; font-size: 0.78rem; letter-spacing: 0.04em;
+    }
+    .summary-table td { padding: 8px 12px; color: #e0e0e0; border-bottom: 1px solid rgba(255,255,255,0.08); line-height: 1.5; }
+    .summary-table tr:hover td { background: rgba(255,255,255,0.05); }
+    .tag-ok   { color: #7effc8; font-weight: 700; }
+    .tag-warn { color: #ffc107; font-weight: 700; }
+    .tag-bad  { color: #ff8080; font-weight: 700; }
+
+    /* Pills */
+    .prereq-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill {
+      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 0.72rem; font-family: 'Courier New', monospace;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* Pipeline */
+    .pipeline {
+      display: flex; align-items: center; gap: 4px;
+      flex-wrap: wrap; margin-top: 12px; justify-content: center;
+    }
+    .pipeline-step {
+      background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px; padding: 8px 14px;
+      font-size: 0.72rem; color: white;
+      font-family: 'Courier New', monospace; text-align: center;
+    }
+    .pipeline-step.accent { border-color: #ffc107; color: #ffc107; background: rgba(255,193,7,0.1); }
+    .pipeline-step.vert   { border-color: #28a745; color: #7effc8; background: rgba(40,167,69,0.1); }
+    .pipeline-step.rouge  { border-color: #dc3545; color: #ff8080; background: rgba(220,53,69,0.1); }
+    .pipeline-arrow { color: rgba(255,255,255,0.35); font-size: 1.2rem; }
+
+    /* Schéma boîtier SVG */
+    .boitier-schema {
+      background: rgba(0,0,0,0.3); border-radius: 10px;
+      padding: 16px; margin-top: 10px;
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+    .checklist li {
+      background: rgba(0,0,0,0.15); border-radius: 6px;
+      padding: 9px 14px; font-size: 0.82rem; color: #e0e0e0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .checklist li .chk {
+      width: 20px; height: 20px; border-radius: 4px;
+      border: 2px solid rgba(255,255,255,0.3);
+      flex-shrink: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; transition: all 0.2s;
+    }
+    .checklist li .chk.done { background: #28a745; border-color: #28a745; color: white; }
+
+    /* Orientations impression */
+    .orient-card {
+      background: rgba(0,0,0,0.2); border-radius: 8px;
+      padding: 14px; border: 1px solid rgba(255,255,255,0.15);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .orient-label {
+      font-family: "Rubik Dirt", system-ui; font-size: 0.85rem;
+      color: white; text-align: center;
+    }
+    .orient-sub {
+      font-family: 'Courier New', monospace; font-size: 0.68rem;
+      color: #e0e0e0; text-align: center; line-height: 1.5;
+    }
+
+    /* Slicer cards */
+    .slicer-card {
+      background: rgba(0,0,0,0.2); border-radius: 8px; padding: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .slicer-name { font-family: "Rubik Dirt", system-ui; font-size: 0.95rem; color: white; }
+    .slicer-sub  { font-family: 'Courier New', monospace; font-size: 0.68rem; color: #e0e0e0; }
+    .slicer-badge {
+      display: inline-block; border-radius: 20px; padding: 2px 10px;
+      font-size: 0.65rem; font-family: 'Courier New', monospace; font-weight: 700;
+    }
+    .slicer-badge.gratuit { background: rgba(40,167,69,0.3); color: #7effc8; border: 1px solid #28a745; }
+    .slicer-badge.universel { background: rgba(255,193,7,0.2); color: #ffc107; border: 1px solid #ffc107; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: -1px; }
+    .tab-btn {
+      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-bottom: none;
+      border-radius: 6px 6px 0 0; padding: 7px 14px;
+      font-size: 0.75rem; font-family: 'Courier New', monospace;
+      color: rgba(255,255,255,0.55); cursor: pointer; transition: all 0.2s;
+    }
+    .tab-btn.active { background: #8ca5b4; border-color: #ddd; color: white; font-weight: 700; }
+    .tab-btn:hover:not(.active) { color: white; background: rgba(255,255,255,0.1); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Footer */
+    footer { margin-top: 10px; text-align: center; color: #e0e0e0; font-size: 0.75rem; font-family: 'Courier New', monospace; padding: 10px 0; }
+    footer a { color: #ffc107; }
+
+    @media (max-width: 750px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Li — Impression 3D du Boîtier</h1>
+<p class="subtitle">Du fichier OpenSCAD au boîtier imprimé — Guide complet étape par étape</p>
+
+<!-- Navigation -->
+<div class="nav-parts" id="navParts">
+  <div class="progress-step active" onclick="showPart(0)">OpenSCAD → STL</div>
+  <div class="progress-step"       onclick="showPart(1)">Slicer</div>
+  <div class="progress-step"       onclick="showPart(2)">Réglages</div>
+  <div class="progress-step"       onclick="showPart(3)">Impression</div>
+  <div class="progress-step"       onclick="showPart(4)">Assemblage</div>
+</div>
+
+<div class="container">
+
+  <!-- ══════════ INTRO ══════════ -->
+  <div class="card">
+    <div class="section-head"><h2>Vue d'ensemble du processus</h2><div class="line"></div></div>
+    <div class="animated-sep"></div>
+
+    <div class="pipeline">
+      <div class="pipeline-step accent">li_boitier.scad<br><small>OpenSCAD</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Exporter STL<br><small>×2 pièces</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step accent">Slicer<br><small>PrusaSlicer / Cura</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Réglages<br><small>matériau, couche…</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step accent">G-code<br><small>export</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step vert">Impression<br><small>~6–9h total</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step vert">Assemblage<br><small>inserts + vis</small></div>
+    </div>
+
+    <div class="alert-info" style="margin-top:14px;">
+      <strong>2 fichiers STL à produire :</strong> le boîtier est en 2 pièces séparées — la <strong>base</strong> (partie basse avec le RPi5) et le <strong>couvercle</strong> (partie haute avec l'écran). Chacune doit être exportée et imprimée indépendamment.
+    </div>
+  </div>
+
+  <!-- ══════════ PARTIE 1 — OpenSCAD ══════════ -->
+  <div id="part-0">
+    <div class="section-head"><h2>Étape 1 — Exporter les STL depuis OpenSCAD</h2><div class="line"></div></div>
+    <div class="animated-sep"></div>
+
+    <div class="grid-2">
+
+      <div class="card">
+        <div class="card-title">1.1 — Exporter la BASE<span>Partie inférieure — RPi5, ports, HP</span></div>
+
+        <div class="etape-row">
+          <div class="etape-badge">1</div>
+          <div class="etape-content">
+            <div class="etape-title">Ouvrir li_boitier.scad dans OpenSCAD</div>
+            <div class="etape-desc">Fichier → Ouvrir → sélectionner <code style="color:#ffc107">li_boitier.scad</code></div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-badge">2</div>
+          <div class="etape-content">
+            <div class="etape-title">Modifier les deux premières lignes</div>
+            <div class="code-box"><span class="c-yellow">AFFICHER_BASE</span>      = <span class="c-blue">true</span>;
+<span class="c-yellow">AFFICHER_COUVERCLE</span> = <span class="c-pink">false</span>;</div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-badge">3</div>
+          <div class="etape-content">
+            <div class="etape-title">Lancer le rendu final</div>
+            <div class="etape-desc">Appuyer sur <strong style="color:#ffc107">F6</strong> — attendre la fin du calcul (barre de progression en bas)</div>
+            <div class="etape-time">~10–30 secondes selon votre machine</div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-badge">4</div>
+          <div class="etape-content">
+            <div class="etape-title">Exporter en STL</div>
+            <div class="etape-desc"><strong>Fichier → Exporter → Exporter en STL…</strong><br>Nommer le fichier : <code style="color:#7effc8">li_base.stl</code></div>
+          </div>
+        </div>
+
+        <div class="alert-success">
+          Vous devez voir la base bleue en 3D dans la fenêtre OpenSCAD avant d'exporter.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">1.2 — Exporter le COUVERCLE<span>Partie supérieure — écran, micro, ventilation</span></div>
+
+        <div class="etape-row">
+          <div class="etape-badge">1</div>
+          <div class="etape-content">
+            <div class="etape-title">Modifier les deux premières lignes</div>
+            <div class="code-box"><span class="c-yellow">AFFICHER_BASE</span>      = <span class="c-pink">false</span>;
+<span class="c-yellow">AFFICHER_COUVERCLE</span> = <span class="c-blue">true</span>;</div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-badge">2</div>
+          <div class="etape-content">
+            <div class="etape-title">Lancer le rendu final</div>
+            <div class="etape-desc">Appuyer sur <strong style="color:#ffc107">F6</strong></div>
+            <div class="etape-time">~10–30 secondes</div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-badge">3</div>
+          <div class="etape-content">
+            <div class="etape-title">Exporter en STL</div>
+            <div class="etape-desc"><strong>Fichier → Exporter → Exporter en STL…</strong><br>Nommer le fichier : <code style="color:#7effc8">li_couvercle.stl</code></div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-badge">4</div>
+          <div class="etape-content">
+            <div class="etape-title">Aperçu assemblé (optionnel)</div>
+            <div class="etape-desc">Mettre les deux à <code style="color:#ffc107">true</code> pour visualiser le boîtier complet — <strong>ne pas exporter dans cet état</strong></div>
+          </div>
+        </div>
+
+        <div class="alert-info">
+          <strong>Résultat attendu :</strong> deux fichiers STL dans votre dossier — <code style="color:#7effc8">li_base.stl</code> et <code style="color:#7effc8">li_couvercle.stl</code>
+        </div>
+      </div>
+
+    </div><!-- /grid-2 -->
+
+    <!-- Schéma des 2 pièces -->
+    <div class="card">
+      <div class="card-title">1.3 — Anatomie du boîtier<span>Dimensions et éléments de chaque pièce</span></div>
+      <div class="boitier-schema">
+        <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="max-width:660px;width:100%">
+
+          <!-- BASE -->
+          <g>
+            <!-- Corps base -->
+            <rect x="30" y="100" width="280" height="140" rx="10" fill="#1e3040" stroke="#50b4ff" stroke-width="1.5"/>
+            <!-- Fond -->
+            <rect x="30" y="220" width="280" height="20" rx="4" fill="#243848" stroke="#50b4ff" stroke-width="1"/>
+            <!-- Piliers intérieurs -->
+            <circle cx="70"  cy="140" r="5" fill="#ffc107" opacity="0.8"/>
+            <circle cx="270" cy="140" r="5" fill="#ffc107" opacity="0.8"/>
+            <circle cx="70"  cy="210" r="5" fill="#ffc107" opacity="0.8"/>
+            <circle cx="270" cy="210" r="5" fill="#ffc107" opacity="0.8"/>
+            <!-- Silhouette RPi5 -->
+            <rect x="60" y="148" width="130" height="55" rx="3" fill="rgba(80,180,255,0.15)" stroke="#50b4ff" stroke-width="0.8" stroke-dasharray="4,3"/>
+            <text x="125" y="178" text-anchor="middle" font-size="9" fill="#50b4ff" font-family="Courier New">RPi5</text>
+            <!-- Grille HP façade -->
+            <rect x="30" y="145" width="8" height="60" rx="2" fill="none" stroke="#ffc107" stroke-width="1"/>
+            <line x1="32" y1="155" x2="36" y2="155" stroke="#ffc107" stroke-width="0.8"/>
+            <line x1="32" y1="163" x2="36" y2="163" stroke="#ffc107" stroke-width="0.8"/>
+            <line x1="32" y1="171" x2="36" y2="171" stroke="#ffc107" stroke-width="0.8"/>
+            <line x1="32" y1="179" x2="36" y2="179" stroke="#ffc107" stroke-width="0.8"/>
+            <line x1="32" y1="187" x2="36" y2="187" stroke="#ffc107" stroke-width="0.8"/>
+            <line x1="32" y1="195" x2="36" y2="195" stroke="#ffc107" stroke-width="0.8"/>
+            <!-- Ports droite -->
+            <rect x="302" y="130" width="8" height="13" rx="1" fill="none" stroke="#7effc8" stroke-width="1"/>
+            <rect x="302" y="148" width="8" height="13" rx="1" fill="none" stroke="#7effc8" stroke-width="1"/>
+            <rect x="302" y="170" width="8" height="10" rx="2" fill="none" stroke="#7effc8" stroke-width="1"/>
+            <rect x="302" y="184" width="8" height="20" rx="1" fill="none" stroke="#7effc8" stroke-width="1"/>
+            <!-- Pieds -->
+            <circle cx="48"  cy="240" r="6" fill="#243848" stroke="#50b4ff" stroke-width="1"/>
+            <circle cx="292" cy="240" r="6" fill="#243848" stroke="#50b4ff" stroke-width="1"/>
+            <!-- Logo Li gravé -->
+            <text x="170" y="218" text-anchor="middle" font-size="11" fill="#1d3a55" font-family="Arial" font-weight="bold">Li</text>
+            <!-- Légende -->
+            <text x="170" y="92"  text-anchor="middle" font-size="12" fill="white" font-family="'Rubik Dirt',system-ui">BASE</text>
+            <text x="170" y="106" text-anchor="middle" font-size="9"  fill="#e0e0e0" font-family="Courier New">130 × 85 × 35 mm</text>
+            <!-- Annotations -->
+            <text x="14"  y="178" text-anchor="middle" font-size="8" fill="#ffc107" font-family="Courier New">HP</text>
+            <text x="320" y="140" font-size="7" fill="#7effc8" font-family="Courier New">USB</text>
+            <text x="320" y="158" font-size="7" fill="#7effc8" font-family="Courier New">USB</text>
+            <text x="320" y="175" font-size="7" fill="#7effc8" font-family="Courier New">USB-C</text>
+            <text x="320" y="196" font-size="7" fill="#7effc8" font-family="Courier New">ETH</text>
+            <text x="75"  y="136" font-size="7" fill="#ffc107" font-family="Courier New">inserts M2.5 ×4</text>
+          </g>
+
+          <!-- COUVERCLE -->
+          <g transform="translate(360,0)">
+            <!-- Corps couvercle -->
+            <rect x="30" y="100" width="280" height="110" rx="10" fill="#243848" stroke="#c896ff" stroke-width="1.5"/>
+            <!-- Dessus -->
+            <rect x="30" y="100" width="280" height="15" rx="8" fill="#2d4560" stroke="#c896ff" stroke-width="1"/>
+            <!-- Fentes ventilation -->
+            <rect x="120" y="103" width="40" height="3" rx="1" fill="#c896ff" opacity="0.6"/>
+            <rect x="120" y="108" width="40" height="3" rx="1" fill="#c896ff" opacity="0.6"/>
+            <rect x="120" y="113" width="40" height="3" rx="1" fill="#c896ff" opacity="0.6"/>
+            <!-- Grille micro -->
+            <circle cx="200" cy="108" r="8" fill="none" stroke="#32dcc8" stroke-width="1"/>
+            <circle cx="200" cy="108" r="4" fill="none" stroke="#32dcc8" stroke-width="0.8"/>
+            <circle cx="200" cy="108" r="1.5" fill="#32dcc8" opacity="0.6"/>
+            <!-- Fenêtre écran (face arrière) -->
+            <rect x="296" y="125" width="14" height="40" rx="2" fill="#080d14" stroke="#ffc83c" stroke-width="1.5"/>
+            <!-- Visage Li miniature dans l'écran -->
+            <ellipse cx="301" cy="137" rx="3.5" ry="3.5" fill="#e6f0ff"/>
+            <ellipse cx="301" cy="137" rx="2.3" ry="2.3" fill="#50b4ff"/>
+            <ellipse cx="307" cy="137" rx="3.5" ry="3.5" fill="#e6f0ff"/>
+            <ellipse cx="307" cy="137" rx="2.3" ry="2.3" fill="#50b4ff"/>
+            <path d="M300 148 Q304 152 308 148" fill="none" stroke="#ff6478" stroke-width="1.2" stroke-linecap="round"/>
+            <!-- Tenon assemblage (bas) -->
+            <rect x="38" y="202" width="264" height="8" rx="2" fill="#1a2d40" stroke="#50b4ff" stroke-width="0.8" stroke-dasharray="6,3"/>
+            <!-- Légende -->
+            <text x="170" y="92"  text-anchor="middle" font-size="12" fill="white" font-family="'Rubik Dirt',system-ui">COUVERCLE</text>
+            <text x="170" y="106" text-anchor="middle" font-size="9"  fill="#e0e0e0" font-family="Courier New">130 × 85 × 28 mm</text>
+            <!-- Annotations -->
+            <text x="155" y="110" text-anchor="middle" font-size="8" fill="#c896ff" font-family="Courier New">ventilation</text>
+            <text x="208" y="122" font-size="7" fill="#32dcc8" font-family="Courier New">micro</text>
+            <text x="312" y="148" font-size="7" fill="#ffc83c" font-family="Courier New">écran</text>
+            <text x="155" y="220" text-anchor="middle" font-size="8" fill="#50b4ff" font-family="Courier New">tenon assemblage</text>
+          </g>
+
+          <!-- Flèche assemblage -->
+          <text x="343" y="185" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.25)">⇅</text>
+          <text x="343" y="200" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.4)" font-family="Courier New">emboîtage</text>
+
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ PARTIE 2 — SLICER ══════════ -->
+  <div id="part-1">
+    <div class="section-head"><h2>Étape 2 — Choisir et configurer un Slicer</h2><div class="line"></div></div>
+    <div class="animated-sep"></div>
+
+    <div class="diff-banner">
+      <p>Un <strong>slicer</strong> (logiciel de découpe) transforme votre fichier STL en <strong>G-code</strong> — la liste d'instructions que l'imprimante exécute mouvement par mouvement, couche par couche. Sans cette étape, le fichier STL n'est pas imprimable.</p>
+    </div>
+
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="slicer-card">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="slicer-name">PrusaSlicer</div>
+          <span class="slicer-badge gratuit">Gratuit</span>
+          <span class="slicer-badge universel">Universel</span>
+        </div>
+        <div class="slicer-sub">prusa3d.com/prusaslicer<br>Compatible toutes imprimantes<br>Interface claire, profils prédéfinis</div>
+        <div class="prereq-pills" style="margin-top:4px;">
+          <div class="pill">Prusa</div><div class="pill">Creality</div><div class="pill">Bambu</div><div class="pill">Tout modèle</div>
+        </div>
+        <div class="alert-success" style="margin-top:6px;">Recommandé pour ce projet</div>
+      </div>
+      <div class="slicer-card">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="slicer-name">Bambu Studio</div>
+          <span class="slicer-badge gratuit">Gratuit</span>
+        </div>
+        <div class="slicer-sub">bambulab.com/software<br>Optimisé Bambu Lab X1/P1/A1<br>Profils automatiques excellents</div>
+        <div class="prereq-pills" style="margin-top:4px;">
+          <div class="pill">X1 Carbon</div><div class="pill">P1S</div><div class="pill">A1 mini</div>
+        </div>
+      </div>
+      <div class="slicer-card">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="slicer-name">Ultimaker Cura</div>
+          <span class="slicer-badge gratuit">Gratuit</span>
+          <span class="slicer-badge universel">Universel</span>
+        </div>
+        <div class="slicer-sub">ultimaker.com/cura<br>Grande base d'utilisateurs<br>Nombreux plugins disponibles</div>
+        <div class="prereq-pills" style="margin-top:4px;">
+          <div class="pill">Creality</div><div class="pill">Ultimaker</div><div class="pill">Ender</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">Importer les STL dans le slicer<span>Même procédure sur PrusaSlicer, Bambu Studio et Cura</span></div>
+      <div class="etape-row">
+        <div class="etape-badge">1</div>
+        <div class="etape-content">
+          <div class="etape-title">Ouvrir le slicer et créer un nouveau projet</div>
+          <div class="etape-desc">Sélectionner votre modèle d'imprimante dans les profils si demandé.</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">2</div>
+        <div class="etape-content">
+          <div class="etape-title">Importer li_base.stl</div>
+          <div class="etape-desc">Fichier → Importer → STL — ou glisser-déposer le fichier directement dans la fenêtre. La pièce apparaît sur le plateau virtuel.</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">3</div>
+        <div class="etape-content">
+          <div class="etape-title">Vérifier l'orientation</div>
+          <div class="etape-desc">La face plate du fond doit être posée <strong style="color:white">à plat sur le plateau</strong>. Si la pièce est retournée, faire un clic droit → Orienter → Face vers le bas.</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">4</div>
+        <div class="etape-content">
+          <div class="etape-title">Répéter pour li_couvercle.stl</div>
+          <div class="etape-desc">Importer dans un <strong style="color:white">nouveau projet séparé</strong> — ne pas imprimer les deux pièces dans le même fichier G-code (réglages supports différents).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PARTIE 3 — RÉGLAGES ══════════ -->
+  <div id="part-2">
+    <div class="section-head"><h2>Étape 3 — Réglages d'impression</h2><div class="line"></div></div>
+    <div class="animated-sep"></div>
+
+    <!-- Tabs matériaux -->
+    <div class="tabs">
+      <div class="tab-btn active" onclick="switchTab(this,'tab-petg')">PETG — Recommandé</div>
+      <div class="tab-btn"       onclick="switchTab(this,'tab-pla')">PLA+ — Acceptable</div>
+    </div>
+
+    <div class="card" style="border-radius:0 8px 8px 8px;">
+      <!-- PETG -->
+      <div class="tab-panel active" id="tab-petg">
+        <div class="card-title">Réglages PETG<span>Température de déformation ~80°C — idéal avec l'Active Cooler</span></div>
+        <table class="summary-table">
+          <thead><tr><th>Paramètre</th><th>Valeur recommandée</th><th>Remarque</th></tr></thead>
+          <tbody>
+            <tr><td>Température buse</td><td><span class="tag-ok">235–245 °C</span></td><td>Selon marque du filament</td></tr>
+            <tr><td>Température plateau</td><td><span class="tag-ok">70–85 °C</span></td><td>Indispensable pour l'adhérence</td></tr>
+            <tr><td>Vitesse impression</td><td><span class="tag-ok">40–60 mm/s</span></td><td>Plus lent = meilleure qualité</td></tr>
+            <tr><td>Hauteur de couche</td><td><span class="tag-ok">0.2 mm</span></td><td>Bon compromis qualité/temps</td></tr>
+            <tr><td>Périmètres (parois)</td><td><span class="tag-ok">3 minimum</span></td><td>Solidité des parois ep. 2.8mm</td></tr>
+            <tr><td>Remplissage</td><td><span class="tag-ok">25 % Gyroid</span></td><td>Solide dans toutes directions</td></tr>
+            <tr><td>Supports</td><td><span class="tag-warn">Oui — Plateau seulement</span></td><td>Pour la fenêtre écran</td></tr>
+            <tr><td>Ventilation couche</td><td><span class="tag-warn">0–30 %</span></td><td>Faible ventilation pour le PETG</td></tr>
+            <tr><td>Rétraction</td><td><span class="tag-ok">4–6 mm / 25 mm/s</span></td><td>Évite les fils entre pièces</td></tr>
+          </tbody>
+        </table>
+        <div class="alert-success" style="margin-top:12px;">
+          <strong>Pourquoi PETG ?</strong> Le RPi5 avec l'Active Cooler peut atteindre 60–70°C en charge. Le PLA commence à se déformer vers 55°C. Le PETG résiste jusqu'à ~80°C — c'est le choix sûr pour ce projet.
+        </div>
+      </div>
+      <!-- PLA+ -->
+      <div class="tab-panel" id="tab-pla">
+        <div class="card-title">Réglages PLA+<span>Température de déformation ~55–60°C — acceptable si ventilation suffisante</span></div>
+        <table class="summary-table">
+          <thead><tr><th>Paramètre</th><th>Valeur recommandée</th><th>Remarque</th></tr></thead>
+          <tbody>
+            <tr><td>Température buse</td><td><span class="tag-ok">215–225 °C</span></td><td>Selon marque du filament</td></tr>
+            <tr><td>Température plateau</td><td><span class="tag-ok">55–65 °C</span></td><td>Ou sans plateau si adhérence ok</td></tr>
+            <tr><td>Vitesse impression</td><td><span class="tag-ok">50–80 mm/s</span></td><td>Le PLA+ tolère des vitesses élevées</td></tr>
+            <tr><td>Hauteur de couche</td><td><span class="tag-ok">0.2 mm</span></td><td>Identique PETG</td></tr>
+            <tr><td>Périmètres (parois)</td><td><span class="tag-ok">3 minimum</span></td><td></td></tr>
+            <tr><td>Remplissage</td><td><span class="tag-ok">25 % Gyroid</span></td><td></td></tr>
+            <tr><td>Supports</td><td><span class="tag-warn">Oui — Plateau seulement</span></td><td></td></tr>
+            <tr><td>Ventilation couche</td><td><span class="tag-ok">80–100 %</span></td><td>Forte ventilation recommandée PLA</td></tr>
+            <tr><td>Rétraction</td><td><span class="tag-ok">2–4 mm / 40 mm/s</span></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="alert-danger" style="margin-top:12px;">
+          <strong>⚠ Risque de déformation thermique</strong> — Avec PLA+, s'assurer que le boîtier est bien ventilé et que l'Active Cooler fonctionne correctement. Éviter de poser le boîtier en plein soleil ou dans un endroit chaud.
+        </div>
+      </div>
+    </div>
+
+    <!-- Orientations -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">Orientation des pièces sur le plateau<span>Critique pour la solidité et la qualité de surface</span></div>
+      <div class="grid-2" style="margin-top:10px;">
+
+        <div class="orient-card">
+          <!-- SVG base orientée -->
+          <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" style="width:180px;">
+            <!-- Plateau -->
+            <rect x="10" y="98" width="180" height="6" rx="2" fill="#1a2a3a" stroke="#50b4ff" stroke-width="1"/>
+            <text x="100" y="112" text-anchor="middle" font-size="8" fill="#50b4ff" font-family="Courier New">plateau d'impression</text>
+            <!-- Base vue de côté -->
+            <rect x="30" y="40" width="140" height="58" rx="6" fill="#1e3040" stroke="#7effc8" stroke-width="1.5"/>
+            <!-- fond plat en bas -->
+            <rect x="30" y="90" width="140" height="8" rx="3" fill="#243848" stroke="#7effc8" stroke-width="1"/>
+            <!-- Piliers visibles -->
+            <rect x="42" y="60" width="6" height="30" rx="2" fill="#ffc107" opacity="0.7"/>
+            <rect x="152" y="60" width="6" height="30" rx="2" fill="#ffc107" opacity="0.7"/>
+            <!-- Flèche gravité -->
+            <text x="100" y="24" text-anchor="middle" font-size="18" fill="#7effc8">↓</text>
+            <text x="100" y="14" text-anchor="middle" font-size="7" fill="#7effc8" font-family="Courier New">FOND VERS LE BAS</text>
+            <!-- Check -->
+            <circle cx="172" cy="50" r="9" fill="#28a745"/>
+            <text x="172" y="54" text-anchor="middle" font-size="11" fill="white">✓</text>
+          </svg>
+          <div class="orient-label">BASE — Fond à plat</div>
+          <div class="orient-sub">Le fond plat repose sur le plateau<br>Piliers RPi5 pointent vers le haut<br>Pas de surplomb critique</div>
+        </div>
+
+        <div class="orient-card">
+          <!-- SVG couvercle orienté -->
+          <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" style="width:180px;">
+            <!-- Plateau -->
+            <rect x="10" y="98" width="180" height="6" rx="2" fill="#1a2a3a" stroke="#50b4ff" stroke-width="1"/>
+            <text x="100" y="112" text-anchor="middle" font-size="8" fill="#50b4ff" font-family="Courier New">plateau d'impression</text>
+            <!-- Couvercle vue de côté — dessus vers le BAS -->
+            <rect x="30" y="32" width="140" height="66" rx="6" fill="#243848" stroke="#c896ff" stroke-width="1.5"/>
+            <!-- Dessus (face visible extérieure) en BAS -->
+            <rect x="30" y="90" width="140" height="8" rx="4" fill="#2d4560" stroke="#c896ff" stroke-width="1"/>
+            <!-- Fentes ventilation sur le dessus (maintenant en bas) -->
+            <line x1="60" y1="95" x2="90" y2="95" stroke="#c896ff" stroke-width="1.5" opacity="0.6"/>
+            <line x1="60" y1="99" x2="90" y2="99" stroke="#c896ff" stroke-width="1.5" opacity="0.6"/>
+            <!-- Tenon en haut -->
+            <rect x="38" y="32" width="124" height="8" rx="2" fill="#1a2d40" stroke="#50b4ff" stroke-width="0.8" stroke-dasharray="4,2"/>
+            <text x="100" y="29" text-anchor="middle" font-size="7" fill="#50b4ff" font-family="Courier New">tenon (vers le haut)</text>
+            <!-- Flèche -->
+            <text x="100" y="17" text-anchor="middle" font-size="7" fill="#c896ff" font-family="Courier New">DESSUS VERS LE BAS</text>
+            <!-- Check -->
+            <circle cx="172" cy="50" r="9" fill="#28a745"/>
+            <text x="172" y="54" text-anchor="middle" font-size="11" fill="white">✓</text>
+          </svg>
+          <div class="orient-label">COUVERCLE — Dessus à plat</div>
+          <div class="orient-sub">La face extérieure visible repose sur le plateau<br>Le tenon d'assemblage pointe vers le haut<br>Supports nécessaires pour la fenêtre écran</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PARTIE 4 — IMPRESSION ══════════ -->
+  <div id="part-3">
+    <div class="section-head"><h2>Étape 4 — Lancer l'impression</h2><div class="line"></div></div>
+    <div class="animated-sep"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">4.1 — Temps et consommation estimés<span>Pour une imprimante standard (Creality, Prusa, Bambu…)</span></div>
+        <table class="summary-table">
+          <thead><tr><th>Pièce</th><th>Temps</th><th>Filament</th></tr></thead>
+          <tbody>
+            <tr><td><strong style="color:#7effc8">Base</strong></td><td>3h30 – 4h30</td><td>~55–70 g</td></tr>
+            <tr><td><strong style="color:#c9a9ff">Couvercle</strong></td><td>2h30 – 3h30</td><td>~40–55 g</td></tr>
+            <tr><td><strong style="color:#ffc107">Total</strong></td><td><strong>~6h – 9h</strong></td><td><strong>~95–125 g</strong></td></tr>
+          </tbody>
+        </table>
+        <div class="alert-info" style="margin-top:12px;">
+          <strong>500 g de filament PETG</strong> (~10–12 €) suffit largement pour les deux pièces, avec de la marge pour un éventuel reprint.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">4.2 — Points de surveillance<span>Pendant l'impression</span></div>
+        <div class="etape-row">
+             <div class="etape-content">
+            <div class="etape-title">Première couche</div>
+            <div class="etape-desc">Vérifier que la première couche adhère bien sur tout le plateau. Si elle se décolle, arrêter et ajuster la hauteur de buse (baby-step Z).</div>
+          </div>
+        </div>
+        <div class="etape-row">
+                 <div class="etape-content">
+            <div class="etape-title">Zone de la fenêtre écran</div>
+            <div class="etape-desc">Le couvercle a un surplomb important à l'endroit de la fenêtre écran. Vérifier que les supports sont bien générés à cet endroit dans le slicer avant de lancer.</div>
+          </div>
+        </div>
+        <div class="etape-row">
+          <div class="etape-content">
+            <div class="etape-title">Remplissage Gyroid visible</div>
+            <div class="etape-desc">En observant l'impression en cours, on doit voir le motif Gyroid ondulé à l'intérieur. Si le remplissage est rectilinéaire, vérifier les réglages du slicer.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4.3 — Post-traitement après impression<span>Avant d'assembler</span></div>
+      <div class="grid-3">
+        <div class="etape-row" style="flex-direction:column;align-items:center;text-align:center;">
+                  <div class="etape-content" style="text-align:center;">
+            <div class="etape-title">Retirer les supports</div>
+            <div class="etape-desc">Avec une pince coupante ou un outil de retrait de supports. Particulièrement sous la fenêtre écran du couvercle.</div>
+          </div>
+        </div>
+        <div class="etape-row" style="flex-direction:column;align-items:center;text-align:center;">
+                  <div class="etape-content" style="text-align:center;">
+            <div class="etape-title">Nettoyer les ports</div>
+            <div class="etape-desc">Passer un tournevis plat ou un cutter dans les ouvertures USB/Ethernet pour retirer les éventuels débordements de filament.</div>
+          </div>
+        </div>
+        <div class="etape-row" style="flex-direction:column;align-items:center;text-align:center;">
+                <div class="etape-content" style="text-align:center;">
+            <div class="etape-title">Insérer les inserts laiton</div>
+            <div class="etape-desc">Inserts M2.5×5 mm dans les 4 bossages de la base, au fer à souder réglé à 200°C. Insérer doucement à la verticale.</div>
+          </div>
+        </div>
+      </div>
+      <div class="alert-info" style="margin-top:4px;">
+        <strong>Test d'emboîtage :</strong> Avant d'insérer les composants, tester l'assemblage base + couvercle à sec. Le tenon doit s'insérer avec une légère résistance. Si trop serré : poncer légèrement le tenon. Si trop lâche : le jeu OpenSCAD (0.3 mm) est trop grand pour votre imprimante — noter pour un prochain reprint.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PARTIE 5 — ASSEMBLAGE ══════════ -->
+  <div id="part-4">
+    <div class="section-head"><h2>Étape 5 — Assemblage final</h2><div class="line"></div></div>
+    <div class="animated-sep"></div>
+
+    <div class="card">
+      <div class="card-title">5.1 — Ordre de montage<span>Respecter l'ordre pour éviter de devoir tout démonter</span></div>
+
+      <div class="etape-row">
+        <div class="etape-badge">1</div>
+        <div class="etape-content">
+          <div class="etape-title">Inserts laiton dans la base</div>
+          <div class="etape-desc">4× inserts M2.5×5 mm dans les bossages aux coins de la base. Fer à souder 200°C, insérer perpendiculairement à la surface.</div>
+          <div class="etape-time">🔩 Visserie : inserts M2.5×5 mm thermofusibles</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">2</div>
+        <div class="etape-content">
+          <div class="etape-title">Fixer le Raspberry Pi 5 dans la base</div>
+          <div class="etape-desc">Positionner le RPi5 sur les 4 piliers. Fixer avec 4× vis M2.5×8 mm. Ne pas trop serrer (plastique).</div>
+          <div class="etape-time">🔩 Visserie : 4× M2.5×8 mm à tête plate</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">3</div>
+        <div class="etape-content">
+          <div class="etape-title">Installer le ReSpeaker HAT</div>
+          <div class="etape-desc">Embrocher le ReSpeaker sur le connecteur GPIO 40 broches du RPi5. Appuyer uniformément sur toute la longueur du connecteur.</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">4</div>
+        <div class="etape-content">
+          <div class="etape-title">Câbler l'écran TFT ST7735</div>
+          <div class="etape-desc">Connecter l'écran selon le tableau de câblage SPI (voir fiche technique principale). Vérifier chaque fil avant de fermer.</div>
+          <div class="etape-time">Voir tableau GPIO dans la fiche technique</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">5</div>
+        <div class="etape-content">
+          <div class="etape-title">Clipser l'écran dans le couvercle</div>
+          <div class="etape-desc">Insérer le module écran dans son cadre de maintien (couvercle). La fenêtre doit être parfaitement alignée avec l'ouverture.</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">6</div>
+        <div class="etape-content">
+          <div class="etape-title">Connecter le haut-parleur</div>
+          <div class="etape-desc">Brancher le HP 40 mm sur l'amplificateur PAM8403, passer les câbles par le côté, positionner le HP face à la grille avant.</div>
+        </div>
+      </div>
+      <div class="etape-row">
+        <div class="etape-badge">7</div>
+        <div class="etape-content">
+          <div class="etape-title">Emboîter et visser</div>
+          <div class="etape-desc">Passer tous les câbles à l'intérieur, emboîter le couvercle sur la base (le tenon doit glisser dans le rebord). Fixer avec 4× vis M2.5×12 mm.</div>
+          <div class="etape-time">Visserie : 4× M2.5×12 mm à tête cylindrique</div>
+        </div>
+      </div>
+      <div class="etape-row" style="background:rgba(40,167,69,0.15);border:1px solid #28a745;">
+        <div class="etape-badge" style="background:#28a745;color:white;font-size:1.2rem">✓</div>
+        <div class="etape-content">
+          <div class="etape-title" style="color:#7effc8">Test de mise en route</div>
+          <div class="etape-desc">Brancher la batterie Anker 737 sur le port USB-C. Le RPi5 démarre, Li charge et le visage animé doit apparaître sur l'écran dans les 30 premières secondes.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste visserie complète -->
+    <div class="card">
+      <div class="card-title">5.2 — Liste de visserie complète<span>Tout ce qu'il faut commander</span></div>
+      <table class="summary-table">
+        <thead><tr><th>Pièce</th><th>Quantité</th><th>Usage</th><th>Prix estimé</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:#ffc107">Inserts laiton M2.5×5 mm</strong></td><td>4×</td><td>Fixation couvercle dans la base</td><td>~2 € (kit 50 pcs)</td></tr>
+          <tr><td><strong style="color:#7effc8">Vis M2.5×8 mm tête plate</strong></td><td>4×</td><td>Fixation RPi5 sur piliers</td><td>~1 € (kit 20 pcs)</td></tr>
+          <tr><td><strong style="color:#c9a9ff">Vis M2.5×12 mm tête cylindrique</strong></td><td>4×</td><td>Fermeture base/couvercle</td><td>~1 € (kit 20 pcs)</td></tr>
+          <tr><td><strong style="color:#e0e0e0">Pieds silicone antidérapants Ø10mm</strong></td><td>4×</td><td>Collés sous les plots de la base</td><td>~2 € (kit 20 pcs)</td></tr>
+        </tbody>
+      </table>
+      <div class="alert-info" style="margin-top:12px;">
+        <strong>Tout se trouve :</strong> AliExpress (livraison lente, très bon marché), Amazon (2–3 jours), ou votre magasin de bricolage local pour les vis (mais les inserts laiton sont plus difficiles à trouver en magasin).
+      </div>
+    </div>
+
+    <!-- Checklist finale interactive -->
+    <div class="card">
+      <div class="card-title">5.3 — Checklist de contrôle final<span>Cliquer sur chaque case pour la cocher</span></div>
+      <ul class="checklist" id="checklist">
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Inserts laiton M2.5 bien enfoncés et de niveau dans la base</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>RPi5 fixé solidement sur ses 4 piliers</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>ReSpeaker HAT bien embroché sur le GPIO 40 broches</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Câblage SPI écran ST7735 vérifié fil par fil</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Écran aligné dans son cadre, fenêtre centrée sur l'ouverture</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Haut-parleur positionné face à la grille avant</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Aucun câble pincé entre base et couvercle</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Tenon couvercle bien emboîté dans le rebord de la base</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>4 vis M2.5×12 vissées — sans forcer (risque de casser les inserts)</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Pieds silicone collés sous la base</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Test de démarrage OK — visage Li visible sur l'écran</li>
+        <li><div class="chk" onclick="toggleCheck(this)"></div>Test wake word "Hello Li" — Li répond vocalement</li>
+      </ul>
+      <div id="check-progress" style="margin-top:12px;font-family:'Courier New',monospace;font-size:0.8rem;color:#e0e0e0;text-align:center;">
+        0 / 12 étapes complétées
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Li Assistant Vocal IA — Guide Impression 3D &amp; Assemblage &nbsp;|&nbsp;
+    OpenSCAD · PrusaSlicer · PETG · Raspberry Pi 5 &nbsp;·&nbsp;
+    <a href="https://openscad.org" target="_blank">openscad.org</a> &nbsp;·&nbsp;
+    <a href="https://github.com/prusa3d/PrusaSlicer" target="_blank">PrusaSlicer</a>
+  </footer>
+
+</div><!-- /container -->
+
+<script>
+  // Navigation scroll-spy
+  function showPart(idx) {
+    const ids = ['part-0','part-1','part-2','part-3','part-4'];
+    const el = document.getElementById(ids[idx]);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    document.querySelectorAll('.progress-step').forEach((s,i) => s.classList.toggle('active', i===idx));
+  }
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = ['part-0','part-1','part-2','part-3','part-4'].indexOf(entry.target.id);
+        if (idx >= 0) document.querySelectorAll('.progress-step').forEach((s,i) => s.classList.toggle('active', i===idx));
+      }
+    });
+  }, { threshold: 0.25 });
+  ['part-0','part-1','part-2','part-3','part-4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Tabs
+  function switchTab(btn, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    const t = document.getElementById(id);
+    if (t) t.classList.add('active');
+  }
+
+  // Checklist interactive
+  function toggleCheck(el) {
+    el.classList.toggle('done');
+    el.textContent = el.classList.contains('done') ? '✓' : '';
+    updateProgress();
+  }
+  function updateProgress() {
+    const total = document.querySelectorAll('.chk').length;
+    const done  = document.querySelectorAll('.chk.done').length;
+    const prog  = document.getElementById('check-progress');
+    prog.textContent = `${done} / ${total} étapes complétées`;
+    prog.style.color = done === total ? '#7effc8' : '#e0e0e0';
+    if (done === total) prog.textContent += ' — ✅ Li est prêt !';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+/* Overrides & extras pour la page résumé */
+h1,
+h2 {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 0 20px;
+    height: auto;
+    min-height: 5vw;
+    line-height: 1.2;
+    font-family: "Rubik Dirt", system-ui;
+    color: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+body {
+    background-color: #6b8d9e;
+    background-image:
+        radial-gradient(ellipse at 20% 20%, rgba(140, 165, 180, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(80, 110, 130, 0.4) 0%, transparent 60%);
+    color: black !important;
+}
+
+.card {
+    background-color: #6b8d9e;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+    margin: 20px 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #ffc107, #fff, #ffc107);
+    border-radius: 3px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    animation: slideIn 0.5s ease forwards;
+    opacity: 0;
+}
+
+.timeline-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.timeline-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.timeline-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.timeline-item:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.timeline-item:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.timeline-item:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -25px;
+    top: 12px;
+    width: 14px;
+    height: 14px;
+    background-color: #ffc107;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 6px rgba(255, 193, 7, 0.6);
+}
+
+.timeline-year {
+    display: inline-block;
+    background: #ffc107;
+    color: black;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-bottom: 5px;
+}
+
+.timeline-content {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: black;
+    font-size: 14px;
+    line-height: 1.6;
+    border-left: 3px solid rgba(255, 193, 7, 0.4);
+}
+
+.timeline-content strong {
+    color: #ffd54f;
+}
+
+/* Cartes futures */
+.futures-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.future-card {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 12px;
+    color: black;
+    font-size: 13px;
+    border-top: 3px solid #ffc107;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.future-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.future-card .icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+.future-card h4 {
+    margin: 0 0 6px 0;
+    color: #ffd54f;
+    font-size: 13px;
+}
+
+.future-card .risk {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #ffb3b3;
+    font-style: italic;
+}
+
+/* Problèmes */
+.problem-box {
+    background: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    color: black;
+    font-size: 14px;
+}
+
+.problem-box h4 {
+    margin: 0 0 8px 0;
+    color: #ff8a80;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Stats */
+.stats-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.stat-chip {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    border-radius: 20px;
+    padding: 5px 14px;
+    color: #ffd54f;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+}
+
+/* Définitions AGI/SI */
+.def-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.def-box {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    color: black;
+    font-size: 13px;
+    text-align: center;
+}
+
+.def-box .def-title {
+    font-family: 'Rubik Dirt', system-ui;
+    color: #ffc107;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+/* Résumé clé */
+.key-box {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.5);
+    border-radius: 8px;
+    padding: 14px;
+    color: black;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-top: 10px;
+}
+
+
+@media screen and (max-width: 600px) {
+    .futures-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .def-row {
+        flex-direction: column;
+    }
+
+    .stats-row {
+        flex-direction: column;
+    }
+}

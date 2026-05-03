@@ -1,0 +1,5 @@
+ {"packages": ["pillow", "numpy", "micropip"], 
+ "files":{
+    "./images/dark1.png": "images/dark1.png", 
+    "./images/dark2.png": "images/dark2.png"
+}}
