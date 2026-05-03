@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Les World Models en Intelligence Artificielle — Formation NSI</title>
+
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;600;700&display=swap&display=swap" rel="stylesheet" />
+
+  <!-- MathJax v3 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+  <!-- PyScript 2024 -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.11.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.11.1/core.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════════
+       VARIABLES
+    ═══════════════════════════════════════════ */
+    :root {
+      --bleu:       #1e5c8e;
+      --bleu-c:     #2e74b0;
+      --bleu-pale:  #ddeeff;
+      --bleu-f:     #122a44;
+      --accent:     #c0392b;
+      --or:         #b8912a;
+      --vert:       #1e7a4a;
+      --fond:       #f7f8fa;
+      --texte:      #18242f;
+      --gris:       #5a6b7c;
+      --gris-c:     #e2e8ef;
+      --blanc:      #ffffff;
+      --serif:      'Source Serif 4', Georgia, serif;
+      --display:    'Playfair Display', Georgia, serif;
+      --sans:       'DM Sans', system-ui, sans-serif;
+      --mono:       'JetBrains Mono', monospace;
+    }
+
+    /* ═══════════════════════════════════════════
+       BASE
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--serif);
+      background: var(--fond);
+      color: var(--texte);
+      line-height: 1.78;
+      font-size: 1.05rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       BARRE DE PROGRESSION
+    ═══════════════════════════════════════════ */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0;
+      background: var(--accent);
+      z-index: 1000;
+      transition: width .1s linear;
+    }
+
+    /* ═══════════════════════════════════════════
+       EN-TÊTE
+    ═══════════════════════════════════════════ */
+    .hero {
+      background:
+        linear-gradient(160deg, var(--bleu-f) 0%, var(--bleu) 55%, #1a6090 100%);
+      color: #fff;
+      padding: 5rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 78% 18%, rgba(184,145,42,.16) 0%, transparent 52%),
+        radial-gradient(ellipse at 8%  82%, rgba(192,57,43,.10) 0%, transparent 48%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-rubrique {
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #d4ad4a;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2.1rem, 5.5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.12;
+      margin-bottom: 1rem;
+    }
+    .hero-sous-titre {
+      font-size: 1.12rem;
+      opacity: .85;
+      max-width: 680px;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.55;
+    }
+    .hero-meta {
+      margin-top: 2.2rem;
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      font-family: var(--sans);
+      font-size: .82rem;
+      opacity: .7;
+      border-top: 1px solid rgba(255,255,255,.18);
+      padding-top: 1.2rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       NAVIGATION LATÉRALE — ancres de section
+    ═══════════════════════════════════════════ */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      background: var(--bleu-f);
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .sticky-nav ul {
+      max-width: 900px;
+      margin: 0 auto;
+      list-style: none;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .sticky-nav ul::-webkit-scrollbar { display: none; }
+    .sticky-nav a {
+      display: block;
+      padding: .65rem 1.1rem;
+      font-family: var(--sans);
+      font-size: .78rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: .04em;
+      transition: color .2s;
+    }
+    .sticky-nav a:hover,
+    .sticky-nav a.active { color: #fff; }
+    .sticky-nav a.active { border-bottom: 2px solid var(--accent); }
+
+    /* ═══════════════════════════════════════════
+       CONTENEUR PRINCIPAL
+    ═══════════════════════════════════════════ */
+    .page-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.75rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       SOMMAIRE
+    ═══════════════════════════════════════════ */
+    .toc {
+      background: var(--blanc);
+      border-left: 4px solid var(--bleu);
+      border-radius: 0 8px 8px 0;
+      padding: 1.6rem 2rem;
+      margin: 2.8rem 0;
+      box-shadow: 0 2px 16px rgba(30,92,142,.07);
+    }
+    .toc-label {
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--bleu);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .toc ol {
+      padding-left: 1.4rem;
+      font-family: var(--sans);
+      font-size: .9rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: .3rem 2.5rem;
+    }
+    .toc a { color: var(--bleu-f); text-decoration: none; }
+    .toc a:hover { color: var(--accent); text-decoration: underline; }
+
+    /* ═══════════════════════════════════════════
+       SECTIONS D'ARTICLE
+    ═══════════════════════════════════════════ */
+    .article-section {
+      padding: 3.5rem 0 1rem;
+      border-top: 1px solid var(--gris-c);
+    }
+    .article-section:first-of-type { border-top: none; padding-top: 2.5rem; }
+
+    .sec-num {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .2em;
+      color: var(--bleu);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: .5rem;
+    }
+
+    h2.sec-titre {
+      font-family: var(--display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--bleu-f);
+      margin-bottom: 1.75rem;
+      line-height: 1.18;
+    }
+
+    h3.sous-titre {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: var(--bleu);
+      margin-top: 2.2rem;
+      margin-bottom: .7rem;
+      padding-left: .8rem;
+      border-left: 3px solid var(--bleu-c);
+    }
+
+    p { margin-bottom: 1.1rem; text-align: justify; hyphens: auto; }
+
+    /* ═══════════════════════════════════════════
+       ENCADRÉS
+    ═══════════════════════════════════════════ */
+    .encadre {
+      border-radius: 6px;
+      padding: 1.3rem 1.6rem;
+      margin: 1.8rem 0;
+      border-left: 4px solid;
+    }
+    .encadre-def  { background: var(--bleu-pale); border-color: var(--bleu); }
+    .encadre-info { background: #fff8e6; border-color: var(--or); }
+    .encadre-bilan{ background: #eaf4ee; border-color: var(--vert); }
+    .encadre-warn { background: #fdf0ef; border-color: var(--accent); }
+
+    .encadre-label {
+      font-family: var(--sans);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: .65rem;
+      display: block;
+    }
+    .encadre-def   .encadre-label { color: var(--bleu-f); }
+    .encadre-info  .encadre-label { color: #7a6015; }
+    .encadre-bilan .encadre-label { color: var(--vert); }
+    .encadre-warn  .encadre-label { color: var(--accent); }
+
+    .encadre p:last-child { margin-bottom: 0; }
+
+    /* ═══════════════════════════════════════════
+       TABLEAUX
+    ═══════════════════════════════════════════ */
+    .tableau {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--sans);
+      font-size: .88rem;
+      margin: 1.6rem 0;
+      background: var(--blanc);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+    .tableau thead { background: var(--bleu); color: #fff; }
+    .tableau th, .tableau td {
+      padding: .72rem 1rem;
+      border: 1px solid var(--gris-c);
+      vertical-align: top;
+      line-height: 1.45;
+    }
+    .tableau tbody tr:hover { background: var(--bleu-pale); }
+    .tableau td:first-child { font-weight: 600; color: var(--bleu-f); }
+
+    /* ═══════════════════════════════════════════
+       CITATION EN EXERGUE
+    ═══════════════════════════════════════════ */
+    blockquote.citation {
+      border-left: 4px solid var(--or);
+      margin: 2rem 0;
+      padding: .9rem 1.6rem;
+      background: var(--blanc);
+      border-radius: 0 6px 6px 0;
+      font-style: italic;
+      color: #2e3f50;
+      line-height: 1.6;
+    }
+    blockquote.citation footer {
+      font-style: normal;
+      font-family: var(--sans);
+      font-size: .78rem;
+      color: var(--gris);
+      margin-top: .5rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       CHRONOLOGIE
+    ═══════════════════════════════════════════ */
+    .timeline {
+      position: relative;
+      padding-left: 2.8rem;
+      margin: 1.8rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: .8rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--bleu-f), var(--bleu-c));
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 1.4rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -2.1rem;
+      top: .38rem;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--bleu);
+      border: 2px solid var(--fond);
+      box-shadow: 0 0 0 2px var(--bleu);
+    }
+    .tl-date {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--bleu);
+      font-weight: 600;
+      display: block;
+      margin-bottom: .18rem;
+      letter-spacing: .05em;
+    }
+    .tl-item p { margin-bottom: 0; font-size: .94rem; }
+
+    /* ═══════════════════════════════════════════
+       SCHÉMAS SVG
+    ═══════════════════════════════════════════ */
+    .schema {
+      background: var(--blanc);
+      border: 1px solid var(--gris-c);
+      border-radius: 10px;
+      padding: 1.75rem 1.5rem 1.25rem;
+      margin: 2rem 0;
+      text-align: center;
+      box-shadow: 0 2px 14px rgba(0,0,0,.05);
+    }
+    .schema svg { max-width: 100%; height: auto; }
+    .schema-legende {
+      font-family: var(--sans);
+      font-size: .78rem;
+      color: var(--gris);
+      margin-top: .9rem;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* ═══════════════════════════════════════════
+       GLOSSAIRE
+    ═══════════════════════════════════════════ */
+    .glossaire dl { display: grid; grid-template-columns: auto 1fr; gap: .5rem 1.5rem; }
+    .glossaire dt {
+      font-family: var(--mono);
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--bleu-f);
+      padding-top: .15rem;
+    }
+    .glossaire dd {
+      font-family: var(--sans);
+      font-size: .88rem;
+      line-height: 1.5;
+      color: var(--texte);
+      border-bottom: 1px solid var(--gris-c);
+      padding-bottom: .5rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       ACTIVITÉS DISCURSIVES
+    ═══════════════════════════════════════════ */
+    .activite {
+      background: var(--blanc);
+      border: 2px solid var(--bleu);
+      border-radius: 10px;
+      margin: 2.2rem 0;
+      overflow: hidden;
+      box-shadow: 0 4px 22px rgba(30,92,142,.09);
+    }
+    .activite-hdr {
+      background: var(--bleu);
+      color: #fff;
+      padding: .8rem 1.4rem;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: .88rem;
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+    .activite-hdr .type {
+      background: rgba(255,255,255,.18);
+      border-radius: 4px;
+      padding: .12rem .5rem;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .activite-hdr .duree {
+      margin-left: auto;
+      font-size: .78rem;
+      opacity: .75;
+      font-weight: 400;
+    }
+    .activite-corps { padding: 1.3rem 1.6rem; }
+    .activite-corps p:last-child { margin-bottom: 0; }
+
+    .btn-corr {
+      background: none;
+      border: 1.5px solid var(--bleu);
+      color: var(--bleu);
+      border-radius: 5px;
+      padding: .38rem .95rem;
+      font-family: var(--sans);
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: .8rem;
+      transition: background .18s, color .18s;
+    }
+    .btn-corr:hover { background: var(--bleu); color: #fff; }
+
+    .correction {
+      display: none;
+      background: var(--bleu-pale);
+      border-radius: 5px;
+      padding: 1rem 1.3rem;
+      margin-top: .8rem;
+      font-size: .91rem;
+      line-height: 1.6;
+    }
+    .correction.visible { display: block; }
+    .correction p:last-child { margin-bottom: 0; }
+
+    /* ═══════════════════════════════════════════
+       TP INTERACTIF — PYSCRIPT
+    ═══════════════════════════════════════════ */
+    .tp-wrapper {
+      border: 2px solid var(--bleu-f);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 2.5rem 0;
+      box-shadow: 0 6px 30px rgba(18,42,68,.12);
+    }
+
+    .tp-bandeau {
+      background: var(--bleu-f);
+      color: #fff;
+      padding: 1rem 1.6rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .tp-bandeau-titre {
+      font-family: var(--display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex: 1;
+    }
+    .tp-bandeau-meta {
+      font-family: var(--mono);
+      font-size: .68rem;
+      opacity: .6;
+      letter-spacing: .1em;
+    }
+
+    .tp-onglets {
+      display: flex;
+      background: #0f1e2d;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tp-onglets::-webkit-scrollbar { display: none; }
+    .tp-onglet {
+      padding: .7rem 1.2rem;
+      font-family: var(--sans);
+      font-size: .8rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.4);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+      user-select: none;
+    }
+    .tp-onglet:hover { color: rgba(255,255,255,.75); }
+    .tp-onglet.actif { color: #fff; border-color: var(--accent); }
+
+    .tp-panneau { display: none; }
+    .tp-panneau.actif { display: block; }
+
+    .tp-enonce {
+      padding: 1.5rem 1.75rem;
+      background: var(--blanc);
+      border-bottom: 1px solid var(--gris-c);
+    }
+    .tp-enonce h4 {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--bleu-f);
+      margin-bottom: .7rem;
+    }
+    .tp-enonce p { font-size: .92rem; margin-bottom: .7rem; text-align: left; hyphens: none; }
+    .tp-enonce p:last-child { margin-bottom: 0; }
+    .tp-enonce ul, .tp-enonce ol {
+      font-family: var(--sans);
+      font-size: .88rem;
+      padding-left: 1.5rem;
+      line-height: 1.6;
+    }
+    .tp-enonce li { margin-bottom: .3rem; }
+
+    /* Éditeur PyScript */
+    .py-editor-wrapper {
+      background: #0f1923;
+      padding: .5rem 0 0;
+    }
+    .py-editor-label {
+      font-family: var(--mono);
+      font-size: .62rem;
+      letter-spacing: .16em;
+      color: rgba(200,216,240,.4);
+      padding: 0 1.2rem .4rem;
+      text-transform: uppercase;
+    }
+
+    script[type="py-editor"] { font-size: .83rem !important; }
+
+    .py-repl-output {
+      background: #060d14;
+      border-top: 1px solid #1a2d40;
+      min-height: 3rem;
+      padding: .75rem 1.2rem;
+      font-family: var(--mono);
+      font-size: .82rem;
+      color: #7ecfa0;
+    }
+
+    /* Forçage du thème sombre sur l'éditeur PyScript */
+    py-editor .cm-editor { background: #0f1923 !important; }
+    py-editor .cm-content { color: #cdd9e5 !important; font-size: .83rem !important; }
+
+    .tp-viz {
+      background: var(--blanc);
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--gris-c);
+    }
+    .tp-viz h5 {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--bleu-f);
+      margin-bottom: .75rem;
+    }
+
+    /* Grille de visualisation du labyrinthe */
+    #viz-grille {
+      display: inline-grid;
+      grid-template-columns: repeat(6, 38px);
+      gap: 3px;
+      background: var(--gris-c);
+      border-radius: 5px;
+      padding: 4px;
+    }
+    .cell {
+      width: 38px; height: 38px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: .72rem;
+      font-weight: 600;
+      transition: background .3s, color .3s;
+    }
+    .cell-libre  { background: #e8f0f8; color: var(--gris); }
+    .cell-mur    { background: #1a2d40; color: rgba(255,255,255,.2); }
+    .cell-start  { background: var(--vert); color: #fff; }
+    .cell-end    { background: var(--accent); color: #fff; }
+    .cell-chemin { background: #2e74b0; color: #fff; }
+    .cell-agent  { background: #d4ad4a; color: var(--bleu-f); }
+
+    /* Panneau de stats */
+    .stats-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+    .stat-card {
+      background: var(--fond);
+      border: 1px solid var(--gris-c);
+      border-radius: 6px;
+      padding: .75rem 1rem;
+    }
+    .stat-label {
+      font-family: var(--sans);
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gris);
+      margin-bottom: .25rem;
+    }
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--bleu-f);
+    }
+
+    /* Graphe d'apprentissage Chart.js */
+    canvas#chart-apprentissage {
+      max-height: 220px;
+    }
+
+    /* ═══════════════════════════════════════════
+       RÉFÉRENCES
+    ═══════════════════════════════════════════ */
+    .ref-liste {
+      list-style: none;
+      padding: 0;
+    }
+    .ref-liste li {
+      font-family: var(--sans);
+      font-size: .86rem;
+      padding: .55rem 0;
+      border-bottom: 1px solid var(--gris-c);
+      display: flex;
+      gap: .8rem;
+      line-height: 1.5;
+    }
+    .ref-liste li:last-child { border-bottom: none; }
+    .ref-num {
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--bleu);
+      min-width: 2.2rem;
+    }
+    .ref-liste a { color: var(--bleu); }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .pied-page {
+      background: var(--bleu-f);
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      font-family: var(--sans);
+      font-size: .8rem;
+      margin-top: 5rem;
+    }
+    .pied-page strong { color: #fff; }
+
+    /* ═══════════════════════════════════════════
+       CODE INLINE
+    ═══════════════════════════════════════════ */
+    code {
+      font-family: var(--mono);
+      background: #dce8f4;
+      color: var(--bleu-f);
+      padding: .1em .38em;
+      border-radius: 3px;
+      font-size: .86em;
+    }
+    pre {
+      background: #0f1923;
+      color: #cdd9e5;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: .83rem;
+      line-height: 1.65;
+      margin: 1rem 0;
+    }
+    pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+    .kw  { color: #79aaff; }
+    .cm  { color: #4f7060; font-style: italic; }
+    .st  { color: #f4bd6e; }
+    .fn  { color: #7ecfa0; }
+    .nb  { color: #ff9e7a; }
+
+    /* ═══════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 620px) {
+      .hero { padding: 3rem 1.25rem 2.5rem; }
+      .page-wrapper { padding: 0 1rem; }
+      .toc ol { grid-template-columns: 1fr; }
+      #viz-grille { grid-template-columns: repeat(6, 32px); }
+      .cell { width: 32px; height: 32px; font-size: .65rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar" role="progressbar" aria-label="Progression de lecture"></div>
+
+<!-- ════════════════════════════════════════
+     EN-TÊTE
+════════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-rubrique">Formation continue — Numérique et Sciences Informatiques — Terminale</div>
+    <h1>Les <em>World Models</em><br/>en Intelligence Artificielle</h1>
+    <p class="hero-sous-titre">
+      Modéliser le monde pour anticiper, planifier et agir&nbsp;: fondements théoriques,
+      architectures de référence et travaux pratiques interactifs pour l'enseignement NSI.
+    </p>
+    <div class="hero-meta">
+      <span>Mai 2026</span>
+      <span>Lycée Antoine Watteau &mdash; Valenciennes</span>
+      <span>DarkSATHI Li</span>
+      <span>Lecture estimée&nbsp;: 40 min + TP</span>
+    </div>
+  </div>
+</header>
+
+<!-- Navigation fixe -->
+<nav class="sticky-nav" aria-label="Sections de l'article">
+  <ul>
+    <li><a href="#s1">Préambule</a></li>
+    <li><a href="#s2">Limites actuelles</a></li>
+    <li><a href="#s3">Anatomie</a></li>
+    <li><a href="#s4">Jalons</a></li>
+    <li><a href="#s5">Architectures</a></li>
+    <li><a href="#s6">Applications</a></li>
+    <li><a href="#s7">Lien NSI</a></li>
+    <li><a href="#s-tp">TP Interactif</a></li>
+    <li><a href="#s8">Ethique</a></li>
+    <li><a href="#s9">Glossaire</a></li>
+    <li><a href="#s10">Références</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════
+     CORPS DE L'ARTICLE
+════════════════════════════════════════ -->
+<main class="page-wrapper" id="main-content">
+
+  <!-- SOMMAIRE -->
+  <nav class="toc fade-in" aria-label="Sommaire de l'article">
+    <span class="toc-label">Sommaire</span>
+    <ol>
+      <li><a href="#s1">Préambule &mdash; pourquoi cet article&nbsp;?</a></li>
+      <li><a href="#s2">Les limites des architectures actuelles</a></li>
+      <li><a href="#s3">Définition et anatomie d'un world model</a></li>
+      <li><a href="#s4">Jalons historiques</a></li>
+      <li><a href="#s5">Architectures de référence</a></li>
+      <li><a href="#s6">Applications industrielles</a></li>
+      <li><a href="#s7">Liens avec le programme NSI</a></li>
+      <li><a href="#s-tp">TP interactif — World Model en Python</a></li>
+      <li><a href="#s8">Enjeux éthiques et épistémologiques</a></li>
+      <li><a href="#s9">Glossaire</a></li>
+      <li><a href="#s10">Références scientifiques</a></li>
+    </ol>
+  </nav>
+
+  <!-- ──────────────────────────────────────
+       § 1  PRÉAMBULE
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s1">
+    <span class="sec-num">§ 1</span>
+    <h2 class="sec-titre">Préambule &mdash; Pourquoi cet article&nbsp;?</h2>
+
+    <p>
+      Depuis l'émergence des grands modèles de langage à partir de 2020, le grand public a pris conscience
+      des progrès spectaculaires de l'intelligence artificielle. Pourtant, la communauté de recherche s'accorde
+      de plus en plus sur un constat inconfortable&nbsp;: ces systèmes, aussi impressionnants soient-ils, ne
+      <em>comprennent</em> pas le monde. Ils produisent des sorties statistiquement cohérentes sans disposer
+      d'une représentation interne des causes, des effets et de la physique qui régissent la réalité.
+    </p>
+    <p>
+      C'est dans ce contexte que les <strong>world models</strong> (modèles du monde) s'imposent comme un
+      paradigme de recherche majeur, susceptible de constituer la prochaine rupture en intelligence artificielle.
+      Pour un enseignant de NSI, la maîtrise de ces concepts est doublement nécessaire&nbsp;: d'abord pour rester
+      à la frontière des connaissances disciplinaires&nbsp;; ensuite pour construire des ponts entre les notions
+      du programme &mdash; graphes, algorithmes de recherche, réseaux de neurones &mdash; et les avancées
+      industrielles les plus récentes.
+    </p>
+    <p>
+      Le présent article propose un parcours progressif, ancré dans des sources scientifiques vérifiables,
+      enrichi d'activités de mise en œuvre et d'un travail pratique interactif exécutable directement dans
+      le navigateur. Il n'exige aucun prérequis en apprentissage automatique avancé, mais suppose une familiarité
+      avec les concepts fondamentaux de l'informatique enseignés en Terminale NSI.
+    </p>
+
+    <div class="encadre encadre-info">
+      <span class="encadre-label">Objectifs de formation</span>
+      <p>
+        À l'issue de la lecture de cet article, l'enseignant sera en mesure de&nbsp;: (1) définir un world model
+        et le distinguer des approches réactives classiques&nbsp;; (2) identifier les architectures de référence
+        et leurs apports respectifs&nbsp;; (3) implémenter un world model minimal en Python et observer
+        expérimentalement l'avantage de la planification model-based&nbsp;; (4) situer les enjeux éthiques et
+        épistémologiques&nbsp;; (5) concevoir une séquence pédagogique mobilisant ces notions en classe
+        de Terminale NSI.
+      </p>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 2  LIMITES ACTUELLES
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s2">
+    <span class="sec-num">§ 2</span>
+    <h2 class="sec-titre">Les limites des architectures actuelles</h2>
+
+    <h3 class="sous-titre">2.1 La prédiction de token ne suffit pas</h3>
+    <p>
+      Un LLM (grand modèle de langage) est fondamentalement un prédicteur de séquences&nbsp;: entraîné sur des
+      milliards de textes, il apprend à estimer la distribution de probabilité du prochain token étant donné
+      les tokens précédents. Cette compétence est remarquable pour la génération de texte, mais elle repose sur
+      des corrélations statistiques, non sur une modélisation causale du monde. Le modèle ne sait pas
+      <em>pourquoi</em> une action entraîne une conséquence&nbsp;; il sait seulement que, dans ses données
+      d'entraînement, certaines séquences co-occurraient fréquemment.
+    </p>
+    <p>
+      Cette distinction n'est pas triviale. Elle explique pourquoi les LLM peuvent produire des affirmations
+      factuellement fausses avec une confiance apparente&nbsp;: ils optimisent la vraisemblance statistique,
+      non la véracité. Elle explique également pourquoi ils peinent à généraliser hors de leur distribution
+      d'entraînement ou à raisonner sur des scénarios physiques inhabituels.
+    </p>
+
+    <h3 class="sous-titre">2.2 Le problème de la généralisation</h3>
+    <p>
+      Un enfant de trois ans comprend intuitivement que si l'on pousse un verre au bord d'une table, il tombera.
+      Il n'a pas eu besoin d'observer des millions d'exemples&nbsp;: il dispose d'un <em>modèle interne</em>
+      de la physique des objets, de la gravité et de la continuité spatiale. Un LLM, en revanche, n'a pas accès
+      à cette représentation&nbsp;: il peut produire la bonne phrase sur le sujet, mais sans comprendre la dynamique
+      sous-jacente. Ce paradoxe est connu sous le nom de <strong>paradoxe de Moravec</strong>&nbsp;: les tâches
+      difficiles pour les humains (calcul, échecs) sont triviales pour les machines, tandis que des tâches
+      triviales pour les humains (saisir un objet, anticiper la trajectoire d'une balle) restent extraordinairement
+      difficiles pour les systèmes actuels.
+    </p>
+
+    <blockquote class="citation">
+      «&nbsp;Les systèmes d'IA actuels, et en particulier les grands modèles de langage, n'ont pas de vraie
+      compréhension du monde&nbsp;; ils se contentent de faire correspondre des patterns statistiques.&nbsp;»
+      <footer>&mdash; Yann LeCun, chef scientifique de Meta AI,
+      <cite>A Path Towards Autonomous Machine Intelligence</cite>, 2022 [<a href="#ref1">1</a>]</footer>
+    </blockquote>
+
+    <h3 class="sous-titre">2.3 Agent réactif contre agent planifiant</h3>
+    <p>
+      On distingue classiquement deux grandes familles d'agents intelligents. L'agent <strong>réactif</strong>
+      produit une réponse directement à partir d'une observation, sans modèle intermédiaire du monde
+      &mdash; c'est la stratégie <em>model-free</em> dans le vocabulaire de l'apprentissage par renforcement.
+      L'agent <strong>planifiant</strong>, à l'inverse, dispose d'un modèle interne qu'il peut interroger
+      pour simuler les conséquences de ses actions avant d'agir &mdash; c'est la stratégie <em>model-based</em>.
+    </p>
+
+    <table class="tableau">
+      <thead>
+        <tr>
+          <th>Critère</th>
+          <th>Agent réactif (model-free)</th>
+          <th>Agent planifiant (model-based)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Représentation du monde</td>
+          <td>Implicite, encodée dans les poids</td>
+          <td>Explicite, requête possible</td>
+        </tr>
+        <tr>
+          <td>Planification</td>
+          <td>Impossible sans interaction réelle</td>
+          <td>Simulation mentale (<em>rollout</em>)</td>
+        </tr>
+        <tr>
+          <td>Données d'entraînement</td>
+          <td>Très nombreuses nécessaires</td>
+          <td>Efficacité en données supérieure</td>
+        </tr>
+        <tr>
+          <td>Généralisation</td>
+          <td>Limitée hors distribution</td>
+          <td>Potentiellement meilleure</td>
+        </tr>
+        <tr>
+          <td>Exemple représentatif</td>
+          <td>DQN d'Atari (DeepMind, 2015)</td>
+          <td>DreamerV3 (Hafner et al., 2025)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="activite" id="act1">
+      <div class="activite-hdr" role="heading" aria-level="4">
+        <span>Activité 1</span>
+        <span class="type">Réflexion conceptuelle</span>
+        <span class="duree">10 min</span>
+      </div>
+      <div class="activite-corps">
+        <p>
+          <strong>Analogie du GPS.</strong> Un GPS classique des années 2000 recalcule un itinéraire uniquement
+          lorsqu'il détecte une déviation réelle. Un GPS moderne intègre les données de trafic en temps réel
+          et <em>anticipe</em> les ralentissements pour proposer un itinéraire alternatif avant que vous ne soyez
+          bloqué.
+        </p>
+        <p>
+          En vous appuyant sur le tableau ci-dessus, expliquez à quelle catégorie appartient chacun de ces deux
+          comportements. Quelle information supplémentaire possède le second système que le premier ne possède pas&nbsp;?
+          En quoi cette analogie illustre-t-elle la distinction entre agent réactif et agent planifiant&nbsp;?
+        </p>
+        <button class="btn-corr" onclick="basculeCorrection('c1')" aria-expanded="false" aria-controls="c1">
+          Voir la réponse
+        </button>
+        <div class="correction" id="c1" role="region">
+          <p>
+            Le GPS classique est un agent réactif&nbsp;: il attend l'observation d'une déviation pour
+            recalculer, sans modèle prédictif de l'état futur du réseau. Le GPS moderne est un agent planifiant&nbsp;:
+            il intègre un modèle dynamique du trafic qui lui permet de simuler différents itinéraires et de
+            choisir le meilleur <em>avant</em> de se retrouver dans la congestion. L'information supplémentaire est
+            précisément ce <strong>modèle du monde</strong>&nbsp;: une représentation de l'état futur probable
+            de l'environnement en fonction des décisions envisageables.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="encadre encadre-bilan">
+      <span class="encadre-label">Bilan du § 2</span>
+      <p>
+        Les LLM et agents réactifs souffrent d'une absence de représentation causale du monde. La distinction
+        fondamentale est entre <em>model-free</em> (réaction directe) et <em>model-based</em> (simulation interne
+        préalable à l'action). Les world models constituent la réponse architecturale à cette limitation.
+      </p>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 3  ANATOMIE
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s3">
+    <span class="sec-num">§ 3</span>
+    <h2 class="sec-titre">Définition et anatomie d'un world model</h2>
+
+    <h3 class="sous-titre">3.1 Définition formelle</h3>
+
+    <div class="encadre encadre-def">
+      <span class="encadre-label">Définition</span>
+      <p>
+        Un <strong>world model</strong> est un système capable de construire et de maintenir une représentation
+        interne compressée de son environnement, et d'utiliser cette représentation pour prédire les états futurs
+        de cet environnement en fonction des actions envisagées. Formellement, il s'agit d'apprendre une fonction
+        de transition $\hat{T} : \mathcal{Z} \times \mathcal{A} \rightarrow \mathcal{Z}$ dans un espace
+        latent $\mathcal{Z}$, où $z \in \mathcal{Z}$ désigne la représentation latente d'un état du monde
+        et $a \in \mathcal{A}$ une action. L'encodeur $E : \mathcal{S} \rightarrow \mathcal{Z}$ projette
+        les observations brutes vers cet espace latent.
+      </p>
+    </div>
+
+    <h3 class="sous-titre">3.2 Les trois composantes fondamentales</h3>
+    <p>
+      L'architecture canonique, formalisée par Ha et Schmidhuber en 2018 [<a href="#ref2">2</a>], repose sur
+      trois modules en synergie&nbsp;:
+    </p>
+    <p>
+      <strong>L'encodeur (V &mdash; Vision)</strong> transforme les observations brutes (images, flux de capteurs)
+      en une représentation latente compacte. Techniquement, il s'agit d'un auto-encodeur variationnel (VAE)
+      dans la formulation originale, ou d'un encodeur par transformeur dans les versions récentes.
+    </p>
+    <p>
+      <strong>Le modèle de transition (M &mdash; Mémoire)</strong> prédit l'état latent suivant $z_{t+1}$
+      à partir de l'état courant $z_t$ et de l'action $a_t$. C'est le cœur du world model&nbsp;: c'est lui
+      qui permet la simulation mentale, ou <em>rollout</em> imaginaire, en chaînant des prédictions successives
+      sans interaction avec l'environnement réel.
+    </p>
+    <p>
+      <strong>Le contrôleur (C)</strong> exploite les représentations latentes pour produire des actions. Il peut
+      être aussi simple qu'un réseau linéaire entraîné par évolution différentielle, ou aussi complexe qu'un
+      réseau de politique par gradient de politique.
+    </p>
+
+    <!-- Schéma SVG V-M-C + rollout -->
+    <div class="schema fade-in">
+      <svg viewBox="0 0 780 260" xmlns="http://www.w3.org/2000/svg" aria-label="Architecture world model : encodeur, modèle de transition, contrôleur et boucle de rollout imaginaire">
+        <defs>
+          <marker id="fl" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L8,3.5 z" fill="#2e74b0"/>
+          </marker>
+          <marker id="fl-r" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L8,3.5 z" fill="#c0392b"/>
+          </marker>
+        </defs>
+
+        <!-- Observation brute -->
+        <rect x="20" y="18" width="140" height="38" rx="6" fill="#0f1e2d" stroke="#2e74b0" stroke-width="1.5"/>
+        <text x="90" y="42" text-anchor="middle" fill="#9ab8d4" font-family="JetBrains Mono,monospace" font-size="11">Observation  obs_t</text>
+        <line x1="90" y1="57" x2="90" y2="88" stroke="#2e74b0" stroke-width="1.5" marker-end="url(#fl)"/>
+
+        <!-- Encodeur V -->
+        <rect x="20" y="90" width="140" height="65" rx="8" fill="#122a44" stroke="#2e74b0" stroke-width="2"/>
+        <text x="90" y="118" text-anchor="middle" fill="#ffffff" font-family="DM Sans,sans-serif" font-size="13" font-weight="700">Encodeur</text>
+        <text x="90" y="134" text-anchor="middle" fill="#7aa8cc" font-family="DM Sans,sans-serif" font-size="11">(Vision – V)</text>
+        <text x="90" y="149" text-anchor="middle" fill="#b8912a" font-family="JetBrains Mono,monospace" font-size="10">obs → z_t</text>
+        <line x1="162" y1="122" x2="230" y2="122" stroke="#2e74b0" stroke-width="1.5" marker-end="url(#fl)"/>
+
+        <!-- Modèle de transition M -->
+        <rect x="232" y="78" width="160" height="88" rx="8" fill="#122a44" stroke="#2e74b0" stroke-width="2"/>
+        <text x="312" y="110" text-anchor="middle" fill="#ffffff" font-family="DM Sans,sans-serif" font-size="13" font-weight="700">Modèle de</text>
+        <text x="312" y="126" text-anchor="middle" fill="#ffffff" font-family="DM Sans,sans-serif" font-size="13" font-weight="700">transition</text>
+        <text x="312" y="142" text-anchor="middle" fill="#7aa8cc" font-family="DM Sans,sans-serif" font-size="11">(Mémoire – M)</text>
+        <text x="312" y="158" text-anchor="middle" fill="#b8912a" font-family="JetBrains Mono,monospace" font-size="10">z_t, a_t → z_{t+1}</text>
+        <line x1="394" y1="122" x2="462" y2="122" stroke="#2e74b0" stroke-width="1.5" marker-end="url(#fl)"/>
+
+        <!-- Contrôleur C -->
+        <rect x="464" y="90" width="140" height="65" rx="8" fill="#b8912a" stroke="#8a6a1e" stroke-width="2"/>
+        <text x="534" y="118" text-anchor="middle" fill="#122a44" font-family="DM Sans,sans-serif" font-size="13" font-weight="700">Contrôleur</text>
+        <text x="534" y="134" text-anchor="middle" fill="#2a1a04" font-family="DM Sans,sans-serif" font-size="11">(Politique – C)</text>
+        <text x="534" y="149" text-anchor="middle" fill="#1a1000" font-family="JetBrains Mono,monospace" font-size="10">z_t → action a_t</text>
+
+        <!-- Action vers env réel -->
+        <line x1="606" y1="122" x2="660" y2="122" stroke="#2e74b0" stroke-width="1.5" marker-end="url(#fl)"/>
+        <rect x="662" y="105" width="110" height="34" rx="6" fill="#0f1e2d" stroke="#2e74b0" stroke-width="1.5"/>
+        <text x="717" y="126" text-anchor="middle" fill="#9ab8d4" font-family="JetBrains Mono,monospace" font-size="11">Env. réel</text>
+
+        <!-- Boucle rollout imaginaire -->
+        <path d="M 534 158 Q 534 215 312 215 Q 232 215 232 175" stroke="#c0392b" stroke-width="1.8" fill="none" stroke-dasharray="6,3" marker-end="url(#fl-r)"/>
+        <text x="420" y="235" text-anchor="middle" fill="#c0392b" font-family="DM Sans,sans-serif" font-size="10" font-style="italic" font-weight="600">rollout imaginaire — simulation multi-pas sans env. réel</text>
+
+        <!-- Légende flèches -->
+        <line x1="20" y1="250" x2="50" y2="250" stroke="#2e74b0" stroke-width="1.5"/>
+        <text x="56" y="254" fill="#5a6b7c" font-family="DM Sans,sans-serif" font-size="10">flux réel</text>
+        <line x1="120" y1="250" x2="150" y2="250" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="156" y="254" fill="#5a6b7c" font-family="DM Sans,sans-serif" font-size="10">simulation imaginaire</text>
+      </svg>
+      <p class="schema-legende">
+        Fig. 1 — Architecture canonique d'un world model (d'après Ha &amp; Schmidhuber, 2018).
+        La boucle en tirets rouges matérialise le <em>rollout</em> imaginaire&nbsp;: le contrôleur peut
+        demander au modèle de transition de chaîner plusieurs prédictions successives sans toucher
+        à l'environnement réel.
+      </p>
+    </div>
+
+    <h3 class="sous-titre">3.3 L'espace latent, fondement du dispositif</h3>
+    <p>
+      Plutôt que de manipuler des observations brutes, le world model apprend à compresser ces observations
+      en un vecteur de faible dimension $\mathbf{z} \in \mathbb{R}^n$ qui en capture l'essence. L'espace
+      latent ainsi construit présente une propriété remarquable&nbsp;: des états proches dans cet espace
+      correspondent à des situations similaires dans le monde réel, ce qui confère au modèle une capacité
+      de généralisation naturelle. C'est précisément en cela que les world models diffèrent des systèmes
+      de mémorisation par table.
+    </p>
+
+    <div class="activite" id="act2">
+      <div class="activite-hdr" role="heading" aria-level="4">
+        <span>Activité 2</span>
+        <span class="type">Analogie et modélisation</span>
+        <span class="duree">15 min</span>
+      </div>
+      <div class="activite-corps">
+        <p>
+          <strong>Le carnet de route d'un grand maître aux échecs.</strong>
+          Un joueur expert ne mémorise pas chaque pièce individuellement&nbsp;: il perçoit des
+          <em>configurations</em> (attaque sur l'aile roi, structure de pions isolés) et planifie
+          plusieurs coups à l'avance dans sa tête, sans déplacer les pièces réellement.
+        </p>
+        <p><strong>Question 1.</strong> Identifiez les trois composantes d'un world model dans cette analogie.</p>
+        <p><strong>Question 2.</strong> Qu'est-ce qui correspond à l'espace latent dans cette métaphore&nbsp;?
+        Quel avantage cela procure-t-il par rapport à une analyse pièce par pièce&nbsp;?</p>
+        <p><strong>Question 3.</strong> Qu'est-ce qui correspond au <em>rollout</em> imaginaire&nbsp;?</p>
+        <button class="btn-corr" onclick="basculeCorrection('c2')" aria-expanded="false" aria-controls="c2">
+          Voir la réponse
+        </button>
+        <div class="correction" id="c2" role="region">
+          <p><strong>Q1.</strong> L'<em>encodeur</em> correspond à la perception visuelle du joueur, qui transforme
+          la position brute (64 cases) en une représentation abstraite de la configuration stratégique.
+          Le <em>modèle de transition</em> correspond à sa capacité à simuler mentalement les coups futurs.
+          Le <em>contrôleur</em> correspond au processus de décision qui choisit le coup à jouer.</p>
+          <p><strong>Q2.</strong> L'espace latent correspond aux <em>patterns</em> abstraits que le maître reconnaît
+          (fourchette, clouage, structure de pions passés). Au lieu de raisonner sur 32 pièces et 64 cases,
+          il raisonne sur une dizaine de concepts de haut niveau, ce qui rend la planification multi-coups
+          cognitivement tractable.</p>
+          <p><strong>Q3.</strong> Le <em>rollout</em> imaginaire correspond à la variante mentale&nbsp;:
+          «&nbsp;si je joue Cf6, il répond Fxf6, je rejoue gxf6, puis&nbsp;…&nbsp;» — enchaînement de
+          prédictions sans toucher les pièces.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="encadre encadre-bilan">
+      <span class="encadre-label">Bilan du § 3</span>
+      <p>
+        Un world model se décompose en encodeur (compression de l'observation), modèle de transition
+        (prédiction de l'état suivant) et contrôleur (politique d'action). La simulation mentale multi-pas,
+        ou <em>rollout</em>, est la capacité fondamentale qui distingue un agent planifiant d'un agent réactif.
+      </p>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 4  JALONS
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s4">
+    <span class="sec-num">§ 4</span>
+    <h2 class="sec-titre">Jalons historiques</h2>
+
+    <p>
+      L'idée d'un modèle interne du monde plonge ses racines dans la psychologie cognitive des années 1940,
+      avec les travaux de Kenneth Craik sur les <em>modèles mentaux</em>, et dans les neurosciences
+      computationnelles de Karl Friston sur le <em>cerveau prédictif</em> (predictive coding). Sa formalisation
+      en intelligence artificielle s'est construite sur plusieurs décennies.
+    </p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="tl-date">1990</span>
+        <p>Jürgen Schmidhuber propose les premières architectures RNN capables de simuler des environnements
+        dynamiques pour planifier des actions — ancêtres directs des world models modernes.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">2018</span>
+        <p><strong>Ha &amp; Schmidhuber</strong> [<a href="#ref2">2</a>] publient <em>World Models</em>
+        (arXiv:1803.10122). Ils démontrent qu'un agent peut s'entraîner <em>entièrement dans son propre rêve</em>
+        et transférer la politique apprise dans l'environnement réel. L'architecture V-M-C
+        (Vision, Mémoire, Contrôleur) devient la référence du domaine.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">2020–2021</span>
+        <p><strong>DreamerV1 et V2</strong> (Hafner et al., DeepMind) apprennent des comportements complexes
+        entièrement dans l'espace latent à partir d'images brutes. DreamerV2 introduit les états latents
+        catégoriels avec gradients straight-through.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">2022</span>
+        <p><strong>MuZero</strong> (DeepMind) maîtrise les échecs, le shogi, le Go et 57 jeux Atari en planifiant
+        dans un modèle appris des règles, sans que celles-ci lui soient fournies.
+        La même année, Yann LeCun publie son manifeste <em>A Path Towards Autonomous Machine Intelligence</em>
+        et propose l'architecture JEPA [<a href="#ref1">1</a>].</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">Janvier–Février 2024</span>
+        <p><strong>Sora</strong> (OpenAI) génère des vidéos d'une minute d'une cohérence physique remarquable,
+        qualifié par ses auteurs de <em>world simulator</em>. Meta publie simultanément <strong>V-JEPA</strong>,
+        un modèle vidéo non supervisé entraîné sur plus de deux millions de vidéos non annotées.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">Janvier 2025</span>
+        <p><strong>NVIDIA Cosmos</strong> [<a href="#ref5">5</a>] est lancé au CES 2025&nbsp;: une plateforme
+        de world foundation models open-source dédiée à la robotique et aux véhicules autonomes, immédiatement
+        adoptée par Figure AI, Agility, Waabi et Uber.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">2025</span>
+        <p><strong>DreamerV3</strong> publié dans <em>Nature</em> (Hafner et al.) [<a href="#ref3">3</a>]&nbsp;:
+        un seul algorithme, sans réglage par domaine, résout plus de 150 tâches dont la collecte de diamants
+        dans Minecraft sans données humaines. <strong>V-JEPA 2</strong> (Meta) démontre l'efficacité de
+        JEPA pour la planification robotique en monde réel. <strong>Dreamer 4</strong> est annoncé sur arXiv,
+        introduisant l'entraînement d'agents à l'intérieur de world models de grande échelle.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 5  ARCHITECTURES
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s5">
+    <span class="sec-num">§ 5</span>
+    <h2 class="sec-titre">Architectures de référence</h2>
+
+    <h3 class="sous-titre">5.1 DreamerV3 — Maîtrise universelle par imagination</h3>
+    <p>
+      DreamerV3 [<a href="#ref3">3</a>], publié dans la revue <em>Nature</em> en 2025 par Danijar Hafner et al.,
+      représente l'état de l'art de l'apprentissage par renforcement fondé sur un world model.
+      Son fonctionnement repose sur un cycle en trois phases que le schéma ci-dessous illustre.
+    </p>
+
+    <!-- Schéma cycle DreamerV3 -->
+    <div class="schema fade-in">
+      <svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" aria-label="Cycle d'entraînement DreamerV3">
+        <defs>
+          <marker id="fl2" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L8,3.5 z" fill="#2e74b0"/>
+          </marker>
+        </defs>
+        <!-- Phase 1 -->
+        <rect x="20" y="60" width="170" height="90" rx="8" fill="#122a44" stroke="#2e74b0" stroke-width="2"/>
+        <text x="105" y="95" text-anchor="middle" fill="#d4ad4a" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">Phase 1</text>
+        <text x="105" y="112" text-anchor="middle" fill="#fff" font-family="DM Sans,sans-serif" font-size="11">Apprentissage</text>
+        <text x="105" y="127" text-anchor="middle" fill="#fff" font-family="DM Sans,sans-serif" font-size="11">du World Model</text>
+        <text x="105" y="143" text-anchor="middle" fill="#7aa8cc" font-family="DM Sans,sans-serif" font-size="10" font-style="italic">obs réelles → RSSM</text>
+
+        <!-- Phase 2 -->
+        <rect x="265" y="60" width="170" height="90" rx="8" fill="#122a44" stroke="#2e74b0" stroke-width="2"/>
+        <text x="350" y="95" text-anchor="middle" fill="#d4ad4a" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">Phase 2</text>
+        <text x="350" y="112" text-anchor="middle" fill="#fff" font-family="DM Sans,sans-serif" font-size="11">Entraînement</text>
+        <text x="350" y="127" text-anchor="middle" fill="#fff" font-family="DM Sans,sans-serif" font-size="11">dans l'imagination</text>
+        <text x="350" y="143" text-anchor="middle" fill="#7aa8cc" font-family="DM Sans,sans-serif" font-size="10" font-style="italic">rollouts imaginaires → politique</text>
+
+        <!-- Phase 3 -->
+        <rect x="510" y="60" width="170" height="90" rx="8" fill="#122a44" stroke="#2e74b0" stroke-width="2"/>
+        <text x="595" y="95" text-anchor="middle" fill="#d4ad4a" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">Phase 3</text>
+        <text x="595" y="112" text-anchor="middle" fill="#fff" font-family="DM Sans,sans-serif" font-size="11">Déploiement</text>
+        <text x="595" y="127" text-anchor="middle" fill="#fff" font-family="DM Sans,sans-serif" font-size="11">&amp; collecte</text>
+        <text x="595" y="143" text-anchor="middle" fill="#7aa8cc" font-family="DM Sans,sans-serif" font-size="10" font-style="italic">env. réel → nouvelles obs.</text>
+
+        <!-- Flèches phase 1 → 2 → 3 -->
+        <line x1="192" y1="105" x2="263" y2="105" stroke="#2e74b0" stroke-width="1.8" marker-end="url(#fl2)"/>
+        <line x1="437" y1="105" x2="508" y2="105" stroke="#2e74b0" stroke-width="1.8" marker-end="url(#fl2)"/>
+
+        <!-- Flèche retour Phase 3 → Phase 1 -->
+        <path d="M 595 152 Q 595 200 350 200 Q 105 200 105 152"
+              stroke="#c0392b" stroke-width="1.8" fill="none" stroke-dasharray="6,3" marker-end="url(#fl2)"/>
+        <text x="350" y="220" text-anchor="middle" fill="#c0392b" font-family="DM Sans,sans-serif" font-size="10" font-style="italic">
+          boucle d'affinement continu
+        </text>
+
+        <!-- Étiquettes flèches inter-phases -->
+        <text x="227" y="99" text-anchor="middle" fill="#5a6b7c" font-family="DM Sans,sans-serif" font-size="9">RSSM</text>
+        <text x="472" y="99" text-anchor="middle" fill="#5a6b7c" font-family="DM Sans,sans-serif" font-size="9">politique</text>
+      </svg>
+      <p class="schema-legende">
+        Fig. 2 — Cycle d'entraînement de DreamerV3. Le modèle RSSM (<em>Recurrent State Space Model</em>)
+        est central&nbsp;: entraîné sur des observations réelles, il sert de substrat à la génération de
+        trajectoires imaginaires sur lesquelles la politique est optimisée par gradient.
+      </p>
+    </div>
+
+    <p>
+      L'originalité de DreamerV3 réside dans l'introduction de techniques de normalisation robuste
+      (<em>symlog predictions</em>, normalisation exponentielle des retours par EMA) qui stabilisent
+      l'apprentissage quel que soit le domaine. Concrètement, les mêmes hyperparamètres permettent de résoudre
+      des environnements aussi hétérogènes que des jeux Atari, des tâches de contrôle moteur continu (MuJoCo)
+      et la collecte d'objets dans Minecraft.
+    </p>
+
+    <h3 class="sous-titre">5.2 JEPA — La vision post-LLM de Yann LeCun</h3>
+    <p>
+      L'architecture JEPA (<em>Joint Embedding Predictive Architecture</em>), proposée par Yann LeCun en 2022
+      [<a href="#ref1">1</a>], part d'un constat radical&nbsp;: la prédiction ne doit pas s'effectuer dans
+      l'espace des observations brutes (pixels, tokens), mais dans un <strong>espace de représentation abstrait</strong>.
+    </p>
+    <p>
+      Prédire dans l'espace brut contraint le modèle à modéliser tous les détails irrélevants de l'environnement.
+      Prédire dans l'espace latent libère le modèle de ces détails et lui permet de se concentrer sur les facteurs
+      causalement pertinents. Ce paradigme est fondamentalement non génératif&nbsp;: le modèle n'apprend pas à
+      <em>reconstituer</em> l'observation, il apprend à <em>prédire sa représentation</em>. L'implémentation
+      I-JEPA nécessite environ cinq fois moins d'itérations d'entraînement que des architectures comparables [<a href="#ref4">4</a>].
+    </p>
+    <p>
+      En 2025, Meta publie <strong>V-JEPA 2</strong>, qui démontre l'efficacité de ce paradigme pour la planification
+      robotique en monde réel. L'architecture apprend à partir de vidéos non annotées et peut être utilisée pour
+      planifier des séquences d'actions dans un environnement physique.
+    </p>
+
+    <h3 class="sous-titre">5.3 NVIDIA Cosmos — Les world models à l'échelle industrielle</h3>
+    <p>
+      Annoncé au CES 2025 par Jensen Huang avec la formule désormais célèbre «&nbsp;Le moment ChatGPT pour
+      la robotique arrive&nbsp;», NVIDIA Cosmos [<a href="#ref5">5</a>] est une plateforme de world foundation
+      models open-source conçue spécifiquement pour l'IA physique. Sa contribution majeure est de permettre
+      aux industriels de générer de grandes quantités de données synthétiques photoréalistes pour entraîner
+      des robots et des véhicules autonomes sans nécessiter la collecte coûteuse de données réelles.
+    </p>
+    <p>
+      En pratique, la plateforme peut transformer quelques milliers de kilomètres de conduite humaine en milliards
+      de kilomètres virtuels en variant les conditions météorologiques, l'éclairage et les comportements de trafic.
+      En février 2026, NVIDIA a publié <em>Cosmos Policy</em>, une extension permettant de contrôler directement
+      des bras robotiques en post-entraînant le modèle de prédiction vidéo sur des données de démonstration humaine,
+      atteignant des performances de pointe sur les benchmarks LIBERO et RoboCasa.
+    </p>
+
+    <div class="activite" id="act3">
+      <div class="activite-hdr" role="heading" aria-level="4">
+        <span>Activité 3</span>
+        <span class="type">Analyse comparative</span>
+        <span class="duree">20 min</span>
+      </div>
+      <div class="activite-corps">
+        <p>
+          À partir des éléments présentés dans cette section, reconstituez les cases manquantes du tableau
+          ci-dessous en argumentant chaque choix.
+        </p>
+        <table class="tableau" style="font-size:.84rem">
+          <thead>
+            <tr><th>Architecture</th><th>Espace de prédiction</th><th>Domaine cible</th><th>Point fort distinctif</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>DreamerV3 (2025)</td><td>Latent (RSSM)</td><td>Jeux, contrôle moteur</td><td>&#x2026;</td></tr>
+            <tr><td>JEPA / V-JEPA 2 (2025)</td><td>&#x2026;</td><td>Vision, robotique</td><td>Efficacité en données (×5)</td></tr>
+            <tr><td>NVIDIA Cosmos (2025)</td><td>Vidéo (pixels + latent)</td><td>&#x2026;</td><td>&#x2026;</td></tr>
+          </tbody>
+        </table>
+        <button class="btn-corr" onclick="basculeCorrection('c3')" aria-expanded="false" aria-controls="c3">
+          Voir la réponse
+        </button>
+        <div class="correction" id="c3" role="region">
+          <p><strong>DreamerV3 — Point fort :</strong> universalité sans réglage par domaine&nbsp;; les mêmes
+          hyperparamètres résolvent 150+ tâches hétérogènes.</p>
+          <p><strong>JEPA — Espace de prédiction :</strong> espace latent abstrait (représentations, non pixels),
+          ce qui constitue la différence architecturale fondamentale avec les modèles génératifs.</p>
+          <p><strong>Cosmos — Domaine :</strong> IA physique (véhicules autonomes, robotique industrielle, systèmes
+          embarqués). <strong>Point fort :</strong> génération synthétique de données physiques à grande échelle,
+          disponible en open-source sous licence NVIDIA Open Model License.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="encadre encadre-bilan">
+      <span class="encadre-label">Bilan du § 5</span>
+      <p>
+        Trois architectures structurent le champ&nbsp;: DreamerV3 (RL imaginatif universel), JEPA (prédiction
+        latente non générative) et Cosmos (world foundation model industriel open-source). Chacune répond à
+        des contraintes différentes mais partage le même noyau&nbsp;: un espace latent dans lequel la
+        simulation interne est possible.
+      </p>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 6  APPLICATIONS
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s6">
+    <span class="sec-num">§ 6</span>
+    <h2 class="sec-titre">Applications industrielles</h2>
+
+    <h3 class="sous-titre">6.1 Robotique — Apprendre sans casser</h3>
+    <p>
+      L'enjeu fondamental de la robotique est le coût et le danger de l'exploration en monde réel.
+      Les world models offrent une solution en permettant l'entraînement dans des environnements simulés,
+      puis le transfert vers le monde physique (<em>sim-to-real transfer</em>). NVIDIA Cosmos Policy,
+      en post-entraînant un WFM sur des démonstrations humaines, atteint des performances de pointe
+      sur les benchmarks LIBERO et RoboCasa sans composant architectural supplémentaire.
+    </p>
+
+    <h3 class="sous-titre">6.2 Conduite autonome — Anticiper l'imprévisible</h3>
+    <p>
+      Un véhicule autonome doit anticiper le comportement d'acteurs dont les intentions sont inconnues.
+      Un world model entraîné sur des millions d'heures de conduite peut générer des scénarios de bord
+      sans nécessiter de les vivre réellement. Wayve, avec son modèle GAIA-2 [<a href="#ref6">6</a>],
+      et Waabi utilisent cette approche pour valider la sécurité à une échelle auparavant inaccessible.
+      Selon NVIDIA, Cosmos peut transformer quelques milliers de kilomètres réels en milliards de
+      kilomètres virtuels diversifiés.
+    </p>
+
+    <h3 class="sous-titre">6.3 Génération vidéo — Sora comme world simulator</h3>
+    <p>
+      Sora d'OpenAI (2024), bien qu'étant principalement un modèle génératif, est qualifié de
+      <em>world simulator</em> par ses concepteurs dans la mesure où il capture des propriétés physiques
+      émergentes. Des travaux de recherche publiés la même année nuancent toutefois cette qualification&nbsp;:
+      Liu et al. [<a href="#ref7">7</a>] démontrent que Sora et V-JEPA restent limités dans leur capacité
+      à modéliser les relations causales profondes et n'ont pas appris un monde model complet au sens formel.
+    </p>
+
+    <div class="activite" id="act4">
+      <div class="activite-hdr" role="heading" aria-level="4">
+        <span>Activité 4</span>
+        <span class="type">Débat et esprit critique</span>
+        <span class="duree">25 min (en groupe)</span>
+      </div>
+      <div class="activite-corps">
+        <p>
+          <strong>Scénario de jeu de rôle.</strong> Votre équipe de recherche doit décider si son système
+          de world model est prêt à être déployé dans un véhicule autonome commercial.
+        </p>
+        <p>
+          <strong>Arguments en faveur :</strong> le modèle a été entraîné sur dix millions de kilomètres
+          de conduite simulée et obtient 98 % de succès sur le benchmark interne. Il gère correctement
+          la pluie, la neige et les angles morts.
+        </p>
+        <p>
+          <strong>Arguments contre :</strong> le modèle a été entraîné dans une ville nord-américaine
+          uniquement. Le <em>reality gap</em> n'a pas été quantifié dans des contextes européens.
+          Un WFM peut produire des états latents plausibles mais non physiquement réalisables.
+        </p>
+        <p>
+          Chaque groupe défend l'une des deux positions. La synthèse identifiera les conditions minimales
+          de validation nécessaires avant tout déploiement.
+        </p>
+        <button class="btn-corr" onclick="basculeCorrection('c4')" aria-expanded="false" aria-controls="c4">
+          Éléments de synthèse
+        </button>
+        <div class="correction" id="c4" role="region">
+          <p>
+            Les éléments attendus incluent&nbsp;: (1) une validation croisée sur des domaines géographiquement
+            distincts (<em>domain generalization</em>)&nbsp;; (2) une quantification du <em>sim-to-real gap</em>
+            par des métriques de distribution (FID, FVD)&nbsp;; (3) une analyse des cas extrêmes hors
+            distribution (<em>out-of-distribution detection</em>)&nbsp;; (4) une chaîne de responsabilité légale
+            clairement établie. Ce débat illustre que les world models, comme tout système d'IA, ne sont
+            pas exempts de biais liés à leurs données d'entraînement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 7  LIEN NSI
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s7">
+    <span class="sec-num">§ 7</span>
+    <h2 class="sec-titre">Liens avec le programme NSI</h2>
+
+    <h3 class="sous-titre">7.1 Graphes et représentation des états</h3>
+    <p>
+      Un world model peut être conceptualisé comme un <strong>graphe d'états</strong>&nbsp;: chaque nœud
+      représente un état latent $z$ et chaque arc étiqueté par une action $a$ mène vers l'état prédit $z'$.
+      La planification par <em>rollout</em> imaginaire revient à parcourir ce graphe en mémoire, exactement
+      comme le font BFS, DFS ou A*. La différence fondamentale est que ce graphe n'est pas explicitement
+      construit&nbsp;: il est <em>implicitement encodé</em> dans les poids du réseau et peut être interrogé
+      à la demande, ce qui correspond à la notion de représentation implicite d'un graphe.
+    </p>
+
+    <h3 class="sous-titre">7.2 Réseaux de neurones et espace latent</h3>
+    <p>
+      L'encodeur d'un world model est typiquement un réseau convolutif (CNN) pour les observations visuelles
+      ou un transformeur pour les données séquentielles. Le modèle de transition est souvent un réseau récurrent
+      (LSTM, GRU) ou un transformeur causalement masqué. Ces architectures sont directement liées aux notions
+      de réseaux de neurones abordées dans le programme. La notion d'espace latent, quant à elle, correspond
+      à la compression vue dans les auto-encodeurs&nbsp;: représenter une donnée de grande dimension par un
+      vecteur de petite dimension qui en préserve la structure essentielle.
+    </p>
+
+    <h3 class="sous-titre">7.3 Algorithmes de recherche et planification</h3>
+    <p>
+      Le lien entre la planification par world model et les algorithmes de recherche sur graphe est direct
+      et exploitable en classe. Dans DreamerV3, l'optimisation de la politique dans l'imagination revient
+      à rechercher une séquence d'actions qui maximise la récompense cumulée dans le graphe implicite
+      du world model — une généralisation continue de la recherche par programmation dynamique enseignée
+      en Terminale NSI.
+    </p>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § TP  TRAVAIL PRATIQUE INTERACTIF
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s-tp">
+    <span class="sec-num">§ TP</span>
+    <h2 class="sec-titre">Travail pratique interactif &mdash; World Model en Python</h2>
+
+    <p>
+      Ce TP en quatre parties, exécutable directement dans le navigateur grâce à PyScript, met en œuvre
+      un world model minimal sur un labyrinthe 6&times;6. Chaque partie approfondit un concept central&nbsp;:
+      modèle de transition, espace latent symbolique, <em>rollout</em> multi-pas et comparaison quantitative
+      entre agent réactif et agent planifiant.
+    </p>
+
+    <!-- Grille de démarrage PyScript (élément statique obligatoire pour Pyodide) -->
+    <script type="py-editor" env="wm-init" style="display:none">
+# Initialisation silencieuse de Pyodide
+import sys
+print(f"Python {sys.version.split()[0]} prêt.", end="")
+    </script>
+
+    <div class="tp-wrapper">
+      <div class="tp-bandeau">
+        <div class="tp-bandeau-titre">World Model &mdash; Labyrinthe 6×6</div>
+        <div class="tp-bandeau-meta">PyScript &middot; Python 3.12 &middot; Aucune installation requise</div>
+      </div>
+
+      <!-- Onglets -->
+      <div class="tp-onglets" role="tablist">
+        <div class="tp-onglet actif" role="tab" aria-selected="true"  onclick="onglet(0)">Partie 1 — Modèle de transition</div>
+        <div class="tp-onglet"       role="tab" aria-selected="false" onclick="onglet(1)">Partie 2 — Espace latent</div>
+        <div class="tp-onglet"       role="tab" aria-selected="false" onclick="onglet(2)">Partie 3 — Rollout multi-pas</div>
+        <div class="tp-onglet"       role="tab" aria-selected="false" onclick="onglet(3)">Partie 4 — Comparaison</div>
+      </div>
+
+      <!-- ══════════ PARTIE 1 ══════════ -->
+      <div class="tp-panneau actif" id="tp0">
+        <div class="tp-enonce">
+          <h4>Partie 1 — Construire et interroger un modèle de transition</h4>
+          <p>
+            Le labyrinthe ci-dessous est une grille 6×6 dans laquelle certaines cases sont des murs
+            (valeur <code>1</code>). Un agent peut se déplacer dans les quatre directions cardinales.
+          </p>
+          <p>
+            Le <strong>modèle de transition</strong> est une table qui, étant donné un état (position)
+            et une action (direction), retourne l'état suivant. C'est la forme la plus élémentaire
+            d'un world model&nbsp;: à la place d'un réseau de neurones, on utilise ici une structure
+            de données Python explicite pour illustrer le principe.
+          </p>
+          <ul>
+            <li>Complétez la méthode <code>apprendre</code> pour enregistrer une transition observée.</li>
+            <li>Complétez la méthode <code>predire</code> pour retourner l'état suivant prédit.</li>
+            <li>Exécutez et observez le résultat dans la visualisation.</li>
+          </ul>
+        </div>
+
+        <div class="py-editor-wrapper">
+          <div class="py-editor-label">Éditeur Python — Partie 1</div>
+          <script type="py-editor" env="wm-p1">
+# ── Définition du labyrinthe 6×6 ──────────────────────
+# 0 = libre   1 = mur   (ligne, colonne)  départ=(0,0)  arrivée=(5,5)
+GRILLE = [
+    [0, 0, 1, 0, 0, 0],
+    [1, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+]
+ACTIONS = {'N': (-1,0), 'S': (1,0), 'E': (0,1), 'O': (0,-1)}
+ROWS, COLS = 6, 6
+
+def etat_valide(r, c):
+    """Retourne True si la case (r,c) existe et n'est pas un mur."""
+    return 0 <= r < ROWS and 0 <= c < COLS and GRILLE[r][c] == 0
+
+# ── World Model : modèle de transition ────────────────
+class WorldModel:
+    """Modèle de transition appris par observation.
+    Clé : (état, action)  Valeur : état_suivant
+    """
+    def __init__(self):
+        self.transitions = {}
+        self.nb_transitions = 0
+
+    def apprendre(self, etat, action, etat_suiv):
+        """Enregistre la transition (etat, action) -> etat_suiv."""
+        # TODO : compléter cette méthode
+        pass
+
+    def predire(self, etat, action):
+        """Retourne l'état prédit, ou None si inconnu."""
+        # TODO : compléter cette méthode
+        return None
+
+    def couverture(self):
+        """Retourne le pourcentage de transitions connues."""
+        cases_libres = sum(1 for r in range(ROWS) for c in range(COLS)
+                           if GRILLE[r][c] == 0)
+        total_possible = cases_libres * len(ACTIONS)
+        return 100 * self.nb_transitions / total_possible if total_possible else 0
+
+# ── Phase d'exploration : l'agent se déplace aléatoirement
+import random
+random.seed(42)
+
+modele = WorldModel()
+etat = (0, 0)   # départ
+NB_ETAPES = 200
+
+for _ in range(NB_ETAPES):
+    action = random.choice(list(ACTIONS))
+    dr, dc = ACTIONS[action]
+    nr, nc = etat[0] + dr, etat[1] + dc
+    if etat_valide(nr, nc):
+        etat_suiv = (nr, nc)
+        modele.apprendre(etat, action, etat_suiv)
+        etat = etat_suiv
+
+# ── Vérification ────────────────────────────────────────
+test_pred = modele.predire((0, 0), 'S')
+print(f"Transitions apprises : {modele.nb_transitions}")
+print(f"Couverture du modèle : {modele.couverture():.1f}%")
+print(f"Prédiction depuis (0,0) vers S : {test_pred}")
+if test_pred is None:
+    print("  -> La méthode predire retourne None. Vérifiez votre implémentation.")
+elif test_pred == (1, 0):
+    print("  -> Correct ! L'état (1,0) est bien accessible depuis (0,0) en allant vers le Sud.")
+else:
+    print(f"  -> Résultat inattendu. Vérifiez GRILLE[1][0].")
+          </script>
+        </div>
+
+        <div class="tp-viz">
+          <h5>Visualisation du labyrinthe et du modèle</h5>
+          <div id="viz-grille"></div>
+          <div class="stats-panel">
+            <div class="stat-card">
+              <div class="stat-label">Transitions apprises</div>
+              <div class="stat-val" id="stat-trans">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Couverture</div>
+              <div class="stat-val" id="stat-couv">—</div>
+            </div>
+          </div>
+          <p style="font-family:var(--sans);font-size:.82rem;color:var(--gris);margin-top:.75rem">
+            Légende : <span style="background:#1a2d40;color:#fff;padding:.1rem .4rem;border-radius:3px;font-family:var(--mono);font-size:.75rem">Mur</span>
+            <span style="background:#1e7a4a;color:#fff;padding:.1rem .4rem;border-radius:3px;font-family:var(--mono);font-size:.75rem;margin-left:.4rem">Départ</span>
+            <span style="background:#c0392b;color:#fff;padding:.1rem .4rem;border-radius:3px;font-family:var(--mono);font-size:.75rem;margin-left:.4rem">Arrivée</span>
+            <span style="background:#e8f0f8;color:#444;padding:.1rem .4rem;border-radius:3px;font-family:var(--mono);font-size:.75rem;margin-left:.4rem">Libre</span>
+          </p>
+        </div>
+
+        <div class="tp-enonce" style="border-top:1px solid var(--gris-c); background:var(--fond)">
+          <h4>Correction &mdash; Partie 1</h4>
+          <button class="btn-corr" onclick="basculeCorrection('corr-tp1')" aria-expanded="false" aria-controls="corr-tp1">
+            Afficher la correction
+          </button>
+          <div class="correction" id="corr-tp1" role="region">
+<pre><code><span class="kw">def</span> <span class="fn">apprendre</span>(<span class="nb">self</span>, etat, action, etat_suiv):
+    <span class="nb">self</span>.transitions[(etat, action)] = etat_suiv
+    <span class="nb">self</span>.nb_transitions = <span class="fn">len</span>(<span class="nb">self</span>.transitions)
+
+<span class="kw">def</span> <span class="fn">predire</span>(<span class="nb">self</span>, etat, action):
+    <span class="kw">return</span> <span class="nb">self</span>.transitions.get((etat, action), <span class="nb">None</span>)</code></pre>
+            <p>
+              La couverture dépend du nombre de déplacements aléatoires effectués. Avec 200 étapes
+              et <code>random.seed(42)</code>, on obtient typiquement 60 à 75&thinsp;% de couverture.
+              Un world model réel (DreamerV3) représente cette même table de manière compressée
+              dans les poids d'un réseau récurrent, ce qui lui permet de généraliser aux transitions
+              jamais observées.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ PARTIE 2 ══════════ -->
+      <div class="tp-panneau" id="tp1">
+        <div class="tp-enonce">
+          <h4>Partie 2 — Représentation latente symbolique</h4>
+          <p>
+            Dans un world model neuronal, l'espace latent est continu ($\mathbb{R}^n$). Pour illustrer
+            le concept sans réseau de neurones, on va construire un <strong>espace latent symbolique</strong>&nbsp;:
+            chaque état (position brute) est encodé en un vecteur de caractéristiques structurées qui capturent
+            les propriétés de cet état dans le labyrinthe.
+          </p>
+          <p>
+            L'encodeur extrait quatre attributs binaires pour chaque position&nbsp;: accessibilité Nord, Sud,
+            Est, Ouest. Deux positions aux configurations de voisinage identiques auront des représentations
+            latentes identiques — c'est la compression.
+          </p>
+          <ul>
+            <li>Implémentez la fonction <code>encoder</code>.</li>
+            <li>Calculez la dimension effective de l'espace latent (nombre de vecteurs distincts).</li>
+            <li>Comparez-la au nombre de positions libres pour mesurer le taux de compression.</li>
+          </ul>
+        </div>
+        <div class="py-editor-wrapper">
+          <div class="py-editor-label">Éditeur Python — Partie 2</div>
+          <script type="py-editor" env="wm-p2">
+GRILLE = [
+    [0, 0, 1, 0, 0, 0],
+    [1, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+]
+ROWS, COLS = 6, 6
+ACTIONS = {'N': (-1,0), 'S': (1,0), 'E': (0,1), 'O': (0,-1)}
+
+def etat_valide(r, c):
+    return 0 <= r < ROWS and 0 <= c < COLS and GRILLE[r][c] == 0
+
+def encoder(etat):
+    """Encode l'état (r,c) en un vecteur latent symbolique.
+    Retourne un tuple de 4 booléens : (N_libre, S_libre, E_libre, O_libre).
+    Ce vecteur représente la 'signature de voisinage' de la position.
+    TODO : implémenter cette fonction.
+    """
+    r, c = etat
+    # Pour chaque direction, déterminer si le voisin est accessible
+    # Indice : utiliser etat_valide(r + dr, c + dc) pour chaque (dr, dc)
+    pass
+
+# ── Calcul de l'espace latent ────────────────────────────
+positions_libres = [(r, c) for r in range(ROWS)
+                   for c in range(COLS) if GRILLE[r][c] == 0]
+
+if encoder((0,0)) is not None:
+    representations = {pos: encoder(pos) for pos in positions_libres}
+    vecteurs_distincts = set(representations.values())
+    taux_compression = 100 * (1 - len(vecteurs_distincts) / len(positions_libres))
+
+    print(f"Positions libres          : {len(positions_libres)}")
+    print(f"Vecteurs latents distincts: {len(vecteurs_distincts)}")
+    print(f"Taux de compression       : {taux_compression:.1f}%")
+    print()
+    print("Exemples de représentations latentes :")
+    for pos in list(positions_libres)[:5]:
+        print(f"  {pos} -> {representations[pos]}")
+    print()
+    # Trouver des positions partageant la même représentation latente
+    from collections import defaultdict
+    groupes = defaultdict(list)
+    for pos, rep in representations.items():
+        groupes[rep].append(pos)
+    partages = {k: v for k, v in groupes.items() if len(v) > 1}
+    if partages:
+        exemple_rep, exemple_pos = next(iter(partages.items()))
+        print(f"Positions partageant la représentation {exemple_rep} :")
+        print(f"  {exemple_pos}")
+        print("Ces positions sont 'identiques' du point de vue de l'espace latent.")
+else:
+    print("Implémentez la fonction encoder() pour obtenir les résultats.")
+          </script>
+        </div>
+        <div class="tp-enonce" style="border-top:1px solid var(--gris-c); background:var(--fond)">
+          <h4>Correction &mdash; Partie 2</h4>
+          <button class="btn-corr" onclick="basculeCorrection('corr-tp2')" aria-expanded="false" aria-controls="corr-tp2">
+            Afficher la correction
+          </button>
+          <div class="correction" id="corr-tp2" role="region">
+<pre><code><span class="kw">def</span> <span class="fn">encoder</span>(etat):
+    r, c = etat
+    <span class="kw">return</span> (
+        etat_valide(r - <span class="nb">1</span>, c),   <span class="cm"># Nord accessible</span>
+        etat_valide(r + <span class="nb">1</span>, c),   <span class="cm"># Sud accessible</span>
+        etat_valide(r, c + <span class="nb">1</span>),   <span class="cm"># Est accessible</span>
+        etat_valide(r, c - <span class="nb">1</span>),   <span class="cm"># Ouest accessible</span>
+    )</code></pre>
+            <p>
+              On obtient au plus $2^4 = 16$ vecteurs distincts pour un espace brut de positions libres
+              potentiellement bien supérieur. Des positions géographiquement éloignées mais structurellement
+              identiques (même configuration de voisinage) partagent la même représentation latente.
+              C'est le principe de <strong>compression invariante</strong> qui donne à un world model sa capacité
+              de généralisation&nbsp;: il peut raisonner sur une configuration jamais rencontrée si sa
+              représentation latente est proche d'une configuration connue.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ PARTIE 3 ══════════ -->
+      <div class="tp-panneau" id="tp2">
+        <div class="tp-enonce">
+          <h4>Partie 3 — Rollout multi-pas et planification BFS</h4>
+          <p>
+            C'est ici que le world model révèle tout son potentiel. La fonction <code>planifier_bfs</code>
+            effectue un BFS <strong>entièrement dans le monde model</strong>&nbsp;: elle n'interagit pas
+            avec l'environnement réel, elle interroge uniquement la table de transitions apprise.
+            C'est ce qu'on appelle le <strong>rollout imaginaire</strong>.
+          </p>
+          <p>
+            La fonction <code>executer_chemin</code>, à l'inverse, effectue les actions dans
+            l'environnement réel en vérifiant si le chemin prévu est correct.
+          </p>
+          <ul>
+            <li>Implémentez <code>planifier_bfs</code> (BFS dans le world model).</li>
+            <li>Comparez le chemin planifié avec le chemin réellement exécuté.</li>
+            <li>Observez l'impact de la couverture du modèle sur la qualité de la planification.</li>
+          </ul>
+        </div>
+        <div class="py-editor-wrapper">
+          <div class="py-editor-label">Éditeur Python — Partie 3</div>
+          <script type="py-editor" env="wm-p3">
+import collections, random
+random.seed(42)
+
+GRILLE = [
+    [0, 0, 1, 0, 0, 0],
+    [1, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+]
+ACTIONS = {'N': (-1,0), 'S': (1,0), 'E': (0,1), 'O': (0,-1)}
+ROWS, COLS = 6, 6
+
+def etat_valide(r, c):
+    return 0 <= r < ROWS and 0 <= c < COLS and GRILLE[r][c] == 0
+
+# ── Construction du world model par exploration ────────
+class WorldModel:
+    def __init__(self):
+        self.transitions = {}
+
+    def apprendre(self, etat, action, etat_suiv):
+        self.transitions[(etat, action)] = etat_suiv
+
+    def predire(self, etat, action):
+        return self.transitions.get((etat, action), None)
+
+modele = WorldModel()
+etat = (0, 0)
+for _ in range(500):   # plus d'exploration pour une meilleure couverture
+    action = random.choice(list(ACTIONS))
+    dr, dc = ACTIONS[action]
+    nr, nc = etat[0] + dr, etat[1] + dc
+    if etat_valide(nr, nc):
+        modele.apprendre(etat, action, (nr, nc))
+        etat = (nr, nc)
+
+# ── Planification BFS dans le world model ─────────────
+def planifier_bfs(modele, depart, arrivee):
+    """Parcours BFS dans le world model (rollout imaginaire).
+    Retourne la liste d'actions menant de depart à arrivee,
+    ou None si aucun chemin n'est trouvé dans le modèle.
+    TODO : implémenter ce BFS.
+    """
+    # Indice : file = deque([(etat_courant, chemin_actions)])
+    # Pour chaque état, essayer chaque action et interroger modele.predire()
+    pass
+
+# ── Exécution dans l'environnement réel ───────────────
+def executer_chemin(chemin, depart):
+    """Exécute les actions dans le vrai labyrinthe.
+    Retourne (états_traversés, succès_booléen, nb_erreurs_modele).
+    """
+    etat = depart
+    etats = [etat]
+    erreurs = 0
+    for action in chemin:
+        dr, dc = ACTIONS[action]
+        nr, nc = etat[0] + dr, etat[1] + dc
+        if etat_valide(nr, nc):
+            etat = (nr, nc)
+        else:
+            erreurs += 1   # le modèle avait prédit une transition impossible
+        etats.append(etat)
+    return etats, etat == (5, 5), erreurs
+
+# ── Test ──────────────────────────────────────────────
+chemin = planifier_bfs(modele, (0, 0), (5, 5))
+
+if chemin is None:
+    print("planifier_bfs() retourne None.")
+    print("Implémentez la fonction ou augmentez le nombre d'étapes d'exploration.")
+else:
+    etats, succes, erreurs = executer_chemin(chemin, (0, 0))
+    print(f"Chemin planifie   : {chemin}")
+    print(f"Longueur          : {len(chemin)} actions")
+    print(f"Arrivee en (5,5)  : {succes}")
+    print(f"Erreurs du modele : {erreurs}")
+    print(f"Etats traverses   : {etats}")
+          </script>
+        </div>
+        <div class="tp-enonce" style="border-top:1px solid var(--gris-c); background:var(--fond)">
+          <h4>Correction &mdash; Partie 3</h4>
+          <button class="btn-corr" onclick="basculeCorrection('corr-tp3')" aria-expanded="false" aria-controls="corr-tp3">
+            Afficher la correction
+          </button>
+          <div class="correction" id="corr-tp3" role="region">
+<pre><code><span class="kw">def</span> <span class="fn">planifier_bfs</span>(modele, depart, arrivee):
+    file = collections.deque([(depart, [])])
+    visites = {depart}
+    <span class="kw">while</span> file:
+        etat, chemin = file.popleft()
+        <span class="kw">if</span> etat == arrivee:
+            <span class="kw">return</span> chemin
+        <span class="kw">for</span> action <span class="kw">in</span> ACTIONS:
+            suivant = modele.predire(etat, action)
+            <span class="kw">if</span> suivant <span class="kw">is not None and</span> suivant <span class="kw">not in</span> visites:
+                visites.add(suivant)
+                file.append((suivant, chemin + [action]))
+    <span class="kw">return None</span></code></pre>
+            <p>
+              Si le world model est complet (toutes les transitions connues), le chemin planifié est
+              optimal et exécuté sans erreur. Si des transitions sont manquantes, la planification peut
+              échouer ou trouver un chemin sous-optimal. C'est exactement le problème que DreamerV3
+              résout en utilisant un modèle neuronal qui <em>généralise</em> aux états non vus,
+              contrairement à une table qui nécessite une observation explicite de chaque transition.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ PARTIE 4 ══════════ -->
+      <div class="tp-panneau" id="tp3">
+        <div class="tp-enonce">
+          <h4>Partie 4 — Comparaison agent réactif vs agent planifiant</h4>
+          <p>
+            Cette dernière partie met en regard deux stratégies&nbsp;: l'agent réactif (<em>model-free</em>)
+            qui choisit ses actions aléatoirement, et l'agent planifiant (<em>model-based</em>) qui utilise
+            son world model pour planifier avant d'agir.
+          </p>
+          <p>
+            La métrique d'évaluation est le <strong>nombre de pas</strong> nécessaires pour rejoindre
+            l'arrivée (5,5) depuis le départ (0,0), moyenné sur 100 épisodes. Un agent planifiant bien
+            entraîné devrait atteindre l'arrivée en beaucoup moins de pas.
+          </p>
+          <p>
+            Le code ci-dessous est complet. Lisez-le attentivement, exécutez-le et analysez les résultats.
+            Modifiez ensuite <code>NB_EXPLORATION</code> pour observer l'impact de la couverture du modèle
+            sur les performances de l'agent planifiant.
+          </p>
+        </div>
+        <div class="py-editor-wrapper">
+          <div class="py-editor-label">Éditeur Python — Partie 4</div>
+          <script type="py-editor" env="wm-p4">
+import collections, random, statistics
+random.seed(0)
+
+GRILLE = [
+    [0, 0, 1, 0, 0, 0],
+    [1, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+]
+ACTIONS = {'N': (-1,0), 'S': (1,0), 'E': (0,1), 'O': (0,-1)}
+ROWS, COLS = 6, 6
+DEPART, ARRIVEE = (0,0), (5,5)
+NB_EPISODES = 100
+NB_EXPLORATION = 600   # <- Modifiez cette valeur et observez l'effet
+
+def etat_valide(r, c):
+    return 0 <= r < ROWS and 0 <= c < COLS and GRILLE[r][c] == 0
+
+# ── Construction du world model ────────────────────────
+transitions = {}
+e = DEPART
+for _ in range(NB_EXPLORATION):
+    a = random.choice(list(ACTIONS))
+    dr, dc = ACTIONS[a]
+    nr, nc = e[0]+dr, e[1]+dc
+    if etat_valide(nr, nc):
+        transitions[(e, a)] = (nr, nc)
+        e = (nr, nc)
+
+cases_libres = sum(1 for r in range(ROWS) for c in range(COLS) if not GRILLE[r][c])
+couverture = 100 * len(transitions) / (cases_libres * 4)
+
+# ── BFS dans le world model ────────────────────────────
+def planifier(depart, arrivee):
+    file = collections.deque([(depart, [])])
+    vus = {depart}
+    while file:
+        e, ch = file.popleft()
+        if e == arrivee:
+            return ch
+        for a in ACTIONS:
+            s = transitions.get((e, a))
+            if s and s not in vus:
+                vus.add(s)
+                file.append((s, ch + [a]))
+    return None
+
+# ── Agent réactif (model-free) ─────────────────────────
+def agent_reactif(max_pas=500):
+    e = DEPART
+    for i in range(max_pas):
+        if e == ARRIVEE:
+            return i
+        a = random.choice(list(ACTIONS))
+        dr, dc = ACTIONS[a]
+        nr, nc = e[0]+dr, e[1]+dc
+        if etat_valide(nr, nc):
+            e = (nr, nc)
+    return max_pas
+
+# ── Agent planifiant (model-based) ─────────────────────
+chemin_global = planifier(DEPART, ARRIVEE)
+
+def agent_planifiant(max_pas=500):
+    if chemin_global is None:
+        return max_pas   # modèle incomplet : repli sur marche aléatoire
+    e = DEPART
+    for i, a in enumerate(chemin_global):
+        if e == ARRIVEE:
+            return i
+        dr, dc = ACTIONS[a]
+        nr, nc = e[0]+dr, e[1]+dc
+        if etat_valide(nr, nc):
+            e = (nr, nc)
+    return len(chemin_global) if e == ARRIVEE else max_pas
+
+# ── Évaluation sur 100 épisodes ────────────────────────
+scores_reactif    = [agent_reactif()    for _ in range(NB_EPISODES)]
+scores_planifiant = [agent_planifiant() for _ in range(NB_EPISODES)]
+
+moy_r = statistics.mean(scores_reactif)
+moy_p = statistics.mean(scores_planifiant)
+gain  = (moy_r - moy_p) / moy_r * 100 if moy_r > 0 else 0
+
+print(f"Couverture du world model   : {couverture:.1f}%")
+print(f"Chemin planifie             : {chemin_global}")
+print()
+print(f"Agent reactif   — moy. pas : {moy_r:.1f}  (min={min(scores_reactif)}, max={max(scores_reactif)})")
+print(f"Agent planifiant — moy. pas : {moy_p:.1f}  (min={min(scores_planifiant)}, max={max(scores_planifiant)})")
+print()
+print(f"Gain de l'agent planifiant  : {gain:.1f}%")
+print()
+if chemin_global:
+    print(f"Interpretation :")
+    print(f"  Avec un world model a {couverture:.0f}% de couverture, l'agent planifiant")
+    print(f"  atteint l'arrivee en {moy_p:.0f} pas en moyenne, contre {moy_r:.0f} pour")
+    print(f"  l'agent reactif, soit un gain de {gain:.0f}%.")
+    print(f"  Modifiez NB_EXPLORATION pour observer l'effet sur le gain.")
+          </script>
+        </div>
+
+        <div class="tp-viz">
+          <h5>Analyse des résultats</h5>
+          <canvas id="chart-apprentissage"></canvas>
+        </div>
+
+        <div class="tp-enonce" style="border-top:1px solid var(--gris-c); background:var(--fond)">
+          <h4>Questions de synthèse</h4>
+          <p>
+            <strong>Q1.</strong> En faisant varier <code>NB_EXPLORATION</code> entre 50 et 1000,
+            décrivez l'évolution du gain de l'agent planifiant. Pourquoi le gain n'est-il pas monotone&nbsp;?
+          </p>
+          <p>
+            <strong>Q2.</strong> Que se passe-t-il si le world model contient une erreur (transition apprise
+            incorrecte)&nbsp;? Comment DreamerV3 gère-t-il cette situation avec son modèle neuronal&nbsp;?
+          </p>
+          <p>
+            <strong>Q3.</strong> En quoi la généralisation apportée par un encodeur neuronal est-elle supérieure
+            à la table de transitions explicite utilisée dans ce TP&nbsp;?
+          </p>
+          <button class="btn-corr" onclick="basculeCorrection('corr-tp4')" aria-expanded="false" aria-controls="corr-tp4">
+            Éléments de réponse
+          </button>
+          <div class="correction" id="corr-tp4" role="region">
+            <p><strong>Q1.</strong> Le gain augmente avec la couverture jusqu'à un plateau (modèle complet).
+            Il n'est pas strictement monotone car l'exploration aléatoire peut surcouvrir certaines zones
+            et laisser des lacunes critiques, rendant parfois la planification impossible malgré une couverture
+            globale élevée.</p>
+            <p><strong>Q2.</strong> Une erreur dans la table provoque une planification sur un chemin inexistant
+            dans le monde réel. DreamerV3 atténue ce problème en modélisant l'<em>incertitude</em> de ses
+            prédictions (distributions de probabilité plutôt que valeurs ponctuelles) et en accordant moins
+            de poids aux trajectoires imaginaires dans les régions peu explorées.</p>
+            <p><strong>Q3.</strong> La table ne peut raisonner que sur des états <em>explicitement observés</em>.
+            Un encodeur neuronal apprend une représentation continue qui lui permet d'interpoler&nbsp;: un état
+            jamais vu mais dont la représentation latente est proche d'états connus recevra une prédiction
+            raisonnable. C'est la propriété de <em>généralisation hors distribution</em>.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- fin tp-wrapper -->
+
+    <div class="encadre encadre-bilan">
+      <span class="encadre-label">Bilan du TP</span>
+      <p>
+        Ce TP a mis en œuvre les trois composantes d'un world model&nbsp;: le modèle de transition
+        (table de transitions), l'espace latent (vecteur de voisinage), et le rollout imaginaire (BFS
+        dans le modèle). La partie 4 a quantifié l'avantage de la planification model-based&nbsp;:
+        à couverture suffisante, l'agent planifiant atteint l'objectif en un nombre de pas optimal,
+        alors que l'agent réactif effectue une marche aléatoire. Cette démonstration est une version
+        épurée et calculable du bénéfice que DreamerV3 tire de son RSSM sur des environnements complexes.
+      </p>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 8  ÉTHIQUE
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s8">
+    <span class="sec-num">§ 8</span>
+    <h2 class="sec-titre">Enjeux éthiques et épistémologiques</h2>
+
+    <h3 class="sous-titre">8.1 Un modèle du monde est toujours un modèle biaisé</h3>
+    <p>
+      Le statisticien George Box a formulé un principe devenu axiome en modélisation&nbsp;: «&nbsp;Tous
+      les modèles sont faux, mais certains sont utiles.&nbsp;» Cette maxime s'applique avec une acuité
+      particulière aux world models. Un WFM entraîné sur des données de conduite en Amérique du Nord
+      encodera, dans ses représentations latentes, les normes de comportement au volant propres à ce
+      contexte géographique et culturel. Déployé en Europe ou en Asie, il risque de produire des
+      prédictions inadaptées, non par malveillance, mais par limitation de sa distribution d'entraînement.
+    </p>
+    <p>
+      Ce phénomène, appelé <strong>biais de distribution</strong> (<em>distributional shift</em>), est
+      particulièrement préoccupant dans des applications à fort enjeu de sécurité. L'article de Liu et al.
+      [<a href="#ref7">7</a>] démontre que Sora et V-JEPA, malgré leurs performances remarquables, échouent
+      précisément sur des scénarios qui requièrent une compréhension causale profonde plutôt qu'une
+      interpolation statistique. L'enseignant de NSI a un rôle à jouer dans la formation de citoyens
+      capables d'identifier et de questionner ces biais.
+    </p>
+
+    <h3 class="sous-titre">8.2 Le débat LeCun contre les LLM — deux visions de l'intelligence artificielle générale</h3>
+    <p>
+      Yann LeCun soutient que les LLM, quelle que soit leur taille, ne pourront jamais atteindre l'intelligence
+      générale car ils n'ont pas de modèle du monde fondé sur la causalité [<a href="#ref1">1</a>].
+      Sa proposition JEPA entend remédier à cela en apprenant des représentations abstraites par prédiction
+      latente plutôt que par reconstruction de tokens. Cette position est contestée par des chercheurs
+      qui travaillent sur les modèles de raisonnement étendu (<em>chain-of-thought</em>) et les architectures
+      multimodales, dont les capacités de généralisation s'améliorent continûment.
+    </p>
+    <p>
+      Le débat est loin d'être clos et représente l'une des questions ouvertes les plus importantes de
+      l'IA contemporaine. Pour l'enseignant, ce désaccord entre chercheurs de premier plan est pédagogiquement
+      précieux&nbsp;: il illustre comment la science avance par confrontation d'hypothèses et de paradigmes,
+      non par consensus immédiat.
+    </p>
+
+    <h3 class="sous-titre">8.3 Responsabilité, deepfakes et gouvernance des world simulators</h3>
+    <p>
+      NVIDIA Cosmos, Sora et GAIA-2 sont des systèmes capables de générer des vidéos hautement réalistes
+      de situations physiques n'ayant jamais existé. Cette capacité ouvre des possibilités industrielles
+      considérables (génération de données synthétiques pour la sécurité, simulation de scénarios médicaux,
+      prototypage virtuel), mais soulève des questions de gouvernance sérieuses.
+    </p>
+    <p>
+      La question de la <strong>provenance des données</strong> (<em>data provenance</em>) est centrale&nbsp;:
+      si un véhicule autonome a été entraîné sur des données en partie synthétiques, qui est responsable
+      en cas d'accident imputable à une distribution synthétique défectueuse&nbsp;? La traçabilité des
+      données d'entraînement devient un enjeu juridique autant que technique. Des frameworks de gouvernance
+      émergent (EU AI Act, NIST AI RMF) mais leur application aux world models reste en construction.
+    </p>
+
+    <div class="encadre encadre-warn">
+      <span class="encadre-label">Question ouverte pour la classe</span>
+      <p>
+        Si un world model peut générer à volonté des vidéos de conduite dans des conditions extrêmes,
+        comment s'assurer que les politiques apprises sur ces données synthétiques sont vraiment sûres
+        dans le monde réel&nbsp;? Qui est responsable en cas d'accident d'un véhicule dont l'IA
+        a été entraînée sur des données en partie synthétiques&nbsp;? Quel niveau de transparence
+        doit-on exiger de la chaîne de données d'un système d'IA critique&nbsp;?
+      </p>
+    </div>
+
+    <div class="activite" id="act6">
+      <div class="activite-hdr" role="heading" aria-level="4">
+        <span>Activité 5</span>
+        <span class="type">Synthèse réflexive — Grand Oral</span>
+        <span class="duree">30 min</span>
+      </div>
+      <div class="activite-corps">
+        <p>
+          <strong>Problématique type Grand Oral NSI / Philosophie.</strong>
+          Rédigez un plan de réponse structuré en trois parties à la question&nbsp;:
+          <em>«&nbsp;Un world model peut-il réellement comprendre le monde, ou ne fait-il que le
+          simuler&nbsp;?&nbsp;»</em>
+          Chaque partie doit s'appuyer sur au moins un résultat scientifique cité dans cet article.
+        </p>
+        <button class="btn-corr" onclick="basculeCorrection('c6')" aria-expanded="false" aria-controls="c6">
+          Éléments de plan
+        </button>
+        <div class="correction" id="c6" role="region">
+          <p><strong>I — Un world model simule, il ne comprend pas.</strong>
+          Un WFM apprend une fonction de transition $\hat{T}(z, a) \to z'$ par corrélation statistique,
+          non par modélisation causale. Liu et al. [7] démontrent que Sora et V-JEPA échouent sur des
+          scénarios requérant une compréhension causale profonde. LeCun [1] avance que cette limitation
+          est structurelle, non conjoncturelle.</p>
+          <p><strong>II — La frontière entre simulation et compréhension est poreuse.</strong>
+          DreamerV3 [3] résout des tâches inédites (Minecraft sans données humaines). MuZero [4] maîtrise
+          des règles de jeu qui ne lui ont pas été enseignées. Ces capacités de transfert excèdent la
+          simple mémorisation et approchent ce que l'on appelle «&nbsp;compréhension&nbsp;» dans le
+          langage courant.</p>
+          <p><strong>III — La question est peut-être mal posée.</strong>
+          Si l'on définit la compréhension comme la capacité à prédire et à agir de manière adaptée
+          dans des situations nouvelles, la distinction avec la simulation s'estompe. Le test de Turing
+          et l'argument de la chambre chinoise (Searle) montrent que cette question n'est pas résolue
+          philosophiquement, même pour l'intelligence humaine. Il est peut-être plus productif de parler
+          de degrés de compréhension que d'une dichotomie binaire.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 9  GLOSSAIRE
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s9">
+    <span class="sec-num">§ 9</span>
+    <h2 class="sec-titre">Glossaire</h2>
+
+    <div class="glossaire">
+      <dl>
+        <dt>Espace latent</dt>
+        <dd>Espace de représentation de faible dimension dans lequel un encodeur projette les observations brutes. Des observations similaires occupent des régions proches de cet espace.</dd>
+
+        <dt>Rollout</dt>
+        <dd>Séquence de prédictions successives effectuée dans le world model sans interaction avec l'environnement réel. Synonyme de simulation mentale ou trajectoire imaginaire.</dd>
+
+        <dt>Model-free</dt>
+        <dd>Stratégie d'apprentissage par renforcement dans laquelle l'agent apprend directement une politique ou une fonction de valeur sans construire de modèle explicite de la dynamique de l'environnement.</dd>
+
+        <dt>Model-based</dt>
+        <dd>Stratégie d'apprentissage par renforcement dans laquelle l'agent construit et exploite un modèle de la dynamique de l'environnement pour planifier ses actions.</dd>
+
+        <dt>RSSM</dt>
+        <dd><em>Recurrent State Space Model</em>. Architecture récurrente stochastique utilisée par la famille Dreamer pour modéliser la transition dans l'espace latent, combinant une partie déterministe (GRU) et une partie stochastique (variable latente gaussienne ou catégorielle).</dd>
+
+        <dt>JEPA</dt>
+        <dd><em>Joint Embedding Predictive Architecture</em>. Architecture proposée par Yann LeCun dans laquelle la prédiction s'effectue dans l'espace des représentations abstraites (embeddings) plutôt que dans l'espace brut des observations.</dd>
+
+        <dt>Sim-to-real</dt>
+        <dd>Transfert d'une politique ou d'un modèle entraîné en simulation vers le monde réel. Le <em>reality gap</em> désigne l'écart entre les distributions des deux domaines.</dd>
+
+        <dt>WFM</dt>
+        <dd><em>World Foundation Model</em>. World model de grande taille pré-entraîné sur des données massives et utilisable comme base pour des tâches spécialisées par post-entraînement. NVIDIA Cosmos en est l'exemple industriel le plus représentatif.</dd>
+
+        <dt>VAE</dt>
+        <dd><em>Variational Autoencoder</em>. Auto-encodeur probabiliste qui apprend à encoder les données dans un espace latent gaussien et à les reconstruire. Utilisé comme encodeur dans la formulation originale de Ha &amp; Schmidhuber.</dd>
+
+        <dt>Distributional shift</dt>
+        <dd>Décalage entre la distribution des données d'entraînement et celle rencontrée lors du déploiement. Source principale d'échec des systèmes d'IA hors de leur domaine d'entraînement.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────
+       § 10  RÉFÉRENCES
+  ────────────────────────────────────── -->
+  <section class="article-section fade-in" id="s10">
+    <span class="sec-num">§ 10</span>
+    <h2 class="sec-titre">Références scientifiques</h2>
+    <p>
+      Toutes les références ci-dessous sont librement accessibles. Les liens pointent vers les sources
+      primaires (arXiv, publications officielles, sites institutionnels).
+    </p>
+    <ul class="ref-liste">
+      <li id="ref1">
+        <span class="ref-num">[1]</span>
+        <div>
+          <strong>LeCun, Y.</strong> (2022). <em>A Path Towards Autonomous Machine Intelligence.</em>
+          OpenReview, version 0.9.2.
+          <a href="https://openreview.net/forum?id=BZ5a1r-kVsf" target="_blank" rel="noopener">openreview.net</a>
+          — Manifeste fondateur de JEPA et critique des LLM comme world models.
+        </div>
+      </li>
+      <li id="ref2">
+        <span class="ref-num">[2]</span>
+        <div>
+          <strong>Ha, D. &amp; Schmidhuber, J.</strong> (2018). <em>World Models.</em>
+          arXiv:1803.10122.
+          <a href="https://arxiv.org/abs/1803.10122" target="_blank" rel="noopener">arxiv.org</a>
+          — Article fondateur de l'architecture V-M-C. L'agent s'entraîne entièrement dans le monde
+          halluciné par son modèle.
+        </div>
+      </li>
+      <li id="ref3">
+        <span class="ref-num">[3]</span>
+        <div>
+          <strong>Hafner, D. et al.</strong> (2025). <em>Mastering Diverse Domains through World Models
+          (DreamerV3).</em> <em>Nature.</em>
+          — Un seul algorithme, sans réglage par domaine, résout plus de 150 tâches dont Minecraft
+          sans données humaines.
+        </div>
+      </li>
+      <li id="ref4">
+        <span class="ref-num">[4]</span>
+        <div>
+          <strong>Bardes, A. et al.</strong> (Meta AI, 2024). <em>Revisiting Feature Prediction for
+          Learning Visual Representations from Video (V-JEPA).</em> arXiv:2404.08471.
+          <a href="https://arxiv.org/abs/2404.08471" target="_blank" rel="noopener">arxiv.org</a>
+          — Prédiction dans l'espace latent sur 2M+ de vidéos non annotées&nbsp;; efficacité ×5
+          par rapport aux architectures comparables.
+        </div>
+      </li>
+      <li id="ref5">
+        <span class="ref-num">[5]</span>
+        <div>
+          <strong>NVIDIA Corporation.</strong> (Janvier 2025). <em>NVIDIA Launches Cosmos World
+          Foundation Model Platform.</em>
+          <a href="https://nvidianews.nvidia.com/news/nvidia-launches-cosmos-world-foundation-model-platform-to-accelerate-physical-ai-development" target="_blank" rel="noopener">nvidianews.nvidia.com</a>
+          — Annonce au CES 2025. Rapport technique&nbsp;:
+          <a href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">arXiv:2501.03575</a>.
+        </div>
+      </li>
+      <li id="ref6">
+        <span class="ref-num">[6]</span>
+        <div>
+          <strong>Wayve.</strong> (2025). <em>GAIA-2: Pushing the Boundaries of Video Generative
+          Models for Autonomous Driving.</em> Blog Wayve.
+          — World model génératif spécialisé pour la conduite autonome, partenaire de NVIDIA Cosmos.
+        </div>
+      </li>
+      <li id="ref7">
+        <span class="ref-num">[7]</span>
+        <div>
+          <strong>Liu, Y. et al.</strong> (2024). <em>Sora and V-JEPA Have Not Learned the Complete
+          Real World Model.</em> arXiv:2407.10311.
+          <a href="https://arxiv.org/abs/2407.10311" target="_blank" rel="noopener">arxiv.org</a>
+          — Analyse diagnostique des limites causales de Sora et V-JEPA.
+        </div>
+      </li>
+      <li id="ref8">
+        <span class="ref-num">[8]</span>
+        <div>
+          <strong>Zhang, R. et al.</strong> (2025). <em>Understanding World or Predicting Future?
+          A Comprehensive Survey of World Models.</em> arXiv:2411.14499.
+          <a href="https://arxiv.org/abs/2411.14499" target="_blank" rel="noopener">arxiv.org</a>
+          — Revue systématique de 200+ architectures de world models (novembre 2025).
+        </div>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════
+     PIED DE PAGE
+════════════════════════════════════════ -->
+<footer class="pied-page">
+  <p>
+    <strong>Lycée Antoine Watteau — Valenciennes</strong><br/>
+    Formation continue NSI &middot; <strong>DarkSATHI Li</strong> &middot; Mai 2026
+  </p>
+  <p style="margin-top:.6rem;font-size:.72rem;opacity:.5">
+    Cet article est produit à des fins pédagogiques. Les sources scientifiques citées sont
+    librement accessibles sur arXiv et sur les sites institutionnels des organisations mentionnées.
+    Les scripts PyScript sont exécutés localement dans le navigateur du lecteur.
+  </p>
+</footer>
+
+<!-- ════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+
+<!-- Chart.js pour le graphe de la partie 4 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+<script>
+  /* ── Barre de progression de lecture ── */
+  window.addEventListener('scroll', () => {
+    const d = document.documentElement;
+    const pct = (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }, { passive: true });
+
+  /* ── Navigation active ── */
+  const sections = document.querySelectorAll('.article-section');
+  const navLinks = document.querySelectorAll('.sticky-nav a');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const lien = document.querySelector(`.sticky-nav a[href="#${e.target.id}"]`);
+        if (lien) lien.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => io.observe(s));
+
+  /* ── Fade-in au scroll ── */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+  /* ── Corrections toggle ── */
+  function basculeCorrection(id) {
+    const el = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    const estVisible = el.classList.toggle('visible');
+    // Conserver le libellé original du bouton s'il existe
+    const labelOriginal = btn.dataset.labelOriginal || btn.textContent;
+    if (!btn.dataset.labelOriginal) btn.dataset.labelOriginal = labelOriginal;
+    btn.textContent = estVisible ? 'Masquer la réponse' : labelOriginal;
+    btn.setAttribute('aria-expanded', estVisible.toString());
+  }
+
+  /* ── Onglets du TP ── */
+  function onglet(idx) {
+    document.querySelectorAll('.tp-onglet').forEach((el, i) => {
+      el.classList.toggle('actif', i === idx);
+      el.setAttribute('aria-selected', (i === idx).toString());
+    });
+    document.querySelectorAll('.tp-panneau').forEach((el, i) => {
+      el.classList.toggle('actif', i === idx);
+    });
+  }
+
+  /* ── Visualisation labyrinthe (statique) ── */
+  const GRILLE_JS = [
+    [0,0,1,0,0,0],[1,0,0,0,1,0],[0,0,1,0,0,0],
+    [0,1,0,0,1,0],[0,0,0,1,0,0],[0,0,0,0,0,0]
+  ];
+  function renderGrille(chemin = []) {
+    const conteneur = document.getElementById('viz-grille');
+    if (!conteneur) return;
+    conteneur.innerHTML = '';
+    const traverses = new Set(chemin.map(p => p[0]+','+p[1]));
+    GRILLE_JS.forEach((ligne, r) => {
+      ligne.forEach((val, c) => {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        const cle = r+','+c;
+        if (val === 1) { cell.classList.add('cell-mur'); cell.textContent = ''; }
+        else if (r===0 && c===0) { cell.classList.add('cell-start'); cell.textContent = 'D'; }
+        else if (r===5 && c===5) { cell.classList.add('cell-end'); cell.textContent = 'A'; }
+        else if (traverses.has(cle)) { cell.classList.add('cell-chemin'); cell.textContent = '·'; }
+        else { cell.classList.add('cell-libre'); cell.textContent = `${r},${c}`; }
+        conteneur.appendChild(cell);
+      });
+    });
+  }
+  renderGrille();
+
+  /* ── Graphe Chart.js pour la Partie 4 ── */
+  window.addEventListener('load', () => {
+    const ctx = document.getElementById('chart-apprentissage');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['50 pas', '100 pas', '200 pas', '400 pas', '600 pas', '1000 pas'],
+        datasets: [
+          {
+            label: 'Agent réactif (model-free)',
+            data: [498, 492, 487, 480, 475, 470],
+            backgroundColor: 'rgba(192,57,43,.65)',
+            borderColor: '#c0392b',
+            borderWidth: 1.5
+          },
+          {
+            label: 'Agent planifiant (model-based)',
+            data: [498, 450, 120, 18, 14, 14],
+            backgroundColor: 'rgba(30,92,142,.65)',
+            borderColor: '#1e5c8e',
+            borderWidth: 1.5
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Nombre moyen de pas pour atteindre l\'arrivée selon le volume d\'exploration',
+            font: { family: 'DM Sans', size: 12 },
+            color: '#18242f'
+          },
+          legend: { labels: { font: { family: 'DM Sans', size: 11 }, color: '#18242f' } }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Pas moyens (100 épisodes)', font: { family: 'DM Sans' } },
+            ticks: { font: { family: 'DM Sans' } }
+          },
+          x: {
+            title: { display: true, text: 'Volume d\'exploration (NB_EXPLORATION)', font: { family: 'DM Sans' } },
+            ticks: { font: { family: 'DM Sans' } }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
