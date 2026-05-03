@@ -3,7 +3,7 @@
 > **L'Intelligence Artificielle au service de l'enseignement NSI**  
 > Formation pratique en 3 niveaux progressifs — Lycée Antoine Watteau, Valenciennes
 
-🌐 **Site :** [darksathili.kesug.com](https://darksathili.kesug.com)  
+🌐 **Site :** [DarkSATHI Li](https://darksathili-jpg.github.io/formation-ia/)
 ✍️ **Auteur :** DarkSATHI Li — Enseignant NSI, Lycée Watteau, Valenciennes  
 📅 **Année :** 2025-2026  
 🤝 **Co-conçu avec :** [Claude](https://claude.ai) — IA développée par [Anthropic](https://www.anthropic.com)
@@ -150,4 +150,4 @@ Activités prêtes à l'emploi, à adapter selon votre classe et vos objectifs p
 
 Ce site est partagé librement dans un esprit de collaboration enseignante. Les ressources sont des **points de départ** — testez-les vous-même avant de les proposer aux élèves, et n'hésitez pas à les adapter.
 
-🔗 [darksathili.kesug.com](https://darksathili.kesug.com) · [← Retour au site NSI](../index.html)
+🔗 [DarkSATHI Li](https://darksathili-jpg.github.io/formation-ia/) · [← Retour au site NSI](../index.html)
