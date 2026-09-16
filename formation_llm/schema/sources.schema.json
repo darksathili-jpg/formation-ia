@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://darksathili-jpg.github.io/formation-ia/formation_llm/schema/sources.schema.json",
+  "title": "Formation LLM — Sources Registry",
+  "description": "Schéma canonique du registre des sources scientifiques, techniques, institutionnelles et réglementaires.",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "schema_version",
+    "updated_on",
+    "sources"
+  ],
+
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+
+    "updated_on": {
+      "type": "string",
+      "format": "date"
+    },
+
+    "sources": {
+      "type": "array",
+
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+
+        "required": [
+          "id",
+          "title",
+          "source_type",
+          "authority_level",
+          "publisher",
+          "url",
+          "publication_year",
+          "accessed_on",
+          "status",
+          "temporal_stability",
+          "topics"
+        ],
+
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^SRC-\\d{4}$"
+          },
+
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "scientific-paper",
+              "institutional",
+              "legal",
+              "standard",
+              "technical-documentation",
+              "security-reference",
+              "benchmark",
+              "dataset",
+              "book",
+              "educational-resource"
+            ]
+          },
+
+          "authority_level": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "secondary",
+              "reference"
+            ]
+          },
+
+          "publisher": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+
+          "doi": {
+            "type": "string"
+          },
+
+          "publication_year": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+          },
+
+          "publication_date": {
+            "type": "string",
+            "format": "date"
+          },
+
+          "accessed_on": {
+            "type": "string",
+            "format": "date"
+          },
+
+          "status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "to-review",
+              "deprecated",
+              "archived"
+            ]
+          },
+
+          "temporal_stability": {
+            "type": "string",
+            "enum": [
+              "stable",
+              "evolving",
+              "volatile"
+            ]
+          },
+
+          "topics": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            }
+          },
+
+          "notes": {
+            "type": "string"
+          },
+
+          "supersedes": {
+            "type": "array",
+            "uniqueItems": true,
+
+            "items": {
+              "type": "string",
+              "pattern": "^SRC-\\d{4}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
