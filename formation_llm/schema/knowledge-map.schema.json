@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://darksathili-jpg.github.io/formation-ia/formation_llm/schema/knowledge-map.schema.json",
+  "title": "Formation LLM — Knowledge Map",
+  "description": "Schéma canonique du référentiel de connaissances de la formation LLM.",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "schema_version",
+    "updated_on",
+    "domains",
+    "concepts"
+  ],
+
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+
+    "updated_on": {
+      "type": "string",
+      "format": "date"
+    },
+
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "order",
+          "description"
+        ],
+
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-M]$"
+          },
+
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "order": {
+            "type": "integer",
+            "minimum": 1
+          },
+
+          "description": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "domain",
+          "mastery_level",
+          "stability",
+          "definition_short",
+          "prerequisites",
+          "learning_objectives",
+          "trainer_mastery",
+          "misconceptions",
+          "source_ids",
+          "tags"
+        ],
+
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-M]\\d{2}$"
+          },
+
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "domain": {
+            "type": "string",
+            "pattern": "^[A-M]$"
+          },
+
+          "mastery_level": {
+            "type": "string",
+            "enum": [
+              "indispensable",
+              "intermediate",
+              "advanced",
+              "expert"
+            ]
+          },
+
+          "stability": {
+            "type": "string",
+            "enum": [
+              "stable",
+              "evolving",
+              "experimental"
+            ]
+          },
+
+          "definition_short": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "prerequisites": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-M]\\d{2}$"
+            }
+          },
+
+          "learning_objectives": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+
+          "trainer_mastery": {
+            "type": "object",
+            "additionalProperties": false,
+
+            "required": [
+              "explain",
+              "demonstrate",
+              "answer"
+            ],
+
+            "properties": {
+              "explain": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+
+              "demonstrate": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+
+              "answer": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+
+          "misconceptions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+
+          "labs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^LAB-[A-Z0-9-]+$"
+            }
+          },
+
+          "source_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^SRC-\\d{4}$"
+            }
+          },
+
+          "tags": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            }
+          },
+
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
