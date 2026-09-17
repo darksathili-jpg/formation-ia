@@ -1,863 +1,1124 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "updated_on": "2026-09-17",
-
   "terms": [
     {
       "id": "TERM-0001",
       "term": "Modèle",
       "english_term": "Model",
       "slug": "modele",
-
       "aliases": [
         "modèle d'IA"
       ],
-
       "definition_short": "Composant appris qui transforme des entrées en sorties selon une architecture et des paramètres déterminés.",
-
       "definition_precise": "Dans un système d'apprentissage automatique, un modèle est une structure computationnelle dont le comportement dépend notamment de son architecture et de paramètres appris à partir de données. Le modèle n'est pas, à lui seul, nécessairement une application complète.",
-
       "pedagogical_analogy": "Le modèle peut être comparé au moteur d'un véhicule : il joue un rôle central, mais le véhicule complet comporte de nombreux autres composants.",
-
       "analogy_limits": "Un modèle n'est pas un mécanisme mécanique indépendant de ses données, de son environnement logiciel et de ses modalités d'utilisation. L'analogie avec un moteur sert uniquement à distinguer composant et système complet.",
-
       "not_to_confuse_with": [
         "TERM-0002",
         "TERM-0003",
         "TERM-0004"
       ],
-
       "common_misuses": [
-        "Employer indifféremment modèle et application.",
-        "Attribuer au modèle toutes les capacités visibles dans un produit."
+        {
+          "statement": "Employer indifféremment modèle et application.",
+          "correction": "À corriger avec la définition canonique : Composant appris qui transforme des entrées en sorties selon une architecture et des paramètres déterminés."
+        },
+        {
+          "statement": "Attribuer au modèle toutes les capacités visibles dans un produit.",
+          "correction": "À corriger avec la définition canonique : Composant appris qui transforme des entrées en sorties selon une architecture et des paramètres déterminés."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A07",
-        "A10"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0001",
         "SRC-0008"
       ],
-
       "tags": [
         "model",
         "architecture",
         "foundations"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0002",
       "term": "Système d'IA",
       "english_term": "AI system",
       "slug": "systeme-ia",
-
       "aliases": [
         "système d'intelligence artificielle"
       ],
-
       "definition_short": "Système basé sur une machine qui infère, à partir des entrées reçues et d'objectifs explicites ou implicites, comment produire des sorties.",
-
       "definition_precise": "La définition de référence de l'OCDE décrit un système d'IA comme un système basé sur une machine qui, pour des objectifs explicites ou implicites, infère à partir des entrées reçues comment générer des sorties telles que prédictions, contenus, recommandations ou décisions susceptibles d'influencer des environnements physiques ou virtuels.",
-
       "pedagogical_analogy": "Le système d'IA correspond davantage au véhicule complet qu'à son seul moteur.",
-
       "analogy_limits": "Un système d'IA peut avoir une architecture logicielle bien plus distribuée qu'un objet physique et peut intégrer plusieurs modèles, services, bases de données ou outils.",
-
       "not_to_confuse_with": [
         "TERM-0001",
         "TERM-0003"
       ],
-
       "common_misuses": [
-        "Réduire tout système d'IA à son modèle neuronal.",
-        "Employer IA uniquement pour désigner les chatbots génératifs."
+        {
+          "statement": "Réduire tout système d'IA à son modèle neuronal.",
+          "correction": "À corriger avec la définition canonique : Système basé sur une machine qui infère, à partir des entrées reçues et d'objectifs explicites ou implicites, comment produire des sorties."
+        },
+        {
+          "statement": "Employer IA uniquement pour désigner les chatbots génératifs.",
+          "correction": "À corriger avec la définition canonique : Système basé sur une machine qui infère, à partir des entrées reçues et d'objectifs explicites ou implicites, comment produire des sorties."
+        }
       ],
-
-      "status": "evolving",
-
-      "concept_ids": [
-        "A01",
-        "A10"
-      ],
-
+      "stability": "evolving",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0001"
       ],
-
       "tags": [
         "ai-system",
         "definition",
         "architecture"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0003",
       "term": "Application",
       "english_term": "Application",
       "slug": "application",
-
       "definition_short": "Produit logiciel destiné à un usage concret et pouvant intégrer un ou plusieurs modèles ainsi que d'autres composants.",
-
       "definition_precise": "Dans le contexte de l'IA, une application est un système logiciel mis à disposition d'un utilisateur ou d'un autre système. Elle peut associer un modèle à une interface, des instructions, une gestion du contexte, des outils, des sources de données, de la mémoire applicative, du code métier et des mécanismes de sécurité.",
-
       "pedagogical_analogy": "Si le modèle est le moteur, l'application est le véhicule utilisable avec son tableau de bord, ses commandes et ses équipements.",
-
       "analogy_limits": "La frontière entre application et système dépend de l'échelle d'analyse ; une application peut elle-même être un composant d'un système plus large.",
-
       "not_to_confuse_with": [
         "TERM-0001",
         "TERM-0002",
         "TERM-0004"
       ],
-
       "common_misuses": [
-        "Prendre le nom commercial d'une application pour le nom exact du modèle qu'elle utilise.",
-        "Supposer que recherche web, mémoire ou outils sont nécessairement des capacités intrinsèques du modèle."
+        {
+          "statement": "Prendre le nom commercial d'une application pour le nom exact du modèle qu'elle utilise.",
+          "correction": "À corriger avec la définition canonique : Produit logiciel destiné à un usage concret et pouvant intégrer un ou plusieurs modèles ainsi que d'autres composants."
+        },
+        {
+          "statement": "Supposer que recherche web, mémoire ou outils sont nécessairement des capacités intrinsèques du modèle.",
+          "correction": "À corriger avec la définition canonique : Produit logiciel destiné à un usage concret et pouvant intégrer un ou plusieurs modèles ainsi que d'autres composants."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A10"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0001",
         "SRC-0003"
       ],
-
       "tags": [
         "application",
         "product",
         "architecture"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0004",
       "term": "Chatbot",
       "english_term": "Chatbot",
       "slug": "chatbot",
-
       "aliases": [
         "assistant conversationnel",
         "interface conversationnelle"
       ],
-
       "definition_short": "Application ou interface permettant une interaction avec un utilisateur sous forme conversationnelle.",
-
       "definition_precise": "Un chatbot organise une interaction sous forme de dialogue. Les chatbots modernes peuvent utiliser un LLM comme composant principal, mais le caractère conversationnel appartient au système ou à l'application et ne définit pas à lui seul le modèle sous-jacent.",
-
       "pedagogical_analogy": "Le chatbot est le guichet avec lequel l'utilisateur dialogue ; le modèle est l'un des mécanismes qui peuvent fonctionner derrière ce guichet.",
-
       "analogy_limits": "Un chatbot peut intégrer de nombreux autres composants et certains systèmes conversationnels historiques n'utilisent aucun LLM.",
-
       "not_to_confuse_with": [
         "TERM-0001",
         "TERM-0003"
       ],
-
       "common_misuses": [
-        "Employer chatbot et LLM comme synonymes.",
-        "Supposer que tout LLM possède nécessairement une interface conversationnelle."
+        {
+          "statement": "Employer chatbot et LLM comme synonymes.",
+          "correction": "À corriger avec la définition canonique : Application ou interface permettant une interaction avec un utilisateur sous forme conversationnelle."
+        },
+        {
+          "statement": "Supposer que tout LLM possède nécessairement une interface conversationnelle.",
+          "correction": "À corriger avec la définition canonique : Application ou interface permettant une interaction avec un utilisateur sous forme conversationnelle."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A10"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0003"
       ],
-
       "tags": [
         "chatbot",
         "conversation",
         "interface"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0005",
       "term": "Paramètre",
       "english_term": "Parameter",
       "slug": "parametre",
-
       "aliases": [
         "paramètre appris"
       ],
-
       "definition_short": "Valeur numérique d'un modèle ajustée pendant l'entraînement.",
-
       "definition_precise": "Un paramètre est une valeur numérique appartenant au modèle et généralement optimisée au cours de l'entraînement afin de réduire une fonction de perte. Les réseaux neuronaux modernes peuvent comporter un très grand nombre de paramètres.",
-
       "pedagogical_analogy": "On peut imaginer des millions ou milliards de petits réglages numériques ajustés progressivement pendant l'apprentissage.",
-
       "analogy_limits": "Ces réglages ne correspondent généralement pas chacun à une connaissance, un mot ou une règle identifiable isolément.",
-
       "not_to_confuse_with": [
         "TERM-0006"
       ],
-
       "common_misuses": [
-        "Imaginer qu'un paramètre contient directement une phrase ou un fait.",
-        "Assimiler nombre de paramètres et intelligence."
+        {
+          "statement": "Imaginer qu'un paramètre contient directement une phrase ou un fait.",
+          "correction": "À corriger avec la définition canonique : Valeur numérique d'un modèle ajustée pendant l'entraînement."
+        },
+        {
+          "statement": "Assimiler nombre de paramètres et intelligence.",
+          "correction": "À corriger avec la définition canonique : Valeur numérique d'un modèle ajustée pendant l'entraînement."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A11"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0002",
         "SRC-0008"
       ],
-
       "tags": [
         "parameters",
         "training",
         "neural-networks"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0006",
       "term": "Poids",
       "english_term": "Weight",
       "slug": "poids",
-
       "aliases": [
         "weight",
         "poids du modèle"
       ],
-
       "definition_short": "Type de paramètre appris qui contribue à déterminer l'influence d'une valeur sur une autre dans les calculs du réseau.",
-
       "definition_precise": "Dans un réseau neuronal, les poids sont des paramètres numériques appris. Dans l'usage courant autour des LLM, l'expression poids du modèle désigne souvent collectivement les paramètres appris distribués dans les différentes couches du réseau.",
-
       "pedagogical_analogy": "Un poids peut être vu comme un coefficient réglant l'intensité d'une connexion ou d'une transformation.",
-
       "analogy_limits": "Les architectures modernes sont plus complexes qu'un simple réseau de connexions indépendantes ; l'analogie avec un coefficient ne doit pas faire croire qu'un poids possède seul une signification interprétable.",
-
       "not_to_confuse_with": [
         "TERM-0005",
         "TERM-0009"
       ],
-
       "common_misuses": [
-        "Présenter les poids comme une bibliothèque de documents.",
-        "Supposer qu'un poids correspond à un concept précis."
+        {
+          "statement": "Présenter les poids comme une bibliothèque de documents.",
+          "correction": "À corriger avec la définition canonique : Type de paramètre appris qui contribue à déterminer l'influence d'une valeur sur une autre dans les calculs du réseau."
+        },
+        {
+          "statement": "Supposer qu'un poids correspond à un concept précis.",
+          "correction": "À corriger avec la définition canonique : Type de paramètre appris qui contribue à déterminer l'influence d'une valeur sur une autre dans les calculs du réseau."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A11",
-        "A12"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0002",
         "SRC-0008"
       ],
-
       "tags": [
         "weights",
         "parameters",
         "neural-networks"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0007",
       "term": "Entraînement",
       "english_term": "Training",
       "slug": "entrainement",
-
       "aliases": [
         "apprentissage du modèle"
       ],
-
       "definition_short": "Processus par lequel les paramètres d'un modèle sont ajustés à partir de données et d'un objectif d'optimisation.",
-
       "definition_precise": "L'entraînement consiste à exposer un modèle à des données et à ajuster ses paramètres selon une procédure d'optimisation afin d'améliorer une mesure de performance définie par un objectif d'apprentissage.",
-
       "pedagogical_analogy": "C'est la phase pendant laquelle les réglages internes du modèle sont modifiés à partir d'exemples.",
-
       "analogy_limits": "L'entraînement d'un modèle n'est pas équivalent à l'apprentissage humain et ne suppose pas nécessairement compréhension consciente, intention ou expérience vécue.",
-
       "not_to_confuse_with": [
         "TERM-0008"
       ],
-
       "common_misuses": [
-        "Dire qu'une conversation ordinaire réentraîne automatiquement le modèle.",
-        "Confondre ajout d'informations dans le contexte et modification des paramètres."
+        {
+          "statement": "Dire qu'une conversation ordinaire réentraîne automatiquement le modèle.",
+          "correction": "À corriger avec la définition canonique : Processus par lequel les paramètres d'un modèle sont ajustés à partir de données et d'un objectif d'optimisation."
+        },
+        {
+          "statement": "Confondre ajout d'informations dans le contexte et modification des paramètres.",
+          "correction": "À corriger avec la définition canonique : Processus par lequel les paramètres d'un modèle sont ajustés à partir de données et d'un objectif d'optimisation."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A02",
-        "A11"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0002",
         "SRC-0008"
       ],
-
       "tags": [
         "training",
         "learning",
         "parameters"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0008",
       "term": "Inférence",
       "english_term": "Inference",
       "slug": "inference",
-
       "definition_short": "Phase d'utilisation d'un modèle entraîné pour calculer des sorties à partir de nouvelles entrées.",
-
       "definition_precise": "L'inférence désigne l'utilisation des paramètres déjà appris afin de produire une prédiction ou une génération à partir d'une entrée. Dans l'usage standard d'un LLM, l'inférence ne modifie pas les poids du modèle.",
-
       "pedagogical_analogy": "L'entraînement correspond à régler le système ; l'inférence correspond à l'utiliser une fois ces réglages acquis.",
-
       "analogy_limits": "Des systèmes particuliers peuvent associer utilisation et mécanismes d'adaptation, mais cela ne doit pas être confondu avec l'inférence standard d'un modèle figé.",
-
       "not_to_confuse_with": [
         "TERM-0007"
       ],
-
       "common_misuses": [
-        "Croire que chaque prompt modifie automatiquement les paramètres du modèle.",
-        "Employer entraînement et inférence comme synonymes."
+        {
+          "statement": "Croire que chaque prompt modifie automatiquement les paramètres du modèle.",
+          "correction": "À corriger avec la définition canonique : Phase d'utilisation d'un modèle entraîné pour calculer des sorties à partir de nouvelles entrées."
+        },
+        {
+          "statement": "Employer entraînement et inférence comme synonymes.",
+          "correction": "À corriger avec la définition canonique : Phase d'utilisation d'un modèle entraîné pour calculer des sorties à partir de nouvelles entrées."
+        }
       ],
-
-      "status": "stable",
-
-      "concept_ids": [
-        "A11"
-      ],
-
+      "stability": "stable",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0003",
         "SRC-0008"
       ],
-
       "tags": [
         "inference",
         "generation",
         "model"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0009",
       "term": "Open weights",
       "english_term": "Open weights",
       "slug": "open-weights",
-
       "aliases": [
         "poids ouverts",
         "poids accessibles"
       ],
-
       "definition_short": "Situation dans laquelle les paramètres appris d'un modèle sont rendus accessibles selon certaines conditions.",
-
       "definition_precise": "L'expression open weights indique que les paramètres appris d'un modèle sont mis à disposition. Cette ouverture peut permettre l'exécution locale, l'adaptation ou l'étude partielle du modèle, mais elle ne garantit pas à elle seule que l'ensemble du système répond aux critères d'Open Source AI.",
-
       "pedagogical_analogy": "C'est comme disposer des réglages internes finaux d'une machine sans disposer nécessairement de tout ce qui a permis de la concevoir et de la fabriquer.",
-
       "analogy_limits": "Les poids sont eux-mêmes une partie fonctionnelle essentielle du modèle et peuvent permettre des usages considérables ; l'analogie ne doit donc pas les présenter comme une information secondaire.",
-
       "not_to_confuse_with": [
         "TERM-0006",
         "TERM-0010"
       ],
-
       "common_misuses": [
-        "Employer open weights comme synonyme automatique d'open source.",
-        "Supposer que disponibilité des poids implique disponibilité des données et du code d'entraînement."
+        {
+          "statement": "Employer open weights comme synonyme automatique d'open source.",
+          "correction": "À corriger avec la définition canonique : Situation dans laquelle les paramètres appris d'un modèle sont rendus accessibles selon certaines conditions."
+        },
+        {
+          "statement": "Supposer que disponibilité des poids implique disponibilité des données et du code d'entraînement.",
+          "correction": "À corriger avec la définition canonique : Situation dans laquelle les paramètres appris d'un modèle sont rendus accessibles selon certaines conditions."
+        }
       ],
-
-      "status": "evolving",
-
-      "concept_ids": [
-        "A12"
-      ],
-
+      "stability": "evolving",
+      "epistemic_status": "established",
       "source_ids": [
         "SRC-0008"
       ],
-
       "tags": [
         "open-weights",
         "weights",
         "licensing"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "TERM-0010",
       "term": "Open Source AI",
       "english_term": "Open Source AI",
       "slug": "open-source-ai",
-
       "aliases": [
         "IA open source"
       ],
-
       "definition_short": "Système d'IA fourni dans des conditions permettant de l'utiliser, l'étudier, le modifier et le partager.",
-
       "definition_precise": "Selon l'Open Source AI Definition 1.0 de l'OSI, une IA open source doit accorder les libertés d'utilisation, d'étude, de modification et de partage et fournir la forme privilégiée nécessaire pour effectuer des modifications, ce qui implique davantage que le simple accès aux poids finaux.",
-
       "pedagogical_analogy": "Il ne suffit pas de pouvoir ouvrir le capot ; il faut disposer des éléments nécessaires pour comprendre, modifier et redistribuer réellement le système.",
-
       "analogy_limits": "La notion d'Open Source AI fait encore l'objet de discussions techniques, juridiques et communautaires ; l'analogie ne remplace pas l'examen précis des licences et des composants disponibles.",
-
       "not_to_confuse_with": [
         "TERM-0009"
       ],
-
       "common_misuses": [
-        "Qualifier d'open source tout modèle dont les poids peuvent être téléchargés.",
-        "Assimiler gratuité, accès public et open source."
+        {
+          "statement": "Qualifier d'open source tout modèle dont les poids peuvent être téléchargés.",
+          "correction": "À corriger avec la définition canonique : Système d'IA fourni dans des conditions permettant de l'utiliser, l'étudier, le modifier et le partager."
+        },
+        {
+          "statement": "Assimiler gratuité, accès public et open source.",
+          "correction": "À corriger avec la définition canonique : Système d'IA fourni dans des conditions permettant de l'utiliser, l'étudier, le modifier et le partager."
+        }
       ],
-
-      "status": "evolving",
-
-      "concept_ids": [
-        "A12"
-      ],
-
+      "stability": "evolving",
+      "epistemic_status": "debated",
       "source_ids": [
         "SRC-0008"
       ],
-
       "tags": [
         "open-source",
         "licensing",
         "openness"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
     {
-  "id": "TERM-0011",
-  "term": "Intelligence artificielle",
-  "english_term": "Artificial Intelligence",
-  "slug": "intelligence-artificielle",
-
-  "aliases": [
-    "IA",
-    "AI"
+      "id": "TERM-0011",
+      "term": "Intelligence artificielle",
+      "english_term": "Artificial Intelligence",
+      "slug": "intelligence-artificielle",
+      "aliases": [
+        "IA",
+        "AI"
+      ],
+      "definition_short": "Domaine et ensemble de systèmes capables d'inférer à partir d'entrées comment produire des sorties telles que prédictions, contenus, recommandations ou décisions.",
+      "definition_precise": "Dans la définition de référence de l'OCDE, un système d'IA est un système basé sur une machine qui, pour des objectifs explicites ou implicites, infère à partir des entrées reçues comment générer des sorties pouvant influencer des environnements physiques ou virtuels.",
+      "pedagogical_analogy": "L'intelligence artificielle peut être vue comme une grande famille contenant de nombreuses techniques et de nombreux types de systèmes.",
+      "analogy_limits": "Cette image de famille ne signifie pas que toutes les approches partagent les mêmes mécanismes ni que l'IA reproduit l'intelligence humaine.",
+      "not_to_confuse_with": [
+        "TERM-0012",
+        "TERM-0015"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Employer IA comme synonyme de chatbot.",
+          "correction": "À corriger avec la définition canonique : Domaine et ensemble de systèmes capables d'inférer à partir d'entrées comment produire des sorties telles que prédictions, contenus, recommandations ou décisions."
+        },
+        {
+          "statement": "Réduire toute l'intelligence artificielle aux modèles génératifs.",
+          "correction": "À corriger avec la définition canonique : Domaine et ensemble de systèmes capables d'inférer à partir d'entrées comment produire des sorties telles que prédictions, contenus, recommandations ou décisions."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0001"
+      ],
+      "tags": [
+        "ai",
+        "definition",
+        "foundations"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0012",
+      "term": "Machine learning",
+      "english_term": "Machine Learning",
+      "slug": "machine-learning",
+      "aliases": [
+        "apprentissage automatique",
+        "apprentissage machine"
+      ],
+      "definition_short": "Ensemble de techniques permettant à une machine d'améliorer ses performances et généralement de construire ou ajuster des modèles à partir de données.",
+      "definition_precise": "Le machine learning regroupe des méthodes dans lesquelles des régularités sont apprises à partir de données plutôt que toutes les règles de traitement soient explicitement écrites par un programmeur.",
+      "pedagogical_analogy": "Au lieu d'écrire toutes les règles, on fournit des exemples ou des données à partir desquels le système ajuste un modèle.",
+      "analogy_limits": "Apprendre à partir de données ne signifie pas comprendre les exemples comme un humain ni découvrir nécessairement des règles vraies sur le monde.",
+      "not_to_confuse_with": [
+        "TERM-0011",
+        "TERM-0013"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Employer machine learning et intelligence artificielle comme synonymes.",
+          "correction": "À corriger avec la définition canonique : Ensemble de techniques permettant à une machine d'améliorer ses performances et généralement de construire ou ajuster des modèles à partir de données."
+        },
+        {
+          "statement": "Croire que tout système d'IA utilise nécessairement du machine learning.",
+          "correction": "À corriger avec la définition canonique : Ensemble de techniques permettant à une machine d'améliorer ses performances et généralement de construire ou ajuster des modèles à partir de données."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0001",
+        "SRC-0002"
+      ],
+      "tags": [
+        "machine-learning",
+        "data",
+        "training"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0013",
+      "term": "Deep learning",
+      "english_term": "Deep Learning",
+      "slug": "deep-learning",
+      "aliases": [
+        "apprentissage profond"
+      ],
+      "definition_short": "Famille de méthodes de machine learning fondées sur des réseaux neuronaux comportant plusieurs couches de traitement.",
+      "definition_precise": "Le deep learning utilise des architectures neuronales à plusieurs couches capables d'apprendre des représentations successives des données, souvent à différents niveaux d'abstraction.",
+      "pedagogical_analogy": "Les données traversent plusieurs étages de transformation qui construisent progressivement des représentations utilisables par le modèle.",
+      "analogy_limits": "Chaque couche ne correspond pas nécessairement à une notion humaine clairement identifiable et davantage de couches ne garantit pas de meilleures performances.",
+      "not_to_confuse_with": [
+        "TERM-0012",
+        "TERM-0017"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Interpréter deep comme une capacité à réfléchir profondément.",
+          "correction": "À corriger avec la définition canonique : Famille de méthodes de machine learning fondées sur des réseaux neuronaux comportant plusieurs couches de traitement."
+        },
+        {
+          "statement": "Présenter deep learning et intelligence artificielle comme synonymes.",
+          "correction": "À corriger avec la définition canonique : Famille de méthodes de machine learning fondées sur des réseaux neuronaux comportant plusieurs couches de traitement."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0002"
+      ],
+      "tags": [
+        "deep-learning",
+        "neural-networks",
+        "representation-learning"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0014",
+      "term": "Traitement automatique du langage",
+      "english_term": "Natural Language Processing",
+      "slug": "traitement-automatique-langage",
+      "aliases": [
+        "TAL",
+        "NLP"
+      ],
+      "definition_short": "Domaine consacré au traitement informatique du langage humain écrit ou oral.",
+      "definition_precise": "Le traitement automatique du langage regroupe les méthodes permettant à des systèmes informatiques d'analyser, transformer, reconnaître, traduire ou générer du langage humain.",
+      "pedagogical_analogy": "Le TAL est le grand domaine informatique du langage ; les LLM constituent aujourd'hui une famille d'outils à l'intérieur de ce domaine.",
+      "analogy_limits": "Tous les problèmes de TAL ne nécessitent pas de LLM et de nombreuses méthodes de TAL existaient bien avant les modèles actuels.",
+      "not_to_confuse_with": [
+        "TERM-0016",
+        "TERM-0017"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Faire commencer l'histoire du TAL avec les LLM.",
+          "correction": "À corriger avec la définition canonique : Domaine consacré au traitement informatique du langage humain écrit ou oral."
+        },
+        {
+          "statement": "Considérer tout système de TAL comme un LLM.",
+          "correction": "À corriger avec la définition canonique : Domaine consacré au traitement informatique du langage humain écrit ou oral."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "tags": [
+        "nlp",
+        "language",
+        "foundations"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0015",
+      "term": "Intelligence artificielle générative",
+      "english_term": "Generative Artificial Intelligence",
+      "slug": "ia-generative",
+      "aliases": [
+        "IA générative",
+        "GenAI"
+      ],
+      "definition_short": "Famille de systèmes d'IA capables de produire de nouveaux contenus ou représentations à partir de structures apprises dans des données.",
+      "definition_precise": "L'IA générative recouvre des systèmes conçus pour générer des contenus tels que texte, code, images, sons ou autres représentations. Les LLM constituent une famille importante de modèles génératifs mais ne couvrent pas l'ensemble de l'IA générative.",
+      "pedagogical_analogy": "Une IA générative ne se contente pas de choisir une étiquette : elle construit une sortie à partir d'un espace de possibilités appris.",
+      "analogy_limits": "Générer ne signifie ni créer avec intention au sens humain ni garantir que le contenu produit est inédit ou factuellement correct.",
+      "not_to_confuse_with": [
+        "TERM-0011",
+        "TERM-0017"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Employer IA générative et LLM comme synonymes.",
+          "correction": "À corriger avec la définition canonique : Famille de systèmes d'IA capables de produire de nouveaux contenus ou représentations à partir de structures apprises dans des données."
+        },
+        {
+          "statement": "Limiter l'IA générative au texte.",
+          "correction": "À corriger avec la définition canonique : Famille de systèmes d'IA capables de produire de nouveaux contenus ou représentations à partir de structures apprises dans des données."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0009"
+      ],
+      "tags": [
+        "generative-ai",
+        "generation",
+        "multimodal"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0016",
+      "term": "Modèle de langage",
+      "english_term": "Language Model",
+      "slug": "modele-langage",
+      "definition_short": "Modèle probabiliste du langage permettant d'estimer la probabilité de séquences ou de continuations en fonction d'un contexte.",
+      "definition_precise": "Un modèle de langage représente statistiquement des séquences linguistiques. Dans les modèles autoregressifs modernes, il fournit notamment une distribution de probabilité sur les prochains tokens possibles conditionnellement au contexte déjà disponible.",
+      "pedagogical_analogy": "À partir d'un début de séquence, le modèle évalue plusieurs continuations possibles et leur attribue des scores ou probabilités.",
+      "analogy_limits": "Un modèle de langage moderne ne fonctionne pas comme la simple fonction de prédiction de mots d'un téléphone : les représentations, architectures et capacités sont beaucoup plus riches.",
+      "not_to_confuse_with": [
+        "TERM-0014",
+        "TERM-0017"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Dire qu'un modèle de langage choisit toujours le mot le plus probable.",
+          "correction": "À corriger avec la définition canonique : Modèle probabiliste du langage permettant d'estimer la probabilité de séquences ou de continuations en fonction d'un contexte."
+        },
+        {
+          "statement": "Employer modèle de langage comme synonyme nécessaire de LLM.",
+          "correction": "À corriger avec la définition canonique : Modèle probabiliste du langage permettant d'estimer la probabilité de séquences ou de continuations en fonction d'un contexte."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "tags": [
+        "language-model",
+        "probability",
+        "prediction"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0017",
+      "term": "Large Language Model",
+      "english_term": "Large Language Model",
+      "slug": "llm",
+      "aliases": [
+        "LLM",
+        "grand modèle de langage"
+      ],
+      "definition_short": "Modèle de langage neuronal de grande échelle capable d'accomplir ou d'être adapté à de nombreuses tâches liées au langage.",
+      "definition_precise": "Un LLM est un modèle de langage neuronal entraîné à grande échelle sur d'importantes quantités de données et possédant une capacité suffisante pour généraliser à de nombreuses tâches. Il n'existe pas de seuil universel de paramètres définissant précisément le mot large.",
+      "pedagogical_analogy": "Un LLM est un moteur linguistique général pouvant être utilisé par de nombreuses applications différentes.",
+      "analogy_limits": "Le caractère général du modèle ne signifie ni omniscience, ni intelligence générale, ni fiabilité universelle.",
+      "not_to_confuse_with": [
+        "TERM-0004",
+        "TERM-0015",
+        "TERM-0016",
+        "TERM-0018"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Employer LLM et chatbot comme synonymes.",
+          "correction": "À corriger avec la définition canonique : Modèle de langage neuronal de grande échelle capable d'accomplir ou d'être adapté à de nombreuses tâches liées au langage."
+        },
+        {
+          "statement": "Définir la qualité d'un LLM uniquement par son nombre de paramètres.",
+          "correction": "À corriger avec la définition canonique : Modèle de langage neuronal de grande échelle capable d'accomplir ou d'être adapté à de nombreuses tâches liées au langage."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0004"
+      ],
+      "tags": [
+        "llm",
+        "language-model",
+        "scaling"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0018",
+      "term": "Foundation model",
+      "english_term": "Foundation Model",
+      "slug": "foundation-model",
+      "aliases": [
+        "modèle de fondation"
+      ],
+      "definition_short": "Modèle entraîné à grande échelle sur des données larges et pouvant être adapté à de nombreuses tâches en aval.",
+      "definition_precise": "La notion de foundation model désigne un modèle entraîné sur de larges ensembles de données à grande échelle puis adaptable à un large éventail de tâches. La notion ne se limite pas nécessairement au langage.",
+      "pedagogical_analogy": "C'est une base générale sur laquelle plusieurs applications ou modèles spécialisés peuvent être construits.",
+      "analogy_limits": "Foundation ne signifie pas intelligence fondamentale ou générale ; il s'agit d'un rôle dans un écosystème de modèles et d'adaptations.",
+      "not_to_confuse_with": [
+        "TERM-0017",
+        "TERM-0019"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Employer foundation model comme synonyme exact de LLM.",
+          "correction": "À corriger avec la définition canonique : Modèle entraîné à grande échelle sur des données larges et pouvant être adapté à de nombreuses tâches en aval."
+        },
+        {
+          "statement": "Supposer qu'un foundation model traite nécessairement du texte.",
+          "correction": "À corriger avec la définition canonique : Modèle entraîné à grande échelle sur des données larges et pouvant être adapté à de nombreuses tâches en aval."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0005"
+      ],
+      "tags": [
+        "foundation-model",
+        "adaptation",
+        "general-purpose"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0019",
+      "term": "Modèle d'IA à usage général",
+      "english_term": "General-Purpose AI Model",
+      "slug": "gpai",
+      "aliases": [
+        "GPAI",
+        "general-purpose AI model"
+      ],
+      "definition_short": "Catégorie juridique de l'Union européenne couvrant certains modèles présentant une généralité significative et capables d'accomplir un large éventail de tâches distinctes.",
+      "definition_precise": "Au sens de l'AI Act européen, un modèle d'IA à usage général est un modèle présentant une généralité significative, capable d'exécuter de manière compétente un large éventail de tâches distinctes et pouvant être intégré dans diverses applications ou systèmes en aval, sous réserve des exclusions prévues par le règlement.",
+      "pedagogical_analogy": "Foundation model est principalement une notion issue de la recherche ; GPAI est une catégorie définie par le droit européen pour organiser des obligations réglementaires.",
+      "analogy_limits": "Les deux notions ont des zones de recouvrement importantes mais leurs définitions, leurs objectifs et leurs frontières ne sont pas identiques.",
+      "not_to_confuse_with": [
+        "TERM-0018",
+        "TERM-0002"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Employer GPAI comme simple traduction juridique de foundation model.",
+          "correction": "À corriger avec la définition canonique : Catégorie juridique de l'Union européenne couvrant certains modèles présentant une généralité significative et capables d'accomplir un large éventail de tâches distinctes."
+        },
+        {
+          "statement": "Confondre modèle d'IA à usage général et système d'IA à usage général.",
+          "correction": "À corriger avec la définition canonique : Catégorie juridique de l'Union européenne couvrant certains modèles présentant une généralité significative et capables d'accomplir un large éventail de tâches distinctes."
+        }
+      ],
+      "stability": "evolving",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0006",
+        "SRC-0007"
+      ],
+      "tags": [
+        "gpai",
+        "ai-act",
+        "regulation"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0020",
+      "term": "Corpus d'entraînement",
+      "english_term": "Training corpus",
+      "slug": "corpus-entrainement",
+      "definition_short": "Ensemble de données utilisé pour ajuster les paramètres d'un modèle pendant l'entraînement.",
+      "definition_precise": "Un corpus d'entraînement rassemble des exemples utilisés par une procédure d'apprentissage pour modifier les paramètres du modèle. Il peut être composé de sources hétérogènes et faire l'objet de filtrage, déduplication, pondération ou mélange.",
+      "pedagogical_analogy": "Le corpus ressemble davantage au matériau utilisé pour former le modèle qu'à une bibliothèque qu'il consulterait ensuite.",
+      "analogy_limits": "L'analogie ne doit pas faire croire que tous les exemples laissent une trace identifiable ou récupérable individuellement dans les paramètres.",
+      "common_misuses": [
+        {
+          "statement": "Le modèle consulte directement son corpus à chaque réponse.",
+          "correction": "L'inférence standard utilise surtout les paramètres appris ; une recherche documentaire explicite est un mécanisme séparé."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "tags": [
+        "training-data",
+        "corpus",
+        "data"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0021",
+      "term": "Token",
+      "english_term": "Token",
+      "slug": "token",
+      "definition_short": "Unité discrète produite par un tokenizer et manipulée comme élément d'une séquence.",
+      "definition_precise": "Un token est une unité appartenant au vocabulaire d'un tokenizer. Selon le système, il peut correspondre à un mot, un sous-mot, un signe, un espace, une unité d'octets ou un marqueur spécial.",
+      "not_to_confuse_with": [
+        "TERM-0023",
+        "TERM-0026"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Un token est toujours un mot.",
+          "correction": "Le découpage dépend du tokenizer et un mot peut produire plusieurs tokens."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "tags": [
+        "token",
+        "tokenization",
+        "sequence"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0022",
+      "term": "Tokenisation",
+      "english_term": "Tokenization",
+      "slug": "tokenisation",
+      "definition_short": "Transformation d'une entrée en une séquence de tokens selon les règles d'un tokenizer.",
+      "definition_precise": "La tokenisation convertit du texte ou une autre représentation d'entrée en unités discrètes choisies dans un vocabulaire. Les algorithmes, conventions et vocabulaires varient selon les modèles.",
+      "not_to_confuse_with": [
+        "TERM-0021",
+        "TERM-0025"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Tokeniser signifie simplement couper sur les espaces.",
+          "correction": "Les tokenizers modernes utilisent des règles statistiques ou algorithmiques qui dépassent largement le découpage par espaces."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0010"
+      ],
+      "tags": [
+        "tokenization",
+        "tokenizer",
+        "text-processing"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0023",
+      "term": "Vocabulaire du tokenizer",
+      "english_term": "Tokenizer vocabulary",
+      "slug": "vocabulaire-tokenizer",
+      "definition_short": "Ensemble fini des unités auxquelles un tokenizer associe des identifiants.",
+      "definition_precise": "Le vocabulaire contient les unités discrètes reconnues par le tokenizer et leur correspondance avec des identifiants. Il peut inclure sous-mots, caractères, octets, ponctuation et tokens spéciaux.",
+      "not_to_confuse_with": [
+        "TERM-0021",
+        "TERM-0026"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Le vocabulaire contient les connaissances du modèle.",
+          "correction": "Il organise les unités d'encodage ; les régularités apprises sont distribuées dans les paramètres du modèle."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0010"
+      ],
+      "tags": [
+        "vocabulary",
+        "tokenizer",
+        "tokens"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0024",
+      "term": "Sous-mot",
+      "english_term": "Subword",
+      "slug": "sous-mot",
+      "definition_short": "Unité de tokenisation plus petite qu'un mot complet mais souvent plus grande qu'un caractère.",
+      "definition_precise": "Les unités sous-mots permettent de composer des formes rares à partir d'éléments réutilisables. Elles offrent un compromis entre vocabulaire de mots entiers et représentation caractère par caractère.",
+      "not_to_confuse_with": [
+        "TERM-0021",
+        "TERM-0025"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Un sous-mot est forcément un morphème linguistique.",
+          "correction": "Les unités sous-mots peuvent être apprises statistiquement sans coïncider avec une analyse morphologique."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0010"
+      ],
+      "tags": [
+        "subword",
+        "tokenization",
+        "vocabulary"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0025",
+      "term": "Byte Pair Encoding",
+      "english_term": "Byte Pair Encoding",
+      "slug": "byte-pair-encoding",
+      "aliases": [
+        "BPE"
+      ],
+      "definition_short": "Famille de méthodes construisant des unités fréquentes par fusions successives de paires.",
+      "definition_precise": "Adapté à la tokenisation, BPE part d'unités fines puis fusionne itérativement des paires fréquentes afin de constituer un vocabulaire d'unités récurrentes.",
+      "not_to_confuse_with": [
+        "TERM-0022",
+        "TERM-0024"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Tous les tokenizers de LLM utilisent exactement BPE.",
+          "correction": "BPE est une famille importante, mais d'autres algorithmes et variantes sont utilisés."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0010"
+      ],
+      "tags": [
+        "bpe",
+        "subword",
+        "tokenization"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0026",
+      "term": "Identifiant de token",
+      "english_term": "Token ID",
+      "slug": "identifiant-token",
+      "definition_short": "Entier qui indexe un token dans le vocabulaire.",
+      "definition_precise": "Le token ID est une clé discrète utilisée pour référencer une entrée du vocabulaire et, notamment, sélectionner une ligne dans une table d'embeddings.",
+      "not_to_confuse_with": [
+        "TERM-0021",
+        "TERM-0028"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Deux IDs proches représentent des sens proches.",
+          "correction": "La valeur numérique de l'ID n'encode généralement pas une proximité sémantique."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0012"
+      ],
+      "tags": [
+        "token-id",
+        "index",
+        "vocabulary"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0027",
+      "term": "Token spécial",
+      "english_term": "Special token",
+      "slug": "token-special",
+      "definition_short": "Token réservé à une fonction de structure ou de contrôle plutôt qu'à du texte ordinaire.",
+      "definition_precise": "Les tokens spéciaux peuvent signaler un début, une fin, un séparateur, un rôle conversationnel, un remplissage ou d'autres conventions définies par le modèle et son tokenizer.",
+      "not_to_confuse_with": [
+        "TERM-0021"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Tous les modèles possèdent les mêmes tokens spéciaux.",
+          "correction": "Les conventions dépendent du tokenizer, de l'architecture et du format de conversation."
+        }
+      ],
+      "stability": "evolving",
+      "epistemic_status": "model-specific",
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "tags": [
+        "special-token",
+        "chat-template",
+        "model-specific"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0028",
+      "term": "Embedding",
+      "english_term": "Embedding",
+      "slug": "embedding",
+      "aliases": [
+        "plongement vectoriel"
+      ],
+      "definition_short": "Représentation vectorielle d'une unité ou d'un objet.",
+      "definition_precise": "Un embedding associe un objet discret ou complexe à un vecteur de nombres. Dans un LLM, un token ID peut notamment indexer un vecteur d'entrée appris ; d'autres embeddings peuvent représenter phrases ou documents.",
+      "not_to_confuse_with": [
+        "TERM-0026",
+        "TERM-0030"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Un embedding et un token ID sont la même chose.",
+          "correction": "L'ID est une clé discrète ; l'embedding est un vecteur utilisé par les calculs neuronaux."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0011",
+        "SRC-0012"
+      ],
+      "tags": [
+        "embedding",
+        "vector",
+        "representation"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0029",
+      "term": "Espace vectoriel",
+      "english_term": "Vector space",
+      "slug": "espace-vectoriel",
+      "definition_short": "Espace mathématique dans lequel des objets sont représentés par des vecteurs.",
+      "definition_precise": "Un espace vectoriel permet d'effectuer des opérations géométriques ou algébriques sur des représentations numériques. Les embeddings modernes vivent souvent dans des espaces de grande dimension.",
+      "not_to_confuse_with": [
+        "TERM-0028",
+        "TERM-0031"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Une visualisation 2D montre exactement l'espace d'embeddings.",
+          "correction": "Une projection en deux dimensions peut déformer des relations présentes dans l'espace original."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0011"
+      ],
+      "tags": [
+        "vector-space",
+        "geometry",
+        "embedding"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0030",
+      "term": "Embedding sémantique",
+      "english_term": "Semantic embedding",
+      "slug": "embedding-semantique",
+      "definition_short": "Vecteur conçu pour refléter certaines proximités sémantiques entre textes.",
+      "definition_precise": "Un embedding sémantique représente une phrase, un passage ou un document de manière à rendre utiles les comparaisons vectorielles pour des tâches comme recherche, regroupement ou récupération d'information.",
+      "not_to_confuse_with": [
+        "TERM-0028",
+        "TERM-0031"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Un embedding sémantique contient une représentation parfaite du sens.",
+          "correction": "Il s'agit d'une représentation apprise et task-dependent qui approxime certaines relations utiles."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0013"
+      ],
+      "tags": [
+        "semantic-embedding",
+        "sentence-embedding",
+        "semantic-search"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0031",
+      "term": "Similarité cosinus",
+      "english_term": "Cosine similarity",
+      "slug": "similarite-cosinus",
+      "definition_short": "Mesure de similarité fondée sur l'angle entre deux vecteurs.",
+      "definition_precise": "La similarité cosinus compare l'orientation de deux vecteurs après normalisation implicite par leurs normes. Elle est fréquemment utilisée pour comparer des embeddings.",
+      "not_to_confuse_with": [
+        "TERM-0029",
+        "TERM-0030"
+      ],
+      "common_misuses": [
+        {
+          "statement": "Une similarité cosinus de 0,9 signifie 90 % de même sens.",
+          "correction": "Le score est une mesure géométrique, pas un pourcentage de sens ni une probabilité de vérité."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0013"
+      ],
+      "tags": [
+        "cosine-similarity",
+        "vector-space",
+        "semantic-search"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0032",
+      "term": "Fenêtre de contexte",
+      "english_term": "Context window",
+      "slug": "fenetre-contexte",
+      "definition_short": "Limite de séquence que le modèle peut traiter dans un contexte donné, généralement exprimée en tokens.",
+      "definition_precise": "La fenêtre de contexte borne la quantité de séquence disponible pour un traitement. Selon le modèle et l'application, elle peut inclure instructions, historique, documents, résultats d'outils et budget de génération.",
+      "scope_note": "Les limites exactes et la répartition entre entrée et sortie dépendent du modèle et du produit.",
+      "not_to_confuse_with": [
+        "TERM-0007",
+        "TERM-0008"
+      ],
+      "common_misuses": [
+        {
+          "statement": "La fenêtre de contexte est une mémoire permanente.",
+          "correction": "Elle décrit le contexte de traitement disponible ; une mémoire persistante éventuelle est un mécanisme applicatif distinct."
+        }
+      ],
+      "stability": "evolving",
+      "epistemic_status": "model-specific",
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0012"
+      ],
+      "tags": [
+        "context-window",
+        "tokens",
+        "context"
+      ],
+      "reviewed_on": "2026-09-17"
+    }
   ],
-
-  "definition_short": "Domaine et ensemble de systèmes capables d'inférer à partir d'entrées comment produire des sorties telles que prédictions, contenus, recommandations ou décisions.",
-
-  "definition_precise": "Dans la définition de référence de l'OCDE, un système d'IA est un système basé sur une machine qui, pour des objectifs explicites ou implicites, infère à partir des entrées reçues comment générer des sorties pouvant influencer des environnements physiques ou virtuels.",
-
-  "pedagogical_analogy": "L'intelligence artificielle peut être vue comme une grande famille contenant de nombreuses techniques et de nombreux types de systèmes.",
-
-  "analogy_limits": "Cette image de famille ne signifie pas que toutes les approches partagent les mêmes mécanismes ni que l'IA reproduit l'intelligence humaine.",
-
-  "not_to_confuse_with": [
-    "TERM-0012",
-    "TERM-0015"
-  ],
-
-  "common_misuses": [
-    "Employer IA comme synonyme de chatbot.",
-    "Réduire toute l'intelligence artificielle aux modèles génératifs."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A01"
-  ],
-
-  "source_ids": [
-    "SRC-0001"
-  ],
-
-  "tags": [
-    "ai",
-    "definition",
-    "foundations"
-  ]
-},
-{
-  "id": "TERM-0012",
-  "term": "Machine learning",
-  "english_term": "Machine Learning",
-  "slug": "machine-learning",
-
-  "aliases": [
-    "apprentissage automatique",
-    "apprentissage machine"
-  ],
-
-  "definition_short": "Ensemble de techniques permettant à une machine d'améliorer ses performances et généralement de construire ou ajuster des modèles à partir de données.",
-
-  "definition_precise": "Le machine learning regroupe des méthodes dans lesquelles des régularités sont apprises à partir de données plutôt que toutes les règles de traitement soient explicitement écrites par un programmeur.",
-
-  "pedagogical_analogy": "Au lieu d'écrire toutes les règles, on fournit des exemples ou des données à partir desquels le système ajuste un modèle.",
-
-  "analogy_limits": "Apprendre à partir de données ne signifie pas comprendre les exemples comme un humain ni découvrir nécessairement des règles vraies sur le monde.",
-
-  "not_to_confuse_with": [
-    "TERM-0011",
-    "TERM-0013"
-  ],
-
-  "common_misuses": [
-    "Employer machine learning et intelligence artificielle comme synonymes.",
-    "Croire que tout système d'IA utilise nécessairement du machine learning."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A02"
-  ],
-
-  "source_ids": [
-    "SRC-0001",
-    "SRC-0002"
-  ],
-
-  "tags": [
-    "machine-learning",
-    "data",
-    "training"
-  ]
-},
-{
-  "id": "TERM-0013",
-  "term": "Deep learning",
-  "english_term": "Deep Learning",
-  "slug": "deep-learning",
-
-  "aliases": [
-    "apprentissage profond"
-  ],
-
-  "definition_short": "Famille de méthodes de machine learning fondées sur des réseaux neuronaux comportant plusieurs couches de traitement.",
-
-  "definition_precise": "Le deep learning utilise des architectures neuronales à plusieurs couches capables d'apprendre des représentations successives des données, souvent à différents niveaux d'abstraction.",
-
-  "pedagogical_analogy": "Les données traversent plusieurs étages de transformation qui construisent progressivement des représentations utilisables par le modèle.",
-
-  "analogy_limits": "Chaque couche ne correspond pas nécessairement à une notion humaine clairement identifiable et davantage de couches ne garantit pas de meilleures performances.",
-
-  "not_to_confuse_with": [
-    "TERM-0012",
-    "TERM-0017"
-  ],
-
-  "common_misuses": [
-    "Interpréter deep comme une capacité à réfléchir profondément.",
-    "Présenter deep learning et intelligence artificielle comme synonymes."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A03"
-  ],
-
-  "source_ids": [
-    "SRC-0002"
-  ],
-
-  "tags": [
-    "deep-learning",
-    "neural-networks",
-    "representation-learning"
-  ]
-},
-{
-  "id": "TERM-0014",
-  "term": "Traitement automatique du langage",
-  "english_term": "Natural Language Processing",
-  "slug": "traitement-automatique-langage",
-
-  "aliases": [
-    "TAL",
-    "NLP"
-  ],
-
-  "definition_short": "Domaine consacré au traitement informatique du langage humain écrit ou oral.",
-
-  "definition_precise": "Le traitement automatique du langage regroupe les méthodes permettant à des systèmes informatiques d'analyser, transformer, reconnaître, traduire ou générer du langage humain.",
-
-  "pedagogical_analogy": "Le TAL est le grand domaine informatique du langage ; les LLM constituent aujourd'hui une famille d'outils à l'intérieur de ce domaine.",
-
-  "analogy_limits": "Tous les problèmes de TAL ne nécessitent pas de LLM et de nombreuses méthodes de TAL existaient bien avant les modèles actuels.",
-
-  "not_to_confuse_with": [
-    "TERM-0016",
-    "TERM-0017"
-  ],
-
-  "common_misuses": [
-    "Faire commencer l'histoire du TAL avec les LLM.",
-    "Considérer tout système de TAL comme un LLM."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A04"
-  ],
-
-  "source_ids": [
-    "SRC-0003"
-  ],
-
-  "tags": [
-    "nlp",
-    "language",
-    "foundations"
-  ]
-},
-{
-  "id": "TERM-0015",
-  "term": "Intelligence artificielle générative",
-  "english_term": "Generative Artificial Intelligence",
-  "slug": "ia-generative",
-
-  "aliases": [
-    "IA générative",
-    "GenAI"
-  ],
-
-  "definition_short": "Famille de systèmes d'IA capables de produire de nouveaux contenus ou représentations à partir de structures apprises dans des données.",
-
-  "definition_precise": "L'IA générative recouvre des systèmes conçus pour générer des contenus tels que texte, code, images, sons ou autres représentations. Les LLM constituent une famille importante de modèles génératifs mais ne couvrent pas l'ensemble de l'IA générative.",
-
-  "pedagogical_analogy": "Une IA générative ne se contente pas de choisir une étiquette : elle construit une sortie à partir d'un espace de possibilités appris.",
-
-  "analogy_limits": "Générer ne signifie ni créer avec intention au sens humain ni garantir que le contenu produit est inédit ou factuellement correct.",
-
-  "not_to_confuse_with": [
-    "TERM-0011",
-    "TERM-0017"
-  ],
-
-  "common_misuses": [
-    "Employer IA générative et LLM comme synonymes.",
-    "Limiter l'IA générative au texte."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A05"
-  ],
-
-  "source_ids": [
-    "SRC-0009"
-  ],
-
-  "tags": [
-    "generative-ai",
-    "generation",
-    "multimodal"
-  ]
-},
-{
-  "id": "TERM-0016",
-  "term": "Modèle de langage",
-  "english_term": "Language Model",
-  "slug": "modele-langage",
-
-  "definition_short": "Modèle probabiliste du langage permettant d'estimer la probabilité de séquences ou de continuations en fonction d'un contexte.",
-
-  "definition_precise": "Un modèle de langage représente statistiquement des séquences linguistiques. Dans les modèles autoregressifs modernes, il fournit notamment une distribution de probabilité sur les prochains tokens possibles conditionnellement au contexte déjà disponible.",
-
-  "pedagogical_analogy": "À partir d'un début de séquence, le modèle évalue plusieurs continuations possibles et leur attribue des scores ou probabilités.",
-
-  "analogy_limits": "Un modèle de langage moderne ne fonctionne pas comme la simple fonction de prédiction de mots d'un téléphone : les représentations, architectures et capacités sont beaucoup plus riches.",
-
-  "not_to_confuse_with": [
-    "TERM-0014",
-    "TERM-0017"
-  ],
-
-  "common_misuses": [
-    "Dire qu'un modèle de langage choisit toujours le mot le plus probable.",
-    "Employer modèle de langage comme synonyme nécessaire de LLM."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A06"
-  ],
-
-  "source_ids": [
-    "SRC-0003"
-  ],
-
-  "tags": [
-    "language-model",
-    "probability",
-    "prediction"
-  ]
-},
-{
-  "id": "TERM-0017",
-  "term": "Large Language Model",
-  "english_term": "Large Language Model",
-  "slug": "llm",
-
-  "aliases": [
-    "LLM",
-    "grand modèle de langage"
-  ],
-
-  "definition_short": "Modèle de langage neuronal de grande échelle capable d'accomplir ou d'être adapté à de nombreuses tâches liées au langage.",
-
-  "definition_precise": "Un LLM est un modèle de langage neuronal entraîné à grande échelle sur d'importantes quantités de données et possédant une capacité suffisante pour généraliser à de nombreuses tâches. Il n'existe pas de seuil universel de paramètres définissant précisément le mot large.",
-
-  "pedagogical_analogy": "Un LLM est un moteur linguistique général pouvant être utilisé par de nombreuses applications différentes.",
-
-  "analogy_limits": "Le caractère général du modèle ne signifie ni omniscience, ni intelligence générale, ni fiabilité universelle.",
-
-  "not_to_confuse_with": [
-    "TERM-0004",
-    "TERM-0015",
-    "TERM-0016",
-    "TERM-0018"
-  ],
-
-  "common_misuses": [
-    "Employer LLM et chatbot comme synonymes.",
-    "Définir la qualité d'un LLM uniquement par son nombre de paramètres."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A07",
-    "A10"
-  ],
-
-  "source_ids": [
-    "SRC-0003",
-    "SRC-0004"
-  ],
-
-  "tags": [
-    "llm",
-    "language-model",
-    "scaling"
-  ]
-},
-{
-  "id": "TERM-0018",
-  "term": "Foundation model",
-  "english_term": "Foundation Model",
-  "slug": "foundation-model",
-
-  "aliases": [
-    "modèle de fondation"
-  ],
-
-  "definition_short": "Modèle entraîné à grande échelle sur des données larges et pouvant être adapté à de nombreuses tâches en aval.",
-
-  "definition_precise": "La notion de foundation model désigne un modèle entraîné sur de larges ensembles de données à grande échelle puis adaptable à un large éventail de tâches. La notion ne se limite pas nécessairement au langage.",
-
-  "pedagogical_analogy": "C'est une base générale sur laquelle plusieurs applications ou modèles spécialisés peuvent être construits.",
-
-  "analogy_limits": "Foundation ne signifie pas intelligence fondamentale ou générale ; il s'agit d'un rôle dans un écosystème de modèles et d'adaptations.",
-
-  "not_to_confuse_with": [
-    "TERM-0017",
-    "TERM-0019"
-  ],
-
-  "common_misuses": [
-    "Employer foundation model comme synonyme exact de LLM.",
-    "Supposer qu'un foundation model traite nécessairement du texte."
-  ],
-
-  "status": "stable",
-
-  "concept_ids": [
-    "A08"
-  ],
-
-  "source_ids": [
-    "SRC-0005"
-  ],
-
-  "tags": [
-    "foundation-model",
-    "adaptation",
-    "general-purpose"
-  ]
-},
-{
-  "id": "TERM-0019",
-  "term": "Modèle d'IA à usage général",
-  "english_term": "General-Purpose AI Model",
-  "slug": "gpai",
-
-  "aliases": [
-    "GPAI",
-    "general-purpose AI model"
-  ],
-
-  "definition_short": "Catégorie juridique de l'Union européenne couvrant certains modèles présentant une généralité significative et capables d'accomplir un large éventail de tâches distinctes.",
-
-  "definition_precise": "Au sens de l'AI Act européen, un modèle d'IA à usage général est un modèle présentant une généralité significative, capable d'exécuter de manière compétente un large éventail de tâches distinctes et pouvant être intégré dans diverses applications ou systèmes en aval, sous réserve des exclusions prévues par le règlement.",
-
-  "pedagogical_analogy": "Foundation model est principalement une notion issue de la recherche ; GPAI est une catégorie définie par le droit européen pour organiser des obligations réglementaires.",
-
-  "analogy_limits": "Les deux notions ont des zones de recouvrement importantes mais leurs définitions, leurs objectifs et leurs frontières ne sont pas identiques.",
-
-  "not_to_confuse_with": [
-    "TERM-0018",
-    "TERM-0002"
-  ],
-
-  "common_misuses": [
-    "Employer GPAI comme simple traduction juridique de foundation model.",
-    "Confondre modèle d'IA à usage général et système d'IA à usage général."
-  ],
-
-  "status": "evolving",
-
-  "concept_ids": [
-    "A09"
-  ],
-
-  "source_ids": [
-    "SRC-0006",
-    "SRC-0007"
-  ],
-
-  "tags": [
-    "gpai",
-    "ai-act",
-    "regulation"
-  ]
-}
-  ]
+  "language": "fr"
 }

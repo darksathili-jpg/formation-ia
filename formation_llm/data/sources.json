@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0.0",
-  "updated_on": "2026-09-16",
+  "schema_version": "1.1.0",
+  "updated_on": "2026-09-17",
   "sources": [
     {
       "id": "SRC-0001",
@@ -8,24 +8,27 @@
       "authors": [
         "OECD"
       ],
-      "source_type": "institutional",
-      "authority_level": "reference",
+      "source_type": "institutional-guidance",
+      "evidence_role": "primary",
       "publisher": "OECD Publishing",
+      "publisher_kind": "intergovernmental",
       "url": "https://www.oecd.org/en/publications/explanatory-memorandum-on-the-updated-oecd-definition-of-an-ai-system_623da898-en.html",
-      "doi": "10.1787/623da898-en",
-      "publication_year": 2024,
-      "publication_date": "2024-03-05",
+      "publication_status": "official",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "stable",
+      "language": "en",
       "topics": [
         "artificial-intelligence",
         "ai-system",
         "definition"
       ],
+      "identifiers": {
+        "doi": "10.1787/623da898-en"
+      },
+      "published_on": "2024-03-05",
       "notes": "Référence institutionnelle pour définir un système d'intelligence artificielle."
     },
-
     {
       "id": "SRC-0002",
       "title": "Deep learning",
@@ -34,25 +37,28 @@
         "Yoshua Bengio",
         "Geoffrey Hinton"
       ],
-      "source_type": "scientific-paper",
-      "authority_level": "secondary",
+      "source_type": "research-paper",
+      "evidence_role": "secondary",
       "publisher": "Nature",
+      "publisher_kind": "publisher",
       "url": "https://www.nature.com/articles/nature14539",
-      "doi": "10.1038/nature14539",
-      "publication_year": 2015,
-      "publication_date": "2015-05-27",
+      "publication_status": "peer-reviewed",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "stable",
+      "language": "en",
       "topics": [
         "machine-learning",
         "deep-learning",
         "neural-networks",
         "representation-learning"
       ],
+      "identifiers": {
+        "doi": "10.1038/nature14539"
+      },
+      "published_on": "2015-05-27",
       "notes": "Article de synthèse majeur pour situer le deep learning et l'apprentissage de représentations."
     },
-
     {
       "id": "SRC-0003",
       "title": "Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition with Language Models",
@@ -61,14 +67,15 @@
         "James H. Martin"
       ],
       "source_type": "book",
-      "authority_level": "reference",
+      "evidence_role": "tertiary",
       "publisher": "Stanford University",
+      "publisher_kind": "academic",
       "url": "https://web.stanford.edu/~jurafsky/slp3/",
-      "publication_year": 2026,
-      "publication_date": "2026-08-19",
+      "publication_status": "living-document",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "evolving",
+      "language": "en",
       "topics": [
         "nlp",
         "language-model",
@@ -76,9 +83,9 @@
         "transformer",
         "tokenization"
       ],
+      "source_updated_on": "2026-08-19",
       "notes": "Manuscrit de référence 2026 pour le TAL, les modèles de langage et les LLM."
     },
-
     {
       "id": "SRC-0004",
       "title": "Language Models are Few-Shot Learners",
@@ -115,15 +122,16 @@
         "Ilya Sutskever",
         "Dario Amodei"
       ],
-      "source_type": "scientific-paper",
-      "authority_level": "primary",
+      "source_type": "research-paper",
+      "evidence_role": "primary",
       "publisher": "arXiv",
+      "publisher_kind": "repository",
       "url": "https://arxiv.org/abs/2005.14165",
-      "publication_year": 2020,
-      "publication_date": "2020-05-28",
+      "publication_status": "preprint",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "stable",
+      "language": "en",
       "topics": [
         "language-model",
         "llm",
@@ -131,9 +139,12 @@
         "in-context-learning",
         "scaling"
       ],
+      "identifiers": {
+        "arxiv": "2005.14165"
+      },
+      "published_on": "2020-05-28",
       "notes": "Référence historique importante pour les grands modèles autoregressifs et l'apprentissage en contexte."
     },
-
     {
       "id": "SRC-0005",
       "title": "On the Opportunities and Risks of Foundation Models",
@@ -253,24 +264,28 @@
         "Kaitlyn Zhou",
         "Percy Liang"
       ],
-      "source_type": "scientific-paper",
-      "authority_level": "primary",
+      "source_type": "research-paper",
+      "evidence_role": "primary",
       "publisher": "Stanford Center for Research on Foundation Models",
+      "publisher_kind": "repository",
       "url": "https://arxiv.org/abs/2108.07258",
-      "publication_year": 2021,
-      "publication_date": "2021-08-16",
+      "publication_status": "preprint",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "stable",
+      "language": "en",
       "topics": [
         "foundation-model",
         "general-purpose-model",
         "scaling",
         "adaptation"
       ],
+      "identifiers": {
+        "arxiv": "2108.07258"
+      },
+      "published_on": "2021-08-16",
       "notes": "Travail fondateur ayant popularisé et défini la notion de foundation model."
     },
-
     {
       "id": "SRC-0006",
       "title": "Regulation (EU) 2024/1689 — Artificial Intelligence Act",
@@ -278,24 +293,28 @@
         "European Parliament",
         "Council of the European Union"
       ],
-      "source_type": "legal",
-      "authority_level": "reference",
+      "source_type": "law-regulation",
+      "evidence_role": "primary",
       "publisher": "EUR-Lex",
+      "publisher_kind": "government",
       "url": "https://eur-lex.europa.eu/legal-content/FR-EN/TXT/?uri=CELEX:32024R1689",
-      "publication_year": 2024,
-      "publication_date": "2024-07-12",
+      "publication_status": "official",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "evolving",
+      "language": "fr",
       "topics": [
         "ai-act",
         "ai-system",
         "gpai",
         "regulation"
       ],
+      "identifiers": {
+        "celex": "32024R1689"
+      },
+      "published_on": "2024-07-12",
       "notes": "Texte juridique européen de référence. À lire avec ses modifications ultérieures, notamment le règlement UE 2026/1744."
     },
-
     {
       "id": "SRC-0007",
       "title": "Regulation (EU) 2026/1744 — Digital Omnibus on AI",
@@ -303,39 +322,44 @@
         "European Parliament",
         "Council of the European Union"
       ],
-      "source_type": "legal",
-      "authority_level": "reference",
+      "source_type": "law-regulation",
+      "evidence_role": "primary",
       "publisher": "EUR-Lex",
+      "publisher_kind": "government",
       "url": "https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=OJ:L_202601744",
-      "publication_year": 2026,
-      "publication_date": "2026-07-24",
+      "publication_status": "official",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "evolving",
+      "language": "fr",
       "topics": [
         "ai-act",
         "regulation",
         "gpai",
         "european-union"
       ],
-      "notes": "Règlement de 2026 modifiant notamment le règlement UE 2024/1689.",
-      "supersedes": []
+      "identifiers": {
+        "celex": "32026R1744"
+      },
+      "published_on": "2026-07-24",
+      "notes": "Règlement de 2026 modifiant notamment le règlement UE 2024/1689."
     },
-
     {
       "id": "SRC-0008",
       "title": "The Open Source AI Definition — Version 1.0",
       "authors": [
         "Open Source Initiative"
       ],
-      "source_type": "standard",
-      "authority_level": "reference",
+      "source_type": "standard-framework",
+      "evidence_role": "primary",
       "publisher": "Open Source Initiative",
+      "publisher_kind": "nonprofit",
       "url": "https://opensource.org/ai/open-source-ai-definition",
-      "publication_year": 2024,
+      "publication_status": "official",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "evolving",
+      "language": "en",
       "topics": [
         "open-source",
         "open-weights",
@@ -344,7 +368,6 @@
       ],
       "notes": "Référence utile pour distinguer open source AI, poids accessibles et modèles propriétaires."
     },
-
     {
       "id": "SRC-0009",
       "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile",
@@ -358,23 +381,155 @@
         "Patrick Hall",
         "Kamie Roberts"
       ],
-      "source_type": "security-reference",
-      "authority_level": "reference",
+      "source_type": "security-guidance",
+      "evidence_role": "primary",
       "publisher": "National Institute of Standards and Technology",
+      "publisher_kind": "government",
       "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
-      "doi": "10.6028/NIST.AI.600-1",
-      "publication_year": 2024,
-      "publication_date": "2024-07-26",
+      "publication_status": "official",
       "accessed_on": "2026-09-16",
       "status": "verified",
       "temporal_stability": "evolving",
+      "language": "en",
       "topics": [
         "generative-ai",
         "risk",
         "evaluation",
         "security"
       ],
+      "identifiers": {
+        "doi": "10.6028/NIST.AI.600-1"
+      },
+      "published_on": "2024-07-26",
       "notes": "Référence institutionnelle pour définir et encadrer les risques propres à l'IA générative."
+    },
+    {
+      "id": "SRC-0010",
+      "title": "Neural Machine Translation of Rare Words with Subword Units",
+      "authors": [
+        "Rico Sennrich",
+        "Barry Haddow",
+        "Alexandra Birch"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "arXiv",
+      "publisher_kind": "repository",
+      "url": "https://arxiv.org/abs/1508.07909",
+      "identifiers": {
+        "arxiv": "1508.07909"
+      },
+      "publication_status": "preprint",
+      "published_on": "2015-08-31",
+      "accessed_on": "2026-09-17",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "tokenization",
+        "subword",
+        "bpe",
+        "vocabulary"
+      ],
+      "notes": "Référence historique pour l'utilisation de BPE et des unités sous-mots en traitement du langage neuronal."
+    },
+    {
+      "id": "SRC-0011",
+      "title": "Efficient Estimation of Word Representations in Vector Space",
+      "authors": [
+        "Tomas Mikolov",
+        "Kai Chen",
+        "Greg Corrado",
+        "Jeffrey Dean"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "arXiv",
+      "publisher_kind": "repository",
+      "url": "https://arxiv.org/abs/1301.3781",
+      "identifiers": {
+        "arxiv": "1301.3781"
+      },
+      "publication_status": "preprint",
+      "published_on": "2013-01-16",
+      "accessed_on": "2026-09-17",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "embeddings",
+        "vector-space",
+        "word-representations",
+        "semantic-similarity"
+      ],
+      "notes": "Référence historique sur les représentations vectorielles distribuées de mots."
+    },
+    {
+      "id": "SRC-0012",
+      "title": "Attention Is All You Need",
+      "authors": [
+        "Ashish Vaswani",
+        "Noam Shazeer",
+        "Niki Parmar",
+        "Jakob Uszkoreit",
+        "Llion Jones",
+        "Aidan N. Gomez",
+        "Lukasz Kaiser",
+        "Illia Polosukhin"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "arXiv",
+      "publisher_kind": "repository",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "identifiers": {
+        "arxiv": "1706.03762"
+      },
+      "publication_status": "preprint",
+      "published_on": "2017-06-12",
+      "source_updated_on": "2023-08-02",
+      "accessed_on": "2026-09-17",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "transformer",
+        "embeddings",
+        "position",
+        "attention",
+        "sequence"
+      ],
+      "notes": "Référence fondatrice du Transformer ; utile ici pour les représentations d'entrée et la séquence traitée par le modèle."
+    },
+    {
+      "id": "SRC-0013",
+      "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
+      "authors": [
+        "Nils Reimers",
+        "Iryna Gurevych"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "Association for Computational Linguistics",
+      "publisher_kind": "academic",
+      "url": "https://aclanthology.org/D19-1410/",
+      "identifiers": {
+        "doi": "10.18653/v1/D19-1410",
+        "arxiv": "1908.10084"
+      },
+      "publication_status": "peer-reviewed",
+      "version": "EMNLP-IJCNLP 2019",
+      "accessed_on": "2026-09-17",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "semantic-embedding",
+        "sentence-embedding",
+        "cosine-similarity",
+        "semantic-search"
+      ],
+      "notes": "Référence pour les embeddings de phrases et leur comparaison par similarité cosinus."
     }
   ]
 }

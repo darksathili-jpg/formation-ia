@@ -2,34 +2,60 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://darksathili-jpg.github.io/formation-ia/formation_llm/schema/knowledge-map.schema.json",
   "title": "Formation LLM — Knowledge Map",
-  "description": "Schéma canonique du référentiel de connaissances de la formation LLM.",
+  "description": "Contrat canonique du référentiel de connaissances. Les axes de stabilité temporelle et de statut épistémique sont séparés ; les définitions canoniques vivent dans le glossaire et les concepts les référencent par term_ids.",
   "type": "object",
   "additionalProperties": false,
-
   "required": [
     "schema_version",
     "updated_on",
     "domains",
     "concepts"
   ],
-
+  "$defs": {
+    "domainId": {
+      "type": "string",
+      "pattern": "^[A-Z]$"
+    },
+    "conceptId": {
+      "type": "string",
+      "pattern": "^[A-Z]\\d{2}$"
+    },
+    "sourceId": {
+      "type": "string",
+      "pattern": "^SRC-\\d{4}$"
+    },
+    "termId": {
+      "type": "string",
+      "pattern": "^TERM-\\d{4}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "nonEmpty": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
   "properties": {
     "schema_version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$"
     },
-
     "updated_on": {
       "type": "string",
       "format": "date"
     },
-
     "domains": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-
         "required": [
           "id",
           "slug",
@@ -37,42 +63,32 @@
           "order",
           "description"
         ],
-
         "properties": {
           "id": {
-            "type": "string",
-            "pattern": "^[A-M]$"
+            "$ref": "#/$defs/domainId"
           },
-
           "slug": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]+$"
+            "$ref": "#/$defs/slug"
           },
-
           "title": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/nonEmpty"
           },
-
           "order": {
             "type": "integer",
             "minimum": 1
           },
-
           "description": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/nonEmpty"
           }
         }
       }
     },
-
     "concepts": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-
         "required": [
           "id",
           "slug",
@@ -80,36 +96,37 @@
           "domain",
           "mastery_level",
           "stability",
-          "definition_short",
+          "epistemic_status",
+          "summary",
           "prerequisites",
           "learning_objectives",
           "trainer_mastery",
           "misconceptions",
           "source_ids",
-          "tags"
+          "term_ids",
+          "tags",
+          "reviewed_on"
         ],
-
         "properties": {
           "id": {
-            "type": "string",
-            "pattern": "^[A-M]\\d{2}$"
+            "$ref": "#/$defs/conceptId"
           },
-
           "slug": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]+$"
+            "$ref": "#/$defs/slug"
           },
-
           "title": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/nonEmpty"
           },
-
           "domain": {
-            "type": "string",
-            "pattern": "^[A-M]$"
+            "$ref": "#/$defs/domainId"
           },
-
+          "aliases": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/nonEmpty"
+            }
+          },
           "mastery_level": {
             "type": "string",
             "enum": [
@@ -119,85 +136,114 @@
               "expert"
             ]
           },
-
           "stability": {
             "type": "string",
             "enum": [
               "stable",
               "evolving",
-              "experimental"
+              "fast-moving"
             ]
           },
-
-          "definition_short": {
+          "epistemic_status": {
             "type": "string",
-            "minLength": 1
+            "enum": [
+              "established",
+              "pedagogical-simplification",
+              "debated",
+              "model-specific",
+              "emerging"
+            ]
           },
-
+          "summary": {
+            "$ref": "#/$defs/nonEmpty"
+          },
           "prerequisites": {
             "type": "array",
             "uniqueItems": true,
             "items": {
-              "type": "string",
-              "pattern": "^[A-M]\\d{2}$"
+              "$ref": "#/$defs/conceptId"
             }
           },
-
           "learning_objectives": {
             "type": "array",
             "minItems": 1,
+            "uniqueItems": true,
             "items": {
-              "type": "string",
-              "minLength": 1
+              "$ref": "#/$defs/nonEmpty"
             }
           },
-
           "trainer_mastery": {
             "type": "object",
             "additionalProperties": false,
-
             "required": [
               "explain",
               "demonstrate",
-              "answer"
+              "hard_questions"
             ],
-
             "properties": {
               "explain": {
                 "type": "array",
                 "minItems": 1,
+                "uniqueItems": true,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "$ref": "#/$defs/nonEmpty"
                 }
               },
-
               "demonstrate": {
                 "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "$ref": "#/$defs/nonEmpty"
                 }
               },
-
-              "answer": {
+              "hard_questions": {
                 "type": "array",
+                "minItems": 1,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "question",
+                    "key_points"
+                  ],
+                  "properties": {
+                    "question": {
+                      "$ref": "#/$defs/nonEmpty"
+                    },
+                    "key_points": {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "$ref": "#/$defs/nonEmpty"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
-
           "misconceptions": {
             "type": "array",
+            "minItems": 1,
             "items": {
-              "type": "string",
-              "minLength": 1
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "statement",
+                "correction"
+              ],
+              "properties": {
+                "statement": {
+                  "$ref": "#/$defs/nonEmpty"
+                },
+                "correction": {
+                  "$ref": "#/$defs/nonEmpty"
+                }
+              }
             }
           },
-
           "labs": {
             "type": "array",
             "uniqueItems": true,
@@ -206,26 +252,34 @@
               "pattern": "^LAB-[A-Z0-9-]+$"
             }
           },
-
           "source_ids": {
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
             "items": {
-              "type": "string",
-              "pattern": "^SRC-\\d{4}$"
+              "$ref": "#/$defs/sourceId"
             }
           },
-
-          "tags": {
+          "term_ids": {
             "type": "array",
+            "minItems": 1,
             "uniqueItems": true,
             "items": {
-              "type": "string",
-              "pattern": "^[a-z0-9-]+$"
+              "$ref": "#/$defs/termId"
             }
           },
-
+          "tags": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/tag"
+            }
+          },
+          "reviewed_on": {
+            "type": "string",
+            "format": "date"
+          },
           "notes": {
             "type": "string"
           }

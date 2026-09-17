@@ -1,7 +1,6 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "updated_on": "2026-09-17",
-
   "domains": [
     {
       "id": "A",
@@ -9,9 +8,15 @@
       "title": "Situer les LLM dans le paysage de l'IA",
       "order": 1,
       "description": "Construire les distinctions conceptuelles indispensables entre intelligence artificielle, apprentissage automatique, deep learning, modèles de langage, LLM, foundation models et applications utilisant ces modèles."
+    },
+    {
+      "id": "B",
+      "slug": "tokens-representations-contexte",
+      "title": "Tokens, représentations et contexte",
+      "order": 2,
+      "description": "Comprendre comment le texte devient une séquence de tokens, puis des représentations vectorielles, et comment la fenêtre de contexte borne l'information disponible au modèle."
     }
   ],
-
   "concepts": [
     {
       "id": "A01",
@@ -20,17 +25,14 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Champ regroupant des systèmes capables d'inférer, à partir d'entrées et d'objectifs explicites ou implicites, comment produire des sorties telles que prédictions, contenus, recommandations ou décisions.",
-
+      "epistemic_status": "established",
+      "summary": "Champ regroupant des systèmes capables d'inférer, à partir d'entrées et d'objectifs explicites ou implicites, comment produire des sorties telles que prédictions, contenus, recommandations ou décisions.",
       "prerequisites": [],
-
       "learning_objectives": [
         "Définir l'intelligence artificielle sans la réduire aux LLM.",
         "Reconnaître qu'un système d'IA peut produire des prédictions, des contenus, des recommandations ou des décisions.",
         "Distinguer intelligence artificielle et intelligence humaine."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi l'intelligence artificielle constitue un domaine beaucoup plus large que les IA génératives.",
@@ -39,29 +41,51 @@
         "demonstrate": [
           "Classer plusieurs systèmes — filtre antispam, recommandation vidéo, reconnaissance d'image et chatbot — comme différents usages de l'IA."
         ],
-        "answer": [
-          "Est-ce qu'un simple algorithme est forcément une intelligence artificielle ?",
-          "Une IA doit-elle imiter le cerveau humain pour être considérée comme une IA ?"
+        "hard_questions": [
+          {
+            "question": "Est-ce qu'un simple algorithme est forcément une intelligence artificielle ?",
+            "key_points": [
+              "Pourquoi l'intelligence artificielle constitue un domaine beaucoup plus large que les IA génératives.",
+              "Pourquoi une définition opérationnelle d'un système d'IA est préférable à une définition reposant sur l'idée d'intelligence humaine."
+            ]
+          },
+          {
+            "question": "Une IA doit-elle imiter le cerveau humain pour être considérée comme une IA ?",
+            "key_points": [
+              "Pourquoi l'intelligence artificielle constitue un domaine beaucoup plus large que les IA génératives.",
+              "Pourquoi une définition opérationnelle d'un système d'IA est préférable à une définition reposant sur l'idée d'intelligence humaine."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "IA signifie automatiquement chatbot.",
-        "Toutes les IA sont génératives.",
-        "Une IA doit reproduire l'intelligence humaine."
+        {
+          "statement": "IA signifie automatiquement chatbot.",
+          "correction": "À corriger en revenant au résumé canonique : Champ regroupant des systèmes capables d'inférer, à partir d'entrées et d'objectifs explicites ou implicites, comment produire des sorties telles que prédictions, contenus, recommandations ou décisions."
+        },
+        {
+          "statement": "Toutes les IA sont génératives.",
+          "correction": "À corriger en revenant au résumé canonique : Champ regroupant des systèmes capables d'inférer, à partir d'entrées et d'objectifs explicites ou implicites, comment produire des sorties telles que prédictions, contenus, recommandations ou décisions."
+        },
+        {
+          "statement": "Une IA doit reproduire l'intelligence humaine.",
+          "correction": "À corriger en revenant au résumé canonique : Champ regroupant des systèmes capables d'inférer, à partir d'entrées et d'objectifs explicites ou implicites, comment produire des sorties telles que prédictions, contenus, recommandations ou décisions."
+        }
       ],
-
       "source_ids": [
         "SRC-0001"
       ],
-
+      "term_ids": [
+        "TERM-0002",
+        "TERM-0011"
+      ],
       "tags": [
         "ai",
         "definition",
         "foundations"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A02",
       "slug": "machine-learning",
@@ -69,19 +93,16 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Ensemble de méthodes permettant à un système d'apprendre des régularités à partir de données afin d'améliorer ses performances ou de construire un modèle sans que toutes les règles soient explicitement programmées.",
-
+      "epistemic_status": "established",
+      "summary": "Ensemble de méthodes permettant à un système d'apprendre des régularités à partir de données afin d'améliorer ses performances ou de construire un modèle sans que toutes les règles soient explicitement programmées.",
       "prerequisites": [
         "A01"
       ],
-
       "learning_objectives": [
         "Expliquer la différence entre programmation explicite et apprentissage à partir de données.",
         "Situer le machine learning comme une famille de méthodes de l'intelligence artificielle.",
         "Comprendre que l'apprentissage produit ou ajuste un modèle."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Le rôle des données d'entraînement.",
@@ -90,30 +111,52 @@
         "demonstrate": [
           "Comparer un filtre antispam construit avec des règles écrites manuellement et un classifieur appris à partir d'exemples."
         ],
-        "answer": [
-          "Le machine learning apprend-il exactement comme un humain ?",
-          "Un système peut-il relever de l'IA sans utiliser de machine learning ?"
+        "hard_questions": [
+          {
+            "question": "Le machine learning apprend-il exactement comme un humain ?",
+            "key_points": [
+              "Le rôle des données d'entraînement.",
+              "La différence entre écrire une règle et apprendre une régularité statistique."
+            ]
+          },
+          {
+            "question": "Un système peut-il relever de l'IA sans utiliser de machine learning ?",
+            "key_points": [
+              "Le rôle des données d'entraînement.",
+              "La différence entre écrire une règle et apprendre une régularité statistique."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Machine learning et intelligence artificielle sont synonymes.",
-        "Le système découvre nécessairement des règles vraies sur le monde.",
-        "Apprendre signifie comprendre comme un humain."
+        {
+          "statement": "Machine learning et intelligence artificielle sont synonymes.",
+          "correction": "À corriger en revenant au résumé canonique : Ensemble de méthodes permettant à un système d'apprendre des régularités à partir de données afin d'améliorer ses performances ou de construire un modèle sans que toutes les règles soient explicitement programmées."
+        },
+        {
+          "statement": "Le système découvre nécessairement des règles vraies sur le monde.",
+          "correction": "À corriger en revenant au résumé canonique : Ensemble de méthodes permettant à un système d'apprendre des régularités à partir de données afin d'améliorer ses performances ou de construire un modèle sans que toutes les règles soient explicitement programmées."
+        },
+        {
+          "statement": "Apprendre signifie comprendre comme un humain.",
+          "correction": "À corriger en revenant au résumé canonique : Ensemble de méthodes permettant à un système d'apprendre des régularités à partir de données afin d'améliorer ses performances ou de construire un modèle sans que toutes les règles soient explicitement programmées."
+        }
       ],
-
       "source_ids": [
         "SRC-0001",
         "SRC-0002"
       ],
-
+      "term_ids": [
+        "TERM-0007",
+        "TERM-0012"
+      ],
       "tags": [
         "machine-learning",
         "training",
         "data"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A03",
       "slug": "deep-learning",
@@ -121,19 +164,16 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Famille de méthodes de machine learning utilisant des réseaux de neurones comportant plusieurs couches de traitement pour apprendre des représentations de données à différents niveaux d'abstraction.",
-
+      "epistemic_status": "established",
+      "summary": "Famille de méthodes de machine learning utilisant des réseaux de neurones comportant plusieurs couches de traitement pour apprendre des représentations de données à différents niveaux d'abstraction.",
       "prerequisites": [
         "A02"
       ],
-
       "learning_objectives": [
         "Situer le deep learning à l'intérieur du machine learning.",
         "Comprendre l'idée d'apprentissage de représentations.",
         "Relier le deep learning aux réseaux neuronaux modernes."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi le mot deep fait référence à la profondeur du réseau.",
@@ -142,28 +182,46 @@
         "demonstrate": [
           "Présenter une chaîne simplifiée où différentes couches extraient progressivement des représentations."
         ],
-        "answer": [
-          "Plus un réseau possède de couches, est-il nécessairement meilleur ?",
-          "Deep learning et réseau de neurones sont-ils strictement synonymes ?"
+        "hard_questions": [
+          {
+            "question": "Plus un réseau possède de couches, est-il nécessairement meilleur ?",
+            "key_points": [
+              "Pourquoi le mot deep fait référence à la profondeur du réseau.",
+              "Pourquoi les représentations sont apprises plutôt qu'entièrement conçues à la main."
+            ]
+          },
+          {
+            "question": "Deep learning et réseau de neurones sont-ils strictement synonymes ?",
+            "key_points": [
+              "Pourquoi le mot deep fait référence à la profondeur du réseau.",
+              "Pourquoi les représentations sont apprises plutôt qu'entièrement conçues à la main."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Deep signifie que le système réfléchit profondément.",
-        "Plus de couches signifie automatiquement de meilleures performances."
+        {
+          "statement": "Deep signifie que le système réfléchit profondément.",
+          "correction": "À corriger en revenant au résumé canonique : Famille de méthodes de machine learning utilisant des réseaux de neurones comportant plusieurs couches de traitement pour apprendre des représentations de données à différents niveaux d'abstraction."
+        },
+        {
+          "statement": "Plus de couches signifie automatiquement de meilleures performances.",
+          "correction": "À corriger en revenant au résumé canonique : Famille de méthodes de machine learning utilisant des réseaux de neurones comportant plusieurs couches de traitement pour apprendre des représentations de données à différents niveaux d'abstraction."
+        }
       ],
-
       "source_ids": [
         "SRC-0002"
       ],
-
+      "term_ids": [
+        "TERM-0013"
+      ],
       "tags": [
         "deep-learning",
         "neural-networks",
         "representation-learning"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A04",
       "slug": "traitement-automatique-langage",
@@ -171,19 +229,16 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Domaine de l'informatique et de l'intelligence artificielle consacré au traitement informatique du langage humain sous forme écrite ou orale.",
-
+      "epistemic_status": "established",
+      "summary": "Domaine de l'informatique et de l'intelligence artificielle consacré au traitement informatique du langage humain sous forme écrite ou orale.",
       "prerequisites": [
         "A01"
       ],
-
       "learning_objectives": [
         "Comprendre que les LLM appartiennent à une histoire plus ancienne du traitement automatique du langage.",
         "Identifier plusieurs tâches classiques du TAL.",
         "Distinguer TAL et IA générative."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Les principales tâches historiques du TAL : classification, traduction, analyse, reconnaissance et génération.",
@@ -192,28 +247,46 @@
         "demonstrate": [
           "Comparer une analyse de sentiment classique avec une génération de texte."
         ],
-        "answer": [
-          "Un correcteur orthographique relève-t-il du TAL ?",
-          "Le TAL existait-il avant les LLM ?"
+        "hard_questions": [
+          {
+            "question": "Un correcteur orthographique relève-t-il du TAL ?",
+            "key_points": [
+              "Les principales tâches historiques du TAL : classification, traduction, analyse, reconnaissance et génération.",
+              "Pourquoi tous les systèmes de TAL ne sont pas des LLM."
+            ]
+          },
+          {
+            "question": "Le TAL existait-il avant les LLM ?",
+            "key_points": [
+              "Les principales tâches historiques du TAL : classification, traduction, analyse, reconnaissance et génération.",
+              "Pourquoi tous les systèmes de TAL ne sont pas des LLM."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Le TAL est apparu avec ChatGPT.",
-        "Tous les outils traitant du langage sont des LLM."
+        {
+          "statement": "Le TAL est apparu avec ChatGPT.",
+          "correction": "À corriger en revenant au résumé canonique : Domaine de l'informatique et de l'intelligence artificielle consacré au traitement informatique du langage humain sous forme écrite ou orale."
+        },
+        {
+          "statement": "Tous les outils traitant du langage sont des LLM.",
+          "correction": "À corriger en revenant au résumé canonique : Domaine de l'informatique et de l'intelligence artificielle consacré au traitement informatique du langage humain sous forme écrite ou orale."
+        }
       ],
-
       "source_ids": [
         "SRC-0003"
       ],
-
+      "term_ids": [
+        "TERM-0014"
+      ],
       "tags": [
         "nlp",
         "language",
         "foundations"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A05",
       "slug": "ia-generative",
@@ -221,20 +294,17 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Famille de systèmes d'IA conçus pour produire de nouveaux contenus tels que texte, image, audio, vidéo, code ou autres représentations à partir des structures apprises dans des données.",
-
+      "epistemic_status": "established",
+      "summary": "Famille de systèmes d'IA conçus pour produire de nouveaux contenus tels que texte, image, audio, vidéo, code ou autres représentations à partir des structures apprises dans des données.",
       "prerequisites": [
         "A01",
         "A02"
       ],
-
       "learning_objectives": [
         "Distinguer génération et simple classification.",
         "Comprendre qu'un LLM constitue une forme d'IA générative mais que l'IA générative ne se limite pas au texte.",
         "Identifier plusieurs modalités génératives."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Ce que signifie générer dans le contexte de l'IA.",
@@ -243,28 +313,46 @@
         "demonstrate": [
           "Comparer une tâche de classification d'image et une tâche de génération d'image."
         ],
-        "answer": [
-          "Une IA de recommandation est-elle nécessairement générative ?",
-          "Une IA générative copie-t-elle simplement des éléments de son entraînement ?"
+        "hard_questions": [
+          {
+            "question": "Une IA de recommandation est-elle nécessairement générative ?",
+            "key_points": [
+              "Ce que signifie générer dans le contexte de l'IA.",
+              "Pourquoi une IA générative ne récupère pas nécessairement un contenu préexistant."
+            ]
+          },
+          {
+            "question": "Une IA générative copie-t-elle simplement des éléments de son entraînement ?",
+            "key_points": [
+              "Ce que signifie générer dans le contexte de l'IA.",
+              "Pourquoi une IA générative ne récupère pas nécessairement un contenu préexistant."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "IA générative signifie uniquement génération de texte.",
-        "Une IA générative se contente de rechercher et copier une réponse existante."
+        {
+          "statement": "IA générative signifie uniquement génération de texte.",
+          "correction": "À corriger en revenant au résumé canonique : Famille de systèmes d'IA conçus pour produire de nouveaux contenus tels que texte, image, audio, vidéo, code ou autres représentations à partir des structures apprises dans des données."
+        },
+        {
+          "statement": "Une IA générative se contente de rechercher et copier une réponse existante.",
+          "correction": "À corriger en revenant au résumé canonique : Famille de systèmes d'IA conçus pour produire de nouveaux contenus tels que texte, image, audio, vidéo, code ou autres représentations à partir des structures apprises dans des données."
+        }
       ],
-
       "source_ids": [
         "SRC-0009"
       ],
-
+      "term_ids": [
+        "TERM-0015"
+      ],
       "tags": [
         "generative-ai",
         "generation",
         "multimodal"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A06",
       "slug": "modele-langage",
@@ -272,20 +360,17 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Modèle qui attribue des probabilités à des séquences linguistiques ou aux différentes continuations possibles d'un contexte.",
-
+      "epistemic_status": "established",
+      "summary": "Modèle qui attribue des probabilités à des séquences linguistiques ou aux différentes continuations possibles d'un contexte.",
       "prerequisites": [
         "A02",
         "A04"
       ],
-
       "learning_objectives": [
         "Comprendre qu'un modèle de langage représente des probabilités sur des séquences.",
         "Relier modèle de langage et prédiction d'une continuation.",
         "Comprendre que les modèles de langage existaient avant les LLM modernes."
       ],
-
       "trainer_mastery": {
         "explain": [
           "La notion de probabilité conditionnelle appliquée à une séquence sans utiliser immédiatement de formalisme mathématique lourd.",
@@ -294,28 +379,46 @@
         "demonstrate": [
           "Proposer plusieurs continuations à une phrase et leur attribuer fictivement différentes probabilités."
         ],
-        "answer": [
-          "Un modèle de langage ne fait-il que prédire le mot suivant ?",
-          "Pourquoi prédire une continuation peut-il produire des textes cohérents ?"
+        "hard_questions": [
+          {
+            "question": "Un modèle de langage ne fait-il que prédire le mot suivant ?",
+            "key_points": [
+              "La notion de probabilité conditionnelle appliquée à une séquence sans utiliser immédiatement de formalisme mathématique lourd.",
+              "Pourquoi prédire une continuation permet ensuite de générer du texte."
+            ]
+          },
+          {
+            "question": "Pourquoi prédire une continuation peut-il produire des textes cohérents ?",
+            "key_points": [
+              "La notion de probabilité conditionnelle appliquée à une séquence sans utiliser immédiatement de formalisme mathématique lourd.",
+              "Pourquoi prédire une continuation permet ensuite de générer du texte."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Un modèle de langage est nécessairement un LLM.",
-        "Le modèle choisit toujours la continuation la plus probable."
+        {
+          "statement": "Un modèle de langage est nécessairement un LLM.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle qui attribue des probabilités à des séquences linguistiques ou aux différentes continuations possibles d'un contexte."
+        },
+        {
+          "statement": "Le modèle choisit toujours la continuation la plus probable.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle qui attribue des probabilités à des séquences linguistiques ou aux différentes continuations possibles d'un contexte."
+        }
       ],
-
       "source_ids": [
         "SRC-0003"
       ],
-
+      "term_ids": [
+        "TERM-0016"
+      ],
       "tags": [
         "language-model",
         "probability",
         "prediction"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A07",
       "slug": "llm",
@@ -323,20 +426,17 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et possédant suffisamment de capacité pour accomplir ou être adapté à de nombreuses tâches liées au langage.",
-
+      "epistemic_status": "established",
+      "summary": "Modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et possédant suffisamment de capacité pour accomplir ou être adapté à de nombreuses tâches liées au langage.",
       "prerequisites": [
         "A03",
         "A06"
       ],
-
       "learning_objectives": [
         "Définir un LLM comme un modèle et non comme une application.",
         "Comprendre le rôle de l'échelle, des données et des paramètres.",
         "Relier LLM, deep learning et modèle de langage."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi le terme Large ne possède pas un seuil universel unique.",
@@ -345,30 +445,52 @@
         "demonstrate": [
           "Reconstituer la chaîne IA → ML → deep learning → modèle de langage → LLM."
         ],
-        "answer": [
-          "Combien de paramètres faut-il pour qu'un modèle soit un LLM ?",
-          "Un LLM est-il nécessairement conversationnel ?"
+        "hard_questions": [
+          {
+            "question": "Combien de paramètres faut-il pour qu'un modèle soit un LLM ?",
+            "key_points": [
+              "Pourquoi le terme Large ne possède pas un seuil universel unique.",
+              "Pourquoi le nombre de paramètres n'est pas à lui seul une mesure d'intelligence ou de qualité."
+            ]
+          },
+          {
+            "question": "Un LLM est-il nécessairement conversationnel ?",
+            "key_points": [
+              "Pourquoi le terme Large ne possède pas un seuil universel unique.",
+              "Pourquoi le nombre de paramètres n'est pas à lui seul une mesure d'intelligence ou de qualité."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "LLM signifie chatbot.",
-        "Un nombre supérieur de paramètres garantit un meilleur modèle.",
-        "Tous les LLM possèdent la même architecture et le même comportement."
+        {
+          "statement": "LLM signifie chatbot.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et possédant suffisamment de capacité pour accomplir ou être adapté à de nombreuses tâches liées au langage."
+        },
+        {
+          "statement": "Un nombre supérieur de paramètres garantit un meilleur modèle.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et possédant suffisamment de capacité pour accomplir ou être adapté à de nombreuses tâches liées au langage."
+        },
+        {
+          "statement": "Tous les LLM possèdent la même architecture et le même comportement.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et possédant suffisamment de capacité pour accomplir ou être adapté à de nombreuses tâches liées au langage."
+        }
       ],
-
       "source_ids": [
         "SRC-0003",
         "SRC-0004"
       ],
-
+      "term_ids": [
+        "TERM-0001",
+        "TERM-0017"
+      ],
       "tags": [
         "llm",
         "language-model",
         "scaling"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A08",
       "slug": "foundation-model",
@@ -376,19 +498,16 @@
       "domain": "A",
       "mastery_level": "intermediate",
       "stability": "stable",
-
-      "definition_short": "Modèle entraîné sur des données larges à grande échelle, conçu pour pouvoir être adapté à un large éventail de tâches en aval.",
-
+      "epistemic_status": "established",
+      "summary": "Modèle entraîné sur des données larges à grande échelle, conçu pour pouvoir être adapté à un large éventail de tâches en aval.",
       "prerequisites": [
         "A03"
       ],
-
       "learning_objectives": [
         "Comprendre la notion de modèle de fondation.",
         "Distinguer foundation model et LLM.",
         "Comprendre le principe d'adaptation à plusieurs tâches."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi tous les foundation models ne sont pas nécessairement des modèles de langage.",
@@ -397,28 +516,46 @@
         "demonstrate": [
           "Comparer un modèle spécialisé pour une tâche et un modèle général pouvant être adapté."
         ],
-        "answer": [
-          "Un LLM est-il toujours un foundation model ?",
-          "Un modèle de vision peut-il être un foundation model ?"
+        "hard_questions": [
+          {
+            "question": "Un LLM est-il toujours un foundation model ?",
+            "key_points": [
+              "Pourquoi tous les foundation models ne sont pas nécessairement des modèles de langage.",
+              "Pourquoi un même modèle de fondation peut alimenter plusieurs applications."
+            ]
+          },
+          {
+            "question": "Un modèle de vision peut-il être un foundation model ?",
+            "key_points": [
+              "Pourquoi tous les foundation models ne sont pas nécessairement des modèles de langage.",
+              "Pourquoi un même modèle de fondation peut alimenter plusieurs applications."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Foundation model est simplement un autre nom pour LLM.",
-        "Foundation signifie que le modèle constitue une intelligence générale."
+        {
+          "statement": "Foundation model est simplement un autre nom pour LLM.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle entraîné sur des données larges à grande échelle, conçu pour pouvoir être adapté à un large éventail de tâches en aval."
+        },
+        {
+          "statement": "Foundation signifie que le modèle constitue une intelligence générale.",
+          "correction": "À corriger en revenant au résumé canonique : Modèle entraîné sur des données larges à grande échelle, conçu pour pouvoir être adapté à un large éventail de tâches en aval."
+        }
       ],
-
       "source_ids": [
         "SRC-0005"
       ],
-
+      "term_ids": [
+        "TERM-0018"
+      ],
       "tags": [
         "foundation-model",
         "adaptation",
         "general-purpose"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A09",
       "slug": "gpai",
@@ -426,20 +563,17 @@
       "domain": "A",
       "mastery_level": "intermediate",
       "stability": "evolving",
-
-      "definition_short": "Catégorie juridique européenne désignant un modèle d'IA présentant une généralité significative et capable d'accomplir de manière compétente un large éventail de tâches distinctes, indépendamment de sa mise sur le marché, et pouvant être intégré dans divers systèmes ou applications en aval.",
-
+      "epistemic_status": "established",
+      "summary": "Catégorie juridique européenne désignant un modèle d'IA présentant une généralité significative et capable d'accomplir de manière compétente un large éventail de tâches distinctes, indépendamment de sa mise sur le marché, et pouvant être intégré dans divers systèmes ou applications en aval.",
       "prerequisites": [
         "A01",
         "A08"
       ],
-
       "learning_objectives": [
         "Distinguer une catégorie juridique d'une catégorie purement scientifique.",
         "Comprendre que GPAI et foundation model se recouvrent partiellement sans être des synonymes parfaits.",
         "Identifier le rôle du règlement européen sur l'IA."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi une définition réglementaire poursuit un objectif différent d'une définition scientifique.",
@@ -448,29 +582,47 @@
         "demonstrate": [
           "Comparer les notions de foundation model et de modèle d'IA à usage général."
         ],
-        "answer": [
-          "Tous les LLM sont-ils juridiquement des GPAI ?",
-          "Pourquoi le droit utilise-t-il une terminologie différente de la recherche ?"
+        "hard_questions": [
+          {
+            "question": "Tous les LLM sont-ils juridiquement des GPAI ?",
+            "key_points": [
+              "Pourquoi une définition réglementaire poursuit un objectif différent d'une définition scientifique.",
+              "La différence entre modèle d'IA à usage général et système d'IA qui l'intègre."
+            ]
+          },
+          {
+            "question": "Pourquoi le droit utilise-t-il une terminologie différente de la recherche ?",
+            "key_points": [
+              "Pourquoi une définition réglementaire poursuit un objectif différent d'une définition scientifique.",
+              "La différence entre modèle d'IA à usage général et système d'IA qui l'intègre."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "GPAI est un terme purement technique.",
-        "GPAI et foundation model sont strictement synonymes."
+        {
+          "statement": "GPAI est un terme purement technique.",
+          "correction": "À corriger en revenant au résumé canonique : Catégorie juridique européenne désignant un modèle d'IA présentant une généralité significative et capable d'accomplir de manière compétente un large éventail de tâches distinctes, indépendamment de sa mise sur le marché, et pouvant être intégré dans divers systèmes ou applications en aval."
+        },
+        {
+          "statement": "GPAI et foundation model sont strictement synonymes.",
+          "correction": "À corriger en revenant au résumé canonique : Catégorie juridique européenne désignant un modèle d'IA présentant une généralité significative et capable d'accomplir de manière compétente un large éventail de tâches distinctes, indépendamment de sa mise sur le marché, et pouvant être intégré dans divers systèmes ou applications en aval."
+        }
       ],
-
       "source_ids": [
         "SRC-0006",
         "SRC-0007"
       ],
-
+      "term_ids": [
+        "TERM-0019"
+      ],
       "tags": [
         "gpai",
         "ai-act",
         "regulation"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A10",
       "slug": "modele-chatbot-application",
@@ -478,19 +630,16 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Un modèle est le composant appris qui transforme des entrées en sorties ; un chatbot est une interface conversationnelle ; une application peut combiner modèle, interface, instructions, contexte, mémoire, recherche, données et outils.",
-
+      "epistemic_status": "established",
+      "summary": "Un modèle est le composant appris qui transforme des entrées en sorties ; un chatbot est une interface conversationnelle ; une application peut combiner modèle, interface, instructions, contexte, mémoire, recherche, données et outils.",
       "prerequisites": [
         "A07"
       ],
-
       "learning_objectives": [
         "Distinguer systématiquement modèle, système, application et interface.",
         "Comprendre pourquoi les capacités observées dans un produit ne proviennent pas toutes directement du LLM.",
         "Éviter d'attribuer au modèle des fonctions fournies par l'application."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi recherche web, mémoire ou exécution de code peuvent appartenir à l'application plutôt qu'au modèle.",
@@ -499,30 +648,52 @@
         "demonstrate": [
           "Dessiner une architecture modèle + instructions + outils + mémoire + interface."
         ],
-        "answer": [
-          "Quand un chatbot consulte Internet, est-ce le LLM lui-même qui navigue sur le web ?",
-          "Pourquoi un même modèle peut-il se comporter différemment dans deux produits ?"
+        "hard_questions": [
+          {
+            "question": "Quand un chatbot consulte Internet, est-ce le LLM lui-même qui navigue sur le web ?",
+            "key_points": [
+              "Pourquoi recherche web, mémoire ou exécution de code peuvent appartenir à l'application plutôt qu'au modèle.",
+              "Pourquoi deux applications utilisant le même modèle peuvent avoir des comportements différents."
+            ]
+          },
+          {
+            "question": "Pourquoi un même modèle peut-il se comporter différemment dans deux produits ?",
+            "key_points": [
+              "Pourquoi recherche web, mémoire ou exécution de code peuvent appartenir à l'application plutôt qu'au modèle.",
+              "Pourquoi deux applications utilisant le même modèle peuvent avoir des comportements différents."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "ChatGPT, Claude ou Gemini désignent toujours un modèle unique.",
-        "Toutes les fonctions visibles d'un chatbot appartiennent au réseau neuronal."
+        {
+          "statement": "ChatGPT, Claude ou Gemini désignent toujours un modèle unique.",
+          "correction": "À corriger en revenant au résumé canonique : Un modèle est le composant appris qui transforme des entrées en sorties ; un chatbot est une interface conversationnelle ; une application peut combiner modèle, interface, instructions, contexte, mémoire, recherche, données et outils."
+        },
+        {
+          "statement": "Toutes les fonctions visibles d'un chatbot appartiennent au réseau neuronal.",
+          "correction": "À corriger en revenant au résumé canonique : Un modèle est le composant appris qui transforme des entrées en sorties ; un chatbot est une interface conversationnelle ; une application peut combiner modèle, interface, instructions, contexte, mémoire, recherche, données et outils."
+        }
       ],
-
       "source_ids": [
         "SRC-0001",
         "SRC-0003"
       ],
-
+      "term_ids": [
+        "TERM-0001",
+        "TERM-0002",
+        "TERM-0003",
+        "TERM-0004",
+        "TERM-0017"
+      ],
       "tags": [
         "model",
         "application",
         "chatbot",
         "architecture"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A11",
       "slug": "parametres-poids",
@@ -530,19 +701,16 @@
       "domain": "A",
       "mastery_level": "indispensable",
       "stability": "stable",
-
-      "definition_short": "Valeurs numériques apprises pendant l'entraînement qui déterminent une grande partie des transformations effectuées par un réseau neuronal.",
-
+      "epistemic_status": "established",
+      "summary": "Valeurs numériques apprises pendant l'entraînement qui déterminent une grande partie des transformations effectuées par un réseau neuronal.",
       "prerequisites": [
         "A03"
       ],
-
       "learning_objectives": [
         "Comprendre ce qu'est un paramètre appris.",
         "Distinguer paramètres du modèle et données placées dans son contexte.",
         "Comprendre que l'entraînement modifie les paramètres alors qu'un prompt ordinaire ne le fait pas."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Pourquoi les poids constituent des nombres appris et non une base documentaire contenant des phrases.",
@@ -551,29 +719,50 @@
         "demonstrate": [
           "Utiliser un petit réseau fictif pour montrer que l'apprentissage ajuste des coefficients numériques."
         ],
-        "answer": [
-          "Où sont stockées les connaissances d'un LLM ?",
-          "Quand je parle à un chatbot, est-ce que je réentraîne son modèle ?"
+        "hard_questions": [
+          {
+            "question": "Où sont stockées les connaissances d'un LLM ?",
+            "key_points": [
+              "Pourquoi les poids constituent des nombres appris et non une base documentaire contenant des phrases.",
+              "Pourquoi utiliser un modèle ne signifie généralement pas modifier ses poids."
+            ]
+          },
+          {
+            "question": "Quand je parle à un chatbot, est-ce que je réentraîne son modèle ?",
+            "key_points": [
+              "Pourquoi les poids constituent des nombres appris et non une base documentaire contenant des phrases.",
+              "Pourquoi utiliser un modèle ne signifie généralement pas modifier ses poids."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Les paramètres sont une base de données contenant les textes d'entraînement.",
-        "Chaque conversation modifie automatiquement les poids du modèle."
+        {
+          "statement": "Les paramètres sont une base de données contenant les textes d'entraînement.",
+          "correction": "À corriger en revenant au résumé canonique : Valeurs numériques apprises pendant l'entraînement qui déterminent une grande partie des transformations effectuées par un réseau neuronal."
+        },
+        {
+          "statement": "Chaque conversation modifie automatiquement les poids du modèle.",
+          "correction": "À corriger en revenant au résumé canonique : Valeurs numériques apprises pendant l'entraînement qui déterminent une grande partie des transformations effectuées par un réseau neuronal."
+        }
       ],
-
       "source_ids": [
         "SRC-0002",
         "SRC-0004"
       ],
-
+      "term_ids": [
+        "TERM-0005",
+        "TERM-0006",
+        "TERM-0007",
+        "TERM-0008"
+      ],
       "tags": [
         "parameters",
         "weights",
         "training"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
     },
-
     {
       "id": "A12",
       "slug": "open-source-open-weights-proprietary",
@@ -581,19 +770,16 @@
       "domain": "A",
       "mastery_level": "intermediate",
       "stability": "evolving",
-
-      "definition_short": "L'accès aux poids d'un modèle ne suffit pas à lui seul à qualifier un système d'IA d'open source ; il faut distinguer disponibilité des paramètres, licences, code, informations sur les données et éléments permettant d'étudier, modifier et redistribuer le système.",
-
+      "epistemic_status": "debated",
+      "summary": "L'accès aux poids d'un modèle ne suffit pas à lui seul à qualifier un système d'IA d'open source ; il faut distinguer disponibilité des paramètres, licences, code, informations sur les données et éléments permettant d'étudier, modifier et redistribuer le système.",
       "prerequisites": [
         "A11"
       ],
-
       "learning_objectives": [
         "Distinguer open weights et open source AI.",
         "Comprendre l'importance des licences.",
         "Éviter de qualifier automatiquement de libre un modèle simplement téléchargeable."
       ],
-
       "trainer_mastery": {
         "explain": [
           "Les libertés d'utilisation, d'étude, de modification et de partage associées à la définition Open Source AI.",
@@ -602,27 +788,763 @@
         "demonstrate": [
           "Comparer trois scénarios : API propriétaire, poids téléchargeables et système répondant aux critères Open Source AI."
         ],
-        "answer": [
-          "Si je peux télécharger un modèle, est-il open source ?",
-          "Pourquoi les données d'entraînement comptent-elles dans la discussion sur l'ouverture des modèles ?"
+        "hard_questions": [
+          {
+            "question": "Si je peux télécharger un modèle, est-il open source ?",
+            "key_points": [
+              "Les libertés d'utilisation, d'étude, de modification et de partage associées à la définition Open Source AI.",
+              "Pourquoi l'accès aux paramètres seuls ne garantit pas la reproductibilité de l'entraînement."
+            ]
+          },
+          {
+            "question": "Pourquoi les données d'entraînement comptent-elles dans la discussion sur l'ouverture des modèles ?",
+            "key_points": [
+              "Les libertés d'utilisation, d'étude, de modification et de partage associées à la définition Open Source AI.",
+              "Pourquoi l'accès aux paramètres seuls ne garantit pas la reproductibilité de l'entraînement."
+            ]
+          }
         ]
       },
-
       "misconceptions": [
-        "Téléchargeable signifie open source.",
-        "Open weights et open source sont synonymes.",
-        "Un modèle gratuit est nécessairement libre."
+        {
+          "statement": "Téléchargeable signifie open source.",
+          "correction": "À corriger en revenant au résumé canonique : L'accès aux poids d'un modèle ne suffit pas à lui seul à qualifier un système d'IA d'open source ; il faut distinguer disponibilité des paramètres, licences, code, informations sur les données et éléments permettant d'étudier, modifier et redistribuer le système."
+        },
+        {
+          "statement": "Open weights et open source sont synonymes.",
+          "correction": "À corriger en revenant au résumé canonique : L'accès aux poids d'un modèle ne suffit pas à lui seul à qualifier un système d'IA d'open source ; il faut distinguer disponibilité des paramètres, licences, code, informations sur les données et éléments permettant d'étudier, modifier et redistribuer le système."
+        },
+        {
+          "statement": "Un modèle gratuit est nécessairement libre.",
+          "correction": "À corriger en revenant au résumé canonique : L'accès aux poids d'un modèle ne suffit pas à lui seul à qualifier un système d'IA d'open source ; il faut distinguer disponibilité des paramètres, licences, code, informations sur les données et éléments permettant d'étudier, modifier et redistribuer le système."
+        }
       ],
-
       "source_ids": [
         "SRC-0008"
       ],
-
+      "term_ids": [
+        "TERM-0006",
+        "TERM-0009",
+        "TERM-0010"
+      ],
       "tags": [
         "open-source",
         "open-weights",
         "licensing"
-      ]
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B01",
+      "slug": "corpus-entrainement",
+      "title": "Corpus d'entraînement",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Ensemble de données utilisées pendant l'entraînement pour ajuster les paramètres d'un modèle.",
+      "prerequisites": [
+        "A02",
+        "A07"
+      ],
+      "learning_objectives": [
+        "Distinguer données d'entraînement et contexte fourni au moment de l'inférence.",
+        "Comprendre qu'un corpus peut être hétérogène, filtré, dédupliqué ou pondéré.",
+        "Éviter d'imaginer le corpus comme une base documentaire directement consultée pendant chaque réponse."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le rôle du corpus dans l'apprentissage statistique du modèle.",
+          "Pourquoi l'origine, la qualité, la couverture et les biais des données influencent le comportement appris."
+        ],
+        "demonstrate": [
+          "Comparer un document présent dans un corpus d'entraînement avec un document injecté explicitement dans le contexte au moment d'une requête."
+        ],
+        "hard_questions": [
+          {
+            "question": "Le LLM recherche-t-il ma question dans son corpus d'entraînement ?",
+            "key_points": [
+              "Non : l'inférence standard utilise les paramètres appris, pas une recherche directe dans le corpus.",
+              "Une application peut toutefois ajouter un moteur de recherche ou un RAG, qui est un mécanisme distinct."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Le corpus d'entraînement est une base de données que le LLM consulte à chaque réponse.",
+          "correction": "Le corpus sert principalement à ajuster les paramètres pendant l'entraînement ; une consultation documentaire explicite relève d'un autre mécanisme."
+        },
+        {
+          "statement": "Plus de données garantit automatiquement un meilleur modèle.",
+          "correction": "La qualité, la diversité, la pertinence, le filtrage et la procédure d'entraînement comptent autant que la quantité brute."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "term_ids": [
+        "TERM-0020"
+      ],
+      "tags": [
+        "training-data",
+        "corpus",
+        "data"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B02",
+      "slug": "token",
+      "title": "Token",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Unité discrète manipulée par le tokenizer et représentée par un identifiant dans la séquence fournie au modèle.",
+      "prerequisites": [
+        "A06"
+      ],
+      "learning_objectives": [
+        "Comprendre qu'un token n'est pas nécessairement un mot.",
+        "Identifier qu'un token peut correspondre à un mot, une partie de mot, un signe, un espace ou une unité issue d'un encodage.",
+        "Comprendre que le découpage dépend du tokenizer."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi les LLM ne manipulent pas directement des mots ou des phrases comme unités fondamentales.",
+          "Pourquoi le nombre de tokens d'un texte varie selon le tokenizer."
+        ],
+        "demonstrate": [
+          "Découper une même phrase de plusieurs façons plausibles pour montrer qu'un token n'est pas synonyme de mot."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un token correspond-il toujours à un morceau de texte lisible ?",
+            "key_points": [
+              "Pas nécessairement : selon le tokenizer, certaines unités peuvent provenir d'octets ou de conventions spéciales.",
+              "Le point essentiel est qu'un token est une unité discrète du vocabulaire du tokenizer."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un token est un mot.",
+          "correction": "Un mot peut produire un ou plusieurs tokens, et un token peut aussi représenter ponctuation, espaces ou sous-unités."
+        },
+        {
+          "statement": "Tous les LLM découpent un texte de la même manière.",
+          "correction": "Le découpage dépend du tokenizer et de son vocabulaire."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "term_ids": [
+        "TERM-0021"
+      ],
+      "tags": [
+        "token",
+        "tokenization",
+        "sequence"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B03",
+      "slug": "tokenisation",
+      "title": "Tokenisation",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Transformation d'une entrée textuelle en une séquence de tokens selon les règles d'un tokenizer.",
+      "prerequisites": [
+        "B02"
+      ],
+      "learning_objectives": [
+        "Expliquer la chaîne texte → tokens.",
+        "Comprendre que la tokenisation influence longueur, coût et représentation de l'entrée.",
+        "Savoir qu'il existe plusieurs familles d'algorithmes de tokenisation."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi la tokenisation constitue l'interface entre texte brut et séquence discrète traitée par le modèle.",
+          "Pourquoi des langues, nombres, code ou caractères rares peuvent se tokeniser différemment."
+        ],
+        "demonstrate": [
+          "Comparer la tokenisation d'un mot fréquent, d'un mot rare, d'un nombre et d'un fragment de code."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi ne pas simplement utiliser un token par mot ?",
+            "key_points": [
+              "Un vocabulaire strictement lexical gère mal les mots inconnus, variantes, langues et formes rares.",
+              "Les approches sous-mots offrent un compromis entre vocabulaire fini et capacité à représenter des chaînes variées."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "La tokenisation est un simple découpage sur les espaces.",
+          "correction": "Les tokenizers modernes utilisent des vocabulaires et algorithmes qui peuvent fusionner ou séparer des unités indépendamment des espaces."
+        },
+        {
+          "statement": "La tokenisation est identique pour tous les modèles.",
+          "correction": "Elle dépend du tokenizer associé au modèle."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0010"
+      ],
+      "term_ids": [
+        "TERM-0022"
+      ],
+      "tags": [
+        "tokenization",
+        "tokenizer",
+        "text-processing"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B04",
+      "slug": "vocabulaire-tokenizer",
+      "title": "Vocabulaire du tokenizer",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Ensemble fini des unités que le tokenizer sait associer à des identifiants de tokens.",
+      "prerequisites": [
+        "B02",
+        "B03"
+      ],
+      "learning_objectives": [
+        "Relier tokens et vocabulaire fini.",
+        "Comprendre qu'un vocabulaire peut contenir mots, sous-mots, signes, unités d'octets et tokens spéciaux.",
+        "Distinguer taille du vocabulaire et richesse des connaissances du modèle."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le compromis entre taille du vocabulaire et longueur des séquences tokenisées.",
+          "Pourquoi un vocabulaire n'est pas un dictionnaire de connaissances."
+        ],
+        "demonstrate": [
+          "Montrer comment plusieurs unités d'un vocabulaire peuvent être combinées pour représenter un mot absent comme entrée unique."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un vocabulaire plus grand rend-il forcément le modèle meilleur ?",
+            "key_points": [
+              "Non : il modifie le compromis entre granularité, longueur des séquences, mémoire et apprentissage.",
+              "La qualité globale dépend de nombreux autres facteurs."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Le vocabulaire contient toutes les connaissances du modèle.",
+          "correction": "Il contient les unités discrètes disponibles pour l'encodage, pas les faits appris."
+        },
+        {
+          "statement": "Un mot absent du vocabulaire ne peut jamais être représenté.",
+          "correction": "Les tokenizers sous-mots ou basés sur des octets peuvent composer des unités plus petites."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0010"
+      ],
+      "term_ids": [
+        "TERM-0023"
+      ],
+      "tags": [
+        "vocabulary",
+        "tokenizer",
+        "tokens"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B05",
+      "slug": "sous-mots-bpe",
+      "title": "Sous-mots et Byte Pair Encoding — BPE",
+      "domain": "B",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Approche de tokenisation où des unités fréquentes de caractères ou sous-mots sont combinées afin de construire un vocabulaire compact et réutilisable.",
+      "prerequisites": [
+        "B03",
+        "B04"
+      ],
+      "learning_objectives": [
+        "Comprendre l'intérêt des unités sous-mots.",
+        "Expliquer l'intuition de BPE sans le présenter comme l'unique tokenizer moderne.",
+        "Relier fréquence des motifs et construction du vocabulaire."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "L'intuition des fusions successives de paires fréquentes.",
+          "Pourquoi les sous-mots réduisent le problème des mots inconnus tout en évitant un vocabulaire contenant chaque mot possible."
+        ],
+        "demonstrate": [
+          "Réaliser quelques fusions BPE à la main sur un mini-corpus."
+        ],
+        "hard_questions": [
+          {
+            "question": "Tous les LLM utilisent-ils BPE ?",
+            "key_points": [
+              "Non : BPE est une famille historique importante, mais d'autres approches existent, notamment Unigram, SentencePiece ou des variantes byte-level.",
+              "Il faut parler du tokenizer concret du modèle étudié."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "BPE découpe toujours les mots selon leur morphologie linguistique.",
+          "correction": "Les unités résultent principalement de critères statistiques et ne coïncident pas nécessairement avec des morphèmes."
+        },
+        {
+          "statement": "BPE est le tokenizer universel des LLM.",
+          "correction": "Les modèles utilisent différentes familles et variantes de tokenizers."
+        }
+      ],
+      "source_ids": [
+        "SRC-0010",
+        "SRC-0003"
+      ],
+      "term_ids": [
+        "TERM-0024",
+        "TERM-0025"
+      ],
+      "tags": [
+        "subword",
+        "bpe",
+        "tokenization"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B06",
+      "slug": "identifiant-token",
+      "title": "Identifiant de token",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Entier servant d'index pour désigner un token précis dans le vocabulaire du tokenizer.",
+      "prerequisites": [
+        "B02",
+        "B04"
+      ],
+      "learning_objectives": [
+        "Comprendre la chaîne token → identifiant entier.",
+        "Ne pas attribuer de signification numérique à la valeur de l'identifiant.",
+        "Relier l'identifiant à la table d'embeddings d'entrée."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi l'ID est essentiellement une clé d'indexation.",
+          "Pourquoi deux tokens sémantiquement proches peuvent avoir des identifiants numériques très éloignés."
+        ],
+        "demonstrate": [
+          "Présenter une mini-table token ↔ ID puis montrer que l'ordre numérique n'encode pas la proximité sémantique."
+        ],
+        "hard_questions": [
+          {
+            "question": "Si le token 100 et le token 101 ont des IDs proches, leurs sens sont-ils proches ?",
+            "key_points": [
+              "Non : la proximité des IDs n'a généralement pas de signification sémantique.",
+              "La représentation géométrique pertinente apparaît dans les vecteurs d'embedding, pas dans la valeur brute de l'ID."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "La valeur d'un token ID mesure son sens ou son importance.",
+          "correction": "L'ID sert d'index discret ; sa valeur numérique n'est pas une coordonnée sémantique."
+        },
+        {
+          "statement": "Le modèle calcule directement sur les identifiants comme sur des nombres ordinaires.",
+          "correction": "Les IDs servent notamment à sélectionner des représentations vectorielles avant les calculs neuronaux."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0026"
+      ],
+      "tags": [
+        "token-id",
+        "vocabulary",
+        "index"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B07",
+      "slug": "token-special",
+      "title": "Token spécial",
+      "domain": "B",
+      "mastery_level": "intermediate",
+      "stability": "evolving",
+      "epistemic_status": "model-specific",
+      "summary": "Token réservé à une fonction de structure ou de contrôle, par exemple délimiter une séquence, un rôle, une fin de texte ou une zone particulière.",
+      "prerequisites": [
+        "B04",
+        "B06"
+      ],
+      "learning_objectives": [
+        "Comprendre que certains tokens ne représentent pas du texte ordinaire.",
+        "Identifier que les conventions de tokens spéciaux varient selon les familles de modèles.",
+        "Relier format conversationnel et séquence effectivement fournie au modèle."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le rôle de tokens de début, fin, séparation, remplissage ou rôles selon les architectures.",
+          "Pourquoi une interface de chat peut transformer les messages utilisateur en une séquence enrichie de marqueurs spéciaux."
+        ],
+        "demonstrate": [
+          "Afficher un exemple conceptuel de conversation transformée en séquence contenant des marqueurs de rôle."
+        ],
+        "hard_questions": [
+          {
+            "question": "Les mots « système », « utilisateur » et « assistant » sont-ils toujours de simples mots dans le prompt ?",
+            "key_points": [
+              "Pas nécessairement : l'application ou le tokenizer peut utiliser des marqueurs spéciaux ou un format structuré.",
+              "Le détail dépend du modèle et de son protocole de conversation."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Tous les modèles utilisent les mêmes tokens spéciaux.",
+          "correction": "Ces conventions sont spécifiques aux architectures, tokenizers et formats de conversation."
+        },
+        {
+          "statement": "Un token spécial correspond forcément à un texte visible par l'utilisateur.",
+          "correction": "Il peut être injecté par l'application ou le format interne sans apparaître comme texte ordinaire."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003"
+      ],
+      "term_ids": [
+        "TERM-0027"
+      ],
+      "tags": [
+        "special-token",
+        "chat-template",
+        "model-specific"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B08",
+      "slug": "embedding",
+      "title": "Embedding — représentation vectorielle",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Représentation d'une unité discrète ou d'un objet par un vecteur de nombres appris ou calculés.",
+      "prerequisites": [
+        "A03",
+        "B06"
+      ],
+      "learning_objectives": [
+        "Comprendre le passage ID de token → vecteur d'entrée.",
+        "Distinguer un identifiant discret d'une représentation vectorielle continue.",
+        "Comprendre qu'il existe plusieurs types d'embeddings selon l'objet et la tâche."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi un réseau neuronal travaille avec des vecteurs plutôt qu'avec les chaînes de caractères elles-mêmes.",
+          "La différence entre embedding initial d'un token et représentations contextuelles produites plus profondément dans le réseau."
+        ],
+        "demonstrate": [
+          "Transformer une mini-liste d'IDs en vecteurs fictifs et montrer que les calculs ultérieurs utilisent ces vecteurs."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un embedding contient-il le « sens » exact d'un mot ?",
+            "key_points": [
+              "Il encode des propriétés apprises utiles au modèle, mais aucune coordonnée isolée ne correspond généralement à une définition humaine simple.",
+              "Le sens observé dépend du type d'embedding, de l'entraînement et du contexte d'utilisation."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un embedding est simplement l'ID du token écrit avec plusieurs nombres.",
+          "correction": "L'ID est une clé discrète ; l'embedding est un vecteur de valeurs apprises ou calculées."
+        },
+        {
+          "statement": "Tous les embeddings sont directement comparables entre modèles.",
+          "correction": "Des espaces vectoriels issus de modèles différents n'ont pas nécessairement les mêmes dimensions ni la même géométrie."
+        }
+      ],
+      "source_ids": [
+        "SRC-0011",
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0028"
+      ],
+      "tags": [
+        "embedding",
+        "vector",
+        "representation"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B09",
+      "slug": "espace-vectoriel",
+      "title": "Espace vectoriel",
+      "domain": "B",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Espace mathématique dans lequel des objets sont représentés par des vecteurs et où des relations géométriques peuvent être calculées.",
+      "prerequisites": [
+        "B08"
+      ],
+      "learning_objectives": [
+        "Lire un embedding comme un point ou un vecteur dans un espace de grande dimension.",
+        "Comprendre que distances et angles peuvent servir à comparer des représentations.",
+        "Ne pas confondre visualisation 2D et espace réel de grande dimension."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi la géométrie d'un espace d'embeddings peut refléter certaines régularités apprises.",
+          "Pourquoi une projection 2D est une simplification pouvant déformer les relations."
+        ],
+        "demonstrate": [
+          "Utiliser des vecteurs 2D fictifs pour introduire distance et angle, puis rappeler que les modèles utilisent bien davantage de dimensions."
+        ],
+        "hard_questions": [
+          {
+            "question": "Peut-on regarder deux dimensions et savoir exactement ce que pense le modèle ?",
+            "key_points": [
+              "Non : une projection 2D réduit fortement l'information et peut déformer les voisinages.",
+              "Elle sert d'outil pédagogique ou exploratoire, pas de lecture directe de la pensée du modèle."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Chaque dimension d'un embedding possède nécessairement un sens humain clair.",
+          "correction": "Les propriétés sont généralement distribuées sur de nombreuses dimensions."
+        },
+        {
+          "statement": "Une carte 2D d'embeddings montre fidèlement l'espace original.",
+          "correction": "Toute réduction de dimension peut introduire des déformations."
+        }
+      ],
+      "source_ids": [
+        "SRC-0011"
+      ],
+      "term_ids": [
+        "TERM-0029"
+      ],
+      "tags": [
+        "vector-space",
+        "geometry",
+        "embedding"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B10",
+      "slug": "embedding-semantique",
+      "title": "Embedding sémantique",
+      "domain": "B",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Vecteur construit pour que des textes jugés proches selon une notion de similarité sémantique tendent à être proches dans l'espace de représentation.",
+      "prerequisites": [
+        "B08",
+        "B09"
+      ],
+      "learning_objectives": [
+        "Distinguer embedding de token et embedding de phrase ou document.",
+        "Comprendre l'usage des embeddings pour recherche sémantique, regroupement et RAG.",
+        "Comprendre que la proximité dépend du modèle et de son objectif d'entraînement."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi deux formulations différentes peuvent être proches dans un espace sémantique.",
+          "Pourquoi un embedding sémantique ne garantit ni vérité factuelle ni équivalence parfaite de sens."
+        ],
+        "demonstrate": [
+          "Comparer conceptuellement trois phrases paraphrastiques et une phrase hors sujet dans un espace d'embeddings."
+        ],
+        "hard_questions": [
+          {
+            "question": "Deux textes très proches vectoriellement disent-ils forcément la même chose ?",
+            "key_points": [
+              "Non : la similarité est une approximation apprise et dépend du modèle.",
+              "Des négations, nombres ou nuances importantes peuvent parfois être mal reflétés."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un embedding sémantique est une représentation parfaite du sens.",
+          "correction": "Il approxime des relations utiles selon l'objectif et les données du modèle."
+        },
+        {
+          "statement": "Proximité sémantique signifie vérité identique.",
+          "correction": "La similarité de formulation ou de thème ne valide pas les faits contenus."
+        }
+      ],
+      "source_ids": [
+        "SRC-0013"
+      ],
+      "term_ids": [
+        "TERM-0030"
+      ],
+      "tags": [
+        "semantic-embedding",
+        "sentence-embedding",
+        "semantic-search"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B11",
+      "slug": "similarite-cosinus",
+      "title": "Similarité cosinus",
+      "domain": "B",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Mesure fondée sur l'angle entre deux vecteurs, fréquemment utilisée pour comparer des embeddings.",
+      "prerequisites": [
+        "B09",
+        "B10"
+      ],
+      "learning_objectives": [
+        "Comprendre intuitivement la comparaison par direction plutôt que par valeur brute des coordonnées.",
+        "Savoir qu'une similarité cosinus élevée indique une proximité géométrique selon l'espace choisi.",
+        "Éviter de transformer ce score en probabilité de vérité."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "L'intuition du cosinus entre deux vecteurs sans exiger un développement mathématique complet.",
+          "Pourquoi la mesure est utile pour classer des voisins dans un espace d'embeddings."
+        ],
+        "demonstrate": [
+          "Comparer l'angle entre quelques vecteurs 2D et relier cette intuition à une recherche sémantique."
+        ],
+        "hard_questions": [
+          {
+            "question": "Une similarité cosinus de 0,9 signifie-t-elle 90 % de même sens ?",
+            "key_points": [
+              "Non : ce n'est pas un pourcentage de sens ni une probabilité.",
+              "Le score prend sa signification dans un modèle, un jeu de données et une tâche donnés."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "La similarité cosinus est une probabilité.",
+          "correction": "C'est une mesure géométrique de l'angle entre vecteurs."
+        },
+        {
+          "statement": "Un score élevé prouve que deux textes sont vrais ou équivalents.",
+          "correction": "Il indique seulement une proximité dans l'espace de représentation considéré."
+        }
+      ],
+      "source_ids": [
+        "SRC-0013"
+      ],
+      "term_ids": [
+        "TERM-0031"
+      ],
+      "tags": [
+        "cosine-similarity",
+        "vector-space",
+        "semantic-search"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "B12",
+      "slug": "fenetre-contexte",
+      "title": "Fenêtre de contexte",
+      "domain": "B",
+      "mastery_level": "indispensable",
+      "stability": "evolving",
+      "epistemic_status": "model-specific",
+      "summary": "Limite de séquence, généralement exprimée en tokens, que le modèle peut prendre en compte dans une requête ou un traitement donné selon sa configuration.",
+      "prerequisites": [
+        "A07",
+        "B03"
+      ],
+      "learning_objectives": [
+        "Comprendre que la fenêtre de contexte est mesurée en tokens et non simplement en pages ou mots.",
+        "Distinguer contexte courant, mémoire applicative et paramètres du modèle.",
+        "Comprendre qu'une grande fenêtre ne garantit pas une utilisation uniforme ou parfaite de toute l'information."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Ce qui peut entrer dans le budget de contexte : instructions, messages, documents, résultats d'outils et génération selon les contraintes du système.",
+          "Pourquoi les limites exactes et la répartition entrée-sortie sont spécifiques au modèle et au produit."
+        ],
+        "demonstrate": [
+          "Représenter une fenêtre comme un budget de tokens partagé entre instructions, historique, documents et réponse."
+        ],
+        "hard_questions": [
+          {
+            "question": "Si un modèle accepte énormément de tokens, se souvient-il parfaitement de tout ?",
+            "key_points": [
+              "Non : capacité d'entrée et qualité d'exploitation de l'information sont deux questions différentes.",
+              "La mémoire persistante d'une application est également distincte de la fenêtre de contexte du modèle."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Fenêtre de contexte signifie mémoire permanente du chatbot.",
+          "correction": "Le contexte est la séquence disponible pour le traitement courant ; une mémoire applicative éventuelle est un autre mécanisme."
+        },
+        {
+          "statement": "Doubler la fenêtre de contexte double automatiquement la qualité.",
+          "correction": "Une capacité plus grande permet d'inclure davantage d'information mais ne garantit pas son exploitation parfaite."
+        }
+      ],
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0032"
+      ],
+      "tags": [
+        "context-window",
+        "tokens",
+        "context"
+      ],
+      "reviewed_on": "2026-09-17"
     }
   ]
 }
