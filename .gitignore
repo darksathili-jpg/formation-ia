@@ -1,0 +1,7 @@
+# Node dependencies
+node_modules/
+formation_llm/node_modules/
+
+# Local/editor noise
+.DS_Store
+Thumbs.db
