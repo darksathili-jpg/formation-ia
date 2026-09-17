@@ -47,3 +47,5 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "Migrate Formation LLM to schema v1.1 and add Domain B"
           git push origin HEAD:main
+
+# retry after strict-schema fix
