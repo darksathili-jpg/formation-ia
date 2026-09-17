@@ -60,7 +60,10 @@
               "properties": {"pedagogical_analogy": {}},
               "required": ["pedagogical_analogy"]
             },
-            "then": {"required": ["analogy_limits"]}
+            "then": {
+              "properties": {"analogy_limits": {"$ref": "#/$defs/nonEmpty"}},
+              "required": ["analogy_limits"]
+            }
           }
         ]
       }
