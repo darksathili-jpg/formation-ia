@@ -1,0 +1,81 @@
+name: Install Domaine B interactive module
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/install-domain-b.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Assemble autonomous module
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p formation_llm/modules
+          cat formation_llm/.tmp/domain-b.part{1,2,3,4,5} | base64 -d | gzip -d > formation_llm/modules/domaine-b.html
+          cat formation_llm/.tmp/index.b64 | base64 -d | gzip -d > formation_llm/index.html
+          echo "d32f907c1723e40e4e51cde0135384ba01ab13db92a149f7b75347b46c8ea588  formation_llm/modules/domaine-b.html" | sha256sum -c -
+          echo "a5717a0283ab49f78ed0f495ddabdf2c904add640b46490bc62717fa71d9137d  formation_llm/index.html" | sha256sum -c -
+          rm -rf formation_llm/.tmp
+
+      - name: Add permanent web smoke test
+        shell: bash
+        run: |
+          cat > formation_llm/tools/validate-module-b.mjs <<'EOF'
+          import { readFile } from 'node:fs/promises';
+          import vm from 'node:vm';
+          const html = await readFile(new URL('../modules/domaine-b.html', import.meta.url), 'utf8');
+          const index = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+          const errors = [];
+          const must = ['Tokenizer Lab','texte → tokens → IDs → vecteurs → budget de contexte','Simulation pédagogique','id="tokenizer"','id="embeddings"','id="contexte"','id="quiz"','B12','Mode formateur intégré'];
+          for (const marker of must) if (!html.includes(marker)) errors.push(`marqueur manquant: ${marker}`);
+          if (!index.includes('modules/domaine-b.html')) errors.push('index: lien vers le Domaine B absent');
+          if (/<script\s+[^>]*src=/i.test(html) || /<link\s+[^>]*href=/i.test(html)) errors.push('dépendance externe détectée');
+          if (/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push('appel réseau détecté');
+          const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+          const dup = ids.filter((id,i) => ids.indexOf(id) !== i);
+          if (dup.length) errors.push(`id dupliqué(s): ${[...new Set(dup)].join(', ')}`);
+          const script = html.match(/<script>([\s\S]*?)<\/script>/i)?.[1];
+          if (!script) errors.push('script principal introuvable');
+          else { try { new vm.Script(script); } catch (e) { errors.push(`JavaScript invalide: ${e.message}`); } }
+          if (!/<meta\s+name="viewport"/i.test(html)) errors.push('viewport mobile absent');
+          if (!/@media\(max-width:600px\)/.test(html)) errors.push('règles responsive mobile absentes');
+          if (!/@media\(prefers-reduced-motion:reduce\)/.test(html)) errors.push('respect prefers-reduced-motion absent');
+          if (errors.length) { console.error('\n❌ MODULE B INVALIDE\n- '+errors.join('\n- ')); process.exit(1); }
+          console.log('✅ Module B valide — autonome, JavaScript analysable, IDs uniques, sections requises présentes.');
+          EOF
+          node - <<'EOF'
+          const fs = require('fs');
+          const p = 'formation_llm/package.json';
+          const data = JSON.parse(fs.readFileSync(p,'utf8'));
+          data.scripts['validate:data'] = 'node tools/validate.mjs';
+          data.scripts['validate:web'] = 'node tools/validate-module-b.mjs';
+          data.scripts.validate = 'npm run validate:data && npm run validate:web';
+          fs.writeFileSync(p, JSON.stringify(data,null,2)+'\n');
+          EOF
+
+      - name: Validate data and web module
+        working-directory: formation_llm
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run validate
+
+      - name: Commit Domain B
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A formation_llm
+          git diff --cached --quiet && exit 0
+          git commit -m "Add interactive Domain B training module"
+          git push origin HEAD:main
