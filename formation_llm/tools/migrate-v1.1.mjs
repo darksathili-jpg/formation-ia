@@ -3,7 +3,6 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const REPO_ROOT = resolve(ROOT, "..");
 const TODAY = "2026-09-17";
 
 async function readJson(rel) {
@@ -178,11 +177,6 @@ await writeJson("data/knowledge-map.json", knowledge);
 await writeJson("data/sources.json", sourcesData);
 await writeJson("data/glossary.json", glossary);
 
-const mainWorkflowPath = resolve(REPO_ROOT, ".github/workflows/validate-formation-llm.yml");
-let mainWorkflow = await readFile(mainWorkflowPath, "utf8");
-mainWorkflow = mainWorkflow.replace("npm install --ignore-scripts --no-audit --no-fund", "npm ci --ignore-scripts --no-audit --no-fund");
-await writeFile(mainWorkflowPath, mainWorkflow.endsWith("\n") ? mainWorkflow : mainWorkflow + "\n", "utf8");
-
 const readmePath = resolve(ROOT, "README.md");
 let readme = await readFile(readmePath, "utf8");
 if (!readme.includes("## Contrat de données v1.1")) {
@@ -193,5 +187,4 @@ if (!readme.includes("## Contrat de données v1.1")) {
 for (const rel of ["schema-next/knowledge-map.schema.json", "schema-next/sources.schema.json", "schema-next/glossary.schema.json", "tools/validate-next.mjs", "tools/migrate-v1.1.mjs", "migration-v1.1.payload.json"]) {
   await rm(resolve(ROOT, rel), { force: true });
 }
-await rm(resolve(REPO_ROOT, ".github/workflows/migrate-formation-llm-v1-1.yml"), { force: true });
 console.log("Migration v1.1 + Domaine B appliqués.");
