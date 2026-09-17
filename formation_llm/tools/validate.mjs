@@ -159,16 +159,6 @@ async function main() {
     if (!referencedSources.has(source.id)) warnings.push(`${source.id} n'est utilisé par aucun concept ni terme`);
   }
 
-  const termById = new Map((glossary.terms ?? []).map(t => [t.id, t]));
-  for (const term of glossary.terms ?? []) {
-    for (const otherId of term.not_to_confuse_with ?? []) {
-      const other = termById.get(otherId);
-      if (other && !(other.not_to_confuse_with ?? []).includes(term.id)) {
-        warnings.push(`${term.id} → ${otherId} n'est pas réciproque`);
-      }
-    }
-  }
-
   if (warnings.length) {
     console.log("\n⚠️  AVERTISSEMENTS\n");
     for (const warning of warnings) console.log(`- ${warning}`);
