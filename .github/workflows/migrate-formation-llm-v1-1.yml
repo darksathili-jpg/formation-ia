@@ -1,0 +1,49 @@
+name: Migrate Formation LLM v1.1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/migrate-formation-llm-v1-1.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    name: Migrate schemas and add Domain B
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Apply v1.1 migration and Domain B
+        working-directory: formation_llm
+        run: node tools/migrate-v1.1.mjs
+
+      - name: Install dependencies and create lockfile
+        working-directory: formation_llm
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Validate migrated knowledge base
+        working-directory: formation_llm
+        run: npm run validate
+
+      - name: Commit migrated repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Migrate Formation LLM to schema v1.1 and add Domain B"
+          git push origin HEAD:main
