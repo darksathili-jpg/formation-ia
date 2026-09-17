@@ -1118,6 +1118,242 @@
         "context"
       ],
       "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0033",
+      "term": "Réseau neuronal",
+      "english_term": "Neural network",
+      "slug": "reseau-neuronal",
+      "definition_short": "Modèle paramétrique organisé en couches de transformations numériques apprises.",
+      "definition_precise": "Famille de modèles composés d'opérations paramétriques différentiables apprises à partir de données. Les Transformers appartiennent à cette famille sans constituer une simulation fidèle d'un cerveau.",
+      "common_misuses": [
+        {
+          "statement": "Un réseau neuronal reproduit fidèlement un cerveau.",
+          "correction": "Il s'agit d'une abstraction mathématique et informatique ; l'analogie biologique est limitée."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0002"
+      ],
+      "tags": [
+        "neural-network"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0034",
+      "term": "Transformer",
+      "english_term": "Transformer",
+      "slug": "transformer",
+      "definition_short": "Architecture neuronale fondée sur des blocs utilisant notamment l'attention.",
+      "definition_precise": "Architecture introduite en 2017 combinant attention multi-têtes, réseaux feed-forward, connexions résiduelles, normalisations et information de position ; les variantes modernes en modifient souvent plusieurs détails.",
+      "common_misuses": [
+        {
+          "statement": "Un Transformer est seulement de l'attention.",
+          "correction": "L'attention est centrale mais n'est pas l'unique composante des blocs Transformer."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "transformer"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0035",
+      "term": "Auto-attention",
+      "english_term": "Self-attention",
+      "slug": "auto-attention",
+      "definition_short": "Attention calculée entre positions appartenant à une même séquence de représentations.",
+      "definition_precise": "Dans l'auto-attention, queries, keys et values sont dérivées de la même séquence d'entrée à une couche donnée ; chaque query combine des values selon des scores de compatibilité avec les keys autorisées.",
+      "common_misuses": [
+        {
+          "statement": "L'auto-attention ne compare qu'un token à ses voisins.",
+          "correction": "Elle peut relier des positions éloignées parmi celles autorisées par le masque et l'architecture."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "self-attention"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0036",
+      "term": "Query",
+      "english_term": "Query",
+      "slug": "query-attention",
+      "definition_short": "Projection utilisée comme requête pour calculer des compatibilités avec des keys.",
+      "definition_precise": "Dans une tête d'attention, la query d'une position est obtenue par une projection linéaire apprise de sa représentation puis comparée aux keys des positions accessibles.",
+      "common_misuses": [
+        {
+          "statement": "La query est la question écrite par l'utilisateur.",
+          "correction": "Dans Q/K/V, query désigne un vecteur interne au mécanisme d'attention."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "query",
+        "attention"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0037",
+      "term": "Key",
+      "english_term": "Key",
+      "slug": "key-attention",
+      "definition_short": "Projection comparée à une query pour produire un score de compatibilité.",
+      "definition_precise": "Chaque position accessible fournit une key calculée par une projection apprise ; le produit entre query et key contribue au score d'attention.",
+      "common_misuses": [
+        {
+          "statement": "La key est une clé de dictionnaire ou de base de données.",
+          "correction": "Dans l'attention, il s'agit d'un vecteur interne appris."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "key",
+        "attention"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0038",
+      "term": "Value",
+      "english_term": "Value",
+      "slug": "value-attention",
+      "definition_short": "Projection fournissant l'information combinée selon les poids d'attention.",
+      "definition_precise": "Après calcul et normalisation des scores query-key, les coefficients obtenus pondèrent les vecteurs value afin de produire la sortie de la tête d'attention.",
+      "common_misuses": [
+        {
+          "statement": "La value est le score d'attention.",
+          "correction": "Le score détermine un poids ; ce poids sert ensuite à combiner les vecteurs value."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "value",
+        "attention"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0039",
+      "term": "Produit scalaire",
+      "english_term": "Dot product",
+      "slug": "produit-scalaire",
+      "definition_short": "Somme des produits coordonnée par coordonnée de deux vecteurs.",
+      "definition_precise": "Pour q et k de même dimension, q·k est la somme des qᵢkᵢ. L'attention scaled dot-product l'utilise comme score brut de compatibilité avant mise à l'échelle.",
+      "common_misuses": [
+        {
+          "statement": "Le produit scalaire d'attention est déjà une probabilité.",
+          "correction": "C'est un score brut qui sera mis à l'échelle puis normalisé."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "dot-product",
+        "vectors"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0040",
+      "term": "Softmax",
+      "english_term": "Softmax",
+      "slug": "softmax",
+      "definition_short": "Fonction transformant une liste de scores en poids positifs normalisés.",
+      "definition_precise": "Le softmax exponentie les scores puis les normalise par leur somme. Dans l'attention, il produit pour chaque query une distribution de poids sur les positions autorisées.",
+      "common_misuses": [
+        {
+          "statement": "Un poids softmax est une probabilité de vérité.",
+          "correction": "Dans l'attention, il s'agit d'un coefficient de pondération interne au calcul."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "softmax",
+        "normalization"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0041",
+      "term": "Masque causal",
+      "english_term": "Causal mask",
+      "slug": "masque-causal",
+      "definition_short": "Contrainte empêchant une position autoregressive d'attendre aux positions futures.",
+      "definition_precise": "Dans l'auto-attention causale, les scores correspondant aux positions futures sont rendus inaccessibles avant le softmax, de sorte qu'une position ne dépende que des positions autorisées antérieures et d'elle-même.",
+      "common_misuses": [
+        {
+          "statement": "Le masque causal efface définitivement les tokens futurs.",
+          "correction": "Il interdit seulement certaines connexions d'attention pour le calcul concerné."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "causal-mask",
+        "autoregressive"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0042",
+      "term": "Attention multi-têtes",
+      "english_term": "Multi-head attention",
+      "slug": "attention-multi-tetes",
+      "definition_short": "Plusieurs attentions calculées en parallèle avec des projections apprises distinctes.",
+      "definition_precise": "Chaque tête utilise ses propres projections Q/K/V ; les sorties des têtes sont concaténées puis transformées afin de produire la sortie multi-têtes.",
+      "common_misuses": [
+        {
+          "statement": "Chaque tête possède nécessairement un rôle linguistique simple.",
+          "correction": "Des motifs interprétables peuvent émerger, mais les fonctions ne sont pas garanties comme simples, fixes ou indépendantes."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "multi-head-attention"
+      ],
+      "reviewed_on": "2026-09-17"
     }
   ],
   "language": "fr"
