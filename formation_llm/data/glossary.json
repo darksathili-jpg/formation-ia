@@ -1,1 +1,459 @@
-{}
+{
+  "schema_version": "1.0.0",
+  "updated_on": "2026-09-17",
+
+  "terms": [
+    {
+      "id": "TERM-0001",
+      "term": "Modèle",
+      "english_term": "Model",
+      "slug": "modele",
+
+      "aliases": [
+        "modèle d'IA"
+      ],
+
+      "definition_short": "Composant appris qui transforme des entrées en sorties selon une architecture et des paramètres déterminés.",
+
+      "definition_precise": "Dans un système d'apprentissage automatique, un modèle est une structure computationnelle dont le comportement dépend notamment de son architecture et de paramètres appris à partir de données. Le modèle n'est pas, à lui seul, nécessairement une application complète.",
+
+      "pedagogical_analogy": "Le modèle peut être comparé au moteur d'un véhicule : il joue un rôle central, mais le véhicule complet comporte de nombreux autres composants.",
+
+      "analogy_limits": "Un modèle n'est pas un mécanisme mécanique indépendant de ses données, de son environnement logiciel et de ses modalités d'utilisation. L'analogie avec un moteur sert uniquement à distinguer composant et système complet.",
+
+      "not_to_confuse_with": [
+        "TERM-0002",
+        "TERM-0003",
+        "TERM-0004"
+      ],
+
+      "common_misuses": [
+        "Employer indifféremment modèle et application.",
+        "Attribuer au modèle toutes les capacités visibles dans un produit."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A07",
+        "A10"
+      ],
+
+      "source_ids": [
+        "SRC-0001",
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "model",
+        "architecture",
+        "foundations"
+      ]
+    },
+
+    {
+      "id": "TERM-0002",
+      "term": "Système d'IA",
+      "english_term": "AI system",
+      "slug": "systeme-ia",
+
+      "aliases": [
+        "système d'intelligence artificielle"
+      ],
+
+      "definition_short": "Système basé sur une machine qui infère, à partir des entrées reçues et d'objectifs explicites ou implicites, comment produire des sorties.",
+
+      "definition_precise": "La définition de référence de l'OCDE décrit un système d'IA comme un système basé sur une machine qui, pour des objectifs explicites ou implicites, infère à partir des entrées reçues comment générer des sorties telles que prédictions, contenus, recommandations ou décisions susceptibles d'influencer des environnements physiques ou virtuels.",
+
+      "pedagogical_analogy": "Le système d'IA correspond davantage au véhicule complet qu'à son seul moteur.",
+
+      "analogy_limits": "Un système d'IA peut avoir une architecture logicielle bien plus distribuée qu'un objet physique et peut intégrer plusieurs modèles, services, bases de données ou outils.",
+
+      "not_to_confuse_with": [
+        "TERM-0001",
+        "TERM-0003"
+      ],
+
+      "common_misuses": [
+        "Réduire tout système d'IA à son modèle neuronal.",
+        "Employer IA uniquement pour désigner les chatbots génératifs."
+      ],
+
+      "status": "evolving",
+
+      "concept_ids": [
+        "A01",
+        "A10"
+      ],
+
+      "source_ids": [
+        "SRC-0001"
+      ],
+
+      "tags": [
+        "ai-system",
+        "definition",
+        "architecture"
+      ]
+    },
+
+    {
+      "id": "TERM-0003",
+      "term": "Application",
+      "english_term": "Application",
+      "slug": "application",
+
+      "definition_short": "Produit logiciel destiné à un usage concret et pouvant intégrer un ou plusieurs modèles ainsi que d'autres composants.",
+
+      "definition_precise": "Dans le contexte de l'IA, une application est un système logiciel mis à disposition d'un utilisateur ou d'un autre système. Elle peut associer un modèle à une interface, des instructions, une gestion du contexte, des outils, des sources de données, de la mémoire applicative, du code métier et des mécanismes de sécurité.",
+
+      "pedagogical_analogy": "Si le modèle est le moteur, l'application est le véhicule utilisable avec son tableau de bord, ses commandes et ses équipements.",
+
+      "analogy_limits": "La frontière entre application et système dépend de l'échelle d'analyse ; une application peut elle-même être un composant d'un système plus large.",
+
+      "not_to_confuse_with": [
+        "TERM-0001",
+        "TERM-0002",
+        "TERM-0004"
+      ],
+
+      "common_misuses": [
+        "Prendre le nom commercial d'une application pour le nom exact du modèle qu'elle utilise.",
+        "Supposer que recherche web, mémoire ou outils sont nécessairement des capacités intrinsèques du modèle."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A10"
+      ],
+
+      "source_ids": [
+        "SRC-0001",
+        "SRC-0003"
+      ],
+
+      "tags": [
+        "application",
+        "product",
+        "architecture"
+      ]
+    },
+
+    {
+      "id": "TERM-0004",
+      "term": "Chatbot",
+      "english_term": "Chatbot",
+      "slug": "chatbot",
+
+      "aliases": [
+        "agent conversationnel",
+        "interface conversationnelle"
+      ],
+
+      "definition_short": "Application ou interface permettant une interaction avec un utilisateur sous forme conversationnelle.",
+
+      "definition_precise": "Un chatbot organise une interaction sous forme de dialogue. Les chatbots modernes peuvent utiliser un LLM comme composant principal, mais le caractère conversationnel appartient au système ou à l'application et ne définit pas à lui seul le modèle sous-jacent.",
+
+      "pedagogical_analogy": "Le chatbot est le guichet avec lequel l'utilisateur dialogue ; le modèle est l'un des mécanismes qui peuvent fonctionner derrière ce guichet.",
+
+      "analogy_limits": "Un chatbot peut intégrer de nombreux autres composants et certains systèmes conversationnels historiques n'utilisent aucun LLM.",
+
+      "not_to_confuse_with": [
+        "TERM-0001",
+        "TERM-0003"
+      ],
+
+      "common_misuses": [
+        "Employer chatbot et LLM comme synonymes.",
+        "Supposer que tout LLM possède nécessairement une interface conversationnelle."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A10"
+      ],
+
+      "source_ids": [
+        "SRC-0003"
+      ],
+
+      "tags": [
+        "chatbot",
+        "conversation",
+        "interface"
+      ]
+    },
+
+    {
+      "id": "TERM-0005",
+      "term": "Paramètre",
+      "english_term": "Parameter",
+      "slug": "parametre",
+
+      "aliases": [
+        "paramètre appris"
+      ],
+
+      "definition_short": "Valeur numérique d'un modèle ajustée pendant l'entraînement.",
+
+      "definition_precise": "Un paramètre est une valeur numérique appartenant au modèle et généralement optimisée au cours de l'entraînement afin de réduire une fonction de perte. Les réseaux neuronaux modernes peuvent comporter un très grand nombre de paramètres.",
+
+      "pedagogical_analogy": "On peut imaginer des millions ou milliards de petits réglages numériques ajustés progressivement pendant l'apprentissage.",
+
+      "analogy_limits": "Ces réglages ne correspondent généralement pas chacun à une connaissance, un mot ou une règle identifiable isolément.",
+
+      "not_to_confuse_with": [
+        "TERM-0006"
+      ],
+
+      "common_misuses": [
+        "Imaginer qu'un paramètre contient directement une phrase ou un fait.",
+        "Assimiler nombre de paramètres et intelligence."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A11"
+      ],
+
+      "source_ids": [
+        "SRC-0002",
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "parameters",
+        "training",
+        "neural-networks"
+      ]
+    },
+
+    {
+      "id": "TERM-0006",
+      "term": "Poids",
+      "english_term": "Weight",
+      "slug": "poids",
+
+      "aliases": [
+        "weight",
+        "poids du modèle"
+      ],
+
+      "definition_short": "Type de paramètre appris qui contribue à déterminer l'influence d'une valeur sur une autre dans les calculs du réseau.",
+
+      "definition_precise": "Dans un réseau neuronal, les poids sont des paramètres numériques appris. Dans l'usage courant autour des LLM, l'expression poids du modèle désigne souvent collectivement les paramètres appris distribués dans les différentes couches du réseau.",
+
+      "pedagogical_analogy": "Un poids peut être vu comme un coefficient réglant l'intensité d'une connexion ou d'une transformation.",
+
+      "analogy_limits": "Les architectures modernes sont plus complexes qu'un simple réseau de connexions indépendantes ; l'analogie avec un coefficient ne doit pas faire croire qu'un poids possède seul une signification interprétable.",
+
+      "not_to_confuse_with": [
+        "TERM-0005",
+        "TERM-0009"
+      ],
+
+      "common_misuses": [
+        "Présenter les poids comme une bibliothèque de documents.",
+        "Supposer qu'un poids correspond à un concept précis."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A11",
+        "A12"
+      ],
+
+      "source_ids": [
+        "SRC-0002",
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "weights",
+        "parameters",
+        "neural-networks"
+      ]
+    },
+
+    {
+      "id": "TERM-0007",
+      "term": "Entraînement",
+      "english_term": "Training",
+      "slug": "entrainement",
+
+      "aliases": [
+        "apprentissage du modèle"
+      ],
+
+      "definition_short": "Processus par lequel les paramètres d'un modèle sont ajustés à partir de données et d'un objectif d'optimisation.",
+
+      "definition_precise": "L'entraînement consiste à exposer un modèle à des données et à ajuster ses paramètres selon une procédure d'optimisation afin d'améliorer une mesure de performance définie par un objectif d'apprentissage.",
+
+      "pedagogical_analogy": "C'est la phase pendant laquelle les réglages internes du modèle sont modifiés à partir d'exemples.",
+
+      "analogy_limits": "L'entraînement d'un modèle n'est pas équivalent à l'apprentissage humain et ne suppose pas nécessairement compréhension consciente, intention ou expérience vécue.",
+
+      "not_to_confuse_with": [
+        "TERM-0008"
+      ],
+
+      "common_misuses": [
+        "Dire qu'une conversation ordinaire réentraîne automatiquement le modèle.",
+        "Confondre ajout d'informations dans le contexte et modification des paramètres."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A02",
+        "A11"
+      ],
+
+      "source_ids": [
+        "SRC-0002",
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "training",
+        "learning",
+        "parameters"
+      ]
+    },
+
+    {
+      "id": "TERM-0008",
+      "term": "Inférence",
+      "english_term": "Inference",
+      "slug": "inference",
+
+      "definition_short": "Phase d'utilisation d'un modèle entraîné pour calculer des sorties à partir de nouvelles entrées.",
+
+      "definition_precise": "L'inférence désigne l'utilisation des paramètres déjà appris afin de produire une prédiction ou une génération à partir d'une entrée. Dans l'usage standard d'un LLM, l'inférence ne modifie pas les poids du modèle.",
+
+      "pedagogical_analogy": "L'entraînement correspond à régler le système ; l'inférence correspond à l'utiliser une fois ces réglages acquis.",
+
+      "analogy_limits": "Des systèmes particuliers peuvent associer utilisation et mécanismes d'adaptation, mais cela ne doit pas être confondu avec l'inférence standard d'un modèle figé.",
+
+      "not_to_confuse_with": [
+        "TERM-0007"
+      ],
+
+      "common_misuses": [
+        "Croire que chaque prompt modifie automatiquement les paramètres du modèle.",
+        "Employer entraînement et inférence comme synonymes."
+      ],
+
+      "status": "stable",
+
+      "concept_ids": [
+        "A11"
+      ],
+
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "inference",
+        "generation",
+        "model"
+      ]
+    },
+
+    {
+      "id": "TERM-0009",
+      "term": "Open weights",
+      "english_term": "Open weights",
+      "slug": "open-weights",
+
+      "aliases": [
+        "poids ouverts",
+        "poids accessibles"
+      ],
+
+      "definition_short": "Situation dans laquelle les paramètres appris d'un modèle sont rendus accessibles selon certaines conditions.",
+
+      "definition_precise": "L'expression open weights indique que les paramètres appris d'un modèle sont mis à disposition. Cette ouverture peut permettre l'exécution locale, l'adaptation ou l'étude partielle du modèle, mais elle ne garantit pas à elle seule que l'ensemble du système répond aux critères d'Open Source AI.",
+
+      "pedagogical_analogy": "C'est comme disposer des réglages internes finaux d'une machine sans disposer nécessairement de tout ce qui a permis de la concevoir et de la fabriquer.",
+
+      "analogy_limits": "Les poids sont eux-mêmes une partie fonctionnelle essentielle du modèle et peuvent permettre des usages considérables ; l'analogie ne doit donc pas les présenter comme une information secondaire.",
+
+      "not_to_confuse_with": [
+        "TERM-0006",
+        "TERM-0010"
+      ],
+
+      "common_misuses": [
+        "Employer open weights comme synonyme automatique d'open source.",
+        "Supposer que disponibilité des poids implique disponibilité des données et du code d'entraînement."
+      ],
+
+      "status": "evolving",
+
+      "concept_ids": [
+        "A12"
+      ],
+
+      "source_ids": [
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "open-weights",
+        "weights",
+        "licensing"
+      ]
+    },
+
+    {
+      "id": "TERM-0010",
+      "term": "Open Source AI",
+      "english_term": "Open Source AI",
+      "slug": "open-source-ai",
+
+      "aliases": [
+        "IA open source"
+      ],
+
+      "definition_short": "Système d'IA fourni dans des conditions permettant de l'utiliser, l'étudier, le modifier et le partager.",
+
+      "definition_precise": "Selon l'Open Source AI Definition 1.0 de l'OSI, une IA open source doit accorder les libertés d'utilisation, d'étude, de modification et de partage et fournir la forme privilégiée nécessaire pour effectuer des modifications, ce qui implique davantage que le simple accès aux poids finaux.",
+
+      "pedagogical_analogy": "Il ne suffit pas de pouvoir ouvrir le capot ; il faut disposer des éléments nécessaires pour comprendre, modifier et redistribuer réellement le système.",
+
+      "analogy_limits": "La notion d'Open Source AI fait encore l'objet de discussions techniques, juridiques et communautaires ; l'analogie ne remplace pas l'examen précis des licences et des composants disponibles.",
+
+      "not_to_confuse_with": [
+        "TERM-0009"
+      ],
+
+      "common_misuses": [
+        "Qualifier d'open source tout modèle dont les poids peuvent être téléchargés.",
+        "Assimiler gratuité, accès public et open source."
+      ],
+
+      "status": "evolving",
+
+      "concept_ids": [
+        "A12"
+      ],
+
+      "source_ids": [
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "open-source",
+        "licensing",
+        "openness"
+      ]
+    }
+  ]
+}
