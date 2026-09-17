@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "validate": "node tools/validate.mjs"
+    "validate": "npm run validate:data && npm run validate:web",
+    "validate:data": "node tools/validate.mjs",
+    "validate:web": "node tools/validate-module-b.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
