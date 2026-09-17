@@ -15,6 +15,13 @@
       "title": "Tokens, représentations et contexte",
       "order": 2,
       "description": "Comprendre comment le texte devient une séquence de tokens, puis des représentations vectorielles, et comment la fenêtre de contexte borne l'information disponible au modèle."
+    },
+    {
+      "id": "C",
+      "slug": "transformer-attention",
+      "title": "Transformer et attention",
+      "order": 3,
+      "description": "Comprendre comment le Transformer contextualise les représentations grâce à l'auto-attention, aux projections Query/Key/Value, au produit scalaire, au softmax, aux têtes multiples et au masque causal."
     }
   ],
   "concepts": [
@@ -1543,6 +1550,491 @@
         "context-window",
         "tokens",
         "context"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C01",
+      "slug": "reseau-neuronal",
+      "title": "Réseau neuronal",
+      "domain": "C",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Modèle paramétrique composé de transformations numériques apprises, organisé en couches et utilisé comme brique de base des Transformers.",
+      "prerequisites": [
+        "A03",
+        "B08"
+      ],
+      "learning_objectives": [
+        "Relier les embeddings à des calculs paramétriques plutôt qu'à des règles symboliques écrites à la main.",
+        "Comprendre qu'un Transformer est une architecture particulière de réseau neuronal."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi les vecteurs d'entrée sont transformés par des couches paramétriques apprises.",
+          "Pourquoi « réseau neuronal » ne signifie pas simulation fidèle d'un cerveau biologique."
+        ],
+        "demonstrate": [
+          "Faire suivre un petit vecteur par une transformation linéaire fictive pour montrer qu'une couche transforme des nombres."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un réseau neuronal reproduit-il le fonctionnement d'un cerveau ?",
+            "key_points": [
+              "Le nom est historique et inspiré de façon très abstraite du vocabulaire neuronal.",
+              "Les réseaux modernes sont des systèmes mathématiques et informatiques ; l'analogie biologique doit rester limitée."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un réseau neuronal simule fidèlement des neurones biologiques.",
+          "correction": "Les unités et opérations sont des abstractions mathématiques très éloignées de la complexité biologique."
+        }
+      ],
+      "source_ids": [
+        "SRC-0002"
+      ],
+      "term_ids": [
+        "TERM-0033"
+      ],
+      "tags": [
+        "neural-network",
+        "layers"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C02",
+      "slug": "transformer",
+      "title": "Transformer",
+      "domain": "C",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Architecture neuronale fondée notamment sur des blocs d'attention, des transformations feed-forward, des connexions résiduelles et des normalisations.",
+      "prerequisites": [
+        "C01",
+        "B08",
+        "B12"
+      ],
+      "learning_objectives": [
+        "Identifier l'attention comme une composante centrale mais non unique d'un bloc Transformer.",
+        "Comprendre que les représentations sont transformées couche après couche."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le rôle général d'un bloc Transformer sans réduire toute l'architecture à l'attention.",
+          "La différence entre architecture Transformer historique et variantes modernes."
+        ],
+        "demonstrate": [
+          "Tracer le trajet embedding → attention → transformation → représentation contextualisée."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un Transformer n'est-il qu'un mécanisme d'attention ?",
+            "key_points": [
+              "Non : les blocs comprennent aussi notamment des couches feed-forward, des résidus et des normalisations.",
+              "Les architectures contemporaines modifient plusieurs détails du Transformer original."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Transformer et attention sont synonymes.",
+          "correction": "L'attention est une composante du Transformer ; l'architecture comporte d'autres opérations essentielles."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0034"
+      ],
+      "tags": [
+        "transformer",
+        "architecture"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C03",
+      "slug": "auto-attention",
+      "title": "Auto-attention",
+      "domain": "C",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Mécanisme par lequel chaque position produit une combinaison pondérée d'informations issues d'autres positions de la même séquence accessibles au mécanisme.",
+      "prerequisites": [
+        "C02",
+        "B08"
+      ],
+      "learning_objectives": [
+        "Comprendre qu'une représentation peut dépendre d'autres positions de la séquence.",
+        "Distinguer proximité dans la phrase et poids d'attention."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi « regarder » est une métaphore pour un calcul de pondération.",
+          "Pourquoi les tokens pris en compte ne sont pas nécessairement seulement les voisins immédiats."
+        ],
+        "demonstrate": [
+          "Sélectionner le token « avocat » et comparer ses poids vers « tribunal » ou « citron » dans deux phrases."
+        ],
+        "hard_questions": [
+          {
+            "question": "L'attention montre-t-elle ce que le modèle « pense » ?",
+            "key_points": [
+              "Les poids d'attention sont des grandeurs internes au calcul.",
+              "Ils ne constituent pas à eux seuls une explication exhaustive du raisonnement ou de la causalité du modèle."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un token ne regarde que ses voisins directs.",
+          "correction": "L'attention peut relier des positions éloignées parmi celles autorisées par l'architecture et le masque."
+        },
+        {
+          "statement": "Le plus grand poids d'attention révèle forcément la raison de la réponse.",
+          "correction": "Un poids d'attention décrit une opération interne locale ; l'explication globale dépend de nombreuses couches, têtes et transformations."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0035"
+      ],
+      "tags": [
+        "self-attention",
+        "contextualization"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C04",
+      "slug": "query-key-value",
+      "title": "Query, Key, Value — Q/K/V",
+      "domain": "C",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Trois projections apprises d'une représentation : Query sert à calculer des compatibilités, Key à être comparée aux queries et Value à fournir l'information combinée.",
+      "prerequisites": [
+        "C03"
+      ],
+      "learning_objectives": [
+        "Associer Q et K au calcul des scores de compatibilité.",
+        "Comprendre que les poids issus de Q·K servent ensuite à combiner les V."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Q, K et V comme projections apprises, et non comme trois bases de données séparées.",
+          "La séquence score avec K puis combinaison de V."
+        ],
+        "demonstrate": [
+          "Pour une query sélectionnée, afficher ses scores avec plusieurs keys puis la combinaison pondérée des values."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi le même token a-t-il trois vecteurs Q, K et V ?",
+            "key_points": [
+              "Ils sont obtenus par des projections apprises distinctes de la représentation d'entrée.",
+              "Ils jouent des rôles calculatoires différents dans l'attention."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Q, K et V sont des mots ou des champs stockés dans le texte.",
+          "correction": "Ce sont des vecteurs calculés à partir des représentations par des matrices de projection apprises."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0036",
+        "TERM-0037",
+        "TERM-0038"
+      ],
+      "tags": [
+        "query",
+        "key",
+        "value",
+        "attention"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C05",
+      "slug": "produit-scalaire",
+      "title": "Produit scalaire Q·K",
+      "domain": "C",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Opération utilisée dans l'attention par produit scalaire pour mesurer une compatibilité numérique entre une query et une key.",
+      "prerequisites": [
+        "C04",
+        "B09"
+      ],
+      "learning_objectives": [
+        "Calculer un petit produit scalaire.",
+        "Comprendre qu'un score brut n'est pas encore un poids d'attention."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le produit scalaire comme somme des produits coordonnée par coordonnée.",
+          "Pourquoi le score brut doit encore être mis à l'échelle puis normalisé."
+        ],
+        "demonstrate": [
+          "Calculer q·k sur des vecteurs 2D ou 3D et comparer plusieurs keys."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un grand produit scalaire signifie-t-il que deux mots ont le même sens ?",
+            "key_points": [
+              "Non : il mesure une compatibilité dans les projections Q/K de cette tête et de cette couche.",
+              "Il n'est pas une mesure universelle de synonymie."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Q·K est déjà une probabilité.",
+          "correction": "C'est un score brut ; l'attention scaled dot-product le met à l'échelle puis applique un softmax."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0039"
+      ],
+      "tags": [
+        "dot-product",
+        "attention-score"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C06",
+      "slug": "attention-produit-scalaire-mis-echelle",
+      "title": "Scaled dot-product attention",
+      "domain": "C",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Forme d'attention calculant QKᵀ, divisant les scores par √dₖ, appliquant éventuellement un masque puis un softmax avant de pondérer V.",
+      "prerequisites": [
+        "C05"
+      ],
+      "learning_objectives": [
+        "Comprendre l'ordre score → mise à l'échelle → masque → softmax → combinaison des V.",
+        "Savoir pourquoi le facteur √dₖ apparaît dans la formulation originale."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "La formule Attention(Q,K,V)=softmax(QKᵀ/√dₖ)V.",
+          "Le rôle stabilisateur de la mise à l'échelle lorsque la dimension des keys augmente."
+        ],
+        "demonstrate": [
+          "Comparer les distributions softmax avec et sans division par √dₖ sur des scores fictifs."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi diviser par √dₖ ?",
+            "key_points": [
+              "Dans l'argument du papier original, la variance du produit scalaire croît avec dₖ sous des hypothèses simples.",
+              "La mise à l'échelle évite des scores trop grands poussant le softmax vers des régimes très saturés."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "La division par √dₖ rend les scores comparables à des probabilités.",
+          "correction": "Elle met les logits d'attention à l'échelle ; c'est le softmax qui produit des poids normalisés."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0035",
+        "TERM-0039",
+        "TERM-0040"
+      ],
+      "tags": [
+        "scaled-dot-product",
+        "attention"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C07",
+      "slug": "softmax-attention",
+      "title": "Softmax dans l'attention",
+      "domain": "C",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Transformation des scores d'attention autorisés en poids positifs normalisés dont la somme vaut 1 pour une query donnée.",
+      "prerequisites": [
+        "C05"
+      ],
+      "learning_objectives": [
+        "Comprendre la normalisation relative des scores.",
+        "Éviter d'interpréter un poids d'attention comme probabilité de vérité."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi tous les scores sont transformés conjointement.",
+          "Pourquoi un poids dépend aussi des autres scores concurrents."
+        ],
+        "demonstrate": [
+          "Modifier un seul score et observer la redistribution de tous les poids."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un poids de 0,8 signifie-t-il que le token correspondant est pertinent à 80 % ?",
+            "key_points": [
+              "Non : c'est un poids de combinaison interne normalisé pour cette query, tête et couche.",
+              "Ce n'est ni une probabilité de vérité ni une mesure générale de pertinence sémantique."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Les poids softmax donnent une probabilité que chaque mot soit vrai ou important.",
+          "correction": "Ils servent à pondérer les values dans un calcul d'attention donné."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0040"
+      ],
+      "tags": [
+        "softmax",
+        "attention-weights"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C08",
+      "slug": "attention-multi-tetes",
+      "title": "Attention multi-têtes",
+      "domain": "C",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Calcul parallèle de plusieurs attentions utilisant des projections Q/K/V apprises distinctes, dont les sorties sont ensuite concaténées et reprojetées.",
+      "prerequisites": [
+        "C06"
+      ],
+      "learning_objectives": [
+        "Comprendre que plusieurs têtes offrent plusieurs sous-espaces de projection.",
+        "Éviter l'anthropomorphisme consistant à attribuer une fonction fixe et lisible à chaque tête."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi plusieurs projections permettent des motifs d'interaction différents.",
+          "Pourquoi une tête n'a pas nécessairement un rôle humain simple et stable."
+        ],
+        "demonstrate": [
+          "Afficher deux têtes fictives produisant des distributions différentes pour la même query."
+        ],
+        "hard_questions": [
+          {
+            "question": "Chaque tête apprend-elle un rôle comme « grammaire », « sujet », « objet » ?",
+            "key_points": [
+              "Certaines têtes peuvent présenter des motifs interprétables dans certains contextes.",
+              "Il ne faut pas supposer une spécialisation propre, stable et exhaustive de chaque tête."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Une tête d'attention correspond toujours à une fonction linguistique identifiable.",
+          "correction": "Les fonctions peuvent être distribuées, redondantes, contextuelles ou difficilement interprétables."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0042"
+      ],
+      "tags": [
+        "multi-head-attention",
+        "heads"
+      ],
+      "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "C09",
+      "slug": "masque-causal",
+      "title": "Masque causal",
+      "domain": "C",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Masque empêchant, dans l'auto-attention causale d'un modèle autoregressif, une position d'utiliser les positions futures lors de la prédiction.",
+      "prerequisites": [
+        "C03",
+        "C07"
+      ],
+      "learning_objectives": [
+        "Visualiser la matrice triangulaire des positions autorisées.",
+        "Comprendre pourquoi la position i ne peut pas utiliser i+1 lors de la génération autoregressive."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le masque causal comme contrainte du calcul, et non comme oubli aléatoire.",
+          "La différence entre causalité d'attention et connaissance générale apprise dans les poids."
+        ],
+        "demonstrate": [
+          "Activer/désactiver un masque triangulaire et montrer quels poids deviennent impossibles."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi ne pas laisser un token voir les mots qui viennent après pendant l'entraînement ?",
+            "key_points": [
+              "Pour apprendre une prédiction autoregressive cohérente avec l'inférence, la position courante ne doit pas dépendre du futur cible.",
+              "Le masque garantit cette contrainte dans l'auto-attention causale."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Le masque causal supprime les mots futurs du texte original.",
+          "correction": "Il interdit certaines connexions d'attention pour une position donnée ; les positions peuvent exister dans la séquence d'entraînement tout en étant masquées."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0041"
+      ],
+      "tags": [
+        "causal-mask",
+        "autoregressive",
+        "attention"
       ],
       "reviewed_on": "2026-09-17"
     }
