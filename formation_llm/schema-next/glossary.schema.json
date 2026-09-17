@@ -56,7 +56,10 @@
         },
         "allOf": [
           {
-            "if": {"required": ["pedagogical_analogy"]},
+            "if": {
+              "properties": {"pedagogical_analogy": {}},
+              "required": ["pedagogical_analogy"]
+            },
             "then": {"required": ["analogy_limits"]}
           }
         ]
