@@ -1,1 +1,628 @@
-{}
+{
+  "schema_version": "1.0.0",
+  "updated_on": "2026-09-16",
+
+  "domains": [
+    {
+      "id": "A",
+      "slug": "foundations",
+      "title": "Situer les LLM dans le paysage de l'IA",
+      "order": 1,
+      "description": "Construire les distinctions conceptuelles indispensables entre intelligence artificielle, apprentissage automatique, deep learning, modèles de langage, LLM, foundation models et applications utilisant ces modèles."
+    }
+  ],
+
+  "concepts": [
+    {
+      "id": "A01",
+      "slug": "intelligence-artificielle",
+      "title": "Intelligence artificielle",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Champ regroupant des systèmes capables d'inférer, à partir d'entrées et d'objectifs explicites ou implicites, comment produire des sorties telles que prédictions, contenus, recommandations ou décisions.",
+
+      "prerequisites": [],
+
+      "learning_objectives": [
+        "Définir l'intelligence artificielle sans la réduire aux LLM.",
+        "Reconnaître qu'un système d'IA peut produire des prédictions, des contenus, des recommandations ou des décisions.",
+        "Distinguer intelligence artificielle et intelligence humaine."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi l'intelligence artificielle constitue un domaine beaucoup plus large que les IA génératives.",
+          "Pourquoi une définition opérationnelle d'un système d'IA est préférable à une définition reposant sur l'idée d'intelligence humaine."
+        ],
+        "demonstrate": [
+          "Classer plusieurs systèmes — filtre antispam, recommandation vidéo, reconnaissance d'image et chatbot — comme différents usages de l'IA."
+        ],
+        "answer": [
+          "Est-ce qu'un simple algorithme est forcément une intelligence artificielle ?",
+          "Une IA doit-elle imiter le cerveau humain pour être considérée comme une IA ?"
+        ]
+      },
+
+      "misconceptions": [
+        "IA signifie automatiquement chatbot.",
+        "Toutes les IA sont génératives.",
+        "Une IA doit reproduire l'intelligence humaine."
+      ],
+
+      "source_ids": [
+        "SRC-0001"
+      ],
+
+      "tags": [
+        "ai",
+        "definition",
+        "foundations"
+      ]
+    },
+
+    {
+      "id": "A02",
+      "slug": "machine-learning",
+      "title": "Machine learning",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Ensemble de méthodes permettant à un système d'apprendre des régularités à partir de données afin d'améliorer ses performances ou de construire un modèle sans que toutes les règles soient explicitement programmées.",
+
+      "prerequisites": [
+        "A01"
+      ],
+
+      "learning_objectives": [
+        "Expliquer la différence entre programmation explicite et apprentissage à partir de données.",
+        "Situer le machine learning comme une famille de méthodes de l'intelligence artificielle.",
+        "Comprendre que l'apprentissage produit ou ajuste un modèle."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Le rôle des données d'entraînement.",
+          "La différence entre écrire une règle et apprendre une régularité statistique."
+        ],
+        "demonstrate": [
+          "Comparer un filtre antispam construit avec des règles écrites manuellement et un classifieur appris à partir d'exemples."
+        ],
+        "answer": [
+          "Le machine learning apprend-il exactement comme un humain ?",
+          "Un système peut-il relever de l'IA sans utiliser de machine learning ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Machine learning et intelligence artificielle sont synonymes.",
+        "Le système découvre nécessairement des règles vraies sur le monde.",
+        "Apprendre signifie comprendre comme un humain."
+      ],
+
+      "source_ids": [
+        "SRC-0001",
+        "SRC-0002"
+      ],
+
+      "tags": [
+        "machine-learning",
+        "training",
+        "data"
+      ]
+    },
+
+    {
+      "id": "A03",
+      "slug": "deep-learning",
+      "title": "Deep learning",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Famille de méthodes de machine learning utilisant des réseaux de neurones comportant plusieurs couches de traitement pour apprendre des représentations de données à différents niveaux d'abstraction.",
+
+      "prerequisites": [
+        "A02"
+      ],
+
+      "learning_objectives": [
+        "Situer le deep learning à l'intérieur du machine learning.",
+        "Comprendre l'idée d'apprentissage de représentations.",
+        "Relier le deep learning aux réseaux neuronaux modernes."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi le mot deep fait référence à la profondeur du réseau.",
+          "Pourquoi les représentations sont apprises plutôt qu'entièrement conçues à la main."
+        ],
+        "demonstrate": [
+          "Présenter une chaîne simplifiée où différentes couches extraient progressivement des représentations."
+        ],
+        "answer": [
+          "Plus un réseau possède de couches, est-il nécessairement meilleur ?",
+          "Deep learning et réseau de neurones sont-ils strictement synonymes ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Deep signifie que le système réfléchit profondément.",
+        "Plus de couches signifie automatiquement de meilleures performances."
+      ],
+
+      "source_ids": [
+        "SRC-0002"
+      ],
+
+      "tags": [
+        "deep-learning",
+        "neural-networks",
+        "representation-learning"
+      ]
+    },
+
+    {
+      "id": "A04",
+      "slug": "traitement-automatique-langage",
+      "title": "Traitement automatique du langage — TAL / NLP",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Domaine de l'informatique et de l'intelligence artificielle consacré au traitement informatique du langage humain sous forme écrite ou orale.",
+
+      "prerequisites": [
+        "A01"
+      ],
+
+      "learning_objectives": [
+        "Comprendre que les LLM appartiennent à une histoire plus ancienne du traitement automatique du langage.",
+        "Identifier plusieurs tâches classiques du TAL.",
+        "Distinguer TAL et IA générative."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Les principales tâches historiques du TAL : classification, traduction, analyse, reconnaissance et génération.",
+          "Pourquoi tous les systèmes de TAL ne sont pas des LLM."
+        ],
+        "demonstrate": [
+          "Comparer une analyse de sentiment classique avec une génération de texte."
+        ],
+        "answer": [
+          "Un correcteur orthographique relève-t-il du TAL ?",
+          "Le TAL existait-il avant les LLM ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Le TAL est apparu avec ChatGPT.",
+        "Tous les outils traitant du langage sont des LLM."
+      ],
+
+      "source_ids": [
+        "SRC-0003"
+      ],
+
+      "tags": [
+        "nlp",
+        "language",
+        "foundations"
+      ]
+    },
+
+    {
+      "id": "A05",
+      "slug": "ia-generative",
+      "title": "Intelligence artificielle générative",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Famille de systèmes d'IA conçus pour produire de nouveaux contenus tels que texte, image, audio, vidéo, code ou autres représentations à partir des structures apprises dans des données.",
+
+      "prerequisites": [
+        "A01",
+        "A02"
+      ],
+
+      "learning_objectives": [
+        "Distinguer génération et simple classification.",
+        "Comprendre qu'un LLM constitue une forme d'IA générative mais que l'IA générative ne se limite pas au texte.",
+        "Identifier plusieurs modalités génératives."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Ce que signifie générer dans le contexte de l'IA.",
+          "Pourquoi une IA générative ne récupère pas nécessairement un contenu préexistant."
+        ],
+        "demonstrate": [
+          "Comparer une tâche de classification d'image et une tâche de génération d'image."
+        ],
+        "answer": [
+          "Une IA de recommandation est-elle nécessairement générative ?",
+          "Une IA générative copie-t-elle simplement des éléments de son entraînement ?"
+        ]
+      },
+
+      "misconceptions": [
+        "IA générative signifie uniquement génération de texte.",
+        "Une IA générative se contente de rechercher et copier une réponse existante."
+      ],
+
+      "source_ids": [
+        "SRC-0009"
+      ],
+
+      "tags": [
+        "generative-ai",
+        "generation",
+        "multimodal"
+      ]
+    },
+
+    {
+      "id": "A06",
+      "slug": "modele-langage",
+      "title": "Modèle de langage",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Modèle qui attribue des probabilités à des séquences linguistiques ou aux différentes continuations possibles d'un contexte.",
+
+      "prerequisites": [
+        "A02",
+        "A04"
+      ],
+
+      "learning_objectives": [
+        "Comprendre qu'un modèle de langage représente des probabilités sur des séquences.",
+        "Relier modèle de langage et prédiction d'une continuation.",
+        "Comprendre que les modèles de langage existaient avant les LLM modernes."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "La notion de probabilité conditionnelle appliquée à une séquence sans utiliser immédiatement de formalisme mathématique lourd.",
+          "Pourquoi prédire une continuation permet ensuite de générer du texte."
+        ],
+        "demonstrate": [
+          "Proposer plusieurs continuations à une phrase et leur attribuer fictivement différentes probabilités."
+        ],
+        "answer": [
+          "Un modèle de langage ne fait-il que prédire le mot suivant ?",
+          "Pourquoi prédire une continuation peut-il produire des textes cohérents ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Un modèle de langage est nécessairement un LLM.",
+        "Le modèle choisit toujours la continuation la plus probable."
+      ],
+
+      "source_ids": [
+        "SRC-0003"
+      ],
+
+      "tags": [
+        "language-model",
+        "probability",
+        "prediction"
+      ]
+    },
+
+    {
+      "id": "A07",
+      "slug": "llm",
+      "title": "Large Language Model — LLM",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et possédant suffisamment de capacité pour accomplir ou être adapté à de nombreuses tâches liées au langage.",
+
+      "prerequisites": [
+        "A03",
+        "A06"
+      ],
+
+      "learning_objectives": [
+        "Définir un LLM comme un modèle et non comme une application.",
+        "Comprendre le rôle de l'échelle, des données et des paramètres.",
+        "Relier LLM, deep learning et modèle de langage."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi le terme Large ne possède pas un seuil universel unique.",
+          "Pourquoi le nombre de paramètres n'est pas à lui seul une mesure d'intelligence ou de qualité."
+        ],
+        "demonstrate": [
+          "Reconstituer la chaîne IA → ML → deep learning → modèle de langage → LLM."
+        ],
+        "answer": [
+          "Combien de paramètres faut-il pour qu'un modèle soit un LLM ?",
+          "Un LLM est-il nécessairement conversationnel ?"
+        ]
+      },
+
+      "misconceptions": [
+        "LLM signifie chatbot.",
+        "Un nombre supérieur de paramètres garantit un meilleur modèle.",
+        "Tous les LLM possèdent la même architecture et le même comportement."
+      ],
+
+      "source_ids": [
+        "SRC-0003",
+        "SRC-0004"
+      ],
+
+      "tags": [
+        "llm",
+        "language-model",
+        "scaling"
+      ]
+    },
+
+    {
+      "id": "A08",
+      "slug": "foundation-model",
+      "title": "Foundation model",
+      "domain": "A",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+
+      "definition_short": "Modèle entraîné sur des données larges à grande échelle, conçu pour pouvoir être adapté à un large éventail de tâches en aval.",
+
+      "prerequisites": [
+        "A03"
+      ],
+
+      "learning_objectives": [
+        "Comprendre la notion de modèle de fondation.",
+        "Distinguer foundation model et LLM.",
+        "Comprendre le principe d'adaptation à plusieurs tâches."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi tous les foundation models ne sont pas nécessairement des modèles de langage.",
+          "Pourquoi un même modèle de fondation peut alimenter plusieurs applications."
+        ],
+        "demonstrate": [
+          "Comparer un modèle spécialisé pour une tâche et un modèle général pouvant être adapté."
+        ],
+        "answer": [
+          "Un LLM est-il toujours un foundation model ?",
+          "Un modèle de vision peut-il être un foundation model ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Foundation model est simplement un autre nom pour LLM.",
+        "Foundation signifie que le modèle constitue une intelligence générale."
+      ],
+
+      "source_ids": [
+        "SRC-0005"
+      ],
+
+      "tags": [
+        "foundation-model",
+        "adaptation",
+        "general-purpose"
+      ]
+    },
+
+    {
+      "id": "A09",
+      "slug": "gpai",
+      "title": "Modèle d'IA à usage général — GPAI",
+      "domain": "A",
+      "mastery_level": "intermediate",
+      "stability": "evolving",
+
+      "definition_short": "Catégorie juridique européenne désignant un modèle d'IA présentant une généralité significative et capable d'accomplir de manière compétente un large éventail de tâches distinctes, indépendamment de sa mise sur le marché, et pouvant être intégré dans divers systèmes ou applications en aval.",
+
+      "prerequisites": [
+        "A01",
+        "A08"
+      ],
+
+      "learning_objectives": [
+        "Distinguer une catégorie juridique d'une catégorie purement scientifique.",
+        "Comprendre que GPAI et foundation model se recouvrent partiellement sans être des synonymes parfaits.",
+        "Identifier le rôle du règlement européen sur l'IA."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi une définition réglementaire poursuit un objectif différent d'une définition scientifique.",
+          "La différence entre modèle d'IA à usage général et système d'IA qui l'intègre."
+        ],
+        "demonstrate": [
+          "Comparer les notions de foundation model et de modèle d'IA à usage général."
+        ],
+        "answer": [
+          "Tous les LLM sont-ils juridiquement des GPAI ?",
+          "Pourquoi le droit utilise-t-il une terminologie différente de la recherche ?"
+        ]
+      },
+
+      "misconceptions": [
+        "GPAI est un terme purement technique.",
+        "GPAI et foundation model sont strictement synonymes."
+      ],
+
+      "source_ids": [
+        "SRC-0006",
+        "SRC-0007"
+      ],
+
+      "tags": [
+        "gpai",
+        "ai-act",
+        "regulation"
+      ]
+    },
+
+    {
+      "id": "A10",
+      "slug": "modele-chatbot-application",
+      "title": "Modèle ≠ chatbot ≠ application",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Un modèle est le composant appris qui transforme des entrées en sorties ; un chatbot est une interface conversationnelle ; une application peut combiner modèle, interface, instructions, contexte, mémoire, recherche, données et outils.",
+
+      "prerequisites": [
+        "A07"
+      ],
+
+      "learning_objectives": [
+        "Distinguer systématiquement modèle, système, application et interface.",
+        "Comprendre pourquoi les capacités observées dans un produit ne proviennent pas toutes directement du LLM.",
+        "Éviter d'attribuer au modèle des fonctions fournies par l'application."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi recherche web, mémoire ou exécution de code peuvent appartenir à l'application plutôt qu'au modèle.",
+          "Pourquoi deux applications utilisant le même modèle peuvent avoir des comportements différents."
+        ],
+        "demonstrate": [
+          "Dessiner une architecture modèle + instructions + outils + mémoire + interface."
+        ],
+        "answer": [
+          "Quand un chatbot consulte Internet, est-ce le LLM lui-même qui navigue sur le web ?",
+          "Pourquoi un même modèle peut-il se comporter différemment dans deux produits ?"
+        ]
+      },
+
+      "misconceptions": [
+        "ChatGPT, Claude ou Gemini désignent toujours un modèle unique.",
+        "Toutes les fonctions visibles d'un chatbot appartiennent au réseau neuronal."
+      ],
+
+      "source_ids": [
+        "SRC-0001",
+        "SRC-0003"
+      ],
+
+      "tags": [
+        "model",
+        "application",
+        "chatbot",
+        "architecture"
+      ]
+    },
+
+    {
+      "id": "A11",
+      "slug": "parametres-poids",
+      "title": "Paramètres et poids",
+      "domain": "A",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+
+      "definition_short": "Valeurs numériques apprises pendant l'entraînement qui déterminent une grande partie des transformations effectuées par un réseau neuronal.",
+
+      "prerequisites": [
+        "A03"
+      ],
+
+      "learning_objectives": [
+        "Comprendre ce qu'est un paramètre appris.",
+        "Distinguer paramètres du modèle et données placées dans son contexte.",
+        "Comprendre que l'entraînement modifie les paramètres alors qu'un prompt ordinaire ne le fait pas."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Pourquoi les poids constituent des nombres appris et non une base documentaire contenant des phrases.",
+          "Pourquoi utiliser un modèle ne signifie généralement pas modifier ses poids."
+        ],
+        "demonstrate": [
+          "Utiliser un petit réseau fictif pour montrer que l'apprentissage ajuste des coefficients numériques."
+        ],
+        "answer": [
+          "Où sont stockées les connaissances d'un LLM ?",
+          "Quand je parle à un chatbot, est-ce que je réentraîne son modèle ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Les paramètres sont une base de données contenant les textes d'entraînement.",
+        "Chaque conversation modifie automatiquement les poids du modèle."
+      ],
+
+      "source_ids": [
+        "SRC-0002",
+        "SRC-0004"
+      ],
+
+      "tags": [
+        "parameters",
+        "weights",
+        "training"
+      ]
+    },
+
+    {
+      "id": "A12",
+      "slug": "open-source-open-weights-proprietary",
+      "title": "Open source, open weights et modèles propriétaires",
+      "domain": "A",
+      "mastery_level": "intermediate",
+      "stability": "evolving",
+
+      "definition_short": "L'accès aux poids d'un modèle ne suffit pas à lui seul à qualifier un système d'IA d'open source ; il faut distinguer disponibilité des paramètres, licences, code, informations sur les données et éléments permettant d'étudier, modifier et redistribuer le système.",
+
+      "prerequisites": [
+        "A11"
+      ],
+
+      "learning_objectives": [
+        "Distinguer open weights et open source AI.",
+        "Comprendre l'importance des licences.",
+        "Éviter de qualifier automatiquement de libre un modèle simplement téléchargeable."
+      ],
+
+      "trainer_mastery": {
+        "explain": [
+          "Les libertés d'utilisation, d'étude, de modification et de partage associées à la définition Open Source AI.",
+          "Pourquoi l'accès aux paramètres seuls ne garantit pas la reproductibilité de l'entraînement."
+        ],
+        "demonstrate": [
+          "Comparer trois scénarios : API propriétaire, poids téléchargeables et système répondant aux critères Open Source AI."
+        ],
+        "answer": [
+          "Si je peux télécharger un modèle, est-il open source ?",
+          "Pourquoi les données d'entraînement comptent-elles dans la discussion sur l'ouverture des modèles ?"
+        ]
+      },
+
+      "misconceptions": [
+        "Téléchargeable signifie open source.",
+        "Open weights et open source sont synonymes.",
+        "Un modèle gratuit est nécessairement libre."
+      ],
+
+      "source_ids": [
+        "SRC-0008"
+      ],
+
+      "tags": [
+        "open-source",
+        "open-weights",
+        "licensing"
+      ]
+    }
+  ]
+}
