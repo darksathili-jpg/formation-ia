@@ -454,6 +454,410 @@
         "licensing",
         "openness"
       ]
-    }
+    },
+    {
+  "id": "TERM-0011",
+  "term": "Intelligence artificielle",
+  "english_term": "Artificial Intelligence",
+  "slug": "intelligence-artificielle",
+
+  "aliases": [
+    "IA",
+    "AI"
+  ],
+
+  "definition_short": "Domaine et ensemble de systèmes capables d'inférer à partir d'entrées comment produire des sorties telles que prédictions, contenus, recommandations ou décisions.",
+
+  "definition_precise": "Dans la définition de référence de l'OCDE, un système d'IA est un système basé sur une machine qui, pour des objectifs explicites ou implicites, infère à partir des entrées reçues comment générer des sorties pouvant influencer des environnements physiques ou virtuels.",
+
+  "pedagogical_analogy": "L'intelligence artificielle peut être vue comme une grande famille contenant de nombreuses techniques et de nombreux types de systèmes.",
+
+  "analogy_limits": "Cette image de famille ne signifie pas que toutes les approches partagent les mêmes mécanismes ni que l'IA reproduit l'intelligence humaine.",
+
+  "not_to_confuse_with": [
+    "TERM-0012",
+    "TERM-0015"
+  ],
+
+  "common_misuses": [
+    "Employer IA comme synonyme de chatbot.",
+    "Réduire toute l'intelligence artificielle aux modèles génératifs."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A01"
+  ],
+
+  "source_ids": [
+    "SRC-0001"
+  ],
+
+  "tags": [
+    "ai",
+    "definition",
+    "foundations"
+  ]
+},
+{
+  "id": "TERM-0012",
+  "term": "Machine learning",
+  "english_term": "Machine Learning",
+  "slug": "machine-learning",
+
+  "aliases": [
+    "apprentissage automatique",
+    "apprentissage machine"
+  ],
+
+  "definition_short": "Ensemble de techniques permettant à une machine d'améliorer ses performances et généralement de construire ou ajuster des modèles à partir de données.",
+
+  "definition_precise": "Le machine learning regroupe des méthodes dans lesquelles des régularités sont apprises à partir de données plutôt que toutes les règles de traitement soient explicitement écrites par un programmeur.",
+
+  "pedagogical_analogy": "Au lieu d'écrire toutes les règles, on fournit des exemples ou des données à partir desquels le système ajuste un modèle.",
+
+  "analogy_limits": "Apprendre à partir de données ne signifie pas comprendre les exemples comme un humain ni découvrir nécessairement des règles vraies sur le monde.",
+
+  "not_to_confuse_with": [
+    "TERM-0011",
+    "TERM-0013"
+  ],
+
+  "common_misuses": [
+    "Employer machine learning et intelligence artificielle comme synonymes.",
+    "Croire que tout système d'IA utilise nécessairement du machine learning."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A02"
+  ],
+
+  "source_ids": [
+    "SRC-0001",
+    "SRC-0002"
+  ],
+
+  "tags": [
+    "machine-learning",
+    "data",
+    "training"
+  ]
+},
+{
+  "id": "TERM-0013",
+  "term": "Deep learning",
+  "english_term": "Deep Learning",
+  "slug": "deep-learning",
+
+  "aliases": [
+    "apprentissage profond"
+  ],
+
+  "definition_short": "Famille de méthodes de machine learning fondées sur des réseaux neuronaux comportant plusieurs couches de traitement.",
+
+  "definition_precise": "Le deep learning utilise des architectures neuronales à plusieurs couches capables d'apprendre des représentations successives des données, souvent à différents niveaux d'abstraction.",
+
+  "pedagogical_analogy": "Les données traversent plusieurs étages de transformation qui construisent progressivement des représentations utilisables par le modèle.",
+
+  "analogy_limits": "Chaque couche ne correspond pas nécessairement à une notion humaine clairement identifiable et davantage de couches ne garantit pas de meilleures performances.",
+
+  "not_to_confuse_with": [
+    "TERM-0012",
+    "TERM-0017"
+  ],
+
+  "common_misuses": [
+    "Interpréter deep comme une capacité à réfléchir profondément.",
+    "Présenter deep learning et intelligence artificielle comme synonymes."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A03"
+  ],
+
+  "source_ids": [
+    "SRC-0002"
+  ],
+
+  "tags": [
+    "deep-learning",
+    "neural-networks",
+    "representation-learning"
+  ]
+},
+{
+  "id": "TERM-0014",
+  "term": "Traitement automatique du langage",
+  "english_term": "Natural Language Processing",
+  "slug": "traitement-automatique-langage",
+
+  "aliases": [
+    "TAL",
+    "NLP"
+  ],
+
+  "definition_short": "Domaine consacré au traitement informatique du langage humain écrit ou oral.",
+
+  "definition_precise": "Le traitement automatique du langage regroupe les méthodes permettant à des systèmes informatiques d'analyser, transformer, reconnaître, traduire ou générer du langage humain.",
+
+  "pedagogical_analogy": "Le TAL est le grand domaine informatique du langage ; les LLM constituent aujourd'hui une famille d'outils à l'intérieur de ce domaine.",
+
+  "analogy_limits": "Tous les problèmes de TAL ne nécessitent pas de LLM et de nombreuses méthodes de TAL existaient bien avant les modèles actuels.",
+
+  "not_to_confuse_with": [
+    "TERM-0016",
+    "TERM-0017"
+  ],
+
+  "common_misuses": [
+    "Faire commencer l'histoire du TAL avec les LLM.",
+    "Considérer tout système de TAL comme un LLM."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A04"
+  ],
+
+  "source_ids": [
+    "SRC-0003"
+  ],
+
+  "tags": [
+    "nlp",
+    "language",
+    "foundations"
+  ]
+},
+{
+  "id": "TERM-0015",
+  "term": "Intelligence artificielle générative",
+  "english_term": "Generative Artificial Intelligence",
+  "slug": "ia-generative",
+
+  "aliases": [
+    "IA générative",
+    "GenAI"
+  ],
+
+  "definition_short": "Famille de systèmes d'IA capables de produire de nouveaux contenus ou représentations à partir de structures apprises dans des données.",
+
+  "definition_precise": "L'IA générative recouvre des systèmes conçus pour générer des contenus tels que texte, code, images, sons ou autres représentations. Les LLM constituent une famille importante de modèles génératifs mais ne couvrent pas l'ensemble de l'IA générative.",
+
+  "pedagogical_analogy": "Une IA générative ne se contente pas de choisir une étiquette : elle construit une sortie à partir d'un espace de possibilités appris.",
+
+  "analogy_limits": "Générer ne signifie ni créer avec intention au sens humain ni garantir que le contenu produit est inédit ou factuellement correct.",
+
+  "not_to_confuse_with": [
+    "TERM-0011",
+    "TERM-0017"
+  ],
+
+  "common_misuses": [
+    "Employer IA générative et LLM comme synonymes.",
+    "Limiter l'IA générative au texte."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A05"
+  ],
+
+  "source_ids": [
+    "SRC-0009"
+  ],
+
+  "tags": [
+    "generative-ai",
+    "generation",
+    "multimodal"
+  ]
+},
+{
+  "id": "TERM-0016",
+  "term": "Modèle de langage",
+  "english_term": "Language Model",
+  "slug": "modele-langage",
+
+  "definition_short": "Modèle probabiliste du langage permettant d'estimer la probabilité de séquences ou de continuations en fonction d'un contexte.",
+
+  "definition_precise": "Un modèle de langage représente statistiquement des séquences linguistiques. Dans les modèles autoregressifs modernes, il fournit notamment une distribution de probabilité sur les prochains tokens possibles conditionnellement au contexte déjà disponible.",
+
+  "pedagogical_analogy": "À partir d'un début de séquence, le modèle évalue plusieurs continuations possibles et leur attribue des scores ou probabilités.",
+
+  "analogy_limits": "Un modèle de langage moderne ne fonctionne pas comme la simple fonction de prédiction de mots d'un téléphone : les représentations, architectures et capacités sont beaucoup plus riches.",
+
+  "not_to_confuse_with": [
+    "TERM-0014",
+    "TERM-0017"
+  ],
+
+  "common_misuses": [
+    "Dire qu'un modèle de langage choisit toujours le mot le plus probable.",
+    "Employer modèle de langage comme synonyme nécessaire de LLM."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A06"
+  ],
+
+  "source_ids": [
+    "SRC-0003"
+  ],
+
+  "tags": [
+    "language-model",
+    "probability",
+    "prediction"
+  ]
+},
+{
+  "id": "TERM-0017",
+  "term": "Large Language Model",
+  "english_term": "Large Language Model",
+  "slug": "llm",
+
+  "aliases": [
+    "LLM",
+    "grand modèle de langage"
+  ],
+
+  "definition_short": "Modèle de langage neuronal de grande échelle capable d'accomplir ou d'être adapté à de nombreuses tâches liées au langage.",
+
+  "definition_precise": "Un LLM est un modèle de langage neuronal entraîné à grande échelle sur d'importantes quantités de données et possédant une capacité suffisante pour généraliser à de nombreuses tâches. Il n'existe pas de seuil universel de paramètres définissant précisément le mot large.",
+
+  "pedagogical_analogy": "Un LLM est un moteur linguistique général pouvant être utilisé par de nombreuses applications différentes.",
+
+  "analogy_limits": "Le caractère général du modèle ne signifie ni omniscience, ni intelligence générale, ni fiabilité universelle.",
+
+  "not_to_confuse_with": [
+    "TERM-0004",
+    "TERM-0015",
+    "TERM-0016",
+    "TERM-0018"
+  ],
+
+  "common_misuses": [
+    "Employer LLM et chatbot comme synonymes.",
+    "Définir la qualité d'un LLM uniquement par son nombre de paramètres."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A07",
+    "A10"
+  ],
+
+  "source_ids": [
+    "SRC-0003",
+    "SRC-0004"
+  ],
+
+  "tags": [
+    "llm",
+    "language-model",
+    "scaling"
+  ]
+},
+{
+  "id": "TERM-0018",
+  "term": "Foundation model",
+  "english_term": "Foundation Model",
+  "slug": "foundation-model",
+
+  "aliases": [
+    "modèle de fondation"
+  ],
+
+  "definition_short": "Modèle entraîné à grande échelle sur des données larges et pouvant être adapté à de nombreuses tâches en aval.",
+
+  "definition_precise": "La notion de foundation model désigne un modèle entraîné sur de larges ensembles de données à grande échelle puis adaptable à un large éventail de tâches. La notion ne se limite pas nécessairement au langage.",
+
+  "pedagogical_analogy": "C'est une base générale sur laquelle plusieurs applications ou modèles spécialisés peuvent être construits.",
+
+  "analogy_limits": "Foundation ne signifie pas intelligence fondamentale ou générale ; il s'agit d'un rôle dans un écosystème de modèles et d'adaptations.",
+
+  "not_to_confuse_with": [
+    "TERM-0017",
+    "TERM-0019"
+  ],
+
+  "common_misuses": [
+    "Employer foundation model comme synonyme exact de LLM.",
+    "Supposer qu'un foundation model traite nécessairement du texte."
+  ],
+
+  "status": "stable",
+
+  "concept_ids": [
+    "A08"
+  ],
+
+  "source_ids": [
+    "SRC-0005"
+  ],
+
+  "tags": [
+    "foundation-model",
+    "adaptation",
+    "general-purpose"
+  ]
+},
+{
+  "id": "TERM-0019",
+  "term": "Modèle d'IA à usage général",
+  "english_term": "General-Purpose AI Model",
+  "slug": "gpai",
+
+  "aliases": [
+    "GPAI",
+    "general-purpose AI model"
+  ],
+
+  "definition_short": "Catégorie juridique de l'Union européenne couvrant certains modèles présentant une généralité significative et capables d'accomplir un large éventail de tâches distinctes.",
+
+  "definition_precise": "Au sens de l'AI Act européen, un modèle d'IA à usage général est un modèle présentant une généralité significative, capable d'exécuter de manière compétente un large éventail de tâches distinctes et pouvant être intégré dans diverses applications ou systèmes en aval, sous réserve des exclusions prévues par le règlement.",
+
+  "pedagogical_analogy": "Foundation model est principalement une notion issue de la recherche ; GPAI est une catégorie définie par le droit européen pour organiser des obligations réglementaires.",
+
+  "analogy_limits": "Les deux notions ont des zones de recouvrement importantes mais leurs définitions, leurs objectifs et leurs frontières ne sont pas identiques.",
+
+  "not_to_confuse_with": [
+    "TERM-0018",
+    "TERM-0002"
+  ],
+
+  "common_misuses": [
+    "Employer GPAI comme simple traduction juridique de foundation model.",
+    "Confondre modèle d'IA à usage général et système d'IA à usage général."
+  ],
+
+  "status": "evolving",
+
+  "concept_ids": [
+    "A09"
+  ],
+
+  "source_ids": [
+    "SRC-0006",
+    "SRC-0007"
+  ],
+
+  "tags": [
+    "gpai",
+    "ai-act",
+    "regulation"
+  ]
+}
   ]
 }
