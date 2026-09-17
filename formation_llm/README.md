@@ -17,7 +17,7 @@ Il couvre le Domaine B — **Tokens, représentations et contexte** — de B01 �
 - un quiz de maîtrise formateur ;
 - un fonctionnement autonome sans API ni dépendance réseau.
 
-## Validation
+## Module interactif — Domaine C\n\nLe module [`modules/domaine-c.html`](modules/domaine-c.html) introduit **Transformer et attention** de C01 à C09. Il comprend un **Attention Lab** local qui rend visible la chaîne `Q·K → /√dₖ → masque causal → softmax → Σ poids·V`, une matrice d’attention complète, trois têtes simulées, un mode formateur et un quiz. Les vecteurs sont fictifs et déterministes : ils illustrent les opérations sans prétendre reproduire un modèle commercial.\n\n## Validation
 
 Depuis `formation_llm/` :
 
@@ -29,7 +29,7 @@ npm run validate
 La commande exécute deux contrôles :
 
 - `validate:data` : schémas JSON et intégrité référentielle du corpus pédagogique ;
-- `validate:web` : contrôle structurel du module B, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
+- `validate:web` : contrôle structurel des modules B et C, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
 
 Le workflow GitHub Actions `Validate Formation LLM` exécute cette validation à chaque modification pertinente.
 
