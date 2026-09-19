@@ -55,9 +55,11 @@
     {
       "path": "modules/hallucination-lab.html",
       "label": "Parcours 3 — Hallucination Lab",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 6
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 6,
+      "reviewed_on": "2026-09-19",
+      "notes": "Fiabilité reconstruite : méthode claim-preuve-verdict, exemple travaillé, calibration, abstention, pratique guidée, auto-explication, quiz et transfert."
     },
     {
       "path": "modules/rag-lab.html",
