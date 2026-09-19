@@ -51,6 +51,20 @@ Le laboratoire [`modules/transformer-block-lab.html`](modules/transformer-block-
 
 Le laboratoire précise que l'ordre exact des opérations et les variantes de normalisation, position et MLP dépendent de l'architecture réelle.
 
+## Sampling Lab
+
+Le laboratoire [`modules/sampling-lab.html`](modules/sampling-lab.html) constitue l'étape 4 du **Parcours 1 — Comprendre un LLM**. Il rend manipulable la chaîne de génération :
+- logits → softmax de sortie → distribution du prochain token ;
+- greedy et sampling pondéré ;
+- température avec garde-fou `T > 0` et distinction explicite avec l'argmax ;
+- filtres top-k et top-p / nucleus sampling ;
+- seed didactique et comparaison de tirages ;
+- boucle autoregressive où chaque token choisi devient du contexte ;
+- démonstration « température basse ≠ vérité » ;
+- test de maîtrise et modes stagiaire, formateur et projection.
+
+Les logits et le petit vocabulaire sont fictifs ; les calculs de softmax, température, filtrage, renormalisation et tirage sont réellement effectués dans le navigateur.
+
 ## RAG Lab
 
 Le laboratoire [`modules/rag-lab.html`](modules/rag-lab.html) isole le **retrieval** du reste du système RAG. Il contient un corpus contrôlé de 12 chunks et 6 questions avec vérité terrain graduée.
