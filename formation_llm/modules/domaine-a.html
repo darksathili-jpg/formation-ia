@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Domaine A — Situer les LLM · Formation LLM</title>
+<title>Parcours 0 — Situer les LLM · Formation LLM</title>
 <style>
 :root{
 --bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#637581;--line:rgba(16,32,45,.14);
@@ -52,13 +52,13 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 <div class="top"><a class="back" href="../index.html#parcours">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button">◆ Formateur</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
 
 <section class="hero">
-<div><div class="eyebrow">Parcours 0 · Domaine A</div><h1>Situer les LLM</h1><p class="lead">Avant de manipuler tokens, attention ou RAG, il faut savoir <strong>de quoi l’on parle</strong>. Ce module construit une carte mentale fiable : IA, machine learning, deep learning, TAL, IA générative, modèles de langage, LLM, foundation models et applications.</p></div>
+<div><div class="eyebrow">Parcours 0 · Fondamentaux</div><h1>Situer les LLM</h1><p class="lead">Avant de manipuler tokens, attention ou RAG, il faut savoir <strong>de quoi l’on parle</strong>. Ce module construit une carte mentale fiable : IA, machine learning, deep learning, TAL, IA générative, modèles de langage, LLM, foundation models et applications.</p></div>
 <aside class="hero-card"><b>La question directrice</b><p>Quand un participant dit « l’IA », « ChatGPT », « le modèle » ou « une IA open source », parle-t-il vraiment de la même chose ?</p><div class="ladder"><span>IA · champ large</span><span>Machine learning · méthodes apprenantes</span><span>Deep learning · réseaux profonds</span><span>LLM · modèles de langage de grande échelle</span></div></aside>
 </section>
 <section class="journey" aria-label="Repères du parcours">
 <div class="journey-card"><div class="k">Point de départ</div><b>Aucun prérequis technique</b><p>On part du vocabulaire courant et on le rend précis.</p></div>
 <div class="journey-card"><div class="k">Objectif de sortie</div><b>Expliquer 4 distinctions</b><p>IA ≠ chatbot · LLM ≠ application · poids ≠ documents · open weights ≠ open source.</p></div>
-<div class="journey-card"><div class="k">Ensuite</div><b>Domaine B</b><p>Une fois le vocabulaire stabilisé : tokens, IDs, embeddings et contexte.</p></div>
+<div class="journey-card"><div class="k">Ensuite</div><b>Parcours 1 · Étape 1</b><p>Une fois le vocabulaire stabilisé : tokens, IDs, embeddings et contexte.</p></div>
 </section>
 
 <div class="notice"><strong>Objectif formateur.</strong>À la fin, vous devez pouvoir corriger sans jargon quatre confusions fréquentes : <em>IA = chatbot</em>, <em>LLM = application</em>, <em>paramètres = base de données</em> et <em>open weights = automatiquement open source</em>.</div>
@@ -67,15 +67,15 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 <div class="section-head"><div class="num">01</div><div><h2>Concept Map Lab — carte mentale interactive</h2><p>La chaîne IA → ML → deep learning → LLM décrit un chemin d’appartenance fréquent pour les LLM modernes. Modèle de langage, TAL, IA générative, foundation model et application sont des notions liées, mais ne forment pas une unique hiérarchie emboîtée.</p></div></div>
 <div class="panel">
 <div class="map" id="conceptMap">
-<button class="node rel active" data-key="ai"><span class="id">A01</span><b>Intelligence artificielle</b><small>Champ général</small></button>
-<button class="node rel" data-key="ml"><span class="id">A02</span><b>Machine learning</b><small>Apprendre à partir de données</small></button>
-<button class="node rel" data-key="dl"><span class="id">A03</span><b>Deep learning</b><small>Réseaux à plusieurs couches</small></button>
-<button class="node rel" data-key="lm"><span class="id">A06</span><b>Modèle de langage</b><small>Probabilités sur des séquences</small></button>
-<button class="node rel" data-key="llm"><span class="id">A07</span><b>LLM</b><small>Modèle de langage à grande échelle</small></button>
-<button class="node" data-key="app"><span class="id">A10</span><b>Application</b><small>Interface + modèle + contexte + outils…</small></button>
-<button class="node wide" data-key="nlp"><span class="id">A04</span><b>TAL / NLP</b><small>Domaine du traitement informatique du langage</small></button>
-<button class="node wide" data-key="gen"><span class="id">A05</span><b>IA générative</b><small>Texte, image, audio, vidéo, code…</small></button>
-<button class="node wide" data-key="foundation"><span class="id">A08</span><b>Foundation model</b><small>Modèle adaptable à de nombreuses tâches</small></button>
+<button class="node rel active" data-key="ai"><span class="id">Notion 01</span><span hidden data-ref="A01"></span><b>Intelligence artificielle</b><small>Champ général</small></button>
+<button class="node rel" data-key="ml"><span class="id">Notion 02</span><span hidden data-ref="A02"></span><b>Machine learning</b><small>Apprendre à partir de données</small></button>
+<button class="node rel" data-key="dl"><span class="id">Notion 03</span><span hidden data-ref="A03"></span><b>Deep learning</b><small>Réseaux à plusieurs couches</small></button>
+<button class="node rel" data-key="lm"><span class="id">Notion 06</span><span hidden data-ref="A06"></span><b>Modèle de langage</b><small>Probabilités sur des séquences</small></button>
+<button class="node rel" data-key="llm"><span class="id">Notion 07</span><span hidden data-ref="A07"></span><b>LLM</b><small>Modèle de langage à grande échelle</small></button>
+<button class="node" data-key="app"><span class="id">Notion 10</span><span hidden data-ref="A10"></span><b>Application</b><small>Interface + modèle + contexte + outils…</small></button>
+<button class="node wide" data-key="nlp"><span class="id">Notion 04</span><span hidden data-ref="A04"></span><b>TAL / NLP</b><small>Domaine du traitement informatique du langage</small></button>
+<button class="node wide" data-key="gen"><span class="id">Notion 05</span><span hidden data-ref="A05"></span><b>IA générative</b><small>Texte, image, audio, vidéo, code…</small></button>
+<button class="node wide" data-key="foundation"><span class="id">Notion 08</span><span hidden data-ref="A08"></span><b>Foundation model</b><small>Modèle adaptable à de nombreuses tâches</small></button>
 </div>
 <div class="detail" id="conceptDetail" aria-live="polite"></div>
 <div class="trainer-only trainer-box"><b>Question à poser.</b> « Un LLM est-il toute l’IA ? » Attendu : non. Un LLM est un type de modèle de langage neuronal, lui-même situé dans un paysage beaucoup plus large.</div>
@@ -122,25 +122,25 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 </section>
 
 <section class="section" id="concepts">
-<div class="section-head"><div class="num">05</div><div><h2>Les 12 notions du Domaine A</h2><p>Le minimum rigoureux à savoir expliquer avant de poursuivre vers tokens et Transformer.</p></div></div>
+<div class="section-head"><div class="num">05</div><div><h2>Les 12 notions fondamentales</h2><p>Le minimum rigoureux à savoir expliquer avant de poursuivre vers tokens et Transformer.</p></div></div>
 <div class="concepts">
-<article class="concept"><span class="id">A01</span><h3>Intelligence artificielle</h3><p>Champ large de systèmes capables de produire des sorties à partir d’entrées et d’objectifs.</p><div class="trap"><b>Piège :</b> IA = chatbot.</div></article>
-<article class="concept"><span class="id">A02</span><h3>Machine learning</h3><p>Méthodes qui apprennent des régularités à partir de données plutôt que d’expliciter toutes les règles.</p><div class="trap"><b>Piège :</b> ML = toute l’IA.</div></article>
-<article class="concept"><span class="id">A03</span><h3>Deep learning</h3><p>Famille de ML utilisant des réseaux neuronaux à plusieurs couches et apprenant des représentations.</p><div class="trap"><b>Piège :</b> « deep » = réflexion profonde.</div></article>
-<article class="concept"><span class="id">A04</span><h3>TAL / NLP</h3><p>Domaine consacré au traitement informatique du langage humain écrit ou oral.</p><div class="trap"><b>Piège :</b> TAL apparu avec les chatbots récents.</div></article>
-<article class="concept"><span class="id">A05</span><h3>IA générative</h3><p>Systèmes conçus pour produire de nouveaux contenus : texte, image, audio, vidéo, code…</p><div class="trap"><b>Piège :</b> génératif = seulement texte.</div></article>
-<article class="concept"><span class="id">A06</span><h3>Modèle de langage</h3><p>Modèle attribuant des probabilités à des séquences ou continuations possibles.</p><div class="trap"><b>Piège :</b> tout modèle de langage est un LLM.</div></article>
-<article class="concept"><span class="id">A07</span><h3>LLM</h3><p>Modèle de langage neuronal de grande échelle entraîné sur de vastes corpus.</p><div class="trap"><b>Piège :</b> LLM = chatbot.</div></article>
-<article class="concept"><span class="id">A08</span><h3>Foundation model</h3><p>Modèle à grande échelle pouvant être adapté à un large éventail de tâches en aval.</p><div class="trap"><b>Piège :</b> synonyme exact de LLM.</div></article>
-<article class="concept"><span class="id">A09</span><h3>GPAI</h3><p>Catégorie juridique européenne pour certains modèles d’IA à usage général. Ce n’est pas une taxonomie scientifique universelle.</p><div class="trap"><b>Piège :</b> GPAI = terme purement technique.</div></article>
-<article class="concept"><span class="id">A10</span><h3>Modèle ≠ chatbot ≠ application</h3><p>Une application peut ajouter interface, mémoire, recherche, données, instructions et outils autour d’un modèle.</p><div class="trap"><b>Piège :</b> attribuer au modèle toutes les fonctions du produit.</div></article>
-<article class="concept"><span class="id">A11</span><h3>Paramètres / poids</h3><p>Valeurs numériques apprises pendant l’entraînement et utilisées dans les transformations du réseau.</p><div class="trap"><b>Piège :</b> poids = base documentaire consultable.</div></article>
-<article class="concept"><span class="id">A12</span><h3>Open source / open weights</h3><p>L’accès aux poids, la licence, le code et les éléments fournis doivent être distingués.</p><div class="trap"><b>Piège :</b> téléchargeable = automatiquement open source.</div></article>
+<article class="concept"><span class="id">Notion 01</span><span hidden data-ref="A01"></span><h3>Intelligence artificielle</h3><p>Champ large de systèmes capables de produire des sorties à partir d’entrées et d’objectifs.</p><div class="trap"><b>Piège :</b> IA = chatbot.</div></article>
+<article class="concept"><span class="id">Notion 02</span><span hidden data-ref="A02"></span><h3>Machine learning</h3><p>Méthodes qui apprennent des régularités à partir de données plutôt que d’expliciter toutes les règles.</p><div class="trap"><b>Piège :</b> ML = toute l’IA.</div></article>
+<article class="concept"><span class="id">Notion 03</span><span hidden data-ref="A03"></span><h3>Deep learning</h3><p>Famille de ML utilisant des réseaux neuronaux à plusieurs couches et apprenant des représentations.</p><div class="trap"><b>Piège :</b> « deep » = réflexion profonde.</div></article>
+<article class="concept"><span class="id">Notion 04</span><span hidden data-ref="A04"></span><h3>TAL / NLP</h3><p>Domaine consacré au traitement informatique du langage humain écrit ou oral.</p><div class="trap"><b>Piège :</b> TAL apparu avec les chatbots récents.</div></article>
+<article class="concept"><span class="id">Notion 05</span><span hidden data-ref="A05"></span><h3>IA générative</h3><p>Systèmes conçus pour produire de nouveaux contenus : texte, image, audio, vidéo, code…</p><div class="trap"><b>Piège :</b> génératif = seulement texte.</div></article>
+<article class="concept"><span class="id">Notion 06</span><span hidden data-ref="A06"></span><h3>Modèle de langage</h3><p>Modèle attribuant des probabilités à des séquences ou continuations possibles.</p><div class="trap"><b>Piège :</b> tout modèle de langage est un LLM.</div></article>
+<article class="concept"><span class="id">Notion 07</span><span hidden data-ref="A07"></span><h3>LLM</h3><p>Modèle de langage neuronal de grande échelle entraîné sur de vastes corpus.</p><div class="trap"><b>Piège :</b> LLM = chatbot.</div></article>
+<article class="concept"><span class="id">Notion 08</span><span hidden data-ref="A08"></span><h3>Foundation model</h3><p>Modèle à grande échelle pouvant être adapté à un large éventail de tâches en aval.</p><div class="trap"><b>Piège :</b> synonyme exact de LLM.</div></article>
+<article class="concept"><span class="id">Notion 09</span><span hidden data-ref="A09"></span><h3>GPAI</h3><p>Catégorie juridique européenne pour certains modèles d’IA à usage général. Ce n’est pas une taxonomie scientifique universelle.</p><div class="trap"><b>Piège :</b> GPAI = terme purement technique.</div></article>
+<article class="concept"><span class="id">Notion 10</span><span hidden data-ref="A10"></span><h3>Modèle ≠ chatbot ≠ application</h3><p>Une application peut ajouter interface, mémoire, recherche, données, instructions et outils autour d’un modèle.</p><div class="trap"><b>Piège :</b> attribuer au modèle toutes les fonctions du produit.</div></article>
+<article class="concept"><span class="id">Notion 11</span><span hidden data-ref="A11"></span><h3>Paramètres / poids</h3><p>Valeurs numériques apprises pendant l’entraînement et utilisées dans les transformations du réseau.</p><div class="trap"><b>Piège :</b> poids = base documentaire consultable.</div></article>
+<article class="concept"><span class="id">Notion 12</span><span hidden data-ref="A12"></span><h3>Open source / open weights</h3><p>L’accès aux poids, la licence, le code et les éléments fournis doivent être distingués.</p><div class="trap"><b>Piège :</b> téléchargeable = automatiquement open source.</div></article>
 </div>
 </section>
 
 <section class="section" id="quiz">
-<div class="section-head"><div class="num">06</div><div><h2>Test de maîtrise</h2><p>Le passage au Domaine B suppose de savoir employer les bons niveaux de vocabulaire.</p></div></div>
+<div class="section-head"><div class="num">06</div><div><h2>Test de maîtrise</h2><p>Le passage à l’étape suivante suppose de savoir employer les bons niveaux de vocabulaire.</p></div></div>
 <form class="quiz" id="quizForm">
 <fieldset class="q" data-answer="b"><legend>1. Un LLM est avant tout…</legend><label><input type="radio" name="q1" value="a"> une application de chat complète.</label><label><input type="radio" name="q1" value="b"> un modèle de langage neuronal de grande échelle.</label><label><input type="radio" name="q1" value="c"> une base de documents.</label><div class="feedback">Le LLM est le modèle. Une application peut l’entourer d’interface, RAG, mémoire et outils.</div></fieldset>
 <fieldset class="q" data-answer="c"><legend>2. Une application de chat recherche sur le web. Cela prouve que…</legend><label><input type="radio" name="q2" value="a"> le réseau neuronal contient le web en temps réel.</label><label><input type="radio" name="q2" value="b"> tous les LLM savent rechercher sur le web.</label><label><input type="radio" name="q2" value="c"> l’application peut fournir un outil de recherche au modèle.</label><div class="feedback">Une capacité visible dans le produit peut venir du système qui entoure le modèle.</div></fieldset>
@@ -166,8 +166,8 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 </div>
 </section>
 
-<nav class="next-step" aria-label="Navigation du parcours"><a href="../index.html#parcours">← Tableau de bord</a><div class="center">A acquis ? Vous devez pouvoir expliquer les quatre distinctions sans réciter les cartes.</div><a href="domaine-b.html">Domaine B →</a></nav>
-<footer class="footer">Formation LLM · Domaine A v1.0 · Module autonome · Progression : A → B → C, puis parcours transversaux comme RAG.</footer>
+<nav class="next-step" aria-label="Navigation du parcours"><a href="../index.html#parcours">← Tableau de bord</a><div class="center">A acquis ? Vous devez pouvoir expliquer les quatre distinctions sans réciter les cartes.</div><a href="domaine-b.html">Parcours 1 · Tokens & contexte →</a></nav>
+<footer class="footer">Formation LLM · Parcours 0 · Fondamentaux · Module autonome.</footer>
 </main>
 <script>
 (function(){
