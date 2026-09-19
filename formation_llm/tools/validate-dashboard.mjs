@@ -23,6 +23,7 @@ const transversal=html.match(/<div class="transversal-grid" id="transversalLabs"
 if(!transversal) errors.push('bloc transversalLabs absent');
 else{
   if(!transversal.includes('data-transversal-card="RAG"')) errors.push('RAG absent du bloc transversal');
+  if(!transversal.includes('data-transversal-card="HALL"')) errors.push('Hallucination Lab absent du bloc transversal');
   if(transversal.includes('data-complete=')) errors.push('un laboratoire transversal ne doit pas modifier la progression guidée');
   if(!transversal.includes('Hors progression guidée')) errors.push('statut transversal non expliqué');
 }
@@ -33,7 +34,7 @@ if(!html.includes('id="doneMetric">0/5</div>')) errors.push('compteur initial de
 if(!/done=\["A","B","C","P1S3","P1S4"\]/.test(html)) errors.push('liste de progression JS incohérente');
 if(!html.includes('.module-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto;padding-top:14px}')) errors.push('alignement vertical des actions de cartes non verrouillé');
 if(html.includes('maîtrise formateur.</p>')) errors.push('ancien libellé "maîtrise formateur" encore visible');
-if(html.includes('Sampling Lab et Hallucination Lab à construire')) errors.push('roadmap obsolète : Sampling est déjà actif');
+if(html.includes('Hallucination Lab à construire')) errors.push('roadmap obsolète : Hallucination Lab est déjà actif');
 
 if(errors.length){
   console.error('\n❌ TABLEAU DE BORD INCOHÉRENT\n- '+errors.join('\n- '));
