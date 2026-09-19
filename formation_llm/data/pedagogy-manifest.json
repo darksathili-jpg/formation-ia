@@ -19,9 +19,11 @@
     {
       "path": "modules/domaine-b.html",
       "label": "Parcours 1 — Tokens, représentations et contexte",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 2
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 2,
+      "reviewed_on": "2026-09-19",
+      "notes": "Pipeline d'entrée reconstruit : définitions, exemple travaillé, Tokenizer Lab guidé, cosinus expliqué, contexte, auto-explication, récupération et transfert."
     },
     {
       "path": "modules/domaine-c.html",
