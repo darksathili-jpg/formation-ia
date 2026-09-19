@@ -35,11 +35,18 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
 @media(max-width:900px){.hero,.grid2{grid-template-columns:1fr}.journey{grid-template-columns:1fr}.kv-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.wrap{padding:17px 13px 60px}.top{align-items:flex-start}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}
+.projector .projector-exit{display:inline-flex;align-items:center;gap:7px}
+.projector .tools{display:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
 </style>
 </head>
 <body>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
 <main class="wrap">
-<div class="top"><a class="back" href="domaine-c.html">← Étape 2 · Attention</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+<div class="top"><div><a class="back" href="../index.html#parcours">← Formation LLM</a><span aria-hidden="true"> · </span><a class="back" href="domaine-c.html">Étape 2 · Attention</a></div><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
 <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues et consignes de débrief sont maintenant visibles.</div>
 
 <section class="hero">
@@ -139,10 +146,13 @@ var root=document.documentElement,body=document.body;
 function applyTheme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
 var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"◆ Mode formateur":"○ Mode stagiaire";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
 setTrainerMode(localStorage.getItem("formation-llm-role")==="trainer");
 document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
-document.getElementById("projectorBtn").addEventListener("click",function(){root.classList.toggle("projector")});
+function setProjectorMode(on){var rootEl=root,btn=document.getElementById("projectorBtn");rootEl.classList.toggle("projector",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection";}
+document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!root.classList.contains("projector"))});
+document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
 
 function rot(v,a){var c=Math.cos(a),s=Math.sin(a);return [v[0]*c-v[1]*s,v[0]*s+v[1]*c]}
 function dot(a,b){return a[0]*b[0]+a[1]*b[1]}
