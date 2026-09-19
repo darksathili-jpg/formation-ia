@@ -65,6 +65,18 @@ Le laboratoire [`modules/sampling-lab.html`](modules/sampling-lab.html) constitu
 
 Les logits et le petit vocabulaire sont fictifs ; les calculs de softmax, température, filtrage, renormalisation et tirage sont réellement effectués dans le navigateur.
 
+## Hallucination Lab
+
+Le laboratoire [`modules/hallucination-lab.html`](modules/hallucination-lab.html) appartient au **Parcours 3 — Fiabilité & évaluation** et reste hors de la progression guidée principale. Il utilise un micro-corpus fictif contrôlé pour rendre vérifiables les distinctions entre :
+- fluidité et factualité ;
+- prémisse fausse et continuation plausible ;
+- auto-révision et preuve externe ;
+- claim confirmé, contredit ou insuffisamment étayé ;
+- confiance verbale et calibration empirique ;
+- réponse forcée, demande de clarification et abstention.
+
+Aucun appel réseau n'est effectué ; les exemples sont déterministes et la vérité terrain est explicitement fournie par le corpus du lab.
+
 ## RAG Lab
 
 Le laboratoire [`modules/rag-lab.html`](modules/rag-lab.html) isole le **retrieval** du reste du système RAG. Il contient un corpus contrôlé de 12 chunks et 6 questions avec vérité terrain graduée.
