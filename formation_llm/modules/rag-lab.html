@@ -33,11 +33,17 @@ button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
 @media(max-width:980px){.hero,.lab{grid-template-columns:1fr}.sticky{position:static}.metrics{grid-template-columns:repeat(3,1fr)}.compare,.corpus{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.wrap{padding:18px 13px 60px}.top{align-items:flex-start}.metrics,.explain,.compare,.corpus{grid-template-columns:1fr}.mode-grid{grid-template-columns:1fr}h1{font-size:clamp(2.5rem,14vw,4rem)}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.trainer-banner{display:none;max-width:1220px;margin:10px auto 18px;padding:12px 16px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-left:5px solid var(--accent);border-radius:13px;background:color-mix(in srgb,var(--soft) 72%,var(--panel));color:var(--text);font-size:.84rem;box-shadow:var(--shadow)}
+.trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
+#trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+
 </style>
 </head>
 <body>
 <main class="wrap">
-  <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button">◆ Formateur</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+  <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+  <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 
   <section class="hero">
     <div><div class="eyebrow">Parcours 4 · Recherche & RAG</div><h1>RAG Lab</h1><p class="lead">Un laboratoire autonome pour observer ce qui se passe <strong>avant</strong> la génération : sélectionner des chunks, fusionner plusieurs moteurs, reranker et mesurer objectivement la qualité du retrieval.</p></div>
@@ -286,7 +292,9 @@ var corpusGrid=document.getElementById("corpusGrid");docs.forEach(function(d){va
 function applyTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
 var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")});
-document.getElementById("trainerBtn").addEventListener("click",function(){document.body.classList.toggle("trainer-on")});
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"◆ Mode formateur":"○ Mode stagiaire";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
+var savedRole;try{savedRole=localStorage.getItem("formation-llm-role")}catch(e){}setTrainerMode(savedRole==="trainer");
+document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!document.body.classList.contains("trainer-on"))});
 document.getElementById("projectorBtn").addEventListener("click",function(){document.documentElement.classList.toggle("projector")});
 render();
 })();
