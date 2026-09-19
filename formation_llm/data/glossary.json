@@ -1688,6 +1688,53 @@
         "selective-answering"
       ],
       "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0058",
+      "term": "Incertitude épistémique",
+      "english_term": "Epistemic uncertainty",
+      "slug": "incertitude-epistemique",
+      "definition_short": "Incertitude liée à ce qui est insuffisamment connu ou étayé.",
+      "definition_precise": "Concept à distinguer de l'incertitude locale de prochain token ; une distribution de génération concentrée n'est pas une mesure directe de vérité factuelle.",
+      "common_misuses": [
+        {
+          "statement": "L'entropie du prochain token mesure directement l'incertitude factuelle.",
+          "correction": "Elle décrit une distribution locale de génération, pas directement la vérité d'une affirmation."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0016"
+      ],
+      "tags": [
+        "uncertainty"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0059",
+      "term": "Erreur de retrieval",
+      "english_term": "Retrieval error",
+      "slug": "erreur-retrieval",
+      "definition_short": "Échec à récupérer les preuves utiles avant la génération.",
+      "definition_precise": "Dans un RAG, erreur où le contexte transmis au générateur ne contient pas les passages nécessaires, à distinguer d'une mauvaise utilisation de passages pourtant présents.",
+      "common_misuses": [
+        {
+          "statement": "Toute réponse fausse d'un RAG vient du générateur.",
+          "correction": "La cause peut être le retrieval, la génération ou les deux."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0009"
+      ],
+      "tags": [
+        "rag",
+        "retrieval"
+      ],
+      "reviewed_on": "2026-09-19"
     }
   ],
   "language": "fr"
