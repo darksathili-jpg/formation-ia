@@ -27,6 +27,20 @@ Il couvre le Domaine B — **Tokens, représentations et contexte** — de B01 �
 
 Le module [`modules/domaine-c.html`](modules/domaine-c.html) introduit **Transformer et attention** de C01 à C09. Il comprend un **Attention Lab** local qui rend visible la chaîne `Q·K → /√dₖ → masque causal → softmax → Σ poids·V`, une matrice d’attention complète, trois têtes simulées, un mode formateur et un quiz. Les vecteurs sont fictifs et déterministes : ils illustrent les opérations sans prétendre reproduire un modèle commercial.
 
+## RAG Lab
+
+Le laboratoire [`modules/rag-lab.html`](modules/rag-lab.html) isole le **retrieval** du reste du système RAG. Il contient un corpus contrôlé de 12 chunks et 6 questions avec vérité terrain graduée.
+
+Le stagiaire peut comparer :
+- recherche lexicale BM25 ;
+- recherche vectorielle didactique par cosinus ;
+- ANN approximatif simulé avec nombre de candidats réglable ;
+- recherche hybride par Reciprocal Rank Fusion ;
+- reranking optionnel des candidats ;
+- calcul réel de Precision@k, Recall@k, Reciprocal Rank, MRR sur le corpus et nDCG@k.
+
+Les embeddings, l'ANN et le reranker sont explicitement des modèles didactiques déterministes ; les métriques et formules sont réellement calculées dans le navigateur. Aucun appel réseau n'est effectué.
+
 ## Validation
 
 Depuis `formation_llm/` :
@@ -39,7 +53,7 @@ npm run validate
 La commande exécute deux contrôles :
 
 - `validate:data` : schémas JSON et intégrité référentielle du corpus pédagogique ;
-- `validate:web` : contrôle structurel de l'application et des modules B et C, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
+- `validate:web` : contrôle structurel de l'application, des modules B/C et du RAG Lab, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
 
 Le workflow GitHub Actions `Validate Formation LLM` exécute cette validation à chaque modification pertinente.
 
