@@ -7,6 +7,7 @@ const pages=[
   'modules/domaine-b.html',
   'modules/domaine-c.html',
   'modules/transformer-block-lab.html',
+  'modules/sampling-lab.html',
   'modules/rag-lab.html'
 ];
 const errors=[];
@@ -93,10 +94,13 @@ const A=await load('modules/domaine-a.html');
 const B=await load('modules/domaine-b.html');
 const C=await load('modules/domaine-c.html');
 const T=await load('modules/transformer-block-lab.html');
+const S=await load('modules/sampling-lab.html');
 if(!A.includes('href="domaine-b.html"')) errors.push('Parcours 0: lien vers étape 1 absent');
 if(!B.includes('href="domaine-c.html"')) errors.push('Parcours 1 étape 1: lien vers étape 2 absent');
 if(!C.includes('href="transformer-block-lab.html"')) errors.push('Parcours 1 étape 2: lien vers étape 3 absent');
 if(!T.includes('href="domaine-c.html"')) errors.push('Parcours 1 étape 3: retour vers étape 2 absent');
+if(!T.includes('href="sampling-lab.html"')) errors.push('Parcours 1 étape 3: lien vers étape 4 absent');
+if(!S.includes('href="transformer-block-lab.html"')) errors.push('Parcours 1 étape 4: retour vers étape 3 absent');
 
 if(errors.length){
   console.error('\n❌ AUDIT NAVIGATION ÉCHOUÉ\n- '+errors.join('\n- '));
