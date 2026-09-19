@@ -9,6 +9,15 @@
 1. Référentiel interne : domaines A, B, C… avec concepts, prérequis, termes, erreurs fréquentes, questions difficiles et sources.
 2. Parcours stagiaire : niveaux 0 à 7 organisés par compétences et usages.
 
+## Règle de nomenclature visible
+
+L'interface stagiaire n'affiche **que les parcours 0 à 7**. Les domaines A/B/C… et identifiants A01/B01/C01… sont réservés au référentiel interne, aux données et aux outils de validation. Un stagiaire ne doit jamais avoir à comprendre deux systèmes de numérotation concurrents.
+
+Correspondance actuelle :
+- Parcours 0 — Fondamentaux ← référentiel interne A ;
+- Parcours 1 — Comprendre un LLM ← référentiels internes B, C et futurs blocs génération/entraînement utiles ;
+- Parcours 4 — Recherche & RAG ← concepts retrieval/RAG du référentiel interne.
+
 ## Parcours cible
 
 - 0 — Fondamentaux
