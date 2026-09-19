@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1.0",
-  "updated_on": "2026-09-17",
+  "updated_on": "2026-09-19",
   "terms": [
     {
       "id": "TERM-0001",
@@ -1354,6 +1354,220 @@
         "multi-head-attention"
       ],
       "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "TERM-0043",
+      "term": "Inférence",
+      "english_term": "Inference",
+      "slug": "inference",
+      "definition_short": "Utilisation d'un modèle entraîné pour calculer des sorties à partir d'entrées.",
+      "definition_precise": "Phase où les poids appris sont utilisés pour produire des prédictions ou générations à partir d'un contexte, sans mise à jour de gradient dans l'inférence standard.",
+      "common_misuses": [
+        {
+          "statement": "Inférence = entraînement en direct.",
+          "correction": "L'inférence standard utilise les poids existants ; l'entraînement modifie les paramètres."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0004"
+      ],
+      "tags": [
+        "inference"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0044",
+      "term": "Logit",
+      "english_term": "Logit",
+      "slug": "logit",
+      "definition_short": "Score brut non normalisé associé à un candidat avant softmax.",
+      "definition_precise": "Valeur réelle produite avant normalisation ; les différences entre logits déterminent les rapports de probabilité après softmax.",
+      "common_misuses": [
+        {
+          "statement": "Un logit est une probabilité.",
+          "correction": "Un logit est un score brut ; softmax produit ensuite une distribution."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0012"
+      ],
+      "tags": [
+        "logit",
+        "softmax"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0045",
+      "term": "Distribution du prochain token",
+      "english_term": "Next-token distribution",
+      "slug": "distribution-prochain-token",
+      "definition_short": "Distribution conditionnelle sur les tokens candidats pour la prochaine position.",
+      "definition_precise": "Distribution calculée à partir des logits du vocabulaire, conditionnée par le contexte accessible et le modèle.",
+      "common_misuses": [
+        {
+          "statement": "Elle donne la probabilité que la réponse soit vraie.",
+          "correction": "Elle porte localement sur le prochain token, pas sur la vérité globale d'une affirmation."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0004"
+      ],
+      "tags": [
+        "next-token",
+        "distribution"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0046",
+      "term": "Décodage glouton",
+      "english_term": "Greedy decoding",
+      "slug": "decodage-glouton",
+      "definition_short": "Sélection du token le plus probable à chaque étape.",
+      "definition_precise": "Stratégie déterministe choisissant l'argmax de la distribution à chaque étape de génération.",
+      "common_misuses": [
+        {
+          "statement": "Greedy choisit la meilleure réponse complète.",
+          "correction": "Il optimise un choix local à chaque étape, sans garantie de qualité globale ou factuelle."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "tags": [
+        "greedy",
+        "decoding"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0047",
+      "term": "Échantillonnage",
+      "english_term": "Sampling",
+      "slug": "sampling",
+      "definition_short": "Tirage aléatoire pondéré dans une distribution de tokens.",
+      "definition_precise": "Méthode de décodage qui sélectionne un token selon les probabilités d'une distribution, éventuellement après transformation ou filtrage.",
+      "common_misuses": [
+        {
+          "statement": "Sampling = hasard uniforme.",
+          "correction": "Le tirage est pondéré ; les candidats plus probables sont davantage susceptibles d'être choisis."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "tags": [
+        "sampling"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0048",
+      "term": "Température",
+      "english_term": "Temperature",
+      "slug": "temperature",
+      "definition_short": "Paramètre contrôlant la concentration de la distribution de sortie.",
+      "definition_precise": "Pour T>0, on applique typiquement softmax(logits/T) : T<1 aiguise la distribution et T>1 l'aplatit.",
+      "common_misuses": [
+        {
+          "statement": "Température basse = vérité.",
+          "correction": "Elle renforce les préférences du modèle mais ne vérifie pas les faits."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "tags": [
+        "temperature",
+        "sampling"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0049",
+      "term": "Top-k",
+      "english_term": "Top-k sampling",
+      "slug": "top-k",
+      "definition_short": "Filtrage qui conserve les k candidats les mieux classés.",
+      "definition_precise": "Après classement des candidats, seuls les k premiers restent éligibles ; leurs probabilités sont ensuite renormalisées avant sélection.",
+      "common_misuses": [
+        {
+          "statement": "k est un pourcentage de probabilité.",
+          "correction": "k désigne un nombre de candidats."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "tags": [
+        "top-k"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0050",
+      "term": "Top-p / nucleus sampling",
+      "english_term": "Top-p / nucleus sampling",
+      "slug": "top-p",
+      "definition_short": "Filtrage adaptatif qui conserve une masse cumulée de probabilité.",
+      "definition_precise": "On trie les candidats par probabilité et conserve le plus petit préfixe dont la masse cumulée atteint au moins p, puis on renormalise.",
+      "common_misuses": [
+        {
+          "statement": "p=0,9 garde 90 % des tokens.",
+          "correction": "p porte sur la masse de probabilité cumulée, pas sur le nombre de tokens."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "tags": [
+        "top-p",
+        "nucleus-sampling"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0051",
+      "term": "Génération autorégressive",
+      "english_term": "Autoregressive generation",
+      "slug": "generation-autoregressive",
+      "definition_short": "Génération séquentielle où chaque token produit conditionne les suivants.",
+      "definition_precise": "À chaque étape, le modèle calcule une distribution du prochain token à partir du contexte courant ; le token sélectionné est ajouté au contexte et le processus recommence.",
+      "common_misuses": [
+        {
+          "statement": "Le modèle génère toute la réponse en une seule opération.",
+          "correction": "Dans un LLM autoregressif, la sortie est construite token par token."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0004",
+        "SRC-0014"
+      ],
+      "tags": [
+        "autoregressive",
+        "generation"
+      ],
+      "reviewed_on": "2026-09-19"
     }
   ],
   "language": "fr"
