@@ -1545,6 +1545,149 @@
         "generation"
       ],
       "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0052",
+      "term": "Hallucination",
+      "english_term": "Hallucination",
+      "slug": "hallucination",
+      "definition_short": "Contenu généré faux, inventé ou non étayé par les informations disponibles.",
+      "definition_precise": "Terme utilisé pour plusieurs formes de contenu non fidèle ou non étayé ; une évaluation rigoureuse doit préciser le type d'erreur et la référence utilisée.",
+      "common_misuses": [
+        {
+          "statement": "Hallucination = mensonge intentionnel.",
+          "correction": "On décrit une propriété de la sortie sans inférer une intention du modèle."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0009",
+        "SRC-0015"
+      ],
+      "tags": [
+        "hallucination",
+        "factuality"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0053",
+      "term": "Factualité",
+      "english_term": "Factuality",
+      "slug": "factualite",
+      "definition_short": "Degré auquel les affirmations d'une sortie correspondent aux faits ou aux preuves retenues.",
+      "definition_precise": "Propriété évaluée relativement à une référence, des sources ou un protocole ; elle est distincte de la fluidité et de la confiance apparente.",
+      "common_misuses": [
+        {
+          "statement": "Une réponse fluide est factuelle.",
+          "correction": "Fluidité et factualité doivent être évaluées séparément."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0015"
+      ],
+      "tags": [
+        "factuality"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0054",
+      "term": "Prémisse fausse",
+      "english_term": "False premise",
+      "slug": "premisse-fausse",
+      "definition_short": "Hypothèse erronée contenue dans une question ou un contexte.",
+      "definition_precise": "Information présentée comme acquise dans le prompt mais qui devrait être vérifiée ou contestée avant de poursuivre.",
+      "common_misuses": [
+        {
+          "statement": "Le modèle corrigera automatiquement toute prémisse fausse.",
+          "correction": "Il peut poursuivre cette prémisse comme partie du contexte."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0015"
+      ],
+      "tags": [
+        "false-premise"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0055",
+      "term": "Calibration",
+      "english_term": "Calibration",
+      "slug": "calibration",
+      "definition_short": "Correspondance empirique entre niveau de confiance et fréquence de réussite.",
+      "definition_precise": "Sur un ensemble comparable, les prédictions associées à une confiance p devraient être correctes approximativement avec une fréquence p pour être bien calibrées.",
+      "common_misuses": [
+        {
+          "statement": "Dire « 95 % sûr » suffit pour être calibré.",
+          "correction": "La calibration doit être mesurée empiriquement sur un ensemble de cas."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0016"
+      ],
+      "tags": [
+        "calibration",
+        "confidence"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0056",
+      "term": "Vérification externe",
+      "english_term": "External verification",
+      "slug": "verification-externe",
+      "definition_short": "Contrôle d'une affirmation à l'aide d'une source ou d'un outil indépendant du texte généré.",
+      "definition_precise": "Processus consistant à extraire des affirmations vérifiables puis à les confronter à des preuves pertinentes et identifiables.",
+      "common_misuses": [
+        {
+          "statement": "Demander au modèle « es-tu sûr ? » équivaut à vérifier.",
+          "correction": "Une auto-révision n'apporte pas nécessairement de preuve indépendante."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0009"
+      ],
+      "tags": [
+        "verification",
+        "evidence"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "TERM-0057",
+      "term": "Abstention",
+      "english_term": "Abstention",
+      "slug": "abstention",
+      "definition_short": "Choix de ne pas conclure lorsque les conditions de fiabilité ne sont pas réunies.",
+      "definition_precise": "Comportement sélectif pouvant consister à déclarer l'insuffisance de preuve, demander une clarification ou différer une conclusion.",
+      "common_misuses": [
+        {
+          "statement": "S'abstenir est toujours un échec.",
+          "correction": "Dans certains contextes, l'abstention est le comportement le plus fiable."
+        }
+      ],
+      "stability": "stable",
+      "epistemic_status": "established",
+      "source_ids": [
+        "SRC-0009"
+      ],
+      "tags": [
+        "abstention",
+        "selective-answering"
+      ],
+      "reviewed_on": "2026-09-19"
     }
   ],
   "language": "fr"
