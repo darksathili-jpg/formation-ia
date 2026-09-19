@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Formation LLM — Domaine B · Tokens, représentations et contexte</title>
+<title>Formation LLM — Parcours 1 · Tokens, représentations et contexte</title>
 <style>
 :root{
   --bg:#f4f1ea;--panel:#fffdf8;--panel-2:#ebe7dd;--text:#10202d;--muted:#5f7180;
@@ -68,7 +68,7 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
 <body>
 <header class="topbar">
   <div class="topbar-inner">
-    <div class="brand">Formation LLM · Domaine B</div>
+    <div class="brand">Formation LLM · Parcours 1</div>
     <nav class="nav" aria-label="Navigation du module">
       <a href="#modele">Modèle mental</a><a href="#tokenizer">Tokenizer Lab</a><a href="#embeddings">Embeddings</a><a href="#contexte">Contexte</a><a href="#quiz">Quiz</a>
     </nav>
@@ -82,12 +82,12 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
 <main>
   <section class="hero">
     <div>
-      <div class="eyebrow">Domaine B · Fondations techniques</div>
+      <div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 1</div>
       <h1>Tokens, représentations<br>et <em style="color:var(--accent)">contexte</em></h1>
       <p class="lead">Une progression expérimentale pour comprendre ce qui se passe entre une phrase saisie dans une interface et la séquence numérique réellement manipulée par un modèle de langage.</p>
       <div class="meta">
         <span class="badge"><span class="dot"></span>100 % local · aucune API</span>
-        <span class="badge">B01 → B12</span>
+        <span class="badge">12 notions</span>
         <span class="badge">≈ 1 h 30 à 2 h</span>
         <span class="badge">Mode formateur intégré</span>
       </div>
@@ -101,9 +101,9 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
     </aside>
   </section>
 <section class="journey" aria-label="Repères du parcours">
-<div class="journey-card"><div class="k">Prérequis</div><b>Domaine A</b><p>Savoir distinguer modèle, chatbot, application et paramètres.</p><div class="recall-check"><details><summary>Rappel : modèle ou application ?</summary><div>Un outil de recherche web ou une mémoire persistante peut appartenir à l’application sans être une propriété intrinsèque du LLM.</div></details></div></div>
+<div class="journey-card"><div class="k">Prérequis</div><b>Parcours 0 · Fondamentaux</b><p>Savoir distinguer modèle, chatbot, application et paramètres.</p><div class="recall-check"><details><summary>Rappel : modèle ou application ?</summary><div>Un outil de recherche web ou une mémoire persistante peut appartenir à l’application sans être une propriété intrinsèque du LLM.</div></details></div></div>
 <div class="journey-card"><div class="k">Objectif de sortie</div><b>Construire le pipeline d’entrée</b><p>texte → tokens → IDs → embeddings → contexte, sans confondre les objets.</p></div>
-<div class="journey-card"><div class="k">Ensuite</div><b>Domaine C</b><p>Observer comment le Transformer contextualise ces représentations.</p></div>
+<div class="journey-card"><div class="k">Ensuite</div><b>Parcours 1 · Étape 2</b><p>Observer comment le Transformer contextualise ces représentations.</p></div>
 </section>
 
   <section class="section" id="modele">
@@ -123,7 +123,7 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
     <div class="section-head"><div class="section-num">02</div><div><h2>Tokenizer Lab</h2><p>Expérimenter réellement la transformation texte → tokens → IDs → vecteurs → budget de contexte.</p></div></div>
     <div class="notice warn" style="margin-bottom:16px"><strong>Simulation pédagogique — pas un tokenizer commercial réel</strong>Le mode « sous-mots » applique une petite liste de règles de fusion inspirées de BPE. Les IDs et embeddings affichés sont déterministes mais fictifs. Le but est d’expliquer le mécanisme sans attribuer ces valeurs à un modèle existant.</div>
     <div class="panel lab">
-      <div class="lab-head"><div><h3>Expérience guidée</h3><div style="color:var(--muted);font-size:.88rem">Modifiez une seule variable à la fois, puis observez ce qui change.</div></div><span class="badge">B02 · B03 · B04 · B05 · B06 · B08 · B12</span></div>
+      <div class="lab-head"><div><h3>Expérience guidée</h3><div style="color:var(--muted);font-size:.88rem">Modifiez une seule variable à la fois, puis observez ce qui change.</div></div><span class="badge">Tokenisation · IDs · embeddings · contexte</span></div>
       <div class="lab-grid">
         <div class="lab-input">
           <div class="field"><label for="labText">Texte d’entrée</label><textarea id="labText">Bonjour ! L'intelligence artificielle transforme le texte en tokens.</textarea></div>
@@ -188,20 +188,20 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
   </section>
 
   <section class="section" id="concepts">
-    <div class="section-head"><div class="section-num">05</div><div><h2>Les 12 notions du Domaine B</h2><p>Chaque carte contient la formulation minimale à savoir défendre face à un participant.</p></div></div>
+    <div class="section-head"><div class="section-num">05</div><div><h2>Les 12 notions de cette étape</h2><p>Chaque carte contient la formulation minimale à savoir défendre face à un participant.</p></div></div>
     <div class="concepts">
-      <article class="concept-card"><div class="id">B01</div><h3>Corpus d’entraînement</h3><p>Ensemble de données utilisées pendant l’apprentissage. Le corpus n’est pas la mémoire de contexte d’une conversation.</p><div class="misconception"><b>Piège :</b> croire que le modèle consulte directement ses documents d’entraînement lors de chaque réponse.</div></article>
-      <article class="concept-card"><div class="id">B02</div><h3>Token</h3><p>Unité discrète du vocabulaire du tokenizer : mot, sous-mot, signe, espace encodé, octet ou marqueur spécial.</p><div class="misconception"><b>Piège :</b> « token = mot ».</div></article>
-      <article class="concept-card"><div class="id">B03</div><h3>Tokenisation</h3><p>Transformation d’une entrée en séquence de tokens selon les règles d’un tokenizer donné.</p><div class="misconception"><b>Piège :</b> croire à un simple découpage sur les espaces.</div></article>
-      <article class="concept-card"><div class="id">B04</div><h3>Vocabulaire</h3><p>Ensemble fini d’unités que le tokenizer sait associer à des identifiants.</p><div class="misconception"><b>Piège :</b> confondre vocabulaire et connaissances.</div></article>
-      <article class="concept-card"><div class="id">B05</div><h3>Sous-mots / BPE</h3><p>Famille d’approches qui compose des unités fréquentes afin d’éviter un vocabulaire contenant tous les mots possibles.</p><div class="misconception"><b>Piège :</b> présenter BPE comme l’unique tokenizer moderne.</div></article>
-      <article class="concept-card"><div class="id">B06</div><h3>ID de token</h3><p>Entier servant d’index. Sa proximité numérique n’implique aucune proximité de sens.</p><div class="misconception"><b>Piège :</b> interpréter la valeur de l’ID.</div></article>
-      <article class="concept-card"><div class="id">B07</div><h3>Token spécial</h3><p>Unité réservée à une fonction de structure : rôle, séparation, début/fin, remplissage… selon le modèle.</p><div class="misconception"><b>Piège :</b> supposer que tous les modèles utilisent les mêmes marqueurs.</div></article>
-      <article class="concept-card"><div class="id">B08</div><h3>Embedding</h3><p>Vecteur représentant une unité ou un objet pour permettre les calculs neuronaux.</p><div class="misconception"><b>Piège :</b> réduire l’embedding à « l’ID avec plusieurs nombres ».</div></article>
-      <article class="concept-card"><div class="id">B09</div><h3>Espace vectoriel</h3><p>Espace mathématique de grande dimension où distances, angles et voisinages peuvent être étudiés.</p><div class="misconception"><b>Piège :</b> prendre une projection 2D pour une carte fidèle de l’espace réel.</div></article>
-      <article class="concept-card"><div class="id">B10</div><h3>Embedding sémantique</h3><p>Vecteur conçu pour rapprocher des textes semblables selon une notion apprise de similarité.</p><div class="misconception"><b>Piège :</b> parler d’une représentation parfaite du sens.</div></article>
-      <article class="concept-card"><div class="id">B11</div><h3>Similarité cosinus</h3><p>Mesure fondée sur l’angle entre deux vecteurs. Utile pour comparer des embeddings.</p><div class="misconception"><b>Piège :</b> lire le score comme un pourcentage de vérité.</div></article>
-      <article class="concept-card"><div class="id">B12</div><h3>Fenêtre de contexte</h3><p>Budget de séquence disponible pour le traitement courant, généralement exprimé en tokens.</p><div class="misconception"><b>Piège :</b> confondre grande fenêtre et mémoire parfaite.</div></article>
+      <article class="concept-card"><div class="id">Notion 01</div><span hidden data-ref="B01"></span><h3>Corpus d’entraînement</h3><p>Ensemble de données utilisées pendant l’apprentissage. Le corpus n’est pas la mémoire de contexte d’une conversation.</p><div class="misconception"><b>Piège :</b> croire que le modèle consulte directement ses documents d’entraînement lors de chaque réponse.</div></article>
+      <article class="concept-card"><div class="id">Notion 02</div><span hidden data-ref="B02"></span><h3>Token</h3><p>Unité discrète du vocabulaire du tokenizer : mot, sous-mot, signe, espace encodé, octet ou marqueur spécial.</p><div class="misconception"><b>Piège :</b> « token = mot ».</div></article>
+      <article class="concept-card"><div class="id">Notion 03</div><span hidden data-ref="B03"></span><h3>Tokenisation</h3><p>Transformation d’une entrée en séquence de tokens selon les règles d’un tokenizer donné.</p><div class="misconception"><b>Piège :</b> croire à un simple découpage sur les espaces.</div></article>
+      <article class="concept-card"><div class="id">Notion 04</div><span hidden data-ref="B04"></span><h3>Vocabulaire</h3><p>Ensemble fini d’unités que le tokenizer sait associer à des identifiants.</p><div class="misconception"><b>Piège :</b> confondre vocabulaire et connaissances.</div></article>
+      <article class="concept-card"><div class="id">Notion 05</div><span hidden data-ref="B05"></span><h3>Sous-mots / BPE</h3><p>Famille d’approches qui compose des unités fréquentes afin d’éviter un vocabulaire contenant tous les mots possibles.</p><div class="misconception"><b>Piège :</b> présenter BPE comme l’unique tokenizer moderne.</div></article>
+      <article class="concept-card"><div class="id">Notion 06</div><span hidden data-ref="B06"></span><h3>ID de token</h3><p>Entier servant d’index. Sa proximité numérique n’implique aucune proximité de sens.</p><div class="misconception"><b>Piège :</b> interpréter la valeur de l’ID.</div></article>
+      <article class="concept-card"><div class="id">Notion 07</div><span hidden data-ref="B07"></span><h3>Token spécial</h3><p>Unité réservée à une fonction de structure : rôle, séparation, début/fin, remplissage… selon le modèle.</p><div class="misconception"><b>Piège :</b> supposer que tous les modèles utilisent les mêmes marqueurs.</div></article>
+      <article class="concept-card"><div class="id">Notion 08</div><span hidden data-ref="B08"></span><h3>Embedding</h3><p>Vecteur représentant une unité ou un objet pour permettre les calculs neuronaux.</p><div class="misconception"><b>Piège :</b> réduire l’embedding à « l’ID avec plusieurs nombres ».</div></article>
+      <article class="concept-card"><div class="id">Notion 09</div><span hidden data-ref="B09"></span><h3>Espace vectoriel</h3><p>Espace mathématique de grande dimension où distances, angles et voisinages peuvent être étudiés.</p><div class="misconception"><b>Piège :</b> prendre une projection 2D pour une carte fidèle de l’espace réel.</div></article>
+      <article class="concept-card"><div class="id">Notion 10</div><span hidden data-ref="B10"></span><h3>Embedding sémantique</h3><p>Vecteur conçu pour rapprocher des textes semblables selon une notion apprise de similarité.</p><div class="misconception"><b>Piège :</b> parler d’une représentation parfaite du sens.</div></article>
+      <article class="concept-card"><div class="id">Notion 11</div><span hidden data-ref="B11"></span><h3>Similarité cosinus</h3><p>Mesure fondée sur l’angle entre deux vecteurs. Utile pour comparer des embeddings.</p><div class="misconception"><b>Piège :</b> lire le score comme un pourcentage de vérité.</div></article>
+      <article class="concept-card"><div class="id">Notion 12</div><span hidden data-ref="B12"></span><h3>Fenêtre de contexte</h3><p>Budget de séquence disponible pour le traitement courant, généralement exprimé en tokens.</p><div class="misconception"><b>Piège :</b> confondre grande fenêtre et mémoire parfaite.</div></article>
     </div>
   </section>
 
@@ -231,8 +231,8 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
     </div>
   </section>
 
-  <nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-a.html">← Domaine A</a><div class="center">Avant C : token ≠ mot · ID ≠ embedding · contexte ≠ mémoire applicative.</div><a href="domaine-c.html">Domaine C →</a></nav>
-<footer class="footer">Formation LLM · Domaine B · Version pédagogique 1.0 · Simulation locale sans API ni collecte de données.</footer>
+  <nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-a.html">← Parcours 0</a><div class="center">Avant C : token ≠ mot · ID ≠ embedding · contexte ≠ mémoire applicative.</div><a href="domaine-c.html">Étape 2 · Transformer →</a></nav>
+<footer class="footer">Formation LLM · Parcours 1 · Version pédagogique 1.0 · Simulation locale sans API ni collecte de données.</footer>
 </main>
 <script>
 (() => {
