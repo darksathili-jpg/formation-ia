@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Formation LLM — Parcours 1 · Transformer Block Lab</title>
+<style>
+:root{
+ --bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#627481;--line:rgba(16,32,45,.14);
+ --accent:#6558ca;--accent2:#0b7894;--soft:#e9e4fb;--cyan:#d8edf2;--ok:#24704e;--oksoft:#dcefe6;--gold:#9a6925;--goldsoft:#f3e5ca;
+ --danger:#a53b42;--dangersoft:#f5dfe1;--code:#101923;--shadow:0 14px 38px rgba(20,34,45,.08);
+ --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--display:Georgia,"Times New Roman",serif
+}
+[data-theme="dark"]{
+ --bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);
+ --accent:#aaa2ff;--accent2:#55c3dc;--soft:#2e2957;--cyan:#153d48;--ok:#71d0a3;--oksoft:#17392b;--gold:#efb967;--goldsoft:#3d2e18;
+ --danger:#ef8086;--dangersoft:#472226;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.56}
+button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max-width:1240px;margin:auto;padding:26px 22px 80px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:24px}.back{text-decoration:none;color:var(--accent2);font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:8px 11px;font-size:.8rem;font-weight:850}
+#trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+.trainer-banner{display:none;margin:8px 0 18px;padding:12px 16px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-left:5px solid var(--accent);border-radius:13px;background:var(--soft);font-size:.84rem}.trainer-on .trainer-banner{display:block}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(290px,.75fr);gap:26px;align-items:start}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:var(--accent);font-weight:950}h1{font-family:var(--display);font-size:clamp(2.8rem,6vw,5.2rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{font-size:1.08rem;color:var(--muted);max-width:790px}.hero-card{background:var(--code);color:#edf7fa;border-radius:22px;padding:21px;box-shadow:var(--shadow)}.hero-card p{color:#bdccd4;font-size:.84rem}.flow{display:grid;gap:6px;margin-top:12px}.flow div{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.08);font-size:.76rem;font-weight:850}
+.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.8rem}
+.notice{padding:15px 17px;border-left:4px solid var(--accent);background:var(--soft);border-radius:13px}.notice strong{display:block;margin-bottom:3px}.section{margin-top:42px}.section-head{display:flex;gap:12px;align-items:start;margin-bottom:15px}.num{width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.8rem;margin:0}.section-head p{color:var(--muted);margin:2px 0 0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.controls{display:grid;gap:12px}.field label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;margin-bottom:5px}.field select,.field input[type=range]{width:100%}.field select{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.switch-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}.switch{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;padding:6px 10px;font-weight:900}.switch.on{background:var(--oksoft);color:var(--ok);border-color:var(--ok)}
+.tokens{display:flex;gap:7px;flex-wrap:wrap}.token{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:9px 10px;font-weight:850}.token.active{background:var(--soft);border-color:var(--accent);color:var(--accent)}.token small{display:block;color:var(--muted);font-size:.65rem}.vectors{display:grid;gap:8px;margin-top:12px}.vec{background:var(--code);color:#edf7fa;border-radius:11px;padding:10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.78rem}.bar{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0}.scoreline{display:grid;grid-template-columns:110px 1fr 55px;gap:8px;align-items:center;font-size:.8rem;margin:7px 0}
+.block{display:grid;gap:7px}.stage{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:11px;display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center}.stage .n{width:30px;height:30px;border-radius:9px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950}.stage b{display:block}.stage small{color:var(--muted)}.stage .value{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.72rem;color:var(--accent2)}
+.callout{margin-top:12px;padding:11px;border-radius:11px;background:var(--cyan);font-size:.82rem}.callout b{color:var(--accent2)}
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.compare-card{background:var(--panel2);border-radius:13px;padding:13px}.compare-card h3{margin:0 0 7px;font-size:.95rem}.compare-card p{margin:0;color:var(--muted);font-size:.82rem}
+.stackviz{display:flex;gap:6px;align-items:flex-end;height:190px;padding:15px;background:var(--panel2);border-radius:14px;overflow:auto}.layerbar{min-width:44px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,var(--accent),var(--accent2));display:flex;align-items:flex-end;justify-content:center;color:white;padding:5px;font-size:.68rem;font-weight:900}.kv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metric{background:var(--panel2);border-radius:14px;padding:14px}.metric .v{font-size:1.55rem;font-weight:950}.metric .l{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}.metric .sub{font-size:.73rem;color:var(--muted);margin-top:4px}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900;padding:0 5px}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.q.ok{border-color:var(--ok)}.q.bad{border-color:var(--danger)}.q.ok .feedback,.q.bad .feedback{display:block}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.trainer-only{display:none}.trainer-on .trainer-only{display:block}.trainer-box{margin-top:12px;padding:13px;border-radius:12px;background:var(--goldsoft);font-size:.82rem}.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.8rem}.projector{font-size:19px}.projector .wrap{max-width:1500px}:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}.footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.77rem}
+@media(max-width:900px){.hero,.grid2{grid-template-columns:1fr}.journey{grid-template-columns:1fr}.kv-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.wrap{padding:17px 13px 60px}.top{align-items:flex-start}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="top"><a class="back" href="domaine-c.html">← Étape 2 · Attention</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues et consignes de débrief sont maintenant visibles.</div>
+
+<section class="hero">
+<div><div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 3</div><h1>Transformer Block Lab</h1><p class="lead">L’attention n’est qu’une partie du bloc. Ici, on relie <strong>position, normalisation, attention, résiduels, MLP, empilement</strong> et <strong>KV cache</strong> pour obtenir un modèle mental plus fidèle du calcul.</p></div>
+<aside class="hero-card"><b>Modèle mental simplifié</b><div class="flow"><div>x + information de position</div><div>Norm → Attention → Résiduel</div><div>Norm → MLP → Résiduel</div><div>bloc suivant</div></div><p>L’ordre exact dépend de l’architecture. Le laboratoire utilise une variante pré-norm didactique.</p></aside>
+</section>
+
+<section class="journey" aria-label="Repères du parcours">
+<div class="journey-card"><div class="k">Prérequis</div><b>Étape 2 · Attention</b><p>Q/K/V, softmax, masque causal et contextualisation doivent être compris.</p></div>
+<div class="journey-card"><div class="k">Objectif de sortie</div><b>Expliquer un bloc complet</b><p>Attention = communication entre positions ; MLP = transformation par position ; résiduels et normalisation stabilisent le traitement profond.</p></div>
+<div class="journey-card"><div class="k">Ensuite</div><b>Génération & sampling</b><p>Projection vers le vocabulaire, logits, probabilités et choix du prochain token.</p></div>
+</section>
+
+<div class="notice"><strong>Garde-fou.</strong> Il n’existe pas un ordre universel unique pour tous les Transformers modernes. Ce lab illustre une architecture causale pré-norm simplifiée ; LayerNorm/RMSNorm, RoPE/positions et variantes de MLP dépendent du modèle réel.</div>
+
+<section class="section" id="position">
+<div class="section-head"><div class="num">01</div><div><h2>Position Lab — l’ordre doit entrer dans le calcul</h2><p>Sans information de position, permuter les tokens ne suffit pas à dire au mécanisme d’attention quel token vient avant ou après.</p></div></div>
+<div class="grid2">
+<div class="panel controls">
+<div class="field"><label for="sentence">Phrase</label><select id="sentence"><option value="dog">Le chien mord l’homme</option><option value="man">L’homme mord le chien</option></select></div>
+<div class="field"><label for="posMode">Information de position</label><select id="posMode"><option value="none">Aucune</option><option value="absolute">Position ajoutée — simulation</option><option value="rope" selected>RoPE simplifié sur Q/K</option></select></div>
+<div class="tokens" id="posTokens"></div>
+<div class="trainer-only trainer-box"><b>Question à poser.</b> « Si deux phrases contiennent exactement les mêmes tokens, comment le modèle peut-il distinguer leur ordre ? » Attendu : il faut injecter ou faire agir une information de position dans les représentations/calculs.</div>
+</div>
+<div class="panel">
+<div class="vectors" id="positionVectors"></div>
+<div id="positionScores"></div>
+<div class="callout"><b>RoPE, version pédagogique.</b> Nous faisons tourner des paires de composantes de Q et K selon la position. Le produit scalaire devient alors sensible aux positions relatives. Ce petit vecteur 2D n’est pas celui d’un modèle réel.</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="block">
+<div class="section-head"><div class="num">02</div><div><h2>Block Lab — attention + MLP + résiduels + normalisation</h2><p>Activez ou désactivez les garde-fous pour voir comment la représentation est transformée.</p></div></div>
+<div class="grid2">
+<div class="panel">
+<div class="switch-row"><span><b>Normalisation</b><br><small style="color:var(--muted)">stabilise l’échelle des activations</small></span><button class="switch on" id="normBtn" type="button">ON</button></div>
+<div class="switch-row"><span><b>Connexion résiduelle</b><br><small style="color:var(--muted)">ajoute la mise à jour au signal entrant</small></span><button class="switch on" id="resBtn" type="button">ON</button></div>
+<div class="switch-row"><span><b>MLP / feed-forward</b><br><small style="color:var(--muted)">transformation non linéaire par position</small></span><button class="switch on" id="mlpBtn" type="button">ON</button></div>
+<div class="trainer-only trainer-box"><b>Erreur attendue.</b> « L’attention fait tout. » Débrief : l’attention mélange l’information entre positions ; le MLP transforme ensuite chaque position avec les mêmes poids de couche.</div>
+</div>
+<div class="panel"><div class="block" id="blockStages"></div><div class="callout" id="blockVerdict"></div></div>
+</div>
+</section>
+
+<section class="section" id="mlp">
+<div class="section-head"><div class="num">03</div><div><h2>Attention ou MLP ? Deux rôles différents</h2><p>La première communique entre positions. Le second transforme la représentation de chaque position indépendamment des autres à cet instant.</p></div></div>
+<div class="compare">
+<div class="compare-card"><h3>Attention</h3><p>Pour un token, combine des informations issues d’autres positions accessibles à l’aide de poids calculés à partir de Q/K et de vecteurs V.</p></div>
+<div class="compare-card"><h3>MLP / feed-forward</h3><p>Applique une transformation non linéaire à chaque position. Dans le Transformer original : linéaire → ReLU → linéaire ; les modèles modernes peuvent utiliser d’autres variantes.</p></div>
+</div>
+<div class="trainer-only trainer-box"><b>Phrase à faire produire.</b> « Attention = communiquer ; MLP = transformer. » Puis préciser que les deux sont appris et répétés couche après couche.</div>
+</section>
+
+<section class="section" id="stack">
+<div class="section-head"><div class="num">04</div><div><h2>Stack Lab — les blocs s’empilent</h2><p>Le bloc suivant reçoit la représentation produite par le précédent, pas l’embedding initial intact.</p></div></div>
+<div class="grid2">
+<div class="panel controls"><div class="field"><label for="layers">Nombre de blocs visualisés</label><input id="layers" type="range" min="1" max="8" value="4"><div style="font-weight:950;color:var(--accent);margin-top:5px"><span id="layersOut">4</span> blocs</div></div><div class="vec" id="stackVector"></div><div class="trainer-only trainer-box"><b>Point de vigilance.</b> Ne pas enseigner « couche 1 = syntaxe, couche 2 = sens ». Des motifs peuvent émerger, mais les fonctions sont distribuées et ne suivent pas un découpage pédagogique simple.</div></div>
+<div class="panel"><div class="stackviz" id="stackViz"></div></div>
+</div>
+</section>
+
+<section class="section" id="kv">
+<div class="section-head"><div class="num">05</div><div><h2>KV Cache Lab — réutiliser le passé pendant la génération</h2><p>Lorsqu’un nouveau token est généré, on peut conserver les K/V des positions précédentes au lieu de recalculer toutes leurs projections à chaque étape.</p></div></div>
+<div class="panel">
+<div class="field"><label for="seqLen">Longueur générée visualisée</label><input id="seqLen" type="range" min="4" max="50" value="16"><div style="font-weight:950;color:var(--accent);margin-top:5px"><span id="seqOut">16</span> tokens</div></div>
+<div class="kv-grid">
+<div class="metric"><div class="v" id="noCacheMetric">—</div><div class="l">Sans cache</div><div class="sub">positions de préfixe retraitées — unité pédagogique</div></div>
+<div class="metric"><div class="v" id="cacheMetric">—</div><div class="l">Avec KV cache</div><div class="sub">nouveaux états projetés — unité pédagogique</div></div>
+<div class="metric"><div class="v" id="memoryMetric">—</div><div class="l">Mémoire cache</div><div class="sub">croît avec contexte × couches × K/V</div></div>
+</div>
+<div class="callout"><b>Important.</b> Le KV cache réduit fortement les recalculs de projections des tokens passés, mais l’attention du nouveau token doit toujours interagir avec les clés précédentes. On échange donc du calcul contre davantage de mémoire.</div>
+<div class="trainer-only trainer-box"><b>Question piège.</b> « Avec le cache, le coût ne dépend plus de la longueur du contexte ? » Réponse : faux. Le cache évite certains recalculs, mais la nouvelle query doit encore comparer avec les K stockées, et le cache occupe de plus en plus de mémoire.</div>
+</div>
+</section>
+
+<section class="section" id="quiz">
+<div class="section-head"><div class="num">06</div><div><h2>Test de maîtrise</h2><p>Vérifier que le Transformer n’est plus réduit à l’attention.</p></div></div>
+<form class="quiz" id="quizForm">
+<fieldset class="q" data-answer="b"><legend>1. Dans un bloc Transformer, l’attention sert surtout à…</legend><label><input type="radio" name="q1" value="a"> remplacer toutes les autres transformations.</label><label><input type="radio" name="q1" value="b"> combiner de l’information entre positions accessibles.</label><label><input type="radio" name="q1" value="c"> mémoriser les documents d’entraînement.</label><div class="feedback">L’attention assure surtout la communication entre positions ; le bloc contient d’autres transformations.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. Le MLP / feed-forward…</legend><label><input type="radio" name="q2" value="a"> compare directement tous les tokens entre eux.</label><label><input type="radio" name="q2" value="b"> est uniquement une mémoire externe.</label><label><input type="radio" name="q2" value="c"> transforme chaque position par une fonction non linéaire apprise.</label><div class="feedback">La transformation est appliquée position par position avec les poids de la couche.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>3. Une connexion résiduelle permet notamment de…</legend><label><input type="radio" name="q3" value="a"> ajouter une mise à jour au signal entrant plutôt que de le remplacer entièrement.</label><label><input type="radio" name="q3" value="b"> supprimer l’attention.</label><label><input type="radio" name="q3" value="c"> stocker le contexte dans une base de données.</label><div class="feedback">Le raccourci x + F(x) facilite la propagation du signal et l’entraînement de réseaux profonds.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>4. RoPE agit principalement, dans sa formulation classique simplifiée ici, sur…</legend><label><input type="radio" name="q4" value="a"> le texte brut avant tokenisation.</label><label><input type="radio" name="q4" value="b"> les représentations Q/K afin que leurs interactions dépendent de la position.</label><label><input type="radio" name="q4" value="c"> le stockage du KV cache.</label><div class="feedback">RoPE encode la position par rotations dans les projections utilisées par l’attention.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Le KV cache…</legend><label><input type="radio" name="q5" value="a"> rend la mémoire indépendante de la longueur du contexte.</label><label><input type="radio" name="q5" value="b"> modifie les poids du modèle à chaque token.</label><label><input type="radio" name="q5" value="c"> réutilise les K/V déjà calculées mais consomme une mémoire croissante.</label><div class="feedback">C’est un compromis calcul ↔ mémoire pendant la génération autoregressive.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><strong id="quizScore"></strong></div>
+</form>
+</section>
+
+<nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-c.html">← Étape 2 · Attention</a><div class="center">Bloc Transformer compris ? La prochaine étape expliquera comment la représentation finale devient une distribution sur le vocabulaire.</div><span style="font-weight:900;color:var(--muted)">Étape 4 · Sampling Lab → à construire</span></nav>
+<footer class="footer">Formation LLM · Parcours 1 · Étape 3 · Transformer Block Lab · Simulation pédagogique autonome.</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+var root=document.documentElement,body=document.body;
+function applyTheme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
+var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
+document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"◆ Mode formateur":"○ Mode stagiaire";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
+setTrainerMode(localStorage.getItem("formation-llm-role")==="trainer");
+document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
+document.getElementById("projectorBtn").addEventListener("click",function(){root.classList.toggle("projector")});
+
+function rot(v,a){var c=Math.cos(a),s=Math.sin(a);return [v[0]*c-v[1]*s,v[0]*s+v[1]*c]}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1]}
+var sentenceKey="dog",posMode="rope";
+var sentences={dog:["Le","chien","mord","l’homme"],man:["L’homme","mord","le","chien"]};
+var base={Le:[.8,.2],le:[.8,.2],chien:[.6,.7],"l’homme":[.7,.5],"L’homme":[.7,.5],mord:[.2,.9]};
+function vecFor(tok,i,kind){var v=base[tok]||[.5,.5];if(kind==="K")v=[v[1],v[0]];if(posMode==="none")return v.slice();if(posMode==="absolute")return [v[0]+i*.08,v[1]+i*.04];return rot(v,i*.55)}
+function renderPos(){
+ var toks=sentences[sentenceKey],strip=document.getElementById("posTokens");strip.innerHTML="";
+ toks.forEach(function(t,i){var b=document.createElement("button");b.className="token"+(i===2?" active":"");b.type="button";b.innerHTML=t+"<small>position "+i+"</small>";strip.appendChild(b)});
+ var q=vecFor(toks[2],2,"Q"),vbox=document.getElementById("positionVectors");vbox.innerHTML='<div class="vec">Q('+toks[2]+', pos 2) = ['+q.map(x=>x.toFixed(2)).join(", ")+']</div>';
+ var max=-Infinity,scores=toks.map(function(t,i){var k=vecFor(t,i,"K"),s=dot(q,k);max=Math.max(max,s);return{t:t,i:i,k:k,s:s}});
+ var ex=scores.map(x=>Math.exp(x.s-max)),sum=ex.reduce((a,b)=>a+b,0),out=document.getElementById("positionScores");out.innerHTML="";
+ scores.forEach(function(x,i){var w=ex[i]/sum,d=document.createElement("div");d.className="scoreline";d.innerHTML='<span>'+x.t+' · p'+x.i+'</span><div class="bar"><i style="width:'+(w*100).toFixed(1)+'%"></i></div><b>'+w.toFixed(2)+'</b>';out.appendChild(d)});
+}
+document.getElementById("sentence").addEventListener("change",function(){sentenceKey=this.value;renderPos()});
+document.getElementById("posMode").addEventListener("change",function(){posMode=this.value;renderPos()});
+
+var toggles={norm:true,res:true,mlp:true};
+function norm(v){var m=v.reduce((a,b)=>a+b,0)/v.length,sd=Math.sqrt(v.reduce((s,x)=>s+(x-m)*(x-m),0)/v.length)||1;return v.map(x=>(x-m)/sd)}
+function add(a,b){return a.map((x,i)=>x+b[i])}
+function fmt(v){return "["+v.map(x=>x.toFixed(2)).join(", ")+"]"}
+function renderBlock(){
+ var x=[.7,-.2,.4,.9],stages=[["Entrée",x.slice(),"représentation issue du bloc précédent"]];
+ var aIn=toggles.norm?norm(x):x.slice();stages.push(["Norm avant attention",aIn,"échelle stabilisée avant sous-couche"]);
+ var att=aIn.map((v,i)=>.28*Math.tanh(v+(i-.8)*.35));stages.push(["Attention",att,"mise à jour issue des interactions"]);
+ var x1=toggles.res?add(x,att):att.slice();stages.push(["Résiduel 1",x1,toggles.res?"x + Attention(x)":"attention remplace x"]);
+ var mIn=toggles.norm?norm(x1):x1.slice();stages.push(["Norm avant MLP",mIn,"entrée de la transformation par position"]);
+ if(toggles.mlp){var hidden=mIn.map((v,i)=>Math.max(0,v*(1.4+i*.15)+.12));var mlp=hidden.map((v,i)=>.42*v-.08*i);stages.push(["MLP",mlp,"transformation non linéaire positionnelle"]);var out=toggles.res?add(x1,mlp):mlp;stages.push(["Résiduel 2",out,toggles.res?"x₁ + MLP(x₁)":"MLP remplace x₁"])}
+ var box=document.getElementById("blockStages");box.innerHTML="";stages.forEach(function(s,i){var d=document.createElement("div");d.className="stage";d.innerHTML='<span class="n">'+(i+1)+'</span><div><b>'+s[0]+'</b><small>'+s[2]+'</small></div><span class="value">'+fmt(s[1])+'</span>';box.appendChild(d)});
+ document.getElementById("blockVerdict").innerHTML='<b>Lecture :</b> le bloc apprend des <em>mises à jour</em> successives de la représentation. Désactiver les résiduels ici illustre une architecture différente, pas un test de performance réel.';
+}
+[["normBtn","norm"],["resBtn","res"],["mlpBtn","mlp"]].forEach(function(p){document.getElementById(p[0]).addEventListener("click",function(){toggles[p[1]]=!toggles[p[1]];this.classList.toggle("on",toggles[p[1]]);this.textContent=toggles[p[1]]?"ON":"OFF";renderBlock()})});
+
+function hash(n){var x=Math.sin(n*12.9898)*43758.5453;return x-Math.floor(x)}
+function renderStack(){var n=Number(document.getElementById("layers").value);document.getElementById("layersOut").textContent=n;var v=[.25,.62,-.18,.44],viz=document.getElementById("stackViz");viz.innerHTML="";for(var i=1;i<=n;i++){v=v.map((x,j)=>.72*x+.28*Math.tanh(x+(hash(i*7+j)-.5)));var b=document.createElement("div");b.className="layerbar";b.style.height=(55+i*14)+"px";b.textContent="B"+i;viz.appendChild(b)}document.getElementById("stackVector").textContent="Représentation après "+n+" bloc(s) : "+fmt(v)}
+document.getElementById("layers").addEventListener("input",renderStack);
+
+function renderKV(){var n=Number(document.getElementById("seqLen").value);document.getElementById("seqOut").textContent=n;var no=n*(n+1)/2,withCache=n,memory=n*24*2;document.getElementById("noCacheMetric").textContent=no;document.getElementById("cacheMetric").textContent=withCache;document.getElementById("memoryMetric").textContent=memory+" u."; }
+document.getElementById("seqLen").addEventListener("input",renderKV);
+
+document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var qs=[...document.querySelectorAll(".q")],score=0;qs.forEach(function(q,i){var c=q.querySelector('input[name="q'+(i+1)+'"]:checked'),ok=c&&c.value===q.dataset.answer;q.classList.toggle("ok",!!ok);q.classList.toggle("bad",!ok);if(ok)score++});document.getElementById("quizScore").textContent=score+" / "+qs.length+(score===qs.length?" · maîtrise solide":"")});
+document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("ok","bad"));document.getElementById("quizScore").textContent=""});
+renderPos();renderBlock();renderStack();renderKV();
+})();
+</script>
+</body>
+</html>
