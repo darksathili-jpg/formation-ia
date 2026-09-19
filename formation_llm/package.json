@@ -1,12 +1,12 @@
 {
   "name": "formation-llm-validator",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "type": "module",
   "scripts": {
     "validate": "npm run validate:data && npm run validate:web",
     "validate:data": "node tools/validate.mjs",
-    "validate:web": "node tools/validate-app.mjs && node tools/validate-module-b.mjs && node tools/validate-module-c.mjs && node tools/validate-rag-lab.mjs"
+    "validate:web": "node tools/validate-app.mjs && node tools/validate-module-a.mjs && node tools/validate-module-b.mjs && node tools/validate-module-c.mjs && node tools/validate-rag-lab.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
