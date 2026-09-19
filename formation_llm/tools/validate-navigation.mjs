@@ -8,6 +8,7 @@ const pages=[
   'modules/domaine-c.html',
   'modules/transformer-block-lab.html',
   'modules/sampling-lab.html',
+  'modules/hallucination-lab.html',
   'modules/rag-lab.html'
 ];
 const errors=[];
