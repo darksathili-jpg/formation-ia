@@ -43,7 +43,7 @@ for(const page of pages){
   if(/llm-b-projector|formation-llm-projector/.test(html)){
     errors.push(prefix+'le mode Projection ne doit pas persister après rechargement');
   }
-  const visibleMarkup=html.replace(/<script[\\s\\S]*?<\\/script>/gi,'').replace(/<style[\\s\\S]*?<\\/style>/gi,'');
+  const visibleMarkup=html.replace(new RegExp('<script[\\s\\S]*?</script>','gi'),'').replace(new RegExp('<style[\\s\\S]*?</style>','gi'),'');
   if(visibleMarkup.includes('\\n')) errors.push(prefix+'séquence littérale \\n détectée dans le HTML visible');
 
   if(page!=='index.html' && !/href="\.\.\/index\.html(?:#[^"]*)?"/.test(html)){
