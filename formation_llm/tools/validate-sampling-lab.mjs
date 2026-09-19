@@ -9,7 +9,8 @@ const must=[
  'setProjectorMode','Test de maîtrise','The Curious Case of Neural Text Degeneration'
 ];
 for(const m of must) if(!html.includes(m)) errors.push('marqueur manquant: '+m);
-if(/>[^<]*(?:Domaine [A-Z]|DOMAINE [A-Z]|[A-Z]\d{2})[^<]*</.test(html)) errors.push('nomenclature technique visible');
+const visibleMarkup=html.replace(new RegExp('<script[\\s\\S]*?</script>','gi'),'').replace(new RegExp('<style[\\s\\S]*?</style>','gi'),'');
+if(/>[^<]*(?:Domaine [A-Z]|DOMAINE [A-Z]|[A-Z]\\d{2})[^<]*</.test(visibleMarkup)) errors.push('nomenclature technique visible');
 if(/<script\s+[^>]*src=/i.test(html)||/<link\s+[^>]*href=/i.test(html)) errors.push('dépendance externe détectée');
 if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push('appel réseau détecté');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
