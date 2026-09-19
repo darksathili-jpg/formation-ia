@@ -64,9 +64,11 @@
     {
       "path": "modules/rag-lab.html",
       "label": "Parcours 4 — RAG Lab",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 7
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 7,
+      "reviewed_on": "2026-09-19",
+      "notes": "RAG reconstruit : chunking, retrieval, ANN, hybride, reranking et métriques introduits avant le lab, exemple manuel, transfert et synthèse."
     }
   ]
 }
