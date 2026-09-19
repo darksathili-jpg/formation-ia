@@ -68,19 +68,26 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
 .trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
 #trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
 
+
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}
+.projector .projector-exit{display:inline-flex;align-items:center;gap:7px}
+.projector .tools{display:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
 </style>
 </head>
 <body>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
 <header class="topbar">
   <div class="topbar-inner">
-    <div class="brand">Formation LLM · Parcours 1</div>
+    <a class="brand" href="../index.html#parcours" style="text-decoration:none">← Formation LLM · Parcours 1</a>
     <nav class="nav" aria-label="Navigation du module">
       <a href="#modele">Modèle mental</a><a href="#tokenizer">Tokenizer Lab</a><a href="#embeddings">Embeddings</a><a href="#contexte">Contexte</a><a href="#quiz">Quiz</a>
     </nav>
     <div class="tools">
       <button class="pill-btn" id="themeBtn" type="button" aria-pressed="false">◐ Thème</button>
-      <button class="pill-btn" id="projectorBtn" type="button" aria-pressed="false">▣ Projection</button>
-      <button class="pill-btn" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button>
+      <button class="pill-btn" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button>
+      <button class="pill-btn" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button>
     </div>
   </div>
 </header>
@@ -260,15 +267,18 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
   function syncButtons(){
     $('themeBtn').setAttribute('aria-pressed', root.dataset.theme === 'dark' ? 'true':'false');
     $('projectorBtn').setAttribute('aria-pressed', root.classList.contains('projector') ? 'true':'false');
+    $('projectorBtn').textContent = root.classList.contains('projector') ? '▣ Quitter projection' : '▣ Activer projection';
     $('trainerBtn').setAttribute('aria-pressed', body.classList.contains('trainer-on') ? 'true':'false');
-    $('trainerBtn').textContent = body.classList.contains('trainer-on') ? '◆ Mode formateur' : '○ Mode stagiaire';
+    $('trainerBtn').textContent = body.classList.contains('trainer-on') ? '○ Revenir au mode stagiaire' : '◆ Activer mode formateur';
   }
   if(getStored('llm-b-theme','light') === 'dark') root.dataset.theme='dark';
-  if(getStored('llm-b-projector','0') === '1') root.classList.add('projector');
   if(getStored('formation-llm-role',getStored('llm-b-trainer','0') === '1' ? 'trainer':'student') === 'trainer') body.classList.add('trainer-on');
   syncButtons();
   $('themeBtn').addEventListener('click',()=>{ root.dataset.theme = root.dataset.theme === 'dark' ? 'light':'dark'; setStored('llm-b-theme',root.dataset.theme); syncButtons(); });
-  $('projectorBtn').addEventListener('click',()=>{ root.classList.toggle('projector'); setStored('llm-b-projector',root.classList.contains('projector')?'1':'0'); syncButtons(); });
+  function setProjectorMode(on){ root.classList.toggle('projector',on); syncButtons(); }
+  $('projectorBtn').addEventListener('click',()=>setProjectorMode(!root.classList.contains('projector')));
+  $('projectorExit').addEventListener('click',()=>{ setProjectorMode(false); $('projectorBtn').focus(); });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'&&root.classList.contains('projector')){ setProjectorMode(false); $('projectorBtn').focus(); } });
   $('trainerBtn').addEventListener('click',()=>{ body.classList.toggle('trainer-on'); const on=body.classList.contains('trainer-on'); setStored('llm-b-trainer',on?'1':'0'); setStored('formation-llm-role',on?'trainer':'student'); syncButtons(); });
 
   document.querySelectorAll('.pipe-step').forEach(btn => btn.addEventListener('click', () => {
