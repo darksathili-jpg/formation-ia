@@ -53,6 +53,16 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
 @media(max-width:900px){.hero,.lab-grid,.budget-grid{grid-template-columns:1fr}.hero{gap:24px}.lab-input{border-right:0;border-bottom:1px solid var(--line)}.pipeline{grid-template-columns:1fr}.pipe-step:not(:last-child):after{content:"↓";right:auto;left:50%;top:auto;bottom:-15px;transform:translateX(-50%)}.concepts,.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.vector-controls{grid-template-columns:1fr 1fr}.vector-controls .result-card{grid-column:1/-1}.nav{display:none}}
 @media(max-width:600px){main,.topbar-inner{padding-left:14px;padding-right:14px}.hero{padding-top:38px}.concepts,.grid-2,.grid-3{grid-template-columns:1fr}.tools{gap:4px}.pill-btn{padding:7px 9px;font-size:.78rem}.lab-input,.lab-output,.panel-pad,.vector-lab,.context-lab{padding:16px}.vector-controls{grid-template-columns:1fr}.vector-controls .result-card{grid-column:auto}.kpis{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 8px}
+.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}
+.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}
+.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.8rem}
+.recall-check{margin-top:9px}.recall-check details{border-top:1px solid var(--line);padding:7px 0}.recall-check summary{cursor:pointer;font-weight:850;font-size:.78rem}.recall-check div{padding-top:5px;color:var(--muted);font-size:.77rem}
+.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.8rem}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+@media(max-width:720px){.journey{grid-template-columns:1fr}.next-step{align-items:flex-start;flex-direction:column}.next-step .center{text-align:left}}
+
 </style>
 </head>
 <body>
@@ -90,6 +100,11 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
       <p class="hero-note">Le Transformer viendra ensuite. Ici, on construit les objets qu’il recevra réellement en entrée.</p>
     </aside>
   </section>
+<section class="journey" aria-label="Repères du parcours">
+<div class="journey-card"><div class="k">Prérequis</div><b>Domaine A</b><p>Savoir distinguer modèle, chatbot, application et paramètres.</p><div class="recall-check"><details><summary>Rappel : modèle ou application ?</summary><div>Un outil de recherche web ou une mémoire persistante peut appartenir à l’application sans être une propriété intrinsèque du LLM.</div></details></div></div>
+<div class="journey-card"><div class="k">Objectif de sortie</div><b>Construire le pipeline d’entrée</b><p>texte → tokens → IDs → embeddings → contexte, sans confondre les objets.</p></div>
+<div class="journey-card"><div class="k">Ensuite</div><b>Domaine C</b><p>Observer comment le Transformer contextualise ces représentations.</p></div>
+</section>
 
   <section class="section" id="modele">
     <div class="section-head"><div class="section-num">01</div><div><h2>Construire le bon modèle mental</h2><p>Cliquez sur chaque étape : l’objectif est de séparer les objets, pas de mémoriser du vocabulaire.</p></div></div>
@@ -191,7 +206,7 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
   </section>
 
   <section class="section" id="quiz">
-    <div class="section-head"><div class="section-num">06</div><div><h2>Test de maîtrise formateur</h2><p>Objectif : être capable de corriger les simplifications trompeuses, pas seulement de réciter les définitions.</p></div></div>
+    <div class="section-head"><div class="section-num">06</div><div><h2>Test de maîtrise</h2><p>Objectif : être capable de corriger les simplifications trompeuses, pas seulement de réciter les définitions.</p></div></div>
     <form class="quiz" id="quizForm">
       <fieldset class="q" data-answer="b"><legend>1. Un token est…</legend><label><input type="radio" name="q1" value="a"> toujours un mot entier.</label><label><input type="radio" name="q1" value="b"> une unité du vocabulaire d’un tokenizer.</label><label><input type="radio" name="q1" value="c"> un vecteur de nombres.</label><div class="feedback">Un token est une unité discrète définie par le tokenizer ; il peut être un sous-mot, un signe, etc.</div></fieldset>
       <fieldset class="q" data-answer="c"><legend>2. Deux IDs de tokens 1200 et 1201…</legend><label><input type="radio" name="q2" value="a"> sont forcément proches sémantiquement.</label><label><input type="radio" name="q2" value="b"> ont des embeddings presque identiques.</label><label><input type="radio" name="q2" value="c"> n’ont pas de proximité sémantique déductible de leurs valeurs.</label><div class="feedback">L’ID sert d’index ; sa valeur numérique n’est pas une coordonnée sémantique.</div></fieldset>
@@ -216,7 +231,8 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
     </div>
   </section>
 
-  <footer class="footer">Formation LLM · Domaine B · Version pédagogique 1.0 · Simulation locale sans API ni collecte de données.</footer>
+  <nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-a.html">← Domaine A</a><div class="center">Avant C : token ≠ mot · ID ≠ embedding · contexte ≠ mémoire applicative.</div><a href="domaine-c.html">Domaine C →</a></nav>
+<footer class="footer">Formation LLM · Domaine B · Version pédagogique 1.0 · Simulation locale sans API ni collecte de données.</footer>
 </main>
 <script>
 (() => {
