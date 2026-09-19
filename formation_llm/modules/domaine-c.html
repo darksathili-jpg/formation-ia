@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Formation LLM — Domaine C · Transformer et attention</title>
+<title>Formation LLM — Domaine C · Transformer et attention — partie 1</title>
 <style>
 :root{--bg:#f4f1ea;--panel:#fffdf8;--panel2:#ebe7dd;--text:#10202d;--muted:#61717d;--line:rgba(16,32,45,.14);--strong:rgba(16,32,45,.28);--accent:#6357c7;--accent2:#0b7894;--soft:#e7e2fb;--cyan:#d7edf2;--gold:#9b6a25;--goldsoft:#f2e4c8;--ok:#24704e;--oksoft:#dcefe6;--danger:#a53b42;--dangersoft:#f5dddd;--code:#131925;--codetext:#edf4ff;--shadow:0 12px 32px rgba(20,34,45,.08);--radius:18px;--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--display:Georgia,"Times New Roman",serif}
 [data-theme="dark"]{--bg:#10151d;--panel:#171e29;--panel2:#202938;--text:#edf3f8;--muted:#aab9c4;--line:rgba(237,243,248,.13);--strong:rgba(237,243,248,.28);--accent:#aaa1ff;--accent2:#54c5df;--soft:#2d2853;--cyan:#153a46;--gold:#e4b35c;--goldsoft:#3a2b16;--ok:#65c494;--oksoft:#17382b;--danger:#ef7b80;--dangersoft:#3d1e22;--code:#080d14;--codetext:#edf4ff;--shadow:0 14px 34px rgba(0,0,0,.25)}
@@ -22,12 +22,27 @@ main{max-width:1220px;margin:auto;padding:0 22px 80px}.hero{display:grid;grid-te
 @media(max-width:950px){.hero,.lab-grid{grid-template-columns:1fr}.controls{border-right:0;border-bottom:1px solid var(--line)}.grid3,.concepts{grid-template-columns:repeat(2,minmax(0,1fr))}.step-row{grid-template-columns:1fr 1fr}.nav{display:none}.bridge{grid-template-columns:1fr}.bridge-arrow{transform:rotate(90deg);text-align:center}}
 @media(max-width:650px){main,.topbar-inner{padding-left:14px;padding-right:14px}.hero{padding-top:38px}.grid2,.grid3,.concepts,.qkv{grid-template-columns:1fr}.pad,.controls,.output{padding:16px}.tools{gap:4px}.pill{font-size:.76rem;padding:7px 9px}.step-row{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 8px}
+.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}
+.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}
+.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.8rem}
+.recall-check{margin-top:9px}.recall-check details{border-top:1px solid var(--line);padding:7px 0}.recall-check summary{cursor:pointer;font-weight:850;font-size:.78rem}.recall-check div{padding-top:5px;color:var(--muted);font-size:.77rem}
+.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.8rem}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+@media(max-width:720px){.journey{grid-template-columns:1fr}.next-step{align-items:flex-start;flex-direction:column}.next-step .center{text-align:left}}
+
 </style>
 </head>
 <body>
 <header class="topbar"><div class="topbar-inner"><div class="brand">Formation LLM · Domaine C</div><nav class="nav" aria-label="Navigation"><a href="#pont">Du B au C</a><a href="#qkv">Q/K/V</a><a href="#attention">Attention Lab</a><a href="#masque">Masque</a><a href="#concepts">C01–C09</a><a href="#quiz">Quiz</a></nav><div class="tools"><button class="pill" id="themeBtn" type="button">◐ Thème</button><button class="pill" id="projectorBtn" type="button">▣ Projection</button><button class="pill" id="trainerBtn" type="button">◆ Formateur</button></div></div></header>
 <main>
 <section class="hero"><div><div class="eyebrow">Domaine C · Transformer et attention</div><h1>Comment un token devient<br><em style="color:var(--accent)">contextuel</em></h1><p class="lead">Le Domaine B s’arrêtait à l’embedding initial. Ici, on observe comment une représentation peut intégrer des informations provenant d’autres positions de la séquence grâce à l’auto-attention.</p><div class="meta"><span class="badge">C01 → C09</span><span class="badge">Attention Lab interactif</span><span class="badge">100 % local · aucune API</span><span class="badge">≈ 1 h 30</span></div></div><aside class="hero-card"><h2>Fil rouge</h2><div class="flow"><div><span>01</span> Embedding initial</div><div><span>02</span> Projections Q · K · V</div><div><span>03</span> Scores Q·K / √dₖ</div><div><span>04</span> Masque causal</div><div><span>05</span> Softmax</div><div><span>06</span> Somme pondérée des V</div><div><span>07</span> Représentation contextualisée</div></div><p class="hero-note">Le laboratoire utilise des vecteurs fictifs déterministes : il montre le mécanisme, pas les poids d’un modèle commercial.</p></aside></section>
+<section class="journey" aria-label="Repères du parcours">
+<div class="journey-card"><div class="k">Prérequis</div><b>Domaine B</b><p>Token, ID, embedding initial et fenêtre de contexte doivent être distincts.</p><div class="recall-check"><details><summary>Rappel : ID ou embedding ?</summary><div>L’ID est un index discret ; l’embedding est le vecteur utilisé dans les calculs.</div></details></div></div>
+<div class="journey-card"><div class="k">Objectif de sortie</div><b>Comprendre l’attention causale</b><p>Q/K déterminent les poids ; V fournit l’information combinée. Les représentations deviennent contextuelles.</p></div>
+<div class="journey-card"><div class="k">Périmètre</div><b>Transformer — partie 1</b><p>L’attention ne suffit pas à définir un bloc Transformer complet : position, MLP, résidus, normalisation et empilement restent à étudier.</p></div>
+</section>
 
 <section class="section" id="pont"><div class="section-head"><div class="num">01</div><div><h2>Le pont : embedding initial → représentation contextualisée</h2><p>Corriger une intuition : le Transformer ne se limite pas aux mots voisins.</p></div></div><div class="bridge"><div class="bridge-card"><h3>Avant le Transformer</h3><p>Le token reçoit une représentation initiale issue de l’embedding. Elle ne suffit pas à résoudre l’ambiguïté du contexte.</p><div class="sentence">« L’avocat … » → vecteur initial</div></div><div class="bridge-arrow">→</div><div class="bridge-card"><h3>Après contextualisation</h3><p>Les couches transforment cette représentation en exploitant d’autres positions accessibles de la séquence.</p><div class="sentence">tribunal ↔ avocat ↔ plaide</div></div></div><div class="notice" style="margin-top:16px"><strong>Formulation formateur</strong>Un token peut prendre en compte des positions proches ou éloignées parmi celles que l’architecture et le masque lui autorisent. « Regarder » est une métaphore pour des calculs de compatibilité et de pondération.</div><div class="trainer-only"><b>Question à poser.</b> « Dans “L’avocat que j’ai rencontré hier plaide aujourd’hui au tribunal”, faut-il que “tribunal” soit juste à côté de “avocat” pour être utile ? » Réponse attendue : non, l’attention peut relier des positions éloignées autorisées.</div></section>
 
@@ -51,7 +66,7 @@ main{max-width:1220px;margin:auto;padding:0 22px 80px}.hero{display:grid;grid-te
 <div class="concept"><div class="id">C09</div><h3>Masque causal</h3><p>Interdit à une position autoregressive d’utiliser les positions futures.</p></div>
 </div></section>
 
-<section class="section" id="quiz"><div class="section-head"><div class="num">07</div><div><h2>Épreuve de maîtrise formateur</h2><p>Valider les distinctions conceptuelles avant C10 et les blocs Transformer complets.</p></div></div><form class="quiz" id="quizForm">
+<section class="section" id="quiz"><div class="section-head"><div class="num">07</div><div><h2>Test de maîtrise</h2><p>Valider les distinctions conceptuelles avant C10 et les blocs Transformer complets.</p></div></div><form class="quiz" id="quizForm">
 <fieldset class="q" data-answer="b"><legend>1. Dans l’attention, Q, K et V sont…</legend><label><input type="radio" name="q1" value="a"> trois mémoires séparées du modèle</label><label><input type="radio" name="q1" value="b"> trois projections apprises des représentations</label><label><input type="radio" name="q1" value="c"> trois types de tokens</label><div class="feedback">Q/K/V sont des projections numériques aux rôles calculatoires différents.</div></fieldset>
 <fieldset class="q" data-answer="c"><legend>2. Le produit Q·K fournit…</legend><label><input type="radio" name="q2" value="a"> une probabilité de vérité</label><label><input type="radio" name="q2" value="b"> directement le vecteur de sortie</label><label><input type="radio" name="q2" value="c"> un score brut de compatibilité</label><div class="feedback">Le score sera encore mis à l’échelle, masqué puis passé au softmax.</div></fieldset>
 <fieldset class="q" data-answer="a"><legend>3. Le masque causal sert principalement à…</legend><label><input type="radio" name="q3" value="a"> empêcher une position d’utiliser les positions futures</label><label><input type="radio" name="q3" value="b"> effacer les tokens rares</label><label><input type="radio" name="q3" value="c"> réduire le vocabulaire</label><div class="feedback">Il impose la contrainte autoregressive dans les connexions d’attention.</div></fieldset>
@@ -61,6 +76,7 @@ main{max-width:1220px;margin:auto;padding:0 22px 80px}.hero{display:grid;grid-te
 
 <section class="section"><div class="notice"><strong>Étape suivante — C10+</strong>Une fois ce laboratoire maîtrisé, nous ajouterons l’information de position (dont RoPE et variantes), le MLP/feed-forward, les connexions résiduelles, la normalisation, l’empilement des blocs, puis le KV cache. L’objectif est de voir le Transformer comme une chaîne de transformations, pas comme une boîte appelée « attention ».</div></section>
 <div class="footer">Formation LLM · Domaine C v0.1 · Simulation pédagogique autonome · Source conceptuelle principale : Vaswani et al., « Attention Is All You Need » (2017).</div>
+<nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-b.html">← Domaine B</a><div class="center">Attention ≠ Transformer complet. Le RAG Lab est un laboratoire transversal, pas la suite architecturale de C.</div><a href="rag-lab.html">Explorer le RAG Lab →</a></nav>
 </main>
 <script>
 (function(){
