@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1.0",
-  "updated_on": "2026-09-17",
+  "updated_on": "2026-09-19",
   "sources": [
     {
       "id": "SRC-0001",
@@ -530,6 +530,38 @@
         "semantic-search"
       ],
       "notes": "Référence pour les embeddings de phrases et leur comparaison par similarité cosinus."
+    },
+    {
+      "id": "SRC-0014",
+      "title": "The Curious Case of Neural Text Degeneration",
+      "authors": [
+        "Ari Holtzman",
+        "Jan Buys",
+        "Li Du",
+        "Maxwell Forbes",
+        "Yejin Choi"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "International Conference on Learning Representations (ICLR)",
+      "publisher_kind": "academic",
+      "url": "https://arxiv.org/abs/1904.09751",
+      "identifiers": {
+        "arxiv": "1904.09751"
+      },
+      "publication_status": "peer-reviewed",
+      "version": "ICLR 2020",
+      "accessed_on": "2026-09-19",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "text-generation",
+        "decoding",
+        "nucleus-sampling",
+        "top-p"
+      ],
+      "notes": "Référence primaire pour l'étude des stratégies de décodage et l'introduction du nucleus sampling."
     }
   ]
 }
