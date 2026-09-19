@@ -45,12 +45,17 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 :focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
 @media(max-width:720px){.journey{grid-template-columns:1fr}.next-step{align-items:flex-start;flex-direction:column}.next-step .center{text-align:left}}
 
+
+.trainer-banner{display:none;max-width:1220px;margin:10px auto 18px;padding:12px 16px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-left:5px solid var(--accent);border-radius:13px;background:color-mix(in srgb,var(--soft) 72%,var(--panel));color:var(--text);font-size:.84rem;box-shadow:var(--shadow)}
+.trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
+#trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+
 </style>
 </head>
 <body>
 <main class="wrap">
-<div class="top"><a class="back" href="../index.html#parcours">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button">◆ Formateur</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
-
+<div class="top"><a class="back" href="../index.html#parcours">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 <section class="hero">
 <div><div class="eyebrow">Parcours 0 · Fondamentaux</div><h1>Situer les LLM</h1><p class="lead">Avant de manipuler tokens, attention ou RAG, il faut savoir <strong>de quoi l’on parle</strong>. Ce module construit une carte mentale fiable : IA, machine learning, deep learning, TAL, IA générative, modèles de langage, LLM, foundation models et applications.</p></div>
 <aside class="hero-card"><b>La question directrice</b><p>Quand un participant dit « l’IA », « ChatGPT », « le modèle » ou « une IA open source », parle-t-il vraiment de la même chose ?</p><div class="ladder"><span>IA · champ large</span><span>Machine learning · méthodes apprenantes</span><span>Deep learning · réseaux profonds</span><span>LLM · modèles de langage de grande échelle</span></div></aside>
@@ -211,7 +216,9 @@ document.getElementById("resetQuiz").addEventListener("click",function(){documen
 function applyTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
 var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")});
-document.getElementById("trainerBtn").addEventListener("click",function(){document.body.classList.toggle("trainer-on")});
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"◆ Mode formateur":"○ Mode stagiaire";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
+var savedRole;try{savedRole=localStorage.getItem("formation-llm-role")}catch(e){}setTrainerMode(savedRole==="trainer");
+document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!document.body.classList.contains("trainer-on"))});
 document.getElementById("projectorBtn").addEventListener("click",function(){document.documentElement.classList.toggle("projector")});
 })();
 </script>
