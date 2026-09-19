@@ -46,9 +46,11 @@
     {
       "path": "modules/sampling-lab.html",
       "label": "Parcours 1 — Sampling Lab",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 5
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 5,
+      "reviewed_on": "2026-09-19",
+      "notes": "Décodage reconstruit : logits/softmax calculés pas à pas, stratégies de sélection, température, top-k/top-p, autorégression, vérité, transfert et synthèse."
     },
     {
       "path": "modules/hallucination-lab.html",
