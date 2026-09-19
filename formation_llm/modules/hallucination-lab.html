@@ -16,7 +16,7 @@
 </style>
 </head>
 <body>
-<button class="projector-exit" id="projectorExit" type="button">✕ Quitter la projection · Échap</button>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
 <main class="wrap">
 <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
 <div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Les diagnostics, questions pièges et attendus de débrief sont visibles.</div>
@@ -84,7 +84,7 @@ document.querySelectorAll("#decisionButtons button").forEach(b=>b.addEventListen
 document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();let score=0;document.querySelectorAll(".q").forEach((q,i)=>{const c=q.querySelector('input[name="q'+(i+1)+'"]:checked'),ok=c&&c.value===q.dataset.answer;q.classList.toggle("okq",!!ok);q.classList.toggle("badq",!ok);if(ok)score++});document.getElementById("quizScore").textContent=score+" / 4"});
 document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("okq","badq"));document.getElementById("quizScore").textContent=""});
 function setTrainer(on){const b=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);b.setAttribute("aria-pressed",String(on));b.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}setTrainer(localStorage.getItem("formation-llm-role")==="trainer");document.getElementById("trainerBtn").addEventListener("click",()=>setTrainer(!document.body.classList.contains("trainer-on")));
-function setProjector(on){document.documentElement.classList.toggle("projector",on);const b=document.getElementById("projectorBtn");b.setAttribute("aria-pressed",String(on));b.textContent=on?"▣ Quitter projection":"▣ Activer projection"}document.getElementById("projectorBtn").addEventListener("click",()=>setProjector(!document.documentElement.classList.contains("projector")));document.getElementById("projectorExit").addEventListener("click",()=>setProjector(false));document.addEventListener("keydown",e=>{if(e.key==="Escape")setProjector(false)});
+function setProjectorMode(on){document.documentElement.classList.toggle("projector",on);const b=document.getElementById("projectorBtn");b.setAttribute("aria-pressed",String(on));b.textContent=on?"▣ Quitter projection":"▣ Activer projection"}document.getElementById("projectorBtn").addEventListener("click",()=>setProjectorMode(!document.documentElement.classList.contains("projector")));document.getElementById("projectorExit").addEventListener("click",()=>setProjectorMode(false));document.addEventListener("keydown",e=>{if(e.key==="Escape")setProjectorMode(false)});
 function theme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}const st=localStorage.getItem("formation-llm-theme");if(st)theme(st);document.getElementById("themeBtn").addEventListener("click",()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
 renderScenarioOptions();render();
 })();
