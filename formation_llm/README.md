@@ -8,6 +8,18 @@ Plateforme de formation professionnelle consacrée aux modèles de langage, cons
 
 Architecture : [`docs/ARCHITECTURE_APP.md`](docs/ARCHITECTURE_APP.md).
 
+## Module interactif — Domaine A
+
+Le module [`modules/domaine-a.html`](modules/domaine-a.html) devient l'entrée pédagogique du parcours. Il couvre **A01 à A12 — Situer les LLM** avec :
+- une carte conceptuelle IA → machine learning → deep learning → modèles de langage → LLM ;
+- un constructeur interactif distinguant modèle, chatbot et application ;
+- un exercice de classement d'objets et systèmes ;
+- un atelier sur open weights, open source et modèles propriétaires ;
+- un test de maîtrise ;
+- les modes clair/sombre, formateur et projection.
+
+La catégorie **GPAI** y est explicitement présentée comme une catégorie juridique européenne et non comme une taxonomie scientifique universelle.
+
 ## Module interactif — Domaine B
 
 Le premier module exploitable est disponible dans [`modules/domaine-b.html`](modules/domaine-b.html), avec une page d'entrée dans [`index.html`](index.html).
@@ -53,7 +65,7 @@ npm run validate
 La commande exécute deux contrôles :
 
 - `validate:data` : schémas JSON et intégrité référentielle du corpus pédagogique ;
-- `validate:web` : contrôle structurel de l'application, des modules B/C et du RAG Lab, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
+- `validate:web` : contrôle structurel de l'application, des modules A/B/C et du RAG Lab, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
 
 Le workflow GitHub Actions `Validate Formation LLM` exécute cette validation à chaque modification pertinente.
 
