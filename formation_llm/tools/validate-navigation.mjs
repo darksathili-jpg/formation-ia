@@ -10,6 +10,7 @@ const pages=[
   'modules/rag-lab.html'
 ];
 const errors=[];
+const appRoutes=new Set(['dashboard','parcours','labs','progression','referentiel','architecture']);
 const cache=new Map();
 
 async function load(path){
@@ -69,7 +70,8 @@ for(const page of pages){
       const target=await load(targetPath);
       if(fragRaw){
         const frag=decodeURIComponent(fragRaw);
-        if(!hasId(target,frag)) errors.push(prefix+'fragment cible introuvable: '+href);
+        const isAppRoute=targetPath==='index.html' && appRoutes.has(frag);
+        if(!isAppRoute && !hasId(target,frag)) errors.push(prefix+'fragment cible introuvable: '+href);
       }
     }catch(e){
       errors.push(prefix+'lien HTML cassé: '+href);
