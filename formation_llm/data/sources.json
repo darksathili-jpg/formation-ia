@@ -562,6 +562,64 @@
         "top-p"
       ],
       "notes": "Référence primaire pour l'étude des stratégies de décodage et l'introduction du nucleus sampling."
+    },
+    {
+      "id": "SRC-0015",
+      "title": "TruthfulQA: Measuring How Models Mimic Human Falsehoods",
+      "authors": [
+        "Stephanie Lin",
+        "Jacob Hilton",
+        "Owain Evans"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "Association for Computational Linguistics",
+      "publisher_kind": "academic",
+      "url": "https://aclanthology.org/2022.acl-long.229/",
+      "identifiers": {
+        "doi": "10.18653/v1/2022.acl-long.229",
+        "arxiv": "2109.07958"
+      },
+      "publication_status": "peer-reviewed",
+      "version": "ACL 2022",
+      "accessed_on": "2026-09-19",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "truthfulness",
+        "falsehoods",
+        "evaluation"
+      ],
+      "notes": "Référence primaire pour l'évaluation de réponses susceptibles de reproduire des idées fausses."
+    },
+    {
+      "id": "SRC-0016",
+      "title": "On Calibration of Modern Neural Networks",
+      "authors": [
+        "Chuan Guo",
+        "Geoff Pleiss",
+        "Yu Sun",
+        "Kilian Q. Weinberger"
+      ],
+      "source_type": "research-paper",
+      "evidence_role": "primary",
+      "publisher": "International Conference on Machine Learning (ICML)",
+      "publisher_kind": "academic",
+      "url": "https://proceedings.mlr.press/v70/guo17a.html",
+      "identifiers": {},
+      "publication_status": "peer-reviewed",
+      "version": "ICML 2017",
+      "accessed_on": "2026-09-19",
+      "status": "verified",
+      "temporal_stability": "stable",
+      "language": "en",
+      "topics": [
+        "calibration",
+        "confidence",
+        "evaluation"
+      ],
+      "notes": "Référence fondamentale sur la calibration des probabilités prédictives ; utilisée ici pour le concept général de calibration, avec prudence quant au transfert direct aux LLM."
     }
   ]
 }
