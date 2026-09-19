@@ -6,7 +6,7 @@
   "scripts": {
     "validate": "npm run validate:data && npm run validate:web",
     "validate:data": "node tools/validate.mjs",
-    "validate:web": "node tools/validate-app.mjs && node tools/validate-dashboard.mjs && node tools/validate-navigation.mjs && node tools/validate-module-a.mjs && node tools/validate-module-b.mjs && node tools/validate-module-c.mjs && node tools/validate-transformer-block.mjs && node tools/validate-sampling-lab.mjs && node tools/validate-rag-lab.mjs"
+    "validate:web": "node tools/validate-app.mjs && node tools/validate-dashboard.mjs && node tools/validate-navigation.mjs && node tools/validate-module-a.mjs && node tools/validate-module-b.mjs && node tools/validate-module-c.mjs && node tools/validate-transformer-block.mjs && node tools/validate-sampling-lab.mjs && node tools/validate-hallucination-lab.mjs && node tools/validate-rag-lab.mjs"
   },
   "devDependencies": {
     "ajv": "8.20.0",
