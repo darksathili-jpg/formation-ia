@@ -28,9 +28,11 @@
     {
       "path": "modules/domaine-c.html",
       "label": "Parcours 1 — Transformer et attention",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 3
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 3,
+      "reviewed_on": "2026-09-19",
+      "notes": "Attention reconstruite autour d’un problème unique, avec Q/K/V introduits progressivement, exemple numérique travaillé, lab guidé, auto-explication, quiz et transfert."
     },
     {
       "path": "modules/transformer-block-lab.html",
