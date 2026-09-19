@@ -7,420 +7,283 @@
 <title>Formation LLM — Parcours 1 · Tokens, représentations et contexte</title>
 <style>
 :root{
-  --bg:#f4f1ea;--panel:#fffdf8;--panel-2:#ebe7dd;--text:#10202d;--muted:#5f7180;
-  --line:rgba(16,32,45,.14);--strong:rgba(16,32,45,.28);--accent:#0b7894;--accent-soft:#d7edf2;
-  --gold:#9b6a25;--gold-soft:#f2e4c8;--ok:#24704e;--ok-soft:#dcefe6;--warn:#a25a1d;--warn-soft:#f7e6d6;
-  --danger:#a53b42;--danger-soft:#f5dddd;--code:#17232d;--code-text:#ecf5f7;--shadow:0 12px 32px rgba(20,34,45,.08);
-  --radius:18px;--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --display:Georgia,"Times New Roman",serif;
-}
-[data-theme="dark"]{
-  --bg:#101820;--panel:#16232d;--panel-2:#1e2d38;--text:#edf4f6;--muted:#a8bac4;
-  --line:rgba(237,244,246,.13);--strong:rgba(237,244,246,.28);--accent:#4fc1dc;--accent-soft:#153a46;
-  --gold:#e4b35c;--gold-soft:#3a2b16;--ok:#65c494;--ok-soft:#17382b;--warn:#f1a15f;--warn-soft:#3c2818;
-  --danger:#ef7b80;--danger-soft:#3d1e22;--code:#091118;--code-text:#edf7f8;--shadow:0 14px 34px rgba(0,0,0,.25);
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.58;transition:background .2s,color .2s}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-a{color:var(--accent)}
+--bg:#f4f1ea;--panel:#fffdf8;--panel2:#ebe7dd;--text:#10202d;--muted:#5f7180;--line:rgba(16,32,45,.14);--strong:rgba(16,32,45,.28);
+--accent:#0b7894;--accentSoft:#d7edf2;--gold:#9b6a25;--goldSoft:#f2e4c8;--ok:#24704e;--okSoft:#dcefe6;--warn:#a25a1d;--warnSoft:#f7e6d6;
+--danger:#a53b42;--dangerSoft:#f5dddd;--violet:#6558ca;--violetSoft:#e9e4fb;--code:#17232d;--codeText:#ecf5f7;--shadow:0 12px 32px rgba(20,34,45,.08);
+--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--display:Georgia,"Times New Roman",serif}
+[data-theme="dark"]{--bg:#101820;--panel:#16232d;--panel2:#1e2d38;--text:#edf4f6;--muted:#a8bac4;--line:rgba(237,244,246,.13);--strong:rgba(237,244,246,.28);
+--accent:#4fc1dc;--accentSoft:#153a46;--gold:#e4b35c;--goldSoft:#3a2b16;--ok:#65c494;--okSoft:#17382b;--warn:#f1a15f;--warnSoft:#3c2818;
+--danger:#ef7b80;--dangerSoft:#3d1e22;--violet:#aaa2ff;--violetSoft:#2f2958;--code:#091118;--codeText:#edf7f8;--shadow:0 14px 34px rgba(0,0,0,.25)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}
+button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--accent)}main{max-width:1180px;margin:auto;padding:0 22px 80px}
 .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.topbar-inner{max-width:1180px;margin:auto;padding:10px 22px;display:flex;gap:16px;align-items:center;justify-content:space-between}
-.brand{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.nav a{text-decoration:none;color:var(--muted);font-weight:700;font-size:.78rem;padding:8px 10px;border-radius:999px}.nav a:hover,.nav a:focus-visible{background:var(--accent-soft);color:var(--accent)}
-.tools{display:flex;gap:6px;flex-wrap:wrap}.icon-btn,.pill-btn{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;min-height:38px;padding:8px 12px;font-weight:800}.icon-btn:hover,.pill-btn:hover{border-color:var(--accent);color:var(--accent)}
-main{max-width:1180px;margin:auto;padding:0 22px 80px}
-.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,.75fr);gap:42px;padding:62px 0 48px;align-items:start}
-.eyebrow{display:flex;gap:10px;align-items:center;color:var(--accent);font-size:.78rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:var(--accent)}
-h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.02;margin:.3em 0 .25em;letter-spacing:-.035em}.lead{font-size:1.12rem;color:var(--muted);max-width:760px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.78rem;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
-.hero-card{background:var(--code);color:var(--code-text);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.hero-card h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#81d6e9;margin:0 0 18px}.flow-mini{display:grid;gap:8px}.flow-mini div{padding:10px 12px;border:1px solid rgba(255,255,255,.13);border-radius:12px;background:rgba(255,255,255,.04);font-weight:800}.flow-mini span{color:#75d0e4;margin-right:8px}.hero-note{font-size:.83rem;color:#b7c8d1;margin-top:16px}
-.section{padding:54px 0 10px}.section-head{display:flex;gap:16px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}.section-num{font-family:var(--display);font-style:italic;font-size:2.8rem;color:var(--strong);line-height:1}.section-head h2{font-family:var(--display);font-size:2rem;margin:0}.section-head p{margin:5px 0 0;color:var(--muted)}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.panel-pad{padding:24px}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.pipeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch}.pipe-step{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:18px 14px;text-align:left;min-height:132px;position:relative;transition:.2s}.pipe-step:hover,.pipe-step.active{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}.pipe-step b{display:block;font-size:1rem;margin-bottom:6px}.pipe-step small{color:var(--muted);display:block}.pipe-step .n{display:inline-flex;width:26px;height:26px;border-radius:50%;align-items:center;justify-content:center;background:var(--accent-soft);color:var(--accent);font-weight:900;margin-bottom:10px}.pipe-step:not(:last-child):after{content:"→";position:absolute;right:-11px;top:50%;transform:translateY(-50%);z-index:2;color:var(--muted);font-weight:900}.concept-detail{margin-top:16px;padding:18px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line)}.concept-detail strong{color:var(--accent)}
-.notice{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:14px 16px}.notice.warn{border-left-color:var(--warn);background:var(--warn-soft)}.notice strong{display:block;margin-bottom:4px}
-.lab{overflow:hidden}.lab-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.lab-head h3{margin:0;font-family:var(--display);font-size:1.55rem}.lab-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}.lab-input{padding:24px;border-right:1px solid var(--line)}.lab-output{padding:24px;min-width:0}.field{display:grid;gap:7px;margin-bottom:16px}.field label{font-size:.8rem;font-weight:900;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}.field textarea,.field select,.field input[type="number"]{width:100%;border:1px solid var(--strong);border-radius:12px;background:var(--bg);color:var(--text);padding:12px}.field textarea{min-height:138px;resize:vertical}.range-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.range-row input{width:100%}.preset-row{display:flex;gap:7px;flex-wrap:wrap}.small-btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:7px 10px;border-radius:10px;font-weight:800;font-size:.82rem}.small-btn:hover{border-color:var(--accent);color:var(--accent)}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:16px}.kpi{background:var(--panel-2);border:1px solid var(--line);border-radius:13px;padding:12px}.kpi .v{font-size:1.3rem;font-weight:900}.kpi .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.tokens{display:flex;flex-wrap:wrap;gap:6px;padding:14px;background:var(--bg);border:1px dashed var(--strong);border-radius:14px;min-height:68px}.token{display:inline-flex;align-items:center;min-height:34px;padding:6px 9px;border-radius:9px;background:var(--accent-soft);color:var(--text);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.84rem}.token.space{background:var(--gold-soft);border-color:color-mix(in srgb,var(--gold) 38%,var(--line))}.token.truncated{opacity:.35;text-decoration:line-through}.token.selected{outline:3px solid var(--accent);outline-offset:2px}.token-count{font-size:.8rem;color:var(--muted);margin:9px 0 13px}.context-meter{height:16px;border-radius:999px;background:var(--panel-2);overflow:hidden;border:1px solid var(--line);display:flex}.context-used{background:var(--accent);height:100%}.context-over{background:var(--danger);height:100%}.meter-labels{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.78rem;margin-top:6px}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;margin-top:16px;max-height:330px}.token-table{width:100%;border-collapse:collapse;min-width:680px;font-size:.82rem}.token-table th,.token-table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}.token-table th{position:sticky;top:0;background:var(--panel-2);z-index:1;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}.token-table tr:last-child td{border-bottom:0}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.embed-mini{white-space:nowrap;color:var(--muted)}
-.trainer-only{display:none;margin-top:14px;background:var(--gold-soft);border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));border-radius:14px;padding:14px}.trainer-on .trainer-only{display:block}.trainer-only b{color:var(--gold)}
-.vector-lab{padding:24px}.vector-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}.vector-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.result-card{padding:18px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);text-align:center}.result-card .score{font-size:2rem;font-weight:900;color:var(--accent)}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem;color:var(--muted);word-break:break-word}.example-pairs{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
-.context-lab{padding:24px}.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.budget-stack{height:52px;border-radius:14px;overflow:hidden;display:flex;border:1px solid var(--line);background:var(--panel-2)}.budget-seg{display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;overflow:hidden;white-space:nowrap}.seg-system{background:var(--gold-soft)}.seg-user{background:var(--accent-soft)}.seg-response{background:var(--ok-soft)}.seg-over{background:var(--danger-soft);color:var(--danger)}
-.concepts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.concept-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}.concept-card .id{font-weight:900;color:var(--accent);font-size:.78rem;letter-spacing:.08em}.concept-card h3{margin:5px 0 8px;font-size:1rem}.concept-card p{margin:0;color:var(--muted);font-size:.9rem}.misconception{margin-top:12px;padding:11px;border-radius:11px;background:var(--warn-soft);font-size:.84rem}.misconception b{color:var(--warn)}
-.quiz{display:grid;gap:14px}.q{padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px}.q legend{font-weight:900;margin-bottom:10px}.q label{display:block;padding:8px 10px;border-radius:9px}.q label:hover{background:var(--panel-2)}.feedback{margin-top:10px;font-size:.88rem;display:none}.q.correct{border-color:var(--ok)}.q.correct .feedback{display:block;color:var(--ok)}.q.wrong{border-color:var(--danger)}.q.wrong .feedback{display:block;color:var(--danger)}.quiz-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;border-radius:12px;padding:11px 16px;font-weight:900}.secondary{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:12px;padding:10px 15px;font-weight:900}.score-box{font-weight:900}
-.refs{display:grid;gap:8px}.ref{padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.ref b{color:var(--accent)}.footer{margin-top:60px;padding-top:28px;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem}
-.projector main{max-width:1450px}.projector body,.projector{font-size:19px}.projector .topbar-inner{max-width:1450px}.projector .concepts{grid-template-columns:repeat(2,minmax(0,1fr))}.projector .pipe-step{min-height:160px}.projector .token{font-size:1rem}.projector .trainer-only{font-size:1rem}
-@media(max-width:900px){.hero,.lab-grid,.budget-grid{grid-template-columns:1fr}.hero{gap:24px}.lab-input{border-right:0;border-bottom:1px solid var(--line)}.pipeline{grid-template-columns:1fr}.pipe-step:not(:last-child):after{content:"↓";right:auto;left:50%;top:auto;bottom:-15px;transform:translateX(-50%)}.concepts,.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.vector-controls{grid-template-columns:1fr 1fr}.vector-controls .result-card{grid-column:1/-1}.nav{display:none}}
-@media(max-width:600px){main,.topbar-inner{padding-left:14px;padding-right:14px}.hero{padding-top:38px}.concepts,.grid-2,.grid-3{grid-template-columns:1fr}.tools{gap:4px}.pill-btn{padding:7px 9px;font-size:.78rem}.lab-input,.lab-output,.panel-pad,.vector-lab,.context-lab{padding:16px}.vector-controls{grid-template-columns:1fr}.vector-controls .result-card{grid-column:auto}.kpis{grid-template-columns:1fr 1fr}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-
-.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 8px}
-.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}
-.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}
-.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.8rem}
-.recall-check{margin-top:9px}.recall-check details{border-top:1px solid var(--line);padding:7px 0}.recall-check summary{cursor:pointer;font-weight:850;font-size:.78rem}.recall-check div{padding-top:5px;color:var(--muted);font-size:.77rem}
-.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.8rem}
-:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
-@media(max-width:720px){.journey{grid-template-columns:1fr}.next-step{align-items:flex-start;flex-direction:column}.next-step .center{text-align:left}}
-
-
-.trainer-banner{display:none;max-width:1220px;margin:10px auto 18px;padding:12px 16px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-left:5px solid var(--accent);border-radius:13px;background:color-mix(in srgb,var(--soft) 72%,var(--panel));color:var(--text);font-size:.84rem;box-shadow:var(--shadow)}
-.trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
-#trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
-
-
-.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}
-.projector .projector-exit{display:inline-flex;align-items:center;gap:7px}
-.projector .tools{display:none}
+.topbar-inner{max-width:1180px;margin:auto;padding:10px 22px;display:flex;gap:16px;align-items:center;justify-content:space-between}.brand{font-size:.78rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.nav{display:flex;gap:6px;flex-wrap:wrap}.nav a{text-decoration:none;color:var(--muted);font-weight:750;font-size:.77rem;padding:8px 10px;border-radius:999px}.nav a:hover,.nav a:focus-visible{background:var(--accentSoft);color:var(--accent)}
+.tools{display:flex;gap:6px;flex-wrap:wrap}.tool{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;min-height:38px;padding:8px 12px;font-weight:850}
+#trainerBtn[aria-pressed="true"]{border-color:var(--gold);background:var(--goldSoft);color:var(--gold)}
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}.projector .projector-exit{display:inline-flex}.projector .tools{display:none}.projector{font-size:19px}.projector main,.projector .topbar-inner{max-width:1450px}
+.trainer-banner{display:none;margin:12px auto 0;max-width:1180px;padding:12px 16px;border-left:5px solid var(--gold);border-radius:12px;background:var(--goldSoft);font-size:.84rem}.trainer-on .trainer-banner{display:block}.trainer-only{display:none}.trainer-on .trainer-only{display:block}
+.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,.75fr);gap:42px;padding:54px 0 36px}.eyebrow{color:var(--accent);font-size:.78rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.02;margin:.28em 0 .22em;letter-spacing:-.035em}.lead{font-size:1.12rem;color:var(--muted);max-width:760px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.badge{padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.76rem;font-weight:850}.badge.good{background:var(--okSoft);color:var(--ok)}
+.hero-card{background:var(--code);color:var(--codeText);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.hero-card h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#81d6e9;margin:0 0 16px}.hero-card p{color:#bfd0d8;font-size:.85rem}.flow-mini{display:grid;gap:8px}.flow-mini div{padding:10px 12px;border:1px solid rgba(255,255,255,.13);border-radius:12px;background:rgba(255,255,255,.04);font-weight:850}.flow-mini span{color:#75d0e4;margin-right:8px}
+.journey{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.82rem}
+.section{padding:42px 0 6px;scroll-margin-top:75px}.section-head{display:flex;gap:16px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:22px}.section-num{font-family:var(--display);font-style:italic;font-size:2.7rem;color:var(--strong);line-height:1}.section-head h2{font-family:var(--display);font-size:2rem;margin:0}.section-head p{margin:4px 0 0;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:21px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.intuition{padding:14px 16px;border-left:4px solid var(--accent);background:var(--accentSoft);border-radius:12px}.definition{padding:14px 16px;border-left:4px solid var(--violet);background:var(--violetSoft);border-radius:12px}.notice{padding:14px 16px;border-left:4px solid var(--warn);background:var(--warnSoft);border-radius:12px}.muted{color:var(--muted)}
+.gloss{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.term{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.term .id{font-size:.68rem;color:var(--accent);font-weight:950}.term h3{margin:4px 0 7px;font-size:1rem}.term p{margin:0;color:var(--muted);font-size:.83rem}.term .limit{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:.78rem}.term .limit b{color:var(--warn)}
+.steps{display:grid;gap:10px}.step{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.step .n{width:34px;height:34px;border-radius:10px;background:var(--accentSoft);color:var(--accent);display:grid;place-items:center;font-weight:950}.step h3{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted);font-size:.86rem}.step .calc{margin-top:7px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--text);font-size:.82rem}
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.pipe{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:14px;min-height:120px}.pipe b{display:block}.pipe small{color:var(--muted)}.pipe .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accentSoft);color:var(--accent);font-weight:950;margin-bottom:8px}
+.lab{overflow:hidden;padding:0}.lab-head{padding:18px 21px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.lab-head h3{margin:0;font-family:var(--display);font-size:1.45rem}.lab-grid{display:grid;grid-template-columns:minmax(300px,.85fr) minmax(0,1.15fr)}.lab-input{padding:21px;border-right:1px solid var(--line)}.lab-output{padding:21px;min-width:0}.field{display:grid;gap:6px;margin-bottom:14px}.field label{font-size:.76rem;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.field textarea,.field select,.field input[type=number]{width:100%;border:1px solid var(--strong);border-radius:11px;background:var(--bg);color:var(--text);padding:10px}.field textarea{min-height:120px;resize:vertical}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.range-row input{width:100%}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:13px}.kpi{background:var(--panel2);border-radius:12px;padding:11px}.kpi .v{font-size:1.25rem;font-weight:950}.kpi .l{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.tokens{display:flex;flex-wrap:wrap;gap:6px;padding:13px;background:var(--bg);border:1px dashed var(--strong);border-radius:13px;min-height:62px}.token{display:inline-flex;align-items:center;padding:6px 9px;border-radius:9px;background:var(--accentSoft);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.82rem}.token.space{background:var(--goldSoft)}.token.truncated{opacity:.35;text-decoration:line-through}
+.meter{height:15px;border-radius:999px;background:var(--panel2);overflow:hidden;border:1px solid var(--line);display:flex}.used{background:var(--accent);height:100%}.over{background:var(--danger);height:100%}.meter-labels{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.76rem;margin-top:5px}
+.completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(170px,.8fr) 30px minmax(220px,1.2fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent);font-weight:950}.feedback-box{display:none;margin-top:10px;padding:11px;border-radius:10px;background:var(--panel2)}.feedback-box.show{display:block}
+.vector-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.vector-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.vector-controls input{width:100%;border:1px solid var(--strong);background:var(--bg);color:var(--text);border-radius:9px;padding:8px}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.84rem;color:var(--muted);word-break:break-word}.score{font-size:2rem;font-weight:950;color:var(--accent)}.bar{height:11px;background:var(--panel2);border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);width:50%}
+.misgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mis{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.mis .wrong{color:var(--danger);font-weight:900}.mis .right{color:var(--ok);font-weight:850;margin-top:8px}.mis p{color:var(--muted);font-size:.83rem;margin:5px 0}
+.selfbox textarea{width:100%;min-height:125px;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px}.criteria{display:grid;gap:6px;margin-top:9px}.criteria label{font-size:.82rem;color:var(--muted)}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px}.q legend{font-weight:900}.q label{display:block;padding:6px 0;color:var(--muted)}.q .feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.81rem}.q.correct{border-color:var(--ok)}.q.wrong{border-color:var(--danger)}.q.correct .feedback,.q.wrong .feedback{display:block}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.primary{border:0;background:var(--accent);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.scorebox{font-weight:950;color:var(--accent)}
+.transfer{display:grid;grid-template-columns:1fr 1fr;gap:11px}.transfer-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.transfer-card select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.transfer-feedback{display:none;margin-top:9px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.transfer-card.good .transfer-feedback,.transfer-card.bad .transfer-feedback{display:block}.transfer-card.good{border-color:var(--ok)}.transfer-card.bad{border-color:var(--danger)}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.recap article{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.recap b{display:block;margin-bottom:5px}.recap p{margin:0;color:var(--muted);font-size:.84rem}
+.refs{display:grid;gap:8px}.ref{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900}.next-step .center{text-align:center;color:var(--muted);font-size:.82rem}.footer{margin-top:48px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-
+@media(max-width:900px){.hero,.grid2,.lab-grid,.vector-grid{grid-template-columns:1fr}.lab-input{border-right:0;border-bottom:1px solid var(--line)}.pipeline{grid-template-columns:1fr}.gloss,.grid3{grid-template-columns:repeat(2,1fr)}.journey{grid-template-columns:1fr}.nav{display:none}}
+@media(max-width:600px){main,.topbar-inner{padding-left:14px;padding-right:14px}.gloss,.grid2,.grid3,.misgrid,.transfer,.recap{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.completion-row{grid-template-columns:1fr}.completion-row .arrow{transform:rotate(90deg)}.tools{gap:4px}.tool{padding:7px 9px;font-size:.76rem}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="../index.html#parcours" style="text-decoration:none">← Formation LLM · Parcours 1</a>
-    <nav class="nav" aria-label="Navigation du module">
-      <a href="#modele">Modèle mental</a><a href="#tokenizer">Tokenizer Lab</a><a href="#embeddings">Embeddings</a><a href="#contexte">Contexte</a><a href="#quiz">Quiz</a>
-    </nav>
-    <div class="tools">
-      <button class="pill-btn" id="themeBtn" type="button" aria-pressed="false">◐ Thème</button>
-      <button class="pill-btn" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button>
-      <button class="pill-btn" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button>
-    </div>
-  </div>
-</header>
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html#parcours">← Formation LLM · Parcours 1</a>
+<nav class="nav" aria-label="Navigation"><a href="#intuition">Intuition</a><a href="#exemple">Exemple</a><a href="#tokenizer">Tokenizer Lab</a><a href="#embeddings">Embeddings</a><a href="#contexte">Contexte</a><a href="#quiz">Quiz</a></nav>
+<div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button></div>
+</div></header>
+<div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues et critères de réussite sont visibles.</div>
 <main>
-<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
-  <section class="hero">
-    <div>
-      <div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 1</div>
-      <h1>Tokens, représentations<br>et <em style="color:var(--accent)">contexte</em></h1>
-      <p class="lead">Une progression expérimentale pour comprendre ce qui se passe entre une phrase saisie dans une interface et la séquence numérique réellement manipulée par un modèle de langage.</p>
-      <div class="meta">
-        <span class="badge"><span class="dot"></span>100 % local · aucune API</span>
-        <span class="badge">12 notions</span>
-        <span class="badge">≈ 1 h 30 à 2 h</span>
-        <span class="badge">Mode formateur intégré</span>
-      </div>
-    </div>
-    <aside class="hero-card">
-      <h2>Fil rouge à savoir expliquer</h2>
-      <div class="flow-mini">
-        <div><span>01</span> Texte</div><div><span>02</span> Tokenisation</div><div><span>03</span> Tokens</div><div><span>04</span> IDs</div><div><span>05</span> Vecteurs</div><div><span>06</span> Contexte</div>
-      </div>
-      <p class="hero-note">Le Transformer viendra ensuite. Ici, on construit les objets qu’il recevra réellement en entrée.</p>
-    </aside>
-  </section>
-<section class="journey" aria-label="Repères du parcours">
-<div class="journey-card"><div class="k">Prérequis</div><b>Parcours 0 · Fondamentaux</b><p>Savoir distinguer modèle, chatbot, application et paramètres.</p><div class="recall-check"><details><summary>Rappel : modèle ou application ?</summary><div>Un outil de recherche web ou une mémoire persistante peut appartenir à l’application sans être une propriété intrinsèque du LLM.</div></details></div></div>
-<div class="journey-card"><div class="k">Objectif de sortie</div><b>Construire le pipeline d’entrée</b><p>texte → tokens → IDs → embeddings → contexte, sans confondre les objets.</p></div>
-<div class="journey-card"><div class="k">Ensuite</div><b>Parcours 1 · Étape 2</b><p>Observer comment le Transformer contextualise ces représentations.</p></div>
+
+<section class="hero">
+<div><div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 1 · NOVICE-FIRST</div><h1>Tokens, représentations et contexte</h1><p class="lead">Le modèle ne reçoit pas directement votre phrase comme vous la lisez. Cette étape montre, sans supposer de connaissances cachées, comment on passe d’un texte à des <strong>unités discrètes, des indices, des vecteurs et un contexte limité</strong>.</p><div class="meta"><span class="badge good">Guidage complet</span><span class="badge">≈ 75–100 min</span><span class="badge">Simulation pédagogique</span><span class="badge">Mode formateur intégré</span></div></div>
+<aside class="hero-card"><h2>Fil rouge</h2><div class="flow-mini"><div><span>01</span> Texte</div><div><span>02</span> Tokens</div><div><span>03</span> IDs</div><div><span>04</span> Vecteurs</div><div><span>05</span> Contexte</div></div><p>Phrase à savoir expliquer : <strong>texte → tokens → IDs → vecteurs → budget de contexte</strong>.</p></aside>
 </section>
 
-  <section class="section" id="modele">
-    <div class="section-head"><div class="section-num">01</div><div><h2>Construire le bon modèle mental</h2><p>Cliquez sur chaque étape : l’objectif est de séparer les objets, pas de mémoriser du vocabulaire.</p></div></div>
-    <div class="pipeline" id="pipeline">
-      <button class="pipe-step active" data-step="text" type="button"><span class="n">1</span><b>Texte</b><small>Chaîne Unicode saisie ou injectée par l’application.</small></button>
-      <button class="pipe-step" data-step="tokens" type="button"><span class="n">2</span><b>Tokens</b><small>Unités discrètes définies par un tokenizer.</small></button>
-      <button class="pipe-step" data-step="ids" type="button"><span class="n">3</span><b>IDs</b><small>Indices entiers associés aux tokens du vocabulaire.</small></button>
-      <button class="pipe-step" data-step="vectors" type="button"><span class="n">4</span><b>Embeddings</b><small>Vecteurs utilisés par le réseau neuronal.</small></button>
-      <button class="pipe-step" data-step="context" type="button"><span class="n">5</span><b>Contexte</b><small>Séquence disponible dans le budget courant.</small></button>
-    </div>
-    <div class="concept-detail" id="conceptDetail" aria-live="polite"></div>
-    <div class="trainer-only"><b>Défi formateur.</b> Demander : « Où est le sens : dans le token, dans l’ID ou dans le vecteur ? » Attendu : l’ID est une clé discrète ; la représentation utile au calcul apparaît dans les vecteurs et devient contextuelle dans le réseau.</div>
-  </section>
+<section class="journey" data-pedagogy="prerequisites">
+<div class="journey-card"><div class="k">Prérequis</div><b>Parcours 0</b><p>Savoir distinguer modèle, application et paramètres.</p></div>
+<div class="journey-card"><div class="k">Objectif</div><b>Ne plus confondre les objets</b><p>Token ≠ mot · ID ≠ embedding · embedding initial ≠ sens complet · contexte ≠ mémoire.</p></div>
+<div class="journey-card"><div class="k">Critère de réussite</div><b>Expliquer le pipeline</b><p>Vous saurez décrire chaque transformation et dire ce qu’elle ne permet pas de conclure.</p></div>
+</section>
 
-  <section class="section" id="tokenizer">
-    <div class="section-head"><div class="section-num">02</div><div><h2>Tokenizer Lab</h2><p>Expérimenter réellement la transformation texte → tokens → IDs → vecteurs → budget de contexte.</p></div></div>
-    <div class="notice warn" style="margin-bottom:16px"><strong>Simulation pédagogique — pas un tokenizer commercial réel</strong>Le mode « sous-mots » applique une petite liste de règles de fusion inspirées de BPE. Les IDs et embeddings affichés sont déterministes mais fictifs. Le but est d’expliquer le mécanisme sans attribuer ces valeurs à un modèle existant.</div>
-    <div class="panel lab">
-      <div class="lab-head"><div><h3>Expérience guidée</h3><div style="color:var(--muted);font-size:.88rem">Modifiez une seule variable à la fois, puis observez ce qui change.</div></div><span class="badge">Tokenisation · IDs · embeddings · contexte</span></div>
-      <div class="lab-grid">
-        <div class="lab-input">
-          <div class="field"><label for="labText">Texte d’entrée</label><textarea id="labText">Bonjour ! L'intelligence artificielle transforme le texte en tokens.</textarea></div>
-          <div class="preset-row" aria-label="Exemples"><button class="small-btn preset" data-text="anticonstitutionnellement" type="button">Mot rare</button><button class="small-btn preset" data-text="for i in range(10): print(i)" type="button">Code Python</button><button class="small-btn preset" data-text="Élève 👩‍💻 : coût = 12,50 €" type="button">Unicode + nombres</button><button class="small-btn preset" data-text="Un chat poursuit un félin. Une base de données stocke des lignes." type="button">Sémantique</button></div>
-          <div class="field" style="margin-top:16px"><label for="tokenMode">Méthode de découpage</label><select id="tokenMode"><option value="subword">Sous-mots pédagogique — type BPE simplifié</option><option value="word">Mots + espaces + ponctuation</option><option value="byte">Octets UTF-8</option></select></div>
-          <div class="field"><label for="contextSize">Fenêtre de contexte simulée</label><div class="range-row"><input id="contextSize" type="range" min="8" max="128" step="4" value="48"><output id="contextSizeOut">48 tokens</output></div></div>
-          <div class="notice"><strong>À faire tester</strong>Comparez « intelligence », « Intelligence », « intelligence! », un emoji et du code. Posez ensuite la question : « un token est-il un mot ? »</div>
-          <div class="trainer-only"><b>Erreur attendue.</b> « Un token = un mot ». Faire apparaître le contre-exemple avec un mot long, la ponctuation, les espaces puis UTF-8. <br><b>Débrief.</b> Un token est une unité du vocabulaire du tokenizer, pas une catégorie linguistique universelle.</div>
-        </div>
-        <div class="lab-output">
-          <div class="kpis"><div class="kpi"><div class="v" id="charCount">0</div><div class="l">caractères</div></div><div class="kpi"><div class="v" id="tokenCount">0</div><div class="l">tokens</div></div><div class="kpi"><div class="v" id="uniqueCount">0</div><div class="l">uniques</div></div><div class="kpi"><div class="v" id="byteCount">0</div><div class="l">octets UTF-8</div></div></div>
-          <div class="tokens" id="tokenList" aria-live="polite"></div><div class="token-count" id="tokenHint"></div>
-          <div class="context-meter" aria-label="Utilisation de la fenêtre de contexte"><div class="context-used" id="contextUsed"></div><div class="context-over" id="contextOver"></div></div><div class="meter-labels"><span id="contextLabel">0 / 48 tokens</span><span id="contextStatus"></span></div>
-          <div class="table-wrap"><table class="token-table"><thead><tr><th>#</th><th>Token visible</th><th>ID simulé</th><th>Embedding didactique (6 premières dimensions)</th></tr></thead><tbody id="tokenRows"></tbody></table></div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="section" data-pedagogy="intuition" id="intuition">
+<div class="section-head"><div class="section-num">01</div><div><h2>Pourquoi découper le texte ?</h2><p>Parce qu’un réseau neuronal calcule sur des nombres, pas directement sur des mots imprimés à l’écran.</p></div></div>
+<div class="grid2">
+<div class="panel"><div class="intuition"><strong>Intuition</strong>Imaginez un piano numérique. La phrase « joue un do » doit être convertie en événements numériques avant que la machine puisse traiter la consigne. Pour un LLM, le texte suit lui aussi plusieurs transformations avant d’entrer dans le réseau.</div><p>Le premier problème est donc : <strong>quelles unités donner au modèle ?</strong> Utiliser un mot entier semble naturel, mais le vocabulaire deviendrait énorme et échouerait sur les mots nouveaux. Utiliser un caractère résout ce problème, mais produit des séquences beaucoup plus longues.</p><p>Les tokenizers modernes utilisent souvent un compromis : des <strong>sous-mots</strong>. Des morceaux fréquents peuvent devenir des unités, tandis qu’un mot rare peut être décomposé en plusieurs unités connues.</p></div>
+<div class="panel">
+<div class="pipeline"><div class="pipe"><span class="n">1</span><b>Texte</b><small>« tokenisation »</small></div><div class="pipe"><span class="n">2</span><b>Tokens</b><small>ex. « token », « isation »</small></div><div class="pipe"><span class="n">3</span><b>IDs</b><small>ex. 821, 3914</small></div><div class="pipe"><span class="n">4</span><b>Vecteurs</b><small>listes de nombres</small></div><div class="pipe"><span class="n">5</span><b>Contexte</b><small>séquence disponible au modèle</small></div></div>
+<div class="notice" style="margin-top:12px"><strong>Attention.</strong> Les exemples numériques de cette page sont fictifs. Un tokenizer réel peut découper le même texte autrement.</div>
+</div>
+</div>
+</section>
 
-  <section class="section" id="embeddings">
-    <div class="section-head"><div class="section-num">03</div><div><h2>Embeddings et similarité cosinus</h2><p>Comprendre qu’un vecteur n’est ni un ID ni une vérité, et qu’un score de similarité n’est pas une probabilité.</p></div></div>
-    <div class="grid-2">
-      <div class="panel vector-lab">
-        <h3 style="margin-top:0">Laboratoire vectoriel</h3>
-        <p style="color:var(--muted)">Les vecteurs ci-dessous sont volontairement en 3 dimensions pour être manipulables. Les embeddings réels sont généralement de dimension bien supérieure.</p>
-        <div class="vector-controls">
-          <div class="field"><label>Vecteur A</label><div class="vector-inputs"><input id="a1" type="number" step="0.1" value="0.9"><input id="a2" type="number" step="0.1" value="0.8"><input id="a3" type="number" step="0.1" value="0.1"></div></div>
-          <div class="field"><label>Vecteur B</label><div class="vector-inputs"><input id="b1" type="number" step="0.1" value="0.85"><input id="b2" type="number" step="0.1" value="0.75"><input id="b3" type="number" step="0.1" value="0.2"></div></div>
-          <div class="result-card"><div class="score" id="cosScore">0.000</div><div>cosinus</div></div>
-        </div>
-        <div class="formula" id="cosFormula"></div>
-        <div class="example-pairs"><button class="small-btn vectorPreset" data-a="0.9,0.8,0.1" data-b="0.85,0.75,0.2" type="button">chat / félin</button><button class="small-btn vectorPreset" data-a="0.9,0.8,0.1" data-b="0.1,0.2,0.9" type="button">chat / base de données</button><button class="small-btn vectorPreset" data-a="0.8,0.7,0.4" data-b="0.78,0.69,0.42" type="button">« j’aime » / « je n’aime pas »</button></div>
-        <div class="trainer-only"><b>Question difficile.</b> « 0,90 = 90 % de même sens ? » Réponse : non. Le cosinus est une relation géométrique dans un espace donné ; sa calibration dépend du modèle et de la tâche.</div>
-      </div>
-      <div class="panel panel-pad">
-        <h3 style="margin-top:0">Trois distinctions à verrouiller</h3>
-        <div class="notice" style="margin-bottom:10px"><strong>ID de token ≠ embedding</strong>L’ID est un index discret. L’embedding est un vecteur utilisé dans les calculs.</div>
-        <div class="notice" style="margin-bottom:10px"><strong>Embedding de token ≠ embedding de phrase</strong>Un modèle peut représenter les tokens en entrée et un autre système produire un seul vecteur pour une phrase ou un document.</div>
-        <div class="notice warn"><strong>Similarité ≠ vérité</strong>Deux textes peuvent être proches vectoriellement et pourtant différer sur une négation, un nombre ou un fait décisif.</div>
-      </div>
-    </div>
-  </section>
+<section class="section" data-pedagogy="definition" id="definitions">
+<div class="section-head"><div class="section-num">02</div><div><h2>Les 12 notions, définies avant manipulation</h2><p>Chaque notion contient aussi sa limite d’interprétation.</p></div></div>
+<div class="gloss">
+<article class="term"><span class="id">Notion 01</span><span hidden data-ref="B01"></span><h3>Corpus</h3><p>Ensemble de textes ou données utilisés pour entraîner, adapter ou évaluer un système.</p><div class="limit"><b>Limite :</b> le corpus n’est pas la conversation courante.</div></article>
+<article class="term"><span class="id">Notion 02</span><span hidden data-ref="B02"></span><h3>Token</h3><p>Unité discrète produite par un tokenizer. Elle peut être un mot, un morceau de mot, un signe ou autre unité définie par le tokenizer.</p><div class="limit"><b>Piège :</b> token ≠ mot.</div></article>
+<article class="term"><span class="id">Notion 03</span><span hidden data-ref="B03"></span><h3>Tokenisation</h3><p>Transformation d’un texte en séquence de tokens selon des règles ou un vocabulaire déterminés.</p><div class="limit"><b>Piège :</b> il n’existe pas une tokenisation universelle.</div></article>
+<article class="term"><span class="id">Notion 04</span><span hidden data-ref="B04"></span><h3>Vocabulaire</h3><p>Ensemble des tokens que le tokenizer peut représenter directement.</p><div class="limit"><b>Piège :</b> le vocabulaire du tokenizer n’est pas un dictionnaire de définitions.</div></article>
+<article class="term"><span class="id">Notion 05</span><span hidden data-ref="B05"></span><h3>Sous-mot / BPE</h3><p>Stratégie de découpage qui combine petites unités en fragments fréquents afin de limiter le vocabulaire tout en représentant les mots rares.</p><div class="limit"><b>Nuance :</b> BPE est une famille de méthodes, pas le seul tokenizer possible.</div></article>
+<article class="term"><span class="id">Notion 06</span><span hidden data-ref="B06"></span><h3>Token ID</h3><p>Entier servant d’index pour identifier un token dans le vocabulaire.</p><div class="limit"><b>Piège :</b> un ID plus grand n’a pas « plus de sens ».</div></article>
+<article class="term"><span class="id">Notion 07</span><span hidden data-ref="B07"></span><h3>Token spécial</h3><p>Token réservé à une fonction de contrôle ou de structure : début, fin, séparation, padding, etc., selon l’architecture.</p><div class="limit"><b>Nuance :</b> la liste dépend du modèle.</div></article>
+<article class="term"><span class="id">Notion 08</span><span hidden data-ref="B08"></span><h3>Embedding</h3><p>Vecteur numérique associé à une unité afin que le réseau puisse effectuer des calculs continus.</p><div class="limit"><b>Piège :</b> un embedding n’est pas une phrase de définition cachée.</div></article>
+<article class="term"><span class="id">Notion 09</span><span hidden data-ref="B09"></span><h3>Espace vectoriel</h3><p>Espace mathématique dans lequel les représentations sont des vecteurs et où l’on peut mesurer certaines relations géométriques.</p><div class="limit"><b>Piège :</b> proximité géométrique ≠ vérité.</div></article>
+<article class="term"><span class="id">Notion 10</span><span hidden data-ref="B10"></span><h3>Embedding sémantique</h3><p>Représentation d’un mot, d’une phrase ou d’un document optimisée pour capter des régularités utiles, notamment sémantiques.</p><div class="limit"><b>Nuance :</b> à distinguer de l’embedding initial d’un token dans un LLM.</div></article>
+<article class="term"><span class="id">Notion 11</span><span hidden data-ref="B11"></span><h3>Similarité cosinus</h3><p>Mesure de l’angle entre deux vecteurs, souvent utilisée pour comparer des représentations.</p><div class="limit"><b>Piège :</b> 0,9 ne signifie pas « 90 % de même sens ».</div></article>
+<article class="term"><span class="id">Notion 12</span><span hidden data-ref="B12"></span><h3>Fenêtre de contexte</h3><p>Quantité bornée de tokens accessibles au modèle pour un traitement donné.</p><div class="limit"><b>Piège :</b> contexte ≠ mémoire applicative ≠ paramètres.</div></article>
+</div>
+</section>
 
-  <section class="section" id="contexte">
-    <div class="section-head"><div class="section-num">04</div><div><h2>Fenêtre de contexte : un budget, pas une mémoire magique</h2><p>Visualiser comment instructions, message courant et réponse se partagent un espace limité.</p></div></div>
-    <div class="panel context-lab">
-      <div class="budget-grid">
-        <div>
-          <div class="field"><label for="budgetTotal">Budget total simulé</label><div class="range-row"><input id="budgetTotal" type="range" min="32" max="256" step="8" value="96"><output id="budgetTotalOut">96</output></div></div>
-          <div class="field"><label for="systemBudget">Instructions système</label><div class="range-row"><input id="systemBudget" type="range" min="0" max="48" step="2" value="12"><output id="systemBudgetOut">12</output></div></div>
-          <div class="field"><label for="responseBudget">Réponse réservée</label><div class="range-row"><input id="responseBudget" type="range" min="8" max="96" step="4" value="24"><output id="responseBudgetOut">24</output></div></div>
-        </div>
-        <div>
-          <h3 style="margin-top:0">Répartition</h3>
-          <div class="budget-stack" id="budgetStack" aria-label="Répartition du budget de contexte"></div>
-          <p id="budgetMessage" style="margin-bottom:8px"></p>
-          <p style="color:var(--muted);font-size:.85rem">Le message utilisateur réutilise le nombre de tokens du Tokenizer Lab ci-dessus. Les produits réels peuvent compter et répartir les tokens différemment.</p>
-          <div class="trainer-only"><b>Question à lancer.</b> « Si une application conserve les anciens échanges dans une base de données, est-ce la même chose que la fenêtre de contexte ? » Attendu : non ; la mémoire applicative doit être réinjectée ou résumée pour devenir du contexte exploitable par le modèle.</div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="section" data-pedagogy="worked-example" id="exemple">
+<div class="section-head"><div class="section-num">03</div><div><h2>Exemple travaillé — « Bonjour modèle ! »</h2><p>Suivez chaque transformation avant de toucher aux curseurs.</p></div></div>
+<div class="panel steps">
+<div class="step"><div class="n">1</div><div><h3>Texte brut</h3><p>L’application reçoit la chaîne Unicode <code>Bonjour modèle !</code>.</p><div class="calc">entrée = "Bonjour modèle !"</div></div></div>
+<div class="step"><div class="n">2</div><div><h3>Tokenisation fictive</h3><p>Supposons qu’un tokenizer didactique produise quatre unités : <code>bonjour</code>, <code>mod</code>, <code>èle</code>, <code>!</code>.</p><div class="calc">["bonjour", "mod", "èle", "!"]</div></div></div>
+<div class="step"><div class="n">3</div><div><h3>IDs</h3><p>Le vocabulaire associe un entier à chaque token. Ces nombres servent d’indices.</p><div class="calc">[7312, 1842, 9021, 17]</div></div></div>
+<div class="step"><div class="n">4</div><div><h3>Embeddings initiaux</h3><p>Chaque ID permet de sélectionner un vecteur appris. Nous montrons seulement 3 dimensions fictives alors qu’un vrai modèle en utilise bien davantage.</p><div class="calc">7312 → [0.42, -0.10, 0.77] · 1842 → [-0.22, 0.63, 0.18] …</div></div></div>
+<div class="step"><div class="n">5</div><div><h3>Contexte</h3><p>Les quatre positions entrent dans la séquence accessible au Transformer, avec d’éventuels tokens système et autres messages.</p><div class="calc">contexte = tokens système + message utilisateur + place réservée à la réponse</div></div></div>
+<div class="step"><div class="n">6</div><div><h3>Ce qui n’a PAS encore eu lieu</h3><p>À ce stade, l’embedding initial de <code>mod</code> n’a pas encore été contextualisé par les autres tokens. C’est le Transformer qui effectuera cette transformation dans l’étape suivante.</p><div class="calc">embedding initial ≠ représentation contextualisée finale</div></div></div>
+</div>
+</section>
 
-  <section class="section" id="concepts">
-    <div class="section-head"><div class="section-num">05</div><div><h2>Les 12 notions de cette étape</h2><p>Chaque carte contient la formulation minimale à savoir défendre face à un participant.</p></div></div>
-    <div class="concepts">
-      <article class="concept-card"><div class="id">Notion 01</div><span hidden data-ref="B01"></span><h3>Corpus d’entraînement</h3><p>Ensemble de données utilisées pendant l’apprentissage. Le corpus n’est pas la mémoire de contexte d’une conversation.</p><div class="misconception"><b>Piège :</b> croire que le modèle consulte directement ses documents d’entraînement lors de chaque réponse.</div></article>
-      <article class="concept-card"><div class="id">Notion 02</div><span hidden data-ref="B02"></span><h3>Token</h3><p>Unité discrète du vocabulaire du tokenizer : mot, sous-mot, signe, espace encodé, octet ou marqueur spécial.</p><div class="misconception"><b>Piège :</b> « token = mot ».</div></article>
-      <article class="concept-card"><div class="id">Notion 03</div><span hidden data-ref="B03"></span><h3>Tokenisation</h3><p>Transformation d’une entrée en séquence de tokens selon les règles d’un tokenizer donné.</p><div class="misconception"><b>Piège :</b> croire à un simple découpage sur les espaces.</div></article>
-      <article class="concept-card"><div class="id">Notion 04</div><span hidden data-ref="B04"></span><h3>Vocabulaire</h3><p>Ensemble fini d’unités que le tokenizer sait associer à des identifiants.</p><div class="misconception"><b>Piège :</b> confondre vocabulaire et connaissances.</div></article>
-      <article class="concept-card"><div class="id">Notion 05</div><span hidden data-ref="B05"></span><h3>Sous-mots / BPE</h3><p>Famille d’approches qui compose des unités fréquentes afin d’éviter un vocabulaire contenant tous les mots possibles.</p><div class="misconception"><b>Piège :</b> présenter BPE comme l’unique tokenizer moderne.</div></article>
-      <article class="concept-card"><div class="id">Notion 06</div><span hidden data-ref="B06"></span><h3>ID de token</h3><p>Entier servant d’index. Sa proximité numérique n’implique aucune proximité de sens.</p><div class="misconception"><b>Piège :</b> interpréter la valeur de l’ID.</div></article>
-      <article class="concept-card"><div class="id">Notion 07</div><span hidden data-ref="B07"></span><h3>Token spécial</h3><p>Unité réservée à une fonction de structure : rôle, séparation, début/fin, remplissage… selon le modèle.</p><div class="misconception"><b>Piège :</b> supposer que tous les modèles utilisent les mêmes marqueurs.</div></article>
-      <article class="concept-card"><div class="id">Notion 08</div><span hidden data-ref="B08"></span><h3>Embedding</h3><p>Vecteur représentant une unité ou un objet pour permettre les calculs neuronaux.</p><div class="misconception"><b>Piège :</b> réduire l’embedding à « l’ID avec plusieurs nombres ».</div></article>
-      <article class="concept-card"><div class="id">Notion 09</div><span hidden data-ref="B09"></span><h3>Espace vectoriel</h3><p>Espace mathématique de grande dimension où distances, angles et voisinages peuvent être étudiés.</p><div class="misconception"><b>Piège :</b> prendre une projection 2D pour une carte fidèle de l’espace réel.</div></article>
-      <article class="concept-card"><div class="id">Notion 10</div><span hidden data-ref="B10"></span><h3>Embedding sémantique</h3><p>Vecteur conçu pour rapprocher des textes semblables selon une notion apprise de similarité.</p><div class="misconception"><b>Piège :</b> parler d’une représentation parfaite du sens.</div></article>
-      <article class="concept-card"><div class="id">Notion 11</div><span hidden data-ref="B11"></span><h3>Similarité cosinus</h3><p>Mesure fondée sur l’angle entre deux vecteurs. Utile pour comparer des embeddings.</p><div class="misconception"><b>Piège :</b> lire le score comme un pourcentage de vérité.</div></article>
-      <article class="concept-card"><div class="id">Notion 12</div><span hidden data-ref="B12"></span><h3>Fenêtre de contexte</h3><p>Budget de séquence disponible pour le traitement courant, généralement exprimé en tokens.</p><div class="misconception"><b>Piège :</b> confondre grande fenêtre et mémoire parfaite.</div></article>
-    </div>
-  </section>
+<section class="section" data-pedagogy="guided-practice" id="tokenizer">
+<div class="section-head"><div class="section-num">04</div><div><h2>Tokenizer Lab — prédire, manipuler, expliquer</h2><p>Avant chaque essai, prédisez : « ce texte produira-t-il plus ou moins de tokens ? » Puis observez.</p></div></div>
+<div class="panel lab">
+<div class="lab-head"><h3>Tokenizer Lab</h3><span class="badge">Simulation pédagogique locale</span></div>
+<div class="lab-grid">
+<div class="lab-input">
+<div class="field"><label for="labText">Texte</label><textarea id="labText">Bonjour modèle ! Les tokenizers découpent le texte.</textarea></div>
+<div class="field"><label for="tokenMode">Mode didactique</label><select id="tokenMode"><option value="subword">Sous-mots simplifiés</option><option value="word">Mots / ponctuation</option><option value="byte">Octets UTF-8</option></select></div>
+<div class="field"><label for="contextSize">Fenêtre simulée</label><div class="range-row"><input id="contextSize" type="range" min="8" max="80" value="32"><output id="contextSizeOut">32 tokens</output></div></div>
+<div class="notice"><strong>À observer.</strong> Changez « extraordinaire » en un mot rare ou ajoutez des emojis. Le nombre de caractères et le nombre de tokens n’évoluent pas forcément de la même manière.</div>
+<div class="trainer-only" style="margin-top:10px"><b>Question.</b> Pourquoi ne peut-on pas estimer exactement les tokens d’un modèle commercial sans connaître son tokenizer ?</div>
+</div>
+<div class="lab-output">
+<div class="kpis"><div class="kpi"><div class="v" id="charCount">0</div><div class="l">caractères</div></div><div class="kpi"><div class="v" id="tokenCount">0</div><div class="l">tokens</div></div><div class="kpi"><div class="v" id="uniqueCount">0</div><div class="l">uniques</div></div><div class="kpi"><div class="v" id="byteCount">0</div><div class="l">octets UTF-8</div></div></div>
+<div class="tokens" id="tokenList"></div><p class="muted" id="tokenHint"></p>
+<div class="meter"><span class="used" id="contextUsed"></span><span class="over" id="contextOver"></span></div><div class="meter-labels"><span id="contextLabel"></span><span id="contextStatus"></span></div>
+</div>
+</div>
+</div>
+</section>
 
-  <section class="section" id="quiz">
-    <div class="section-head"><div class="section-num">06</div><div><h2>Test de maîtrise</h2><p>Objectif : être capable de corriger les simplifications trompeuses, pas seulement de réciter les définitions.</p></div></div>
-    <form class="quiz" id="quizForm">
-      <fieldset class="q" data-answer="b"><legend>1. Un token est…</legend><label><input type="radio" name="q1" value="a"> toujours un mot entier.</label><label><input type="radio" name="q1" value="b"> une unité du vocabulaire d’un tokenizer.</label><label><input type="radio" name="q1" value="c"> un vecteur de nombres.</label><div class="feedback">Un token est une unité discrète définie par le tokenizer ; il peut être un sous-mot, un signe, etc.</div></fieldset>
-      <fieldset class="q" data-answer="c"><legend>2. Deux IDs de tokens 1200 et 1201…</legend><label><input type="radio" name="q2" value="a"> sont forcément proches sémantiquement.</label><label><input type="radio" name="q2" value="b"> ont des embeddings presque identiques.</label><label><input type="radio" name="q2" value="c"> n’ont pas de proximité sémantique déductible de leurs valeurs.</label><div class="feedback">L’ID sert d’index ; sa valeur numérique n’est pas une coordonnée sémantique.</div></fieldset>
-      <fieldset class="q" data-answer="a"><legend>3. Un embedding de token est…</legend><label><input type="radio" name="q3" value="a"> un vecteur associé à une unité discrète pour les calculs.</label><label><input type="radio" name="q3" value="b"> le texte original compressé sans perte.</label><label><input type="radio" name="q3" value="c"> la fenêtre de contexte.</label><div class="feedback">L’embedding fournit une représentation vectorielle utilisable par le réseau.</div></fieldset>
-      <fieldset class="q" data-answer="b"><legend>4. Une similarité cosinus de 0,92 signifie…</legend><label><input type="radio" name="q4" value="a"> 92 % de vérité identique.</label><label><input type="radio" name="q4" value="b"> une forte proximité angulaire dans cet espace vectoriel.</label><label><input type="radio" name="q4" value="c"> que les deux textes ont le même nombre de tokens.</label><div class="feedback">Le cosinus est géométrique ; il n’est ni une probabilité ni un certificat de vérité.</div></fieldset>
-      <fieldset class="q" data-answer="c"><legend>5. Une fenêtre de contexte plus grande garantit…</legend><label><input type="radio" name="q5" value="a"> une mémoire permanente.</label><label><input type="radio" name="q5" value="b"> une réponse toujours meilleure.</label><label><input type="radio" name="q5" value="c"> seulement la possibilité d’inclure davantage de séquence, pas son exploitation parfaite.</label><div class="feedback">Capacité d’entrée et qualité d’utilisation de l’information sont deux questions différentes.</div></fieldset>
-      <fieldset class="q" data-answer="b"><legend>6. BPE est…</legend><label><input type="radio" name="q6" value="a"> le tokenizer universel de tous les LLM.</label><label><input type="radio" name="q6" value="b"> une famille historique importante de tokenisation en sous-mots parmi d’autres.</label><label><input type="radio" name="q6" value="c"> une méthode de calcul de similarité.</label><div class="feedback">Il existe d’autres familles et de nombreuses variantes ; il faut parler du tokenizer concret du modèle étudié.</div></fieldset>
-      <fieldset class="q" data-answer="a"><legend>7. La mémoire d’une application de chat…</legend><label><input type="radio" name="q7" value="a"> est distincte de la fenêtre de contexte et doit être réinjectée pour influencer le traitement courant.</label><label><input type="radio" name="q7" value="b"> est automatiquement stockée dans les poids du modèle.</label><label><input type="radio" name="q7" value="c"> est exactement la même chose que les tokens spéciaux.</label><div class="feedback">Une mémoire applicative peut être stockée ailleurs puis sélectionnée, résumée ou réinjectée.</div></fieldset>
-      <fieldset class="q" data-answer="c"><legend>8. Dans ce laboratoire, les embeddings affichés sont…</legend><label><input type="radio" name="q8" value="a"> ceux d’un modèle commercial actuel.</label><label><input type="radio" name="q8" value="b"> issus d’une API distante.</label><label><input type="radio" name="q8" value="c"> des vecteurs didactiques déterministes, explicitement fictifs.</label><div class="feedback">Le laboratoire est volontairement autonome et distingue simulation pédagogique et comportement d’un modèle réel.</div></fieldset>
-      <div class="quiz-actions"><button class="primary" type="submit">Corriger le test</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="score-box" id="quizScore" aria-live="polite"></span></div>
-    </form>
-  </section>
+<section class="section" data-pedagogy="completion" id="completer">
+<div class="section-head"><div class="section-num">05</div><div><h2>Je complète le pipeline</h2><p>L’aide diminue : choisissez l’objet correct à chaque étape.</p></div></div>
+<div class="panel completion">
+<div class="completion-row"><strong>« chat »</strong><span class="arrow">→</span><select data-answer="token"><option value="">Quel objet ?</option><option value="token">Token possible</option><option value="id">ID</option><option value="embedding">Embedding</option></select></div>
+<div class="completion-row"><strong>4317</strong><span class="arrow">→</span><select data-answer="id"><option value="">Quel objet ?</option><option value="token">Token</option><option value="id">ID de token</option><option value="context">Contexte</option></select></div>
+<div class="completion-row"><strong>[0.41, -0.09, 0.72, …]</strong><span class="arrow">→</span><select data-answer="embedding"><option value="">Quel objet ?</option><option value="id">ID</option><option value="embedding">Vecteur / embedding</option><option value="word">Mot brut</option></select></div>
+<div class="completion-row"><strong>séquence accessible au calcul courant</strong><span class="arrow">→</span><select data-answer="context"><option value="">Quel objet ?</option><option value="context">Fenêtre de contexte</option><option value="memory">Poids du modèle</option><option value="token">Token unique</option></select></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback"></div>
+</div>
+</section>
 
-  <section class="section" id="sources">
-    <div class="section-head"><div class="section-num">07</div><div><h2>Références du référentiel</h2><p>Le laboratoire est pédagogique ; les définitions s’appuient sur les sources académiques enregistrées dans la base Formation LLM.</p></div></div>
-    <div class="refs">
-      <div class="ref"><b>SRC-0003</b> — Jurafsky & Martin, <em>Speech and Language Processing</em> — TAL, modèles de langage, tokenisation.</div>
-      <div class="ref"><b>SRC-0010</b> — Sennrich, Haddow & Birch, <em>Neural Machine Translation of Rare Words with Subword Units</em> — unités sous-mots et BPE.</div>
-      <div class="ref"><b>SRC-0011</b> — Mikolov et al., <em>Efficient Estimation of Word Representations in Vector Space</em> — représentations vectorielles distribuées.</div>
-      <div class="ref"><b>SRC-0012</b> — Vaswani et al., <em>Attention Is All You Need</em> — représentations d’entrée et séquences du Transformer.</div>
-      <div class="ref"><b>SRC-0013</b> — Reimers & Gurevych, <em>Sentence-BERT</em> — embeddings de phrases et similarité sémantique.</div>
-    </div>
-  </section>
+<section class="section" id="embeddings">
+<div class="section-head"><div class="section-num">06</div><div><h2>Embedding & cosinus — de l’intuition au calcul</h2><p>Pourquoi représenter une unité par un vecteur et que signifie réellement une similarité élevée ?</p></div></div>
+<div class="grid2">
+<div class="panel">
+<div class="intuition"><strong>Intuition</strong>Un ID est seulement une étiquette. Si « chat » a l’ID 4317 et « chien » 201, la différence numérique entre 4317 et 201 ne dit rien de leur relation. Il faut une représentation sur laquelle le réseau peut calculer : un vecteur.</div>
+<div class="definition" style="margin-top:10px"><strong>Similarité cosinus</strong>Elle compare l’orientation de deux vecteurs. Pour des vecteurs A et B : <code>cos(A,B) = (A·B) / (||A|| × ||B||)</code>.</div>
+<div class="steps" style="margin-top:12px">
+<div class="step"><div class="n">1</div><div><h3>Produit scalaire</h3><p>Multiplier les composantes correspondantes puis additionner.</p><div class="calc">A=[1,0,1], B=[1,1,0] → A·B = 1</div></div></div>
+<div class="step"><div class="n">2</div><div><h3>Normes</h3><p>Calculer la longueur de chaque vecteur.</p><div class="calc">||A||=√2 · ||B||=√2</div></div></div>
+<div class="step"><div class="n">3</div><div><h3>Division</h3><p>Diviser le produit scalaire par le produit des normes.</p><div class="calc">cos = 1 / 2 = 0,5</div></div></div>
+</div>
+</div>
+<div class="panel">
+<div class="vector-grid">
+<div><strong>Vecteur A</strong><div class="vector-controls"><input id="a1" type="number" step=".1" value="1"><input id="a2" type="number" step=".1" value="0"><input id="a3" type="number" step=".1" value="1"></div></div>
+<div><strong>Vecteur B</strong><div class="vector-controls"><input id="b1" type="number" step=".1" value="1"><input id="b2" type="number" step=".1" value="1"><input id="b3" type="number" step=".1" value="0"></div></div>
+</div>
+<div style="margin-top:16px"><div class="score" id="cosScore">0.500</div><div class="formula" id="cosFormula"></div><div class="bar"><i id="cosBar"></i></div></div>
+<div class="notice" style="margin-top:12px"><strong>Interprétation prudente.</strong> Une similarité de 0,90 ne signifie ni « 90 % de même sens », ni « 90 % de vérité ». C’est une relation géométrique dans l’espace de représentation choisi.</div>
+</div>
+</div>
+</section>
 
-  <nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-a.html">← Parcours 0</a><div class="center">Avant C : token ≠ mot · ID ≠ embedding · contexte ≠ mémoire applicative.</div><a href="domaine-c.html">Étape 2 · Transformer →</a></nav>
-<footer class="footer">Formation LLM · Parcours 1 · Version pédagogique 1.0 · Simulation locale sans API ni collecte de données.</footer>
+<section class="section" id="contexte">
+<div class="section-head"><div class="section-num">07</div><div><h2>Context Lab — la place est limitée</h2><p>La fenêtre de contexte est un budget de tokens pour le traitement courant.</p></div></div>
+<div class="grid2">
+<div class="panel">
+<div class="intuition"><strong>Intuition</strong>Imaginez une table de travail : vous pouvez poser des documents dessus, mais sa surface est limitée. Un système peut posséder d’autres documents dans une armoire — mémoire ou base externe — sans qu’ils soient actuellement sur la table.</div>
+<p><strong>Fenêtre de contexte :</strong> ce qui est accessible au calcul courant. <strong>Mémoire applicative :</strong> données stockées ailleurs que l’application peut choisir de réinjecter. <strong>Paramètres :</strong> poids appris du modèle.</p>
+<div class="notice"><strong>Trois objets différents.</strong> Une information absente du contexte courant peut éventuellement être récupérée depuis une mémoire externe ; cela ne signifie pas qu’elle a été ajoutée aux paramètres.</div>
+</div>
+<div class="panel">
+<div class="field"><label for="budgetTotal">Budget total simulé</label><div class="range-row"><input id="budgetTotal" type="range" min="32" max="160" value="96"><output id="budgetTotalOut">96</output></div></div>
+<div class="field"><label for="systemBudget">Instructions système</label><div class="range-row"><input id="systemBudget" type="range" min="0" max="40" value="16"><output id="systemBudgetOut">16</output></div></div>
+<div class="field"><label for="responseBudget">Réponse réservée</label><div class="range-row"><input id="responseBudget" type="range" min="8" max="60" value="24"><output id="responseBudgetOut">24</output></div></div>
+<div class="meter" id="budgetStack"><span class="used" id="budgetUsed"></span><span class="over" id="budgetOverflow"></span></div><div class="meter-labels"><span id="budgetMessage"></span><span id="budgetCount"></span></div>
+</div>
+</div>
+</section>
+
+<section class="section" data-pedagogy="misconception" id="pieges">
+<div class="section-head"><div class="section-num">08</div><div><h2>Les cinq confusions qui bloquent la suite</h2><p>Si elles restent floues, l’attention et le RAG seront presque impossibles à comprendre correctement.</p></div></div>
+<div class="misgrid">
+<article class="mis"><div class="wrong">« 1 token = 1 mot »</div><p>Certains mots correspondent à un token, d’autres à plusieurs ; espaces et ponctuation peuvent aussi compter.</p><div class="right">Correction : le token dépend du tokenizer.</div></article>
+<article class="mis"><div class="wrong">« L’ID contient le sens »</div><p>Un ID est un index discret. Sa valeur numérique ne code pas directement la proximité sémantique.</p><div class="right">Correction : c’est le vecteur associé qui entre dans les calculs continus.</div></article>
+<article class="mis"><div class="wrong">« L’embedding est une définition »</div><p>Un vecteur encode des régularités apprises, pas une phrase cachée du dictionnaire.</p><div class="right">Correction : il matérialise une représentation numérique utile au modèle.</div></article>
+<article class="mis"><div class="wrong">« Cosinus 0,9 = 90 % même sens »</div><p>Le cosinus est une mesure géométrique dépendant de l’espace et de la tâche.</p><div class="right">Correction : proximité géométrique ≠ pourcentage de vérité ou d’identité.</div></article>
+<article class="mis"><div class="wrong">« Contexte = mémoire du chatbot »</div><p>La mémoire peut être stockée hors contexte puis réinjectée.</p><div class="right">Correction : contexte courant, mémoire applicative et paramètres sont distincts.</div></article>
+</div>
+</section>
+
+<section class="section" data-pedagogy="self-explanation" id="expliquer">
+<div class="section-head"><div class="section-num">09</div><div><h2>Expliquez le pipeline avec vos mots</h2><p>Vous devez pouvoir reconstruire la chaîne sans regarder le schéma.</p></div></div>
+<div class="panel selfbox"><label for="explain"><strong>Consigne.</strong> Expliquez à un collègue pourquoi un LLM ne travaille pas directement avec le mot « chat » comme vous le voyez à l’écran. Faites apparaître token, ID, embedding et contexte.</label><textarea id="explain" placeholder="Votre explication…"></textarea><div class="criteria"><label><input type="checkbox"> J’ai distingué token et mot.</label><label><input type="checkbox"> J’ai décrit l’ID comme un index.</label><label><input type="checkbox"> J’ai expliqué qu’un embedding est un vecteur.</label><label><input type="checkbox"> J’ai précisé que le Transformer contextualisera ensuite ces représentations.</label></div></div>
+</section>
+
+<section class="section" data-pedagogy="retrieval" id="quiz">
+<div class="section-head"><div class="section-num">10</div><div><h2>Test de maîtrise</h2><p>Répondez sans remonter la page. Le feedback explique le raisonnement.</p></div></div>
+<form class="quiz" id="quizForm">
+<fieldset class="q" data-answer="b"><legend>1. Un token est…</legend><label><input type="radio" name="q1" value="a"> toujours un mot complet.</label><label><input type="radio" name="q1" value="b"> une unité définie par un tokenizer.</label><label><input type="radio" name="q1" value="c"> un vecteur sémantique.</label><div class="feedback" data-pedagogy="feedback"><b>Pourquoi ?</b> La segmentation dépend du tokenizer et peut produire mots, sous-mots ou autres unités.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. Le token ID 5000 est-il « plus sémantique » que l’ID 200 ?</legend><label><input type="radio" name="q2" value="a"> Oui.</label><label><input type="radio" name="q2" value="b"> Seulement pour les noms propres.</label><label><input type="radio" name="q2" value="c"> Non, ce sont des indices.</label><div class="feedback">La magnitude de l’ID n’a pas cette interprétation.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>3. L’embedding initial d’un token…</legend><label><input type="radio" name="q3" value="a"> est un vecteur avant contextualisation par le Transformer.</label><label><input type="radio" name="q3" value="b"> contient déjà toute la phrase.</label><label><input type="radio" name="q3" value="c"> est l’ID écrit en décimal.</label><div class="feedback">Le contexte modifie ensuite la représentation au fil des blocs du Transformer.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>4. Une similarité cosinus de 0,92 permet de conclure que…</legend><label><input type="radio" name="q4" value="a"> les deux phrases sont vraies à 92 %.</label><label><input type="radio" name="q4" value="b"> les deux vecteurs sont fortement alignés dans cet espace.</label><label><input type="radio" name="q4" value="c"> les phrases sont identiques.</label><div class="feedback">Le cosinus mesure une relation géométrique, pas un pourcentage de vérité.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Une information stockée dans une mémoire applicative…</legend><label><input type="radio" name="q5" value="a"> modifie automatiquement les poids du LLM.</label><label><input type="radio" name="q5" value="b"> est toujours dans la fenêtre de contexte.</label><label><input type="radio" name="q5" value="c"> doit être réinjectée pour influencer le calcul courant.</label><div class="feedback">Stockage externe et contexte courant sont deux étapes distinctes.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>6. Pourquoi utiliser des sous-mots ?</legend><label><input type="radio" name="q6" value="a"> Pour équilibrer taille du vocabulaire et capacité à représenter des mots rares.</label><label><input type="radio" name="q6" value="b"> Pour garantir un token par phrase.</label><label><input type="radio" name="q6" value="c"> Pour stocker des définitions.</label><div class="feedback">Le compromis sous-mot évite à la fois un vocabulaire de mots gigantesque et des séquences entièrement caractère par caractère.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>7. La fenêtre de contexte…</legend><label><input type="radio" name="q7" value="a"> est illimitée si l’application possède une mémoire.</label><label><input type="radio" name="q7" value="b"> borne les tokens accessibles au calcul courant.</label><label><input type="radio" name="q7" value="c"> contient les paramètres appris.</label><div class="feedback">Une mémoire externe peut aider l’application à choisir quoi réinjecter, mais elle ne rend pas la fenêtre infinie.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>8. Les embeddings affichés dans ce lab sont…</legend><label><input type="radio" name="q8" value="a"> ceux d’un modèle commercial.</label><label><input type="radio" name="q8" value="b"> récupérés depuis une API.</label><label><input type="radio" name="q8" value="c"> des représentations didactiques fictives.</label><div class="feedback">Le lab enseigne les transformations sans prétendre reproduire les poids d’un modèle réel.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div>
+</form>
+</section>
+
+<section class="section" data-pedagogy="transfer" id="transfert">
+<div class="section-head"><div class="section-num">11</div><div><h2>Transfert — trois situations nouvelles</h2><p>Reconnaissez la structure sans reprendre les exemples du cours.</p></div></div>
+<div class="transfer">
+<article class="transfer-card" data-answer="tokens"><h3>Code Python</h3><p>Le texte <code>ma_variable += 1</code> est envoyé à un LLM.</p><label>Quelle affirmation est la plus sûre ?</label><select><option value="">Choisir…</option><option value="words">Il y aura exactement 3 tokens.</option><option value="tokens">Le découpage dépendra du tokenizer.</option><option value="chars">Chaque caractère sera forcément un token.</option></select><div class="transfer-feedback">Un tokenizer peut segmenter identifiants et opérateurs de façons différentes ; le nombre exact n’est pas déductible sans connaître le tokenizer.</div></article>
+<article class="transfer-card" data-answer="context"><h3>Conversation très longue</h3><p>Un assistant possède un historique externe de 200 pages mais une fenêtre de contexte limitée.</p><label>Que doit faire l’application ?</label><select><option value="">Choisir…</option><option value="weights">Réentraîner les poids à chaque tour.</option><option value="context">Sélectionner, résumer ou récupérer ce qui doit être réinjecté.</option><option value="ignore">Tout mettre automatiquement dans le contexte.</option></select><div class="transfer-feedback">Une mémoire externe doit être transformée en contexte utile et compatible avec le budget.</div></article>
+<article class="transfer-card" data-answer="geometry"><h3>Recherche sémantique</h3><p>Deux passages ont une similarité cosinus élevée.</p><label>Que peut-on conclure ?</label><select><option value="">Choisir…</option><option value="truth">Ils sont vrais.</option><option value="same">Ils veulent exactement dire la même chose.</option><option value="geometry">Leurs vecteurs sont proches selon cette représentation.</option></select><div class="transfer-feedback">La proximité est un signal utile de représentation ; elle n’établit ni identité ni vérité.</div></article>
+</div>
+<div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div>
+</section>
+
+<section class="section" data-pedagogy="recap" id="synthese">
+<div class="section-head"><div class="section-num">12</div><div><h2>À retenir avant l’attention</h2><p>Sept idées suffisent pour entrer proprement dans le Transformer.</p></div></div>
+<div class="recap">
+<article><b>1. Token ≠ mot.</b><p>Le tokenizer choisit les unités selon son vocabulaire et sa méthode.</p></article>
+<article><b>2. ID ≠ sens.</b><p>L’ID sert d’index ; sa valeur numérique n’est pas une coordonnée sémantique.</p></article>
+<article><b>3. Embedding = vecteur.</b><p>Il fournit une représentation numérique sur laquelle le réseau peut calculer.</p></article>
+<article><b>4. Embedding initial ≠ représentation contextualisée.</b><p>Le Transformer va utiliser les autres tokens accessibles pour transformer cette représentation.</p></article>
+<article><b>5. Cosinus ≠ vérité.</b><p>Il mesure un alignement géométrique dans un espace donné.</p></article>
+<article><b>6. Contexte ≠ mémoire.</b><p>La mémoire externe doit être sélectionnée ou réinjectée pour influencer le calcul courant.</p></article>
+<article><b>7. Le budget compte.</b><p>Instructions, question, documents et réponse future consomment tous des tokens.</p></article>
+</div>
+<div class="intuition" style="margin-top:14px"><strong>Pont vers l’étape 2.</strong> Nous avons maintenant des vecteurs pour chaque position. Reste la question centrale : <em>comment le token « avocat » peut-il être interprété différemment selon qu’il rencontre « tribunal » ou « citron » ?</em> C’est le rôle de l’attention et de la contextualisation.</div>
+</section>
+
+<section class="section" id="sources">
+<div class="section-head"><div class="section-num">13</div><div><h2>Références</h2></div></div>
+<div class="refs"><div class="ref"><b>SRC-0003</b> — Jurafsky & Martin, <em>Speech and Language Processing</em>.</div><div class="ref"><b>SRC-0010</b> — Sennrich, Haddow & Birch, <em>Neural Machine Translation of Rare Words with Subword Units</em>.</div><div class="ref"><b>SRC-0011</b> — Mikolov et al., <em>Efficient Estimation of Word Representations in Vector Space</em>.</div><div class="ref"><b>SRC-0012</b> — Vaswani et al., <em>Attention Is All You Need</em>.</div><div class="ref"><b>SRC-0013</b> — Reimers & Gurevych, <em>Sentence-BERT</em>.</div></div>
+</section>
+
+<nav class="next-step"><a href="domaine-a.html">← Parcours 0</a><div class="center">Vous êtes prêt si vous pouvez reconstruire sans aide : texte → tokens → IDs → embeddings → contexte.</div><a href="domaine-c.html">Étape 2 · Attention →</a></nav>
+<footer class="footer">Formation LLM · Parcours 1 · Étape 1 · Version NOVICE-FIRST 1.0 · Simulation locale sans API.</footer>
 </main>
+
 <script>
-(() => {
-  'use strict';
-  const root = document.documentElement;
-  const body = document.body;
-  const $ = (id) => document.getElementById(id);
+(function(){
+"use strict";
+const root=document.documentElement,body=document.body,$=id=>document.getElementById(id);
+function setTheme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
+const saved=localStorage.getItem("formation-llm-theme");if(saved)setTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)setTheme("dark");
+$("themeBtn").addEventListener("click",()=>setTheme(root.dataset.theme==="dark"?"light":"dark"));
+function setTrainer(on){body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
+setTrainer(localStorage.getItem("formation-llm-role")==="trainer");$("trainerBtn").addEventListener("click",()=>setTrainer(!body.classList.contains("trainer-on")));
+function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"▣ Quitter projection":"▣ Activer projection"}
+$("projectorBtn").addEventListener("click",()=>setProjectorMode(!root.classList.contains("projector")));$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
 
-  const conceptDetails = {
-    text: '<strong>Texte.</strong> L’application reçoit d’abord des caractères Unicode. Le modèle neuronal ne calcule pas directement sur cette chaîne.',
-    tokens: '<strong>Tokens.</strong> Le tokenizer transforme le texte en unités discrètes. Un token n’est pas nécessairement un mot et la segmentation dépend du tokenizer.',
-    ids: '<strong>IDs.</strong> Chaque token du vocabulaire est associé à un entier qui sert d’index. La valeur 1201 n’est pas « plus sémantique » que 1200.',
-    vectors: '<strong>Embeddings.</strong> Les IDs permettent notamment de sélectionner des vecteurs. Ces vecteurs constituent des représentations numériques utilisables par le réseau.',
-    context: '<strong>Contexte.</strong> La séquence disponible pour le traitement courant est bornée. Mémoire applicative, paramètres appris et fenêtre de contexte sont trois choses différentes.'
-  };
+const merges=[["t","i"],["ti","on"],["i","s"],["is","ation"],["m","od"],["è","l"],["èl","e"],["bon","jour"],["extra","ordinaire"],["token","izer"]];
+function chunks(text){return text.match(/\s+|[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]/gu)||[]}
+function subword(w){let s=Array.from(w.toLowerCase());for(const [a,b] of merges){const n=[];for(let i=0;i<s.length;i++){if(i<s.length-1&&s[i]===a&&s[i+1]===b){n.push(a+b);i++}else n.push(s[i])}s=n}return s}
+function tokenize(text,mode){if(mode==="byte")return Array.from(new TextEncoder().encode(text),b=>"0x"+b.toString(16).padStart(2,"0").toUpperCase());const c=chunks(text);if(mode==="word")return c.flatMap(x=>/^\s+$/u.test(x)?Array.from(x).map(()=> "␠"):[x]);return c.flatMap(x=>/^\s+$/u.test(x)?Array.from(x).map(()=> "␠"):/^[\p{L}\p{M}\p{N}_]+$/u.test(x)?subword(x):[x])}
+function updateTokenizer(){const text=$("labText").value,mode=$("tokenMode").value,limit=Number($("contextSize").value),ts=tokenize(text,mode);$("charCount").textContent=Array.from(text).length;$("tokenCount").textContent=ts.length;$("uniqueCount").textContent=new Set(ts).size;$("byteCount").textContent=new TextEncoder().encode(text).length;$("contextSizeOut").textContent=limit+" tokens";const list=$("tokenList");list.innerHTML="";ts.forEach((t,i)=>{const s=document.createElement("span");s.className="token"+(t==="␠"?" space":"")+(i>=limit?" truncated":"");s.textContent=t;list.appendChild(s)});$("tokenHint").textContent="Simulation : ce découpage n’est pas celui d’un tokenizer commercial précis.";const used=Math.min(ts.length,limit),over=Math.max(0,ts.length-limit);$("contextUsed").style.width=Math.min(100,used/limit*100)+"%";$("contextOver").style.width=over?Math.min(100,over/Math.max(ts.length,1)*100)+"%":"0%";$("contextLabel").textContent=ts.length+" / "+limit+" tokens";$("contextStatus").textContent=over?over+" hors fenêtre":(limit-ts.length)+" disponibles";updateBudget(ts.length)}
+["labText","tokenMode","contextSize"].forEach(id=>$(id).addEventListener(id==="labText"?"input":"change",updateTokenizer));
 
-  function setStored(key, value){ try{ localStorage.setItem(key, value); }catch(_){} }
-  function getStored(key, fallback){ try{ return localStorage.getItem(key) ?? fallback; }catch(_){ return fallback; } }
-  function syncButtons(){
-    $('themeBtn').setAttribute('aria-pressed', root.dataset.theme === 'dark' ? 'true':'false');
-    $('projectorBtn').setAttribute('aria-pressed', root.classList.contains('projector') ? 'true':'false');
-    $('projectorBtn').textContent = root.classList.contains('projector') ? '▣ Quitter projection' : '▣ Activer projection';
-    $('trainerBtn').setAttribute('aria-pressed', body.classList.contains('trainer-on') ? 'true':'false');
-    $('trainerBtn').textContent = body.classList.contains('trainer-on') ? '○ Revenir au mode stagiaire' : '◆ Activer mode formateur';
-  }
-  if(getStored('llm-b-theme','light') === 'dark') root.dataset.theme='dark';
-  if(getStored('formation-llm-role',getStored('llm-b-trainer','0') === '1' ? 'trainer':'student') === 'trainer') body.classList.add('trainer-on');
-  syncButtons();
-  $('themeBtn').addEventListener('click',()=>{ root.dataset.theme = root.dataset.theme === 'dark' ? 'light':'dark'; setStored('llm-b-theme',root.dataset.theme); syncButtons(); });
-  function setProjectorMode(on){ root.classList.toggle('projector',on); syncButtons(); }
-  $('projectorBtn').addEventListener('click',()=>setProjectorMode(!root.classList.contains('projector')));
-  $('projectorExit').addEventListener('click',()=>{ setProjectorMode(false); $('projectorBtn').focus(); });
-  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'&&root.classList.contains('projector')){ setProjectorMode(false); $('projectorBtn').focus(); } });
-  $('trainerBtn').addEventListener('click',()=>{ body.classList.toggle('trainer-on'); const on=body.classList.contains('trainer-on'); setStored('llm-b-trainer',on?'1':'0'); setStored('formation-llm-role',on?'trainer':'student'); syncButtons(); });
+$("checkCompletion").addEventListener("click",()=>{let ok=0,total=0;document.querySelectorAll("[data-answer]").forEach(s=>{total++;if(s.value===s.dataset.answer)ok++});$("completionFeedback").classList.add("show");$("completionFeedback").innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Pipeline correctement distingué.":"Reprenez surtout la différence entre index discret, vecteur et contexte.")});
+$("resetCompletion").addEventListener("click",()=>{document.querySelectorAll("[data-answer]").forEach(s=>s.value="");$("completionFeedback").classList.remove("show")});
 
-  document.querySelectorAll('.pipe-step').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('.pipe-step').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    $('conceptDetail').innerHTML = conceptDetails[btn.dataset.step];
-  }));
-  $('conceptDetail').innerHTML = conceptDetails.text;
+function num(id){return Number($(id).value)||0}function cosine(a,b){const dot=a.reduce((s,x,i)=>s+x*b[i],0),na=Math.sqrt(a.reduce((s,x)=>s+x*x,0)),nb=Math.sqrt(b.reduce((s,x)=>s+x*x,0));return na&&nb?dot/(na*nb):0}
+function updateCos(){const a=[num("a1"),num("a2"),num("a3")],b=[num("b1"),num("b2"),num("b3")],dot=a.reduce((s,x,i)=>s+x*b[i],0),na=Math.sqrt(a.reduce((s,x)=>s+x*x,0)),nb=Math.sqrt(b.reduce((s,x)=>s+x*x,0)),c=cosine(a,b);$("cosScore").textContent=c.toFixed(3);$("cosFormula").textContent="dot="+dot.toFixed(2)+" · ||A||="+na.toFixed(2)+" · ||B||="+nb.toFixed(2)+" · cos="+c.toFixed(3);$("cosBar").style.width=((c+1)/2*100)+"%"}
+["a1","a2","a3","b1","b2","b3"].forEach(id=>$(id).addEventListener("input",updateCos));
 
-  const toyMerges = [
-    ['t','i'],['ti','o'],['tio','n'],['m','e'],['me','n'],['men','t'],['i','n'],['in','t'],['int','e'],['inte','l'],['intel','l'],
-    ['a','r'],['ar','t'],['art','i'],['arti','f'],['c','i'],['ci','e'],['e','l'],['el','l'],['l','e'],['q','u'],['qu','e'],
-    ['c','o'],['co','n'],['con','t'],['r','e'],['p','r'],['pr','o'],['d','e'],['l','a'],['u','n'],['e','n'],['s','t'],['s','e'],
-    ['b','o'],['bo','n'],['bon','j'],['bonj','o'],['bonjo','u'],['bonjou','r'],['p','y'],['py','t'],['pyt','h'],['pyth','o'],['pytho','n']
-  ];
+function updateBudget(user){const total=Number($("budgetTotal").value),sys=Number($("systemBudget").value),resp=Number($("responseBudget").value),used=sys+user+resp,over=Math.max(0,used-total);$("budgetTotalOut").textContent=total;$("systemBudgetOut").textContent=sys;$("responseBudgetOut").textContent=resp;$("budgetUsed").style.width=Math.min(100,used/total*100)+"%";$("budgetOverflow").style.width=over?Math.min(100,over/used*100)+"%":"0%";$("budgetCount").textContent=used+" / "+total;$("budgetMessage").textContent=over?"Dépassement : "+over:(total-used)+" libres"}
+["budgetTotal","systemBudget","responseBudget"].forEach(id=>$(id).addEventListener("input",()=>updateTokenizer()));
 
-  function splitWordLike(text){
-    return text.match(/\s+|[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]/gu) || [];
-  }
-  function bpeWord(word){
-    let symbols = Array.from(word);
-    for(const [a,b] of toyMerges){
-      const merged = [];
-      for(let i=0;i<symbols.length;i++){
-        if(i < symbols.length-1 && symbols[i]===a && symbols[i+1]===b){ merged.push(a+b); i++; }
-        else merged.push(symbols[i]);
-      }
-      symbols = merged;
-    }
-    return symbols;
-  }
-  function tokenizeSubword(text){
-    const chunks = splitWordLike(text);
-    const out=[];
-    for(const chunk of chunks){
-      if(/^\s+$/u.test(chunk)){
-        for(const ch of Array.from(chunk)) out.push(ch === ' ' ? '␠' : ch === '\n' ? '↵' : '⇥');
-      } else if(/^[\p{L}\p{M}\p{N}_]+$/u.test(chunk)) out.push(...bpeWord(chunk.toLowerCase()));
-      else out.push(chunk);
-    }
-    return out;
-  }
-  function tokenizeWord(text){
-    return splitWordLike(text).flatMap(chunk => {
-      if(/^\s+$/u.test(chunk)) return Array.from(chunk).map(ch => ch === ' ' ? '␠' : ch === '\n' ? '↵' : '⇥');
-      return [chunk];
-    });
-  }
-  function tokenizeBytes(text){
-    return Array.from(new TextEncoder().encode(text), b => '0x'+b.toString(16).padStart(2,'0').toUpperCase());
-  }
-  function hash32(str){
-    let h=2166136261>>>0;
-    for(const ch of str){ h ^= ch.codePointAt(0); h = Math.imul(h,16777619)>>>0; }
-    return h>>>0;
-  }
-  function idForToken(token, mode){
-    if(mode==='byte') return parseInt(token.slice(2),16);
-    return 1000 + (hash32(mode+'|'+token) % 49000);
-  }
-  function vectorFor(token, mode){
-    let x = hash32('vec|'+mode+'|'+token) || 1;
-    const v=[];
-    for(let i=0;i<8;i++){
-      x = (Math.imul(1664525,x) + 1013904223)>>>0;
-      v.push(((x/4294967295)*2-1));
-    }
-    return v;
-  }
-  function visibleToken(t){ return t === '␠' ? '␠ espace' : t === '↵' ? '↵ retour' : t === '⇥' ? '⇥ tab' : t; }
-  function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+$("quizForm").addEventListener("submit",e=>{e.preventDefault();let score=0,total=0;document.querySelectorAll(".q").forEach(q=>{total++;const c=q.querySelector("input:checked"),ok=c&&c.value===q.dataset.answer;q.classList.toggle("correct",!!ok);q.classList.toggle("wrong",!ok);if(ok)score++});$("quizScore").textContent=score+" / "+total+(score===total?" · maîtrise solide":" · utilisez les feedbacks")});
+$("resetQuiz").addEventListener("click",()=>{$("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("correct","wrong"));$("quizScore").textContent=""});
 
-  let currentTokens=[];
-  function updateTokenizer(){
-    const text=$('labText').value;
-    const mode=$('tokenMode').value;
-    const limit=Number($('contextSize').value)||48;
-    $('contextSizeOut').textContent=limit+' tokens';
-    currentTokens = mode==='subword'?tokenizeSubword(text):mode==='word'?tokenizeWord(text):tokenizeBytes(text);
-    const bytes=new TextEncoder().encode(text).length;
-    $('charCount').textContent=Array.from(text).length;
-    $('tokenCount').textContent=currentTokens.length;
-    $('uniqueCount').textContent=new Set(currentTokens).size;
-    $('byteCount').textContent=bytes;
-    const tokenList=$('tokenList'); tokenList.innerHTML='';
-    currentTokens.slice(0,180).forEach((t,i)=>{
-      const span=document.createElement('button'); span.type='button'; span.className='token'+(t==='␠'||t==='↵'||t==='⇥'?' space':'')+(i>=limit?' truncated':''); span.textContent=visibleToken(t); span.title='Token '+(i+1)+' · ID simulé '+idForToken(t,mode); span.addEventListener('click',()=>{
-        tokenList.querySelectorAll('.token').forEach(x=>x.classList.remove('selected')); span.classList.add('selected');
-        const row=$('tokenRows').querySelector('[data-row="'+i+'"]'); if(row) row.scrollIntoView({block:'nearest'});
-      }); tokenList.appendChild(span);
-    });
-    if(currentTokens.length>180){ const more=document.createElement('span'); more.className='token'; more.textContent='+'+(currentTokens.length-180)+'…'; tokenList.appendChild(more); }
-    $('tokenHint').textContent= currentTokens.length ? 'Cliquez un token pour repérer sa ligne. Les tokens barrés dépassent le budget simulé.' : 'Saisissez du texte pour commencer.';
-    const rows=$('tokenRows'); rows.innerHTML='';
-    currentTokens.slice(0,220).forEach((t,i)=>{
-      const v=vectorFor(t,mode); const tr=document.createElement('tr'); tr.dataset.row=i;
-      tr.innerHTML='<td>'+(i+1)+'</td><td class="mono">'+escapeHtml(visibleToken(t))+'</td><td class="mono">'+idForToken(t,mode)+'</td><td class="embed-mini mono">['+v.slice(0,6).map(n=>n.toFixed(2)).join(', ')+', …]</td>';
-      rows.appendChild(tr);
-    });
-    const used=Math.min(currentTokens.length,limit), over=Math.max(0,currentTokens.length-limit);
-    const usedPct=limit?Math.min(100,(used/limit)*100):0; const overPct=over?Math.min(100-usedPct,(over/Math.max(currentTokens.length,1))*100):0;
-    $('contextUsed').style.width=usedPct+'%'; $('contextOver').style.width=overPct+'%';
-    $('contextLabel').textContent=currentTokens.length+' / '+limit+' tokens';
-    $('contextStatus').textContent=over ? over+' token(s) hors contexte simulé' : (limit-currentTokens.length)+' token(s) disponibles';
-    $('contextStatus').style.color=over?'var(--danger)':'var(--ok)';
-    updateBudget();
-  }
-  ['labText','tokenMode','contextSize'].forEach(id=>$(id).addEventListener(id==='labText'?'input':'change',updateTokenizer));
-  document.querySelectorAll('.preset').forEach(btn=>btn.addEventListener('click',()=>{$('labText').value=btn.dataset.text;updateTokenizer();}));
+$("checkTransfer").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll(".transfer-card").forEach(c=>{total++;const good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});$("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":"")});
 
-  function num(id){ const v=Number($(id).value); return Number.isFinite(v)?v:0; }
-  function cosine(a,b){ const dot=a.reduce((s,x,i)=>s+x*b[i],0); const na=Math.sqrt(a.reduce((s,x)=>s+x*x,0)); const nb=Math.sqrt(b.reduce((s,x)=>s+x*x,0)); return (na&&nb)?dot/(na*nb):0; }
-  function updateCosine(){
-    const a=[num('a1'),num('a2'),num('a3')],b=[num('b1'),num('b2'),num('b3')];
-    const c=Math.max(-1,Math.min(1,cosine(a,b))); $('cosScore').textContent=c.toFixed(3);
-    const dot=a.reduce((s,x,i)=>s+x*b[i],0),na=Math.sqrt(a.reduce((s,x)=>s+x*x,0)),nb=Math.sqrt(b.reduce((s,x)=>s+x*x,0));
-    $('cosFormula').textContent='cos(A,B) = (A·B) / (||A|| × ||B||) = '+dot.toFixed(3)+' / ('+na.toFixed(3)+' × '+nb.toFixed(3)+')';
-  }
-  ['a1','a2','a3','b1','b2','b3'].forEach(id=>$(id).addEventListener('input',updateCosine));
-  document.querySelectorAll('.vectorPreset').forEach(btn=>btn.addEventListener('click',()=>{
-    const a=btn.dataset.a.split(','),b=btn.dataset.b.split(','); ['a1','a2','a3'].forEach((id,i)=>$(id).value=a[i]); ['b1','b2','b3'].forEach((id,i)=>$(id).value=b[i]); updateCosine();
-  }));
-
-  function updateBudget(){
-    const total=num('budgetTotal')||96,system=num('systemBudget'),response=num('responseBudget'),user=currentTokens.length;
-    $('budgetTotalOut').textContent=total; $('systemBudgetOut').textContent=system; $('responseBudgetOut').textContent=response;
-    const required=system+user+response,over=Math.max(0,required-total),stack=$('budgetStack'); stack.innerHTML='';
-    const pieces=[['Système',system,'seg-system'],['Message',user,'seg-user'],['Réponse',response,'seg-response']]; if(over) pieces.push(['Dépassement',over,'seg-over']);
-    pieces.forEach(([label,value,cls])=>{if(value<=0)return;const seg=document.createElement('div');seg.className='budget-seg '+cls;seg.style.width=Math.max(5,(value/Math.max(required,total))*100)+'%';seg.textContent=value>=8?label+' '+value:value;seg.title=label+' : '+value+' tokens';stack.appendChild(seg);});
-    if(over){ $('budgetMessage').innerHTML='<strong style="color:var(--danger)">Budget dépassé de '+over+' tokens.</strong> Il faut réduire, tronquer, résumer ou sélectionner le contexte.'; }
-    else { $('budgetMessage').innerHTML='<strong style="color:var(--ok)">'+(total-required)+' tokens restent disponibles.</strong> Le budget est compatible avec cette répartition simulée.'; }
-  }
-  ['budgetTotal','systemBudget','responseBudget'].forEach(id=>$(id).addEventListener('input',updateBudget));
-
-  $('quizForm').addEventListener('submit',e=>{
-    e.preventDefault(); let score=0,total=0;
-    document.querySelectorAll('.q').forEach((q,i)=>{ total++; q.classList.remove('correct','wrong'); const chosen=q.querySelector('input:checked'); const ok=chosen&&chosen.value===q.dataset.answer; if(ok){score++;q.classList.add('correct');} else q.classList.add('wrong'); });
-    $('quizScore').textContent='Score : '+score+' / '+total+(score===total?' — maîtrise solide.':score>=6?' — bon niveau, revoir les pièges signalés.':' — reprendre les distinctions fondamentales.');
-  });
-  $('resetQuiz').addEventListener('click',()=>{ $('quizForm').reset(); document.querySelectorAll('.q').forEach(q=>q.classList.remove('correct','wrong')); $('quizScore').textContent=''; });
-
-  updateTokenizer(); updateCosine(); updateBudget();
+updateTokenizer();updateCos();
 })();
 </script>
 </body>
