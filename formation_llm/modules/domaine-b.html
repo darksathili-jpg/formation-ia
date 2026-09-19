@@ -63,6 +63,11 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
 :focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
 @media(max-width:720px){.journey{grid-template-columns:1fr}.next-step{align-items:flex-start;flex-direction:column}.next-step .center{text-align:left}}
 
+
+.trainer-banner{display:none;max-width:1220px;margin:10px auto 18px;padding:12px 16px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-left:5px solid var(--accent);border-radius:13px;background:color-mix(in srgb,var(--soft) 72%,var(--panel));color:var(--text);font-size:.84rem;box-shadow:var(--shadow)}
+.trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
+#trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+
 </style>
 </head>
 <body>
@@ -75,11 +80,12 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
     <div class="tools">
       <button class="pill-btn" id="themeBtn" type="button" aria-pressed="false">◐ Thème</button>
       <button class="pill-btn" id="projectorBtn" type="button" aria-pressed="false">▣ Projection</button>
-      <button class="pill-btn" id="trainerBtn" type="button" aria-pressed="false">◆ Formateur</button>
+      <button class="pill-btn" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button>
     </div>
   </div>
 </header>
 <main>
+<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
   <section class="hero">
     <div>
       <div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 1</div>
@@ -255,14 +261,15 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.9rem);line-height:1.0
     $('themeBtn').setAttribute('aria-pressed', root.dataset.theme === 'dark' ? 'true':'false');
     $('projectorBtn').setAttribute('aria-pressed', root.classList.contains('projector') ? 'true':'false');
     $('trainerBtn').setAttribute('aria-pressed', body.classList.contains('trainer-on') ? 'true':'false');
+    $('trainerBtn').textContent = body.classList.contains('trainer-on') ? '◆ Mode formateur' : '○ Mode stagiaire';
   }
   if(getStored('llm-b-theme','light') === 'dark') root.dataset.theme='dark';
   if(getStored('llm-b-projector','0') === '1') root.classList.add('projector');
-  if(getStored('llm-b-trainer','0') === '1') body.classList.add('trainer-on');
+  if(getStored('formation-llm-role',getStored('llm-b-trainer','0') === '1' ? 'trainer':'student') === 'trainer') body.classList.add('trainer-on');
   syncButtons();
   $('themeBtn').addEventListener('click',()=>{ root.dataset.theme = root.dataset.theme === 'dark' ? 'light':'dark'; setStored('llm-b-theme',root.dataset.theme); syncButtons(); });
   $('projectorBtn').addEventListener('click',()=>{ root.classList.toggle('projector'); setStored('llm-b-projector',root.classList.contains('projector')?'1':'0'); syncButtons(); });
-  $('trainerBtn').addEventListener('click',()=>{ body.classList.toggle('trainer-on'); setStored('llm-b-trainer',body.classList.contains('trainer-on')?'1':'0'); syncButtons(); });
+  $('trainerBtn').addEventListener('click',()=>{ body.classList.toggle('trainer-on'); const on=body.classList.contains('trainer-on'); setStored('llm-b-trainer',on?'1':'0'); setStored('formation-llm-role',on?'trainer':'student'); syncButtons(); });
 
   document.querySelectorAll('.pipe-step').forEach(btn => btn.addEventListener('click', () => {
     document.querySelectorAll('.pipe-step').forEach(b => b.classList.remove('active'));
