@@ -91,6 +91,17 @@ Le stagiaire peut comparer :
 
 Les embeddings, l'ANN et le reranker sont explicitement des modèles didactiques déterministes ; les métriques et formules sont réellement calculées dans le navigateur. Aucun appel réseau n'est effectué.
 
+## Standard pédagogique NOVICE-FIRST
+
+La plateforme suit désormais un contrat pédagogique explicite documenté dans [`docs/STANDARD_PEDAGOGIQUE_NOVICE.md`](docs/STANDARD_PEDAGOGIQUE_NOVICE.md).
+
+Le manifeste [`data/pedagogy-manifest.json`](data/pedagogy-manifest.json) distingue :
+- les modules historiques encore en `remediation-required` ;
+- les futurs modules `novice-ready`, qui doivent contenir les blocs d'étayage obligatoires ;
+- les nouveaux modules, qui ne peuvent plus être ajoutés sans être déclarés dans le manifeste.
+
+Le plan de reconstruction est détaillé dans [`docs/PLAN_REMEDIATION_PEDAGOGIQUE.md`](docs/PLAN_REMEDIATION_PEDAGOGIQUE.md).
+
 ## Validation
 
 Depuis `formation_llm/` :
