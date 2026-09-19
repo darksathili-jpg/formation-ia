@@ -38,11 +38,18 @@ button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
 .trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
 #trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
 
+
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}
+.projector .projector-exit{display:inline-flex;align-items:center;gap:7px}
+.projector .tools{display:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
 </style>
 </head>
 <body>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
 <main class="wrap">
-  <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+  <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
   <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 
   <section class="hero">
@@ -292,10 +299,13 @@ var corpusGrid=document.getElementById("corpusGrid");docs.forEach(function(d){va
 function applyTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
 var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")});
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"◆ Mode formateur":"○ Mode stagiaire";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
 var savedRole;try{savedRole=localStorage.getItem("formation-llm-role")}catch(e){}setTrainerMode(savedRole==="trainer");
 document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!document.body.classList.contains("trainer-on"))});
-document.getElementById("projectorBtn").addEventListener("click",function(){document.documentElement.classList.toggle("projector")});
+function setProjectorMode(on){var rootEl=document.documentElement,btn=document.getElementById("projectorBtn");rootEl.classList.toggle("projector",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection";}
+document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!document.documentElement.classList.contains("projector"))});
+document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.documentElement.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
 render();
 })();
 </script>
