@@ -44,6 +44,17 @@ button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
 .projector .tools{display:none}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 
+
+.journey{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.82rem}
+.grid2eq{display:grid;grid-template-columns:1fr 1fr;gap:14px}.intuition{padding:14px 16px;border-left:4px solid var(--accent);background:var(--blueSoft);border-radius:12px}.definition{padding:14px 16px;border-left:4px solid var(--accent2);background:var(--violetSoft);border-radius:12px}.gloss{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.term{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.term h3{margin:0 0 6px;font-size:1rem}.term p{margin:0;color:var(--muted);font-size:.83rem}.term .limit{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:.78rem}.term .limit b{color:var(--red)}
+.steps{display:grid;gap:10px}.worked-step{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.worked-step .n{width:34px;height:34px;border-radius:10px;background:var(--blueSoft);color:var(--accent);display:grid;place-items:center;font-weight:950}.worked-step h3{margin:0 0 4px;font-size:1rem}.worked-step p{margin:0;color:var(--muted);font-size:.86rem}.worked-step .calc{margin-top:7px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.8rem}
+.completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(180px,.9fr) 30px minmax(220px,1.1fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent);font-weight:950}.feedback-box{display:none;margin-top:10px;padding:11px;border-radius:10px;background:var(--panel2)}.feedback-box.show{display:block}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.scorebox{font-weight:950;color:var(--accent)}
+.misgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mis{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.mis .wrong{color:var(--red);font-weight:900}.mis .right{color:var(--green);font-weight:850;margin-top:8px}.mis p{color:var(--muted);font-size:.83rem;margin:5px 0}.selfbox textarea{width:100%;min-height:125px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px}.criteria{display:grid;gap:6px;margin-top:9px}.criteria label{font-size:.82rem;color:var(--muted)}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.q.okq{border-color:var(--green)}.q.badq{border-color:var(--red)}.q.okq .feedback,.q.badq .feedback{display:block}
+.transfer{display:grid;grid-template-columns:1fr 1fr;gap:11px}.transfer-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.transfer-card select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.transfer-feedback{display:none;margin-top:9px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.transfer-card.good .transfer-feedback,.transfer-card.bad .transfer-feedback{display:block}.transfer-card.good{border-color:var(--green)}.transfer-card.bad{border-color:var(--red)}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.recap article{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.recap b{display:block;margin-bottom:5px}.recap p{margin:0;color:var(--muted);font-size:.84rem}
+@media(max-width:940px){.journey,.grid2eq{grid-template-columns:1fr}.gloss{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.gloss,.misgrid,.transfer,.recap{grid-template-columns:1fr}.completion-row{grid-template-columns:1fr}.completion-row .arrow{transform:rotate(90deg)}}
+
 </style>
 </head>
 <body>
@@ -53,14 +64,77 @@ button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
   <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 
   <section class="hero">
-    <div><div class="eyebrow">Parcours 4 · Recherche & RAG</div><h1>RAG Lab</h1><p class="lead">Un laboratoire autonome pour observer ce qui se passe <strong>avant</strong> la génération : sélectionner des chunks, fusionner plusieurs moteurs, reranker et mesurer objectivement la qualité du retrieval.</p></div>
+    <div><div class="eyebrow">Parcours 4 · Recherche & RAG · NOVICE-FIRST</div><h1>RAG Lab</h1><p class="lead">Comment retrouver quelques passages utiles parmi des milliers sans tout placer dans le contexte ? Cette formation construit d’abord le pipeline <strong>documents → chunks → index → retrieval → reranking → contexte</strong>, puis seulement les métriques.</p><div class="pipeline"><span class="pipe">Guidage complet</span><span class="pipe">≈ 90–120 min</span><span class="pipe">12 chunks contrôlés</span></div></div>
     <aside class="hero-card"><b>Pipeline observable</b><div class="pipeline"><span class="pipe">question</span><span class="arrow">→</span><span class="pipe">retrieval</span><span class="arrow">→</span><span class="pipe">top-k</span><span class="arrow">→</span><span class="pipe">rerank</span><span class="arrow">→</span><span class="pipe">contexte</span></div><p style="font-size:.82rem;color:#b9cbd3;margin-bottom:0">Ici, aucun LLM distant : nous isolons le retrieval pour pouvoir l’évaluer sans confondre ses erreurs avec celles de la génération.</p></aside>
   </section>
 
   <div class="notice"><strong>Simulation didactique, calculs réels.</strong>BM25, cosinus, RRF et métriques sont calculés dans le navigateur. Le « modèle d’embedding », l’ANN et le reranker sont volontairement simplifiés et déterministes : ils enseignent les mécanismes sans prétendre reproduire les scores d’un moteur commercial.</div>
 
-  <section class="section" id="experiment">
-    <div class="section-head"><div class="num">01</div><div><h2>Expérience de retrieval</h2><p>Changez une seule variable à la fois et observez le classement et les métriques.</p></div></div>
+  
+<section class="journey" data-pedagogy="prerequisites">
+<div class="journey-card"><div class="k">Prérequis</div><b>Embeddings + fiabilité</b><p>Savoir qu’un cosinus mesure une proximité vectorielle et qu’une preuve disponible doit encore être bien utilisée.</p></div>
+<div class="journey-card"><div class="k">Objectif</div><b>Diagnostiquer le retrieval</b><p>Comprendre chunking, lexical/vectoriel, ANN, hybride, reranking et les métriques de classement.</p></div>
+<div class="journey-card"><div class="k">Limite</div><b>Retrieval ≠ réponse finale</b><p>Un bon classement fournit de meilleures preuves ; il ne garantit pas que le générateur les interprétera correctement.</p></div>
+</section>
+
+<section class="section" data-pedagogy="intuition" id="intuition">
+<div class="section-head"><div class="num">01</div><div><h2>Pourquoi ne pas donner les 10 000 documents au LLM ?</h2><p>Parce qu’il faut sélectionner avant de générer.</p></div></div>
+<div class="grid2eq"><div class="panel"><div class="intuition"><strong>Intuition</strong>Imaginez une bibliothèque. Pour répondre à une question, on ne dépose pas tous les livres sur la table. On cherche d’abord quelques passages prometteurs, puis on les donne au lecteur.</div><p>Un RAG — <em>Retrieval-Augmented Generation</em> — ajoute donc une étape de <strong>recherche</strong> avant la génération. Le modèle reçoit la question, mais aussi des passages récupérés depuis une source externe.</p><p>Cette mécanique modifie surtout le <strong>contexte fourni au modèle</strong>, pas ses poids. Mettre à jour un index documentaire est donc différent d’un réentraînement du LLM.</p></div>
+<div class="panel"><div class="definition"><strong>Pipeline RAG minimal</strong><p>Documents → découpage en chunks → représentation/indexation → question → retrieval → top-k → contexte augmenté → LLM → réponse.</p></div><div class="notice" style="margin-top:12px"><strong>Deux familles d’erreurs.</strong> Si la bonne preuve n’est jamais récupérée : erreur de retrieval. Si la bonne preuve est présente mais mal utilisée : erreur de génération.</div></div></div>
+</section>
+
+<section class="section" data-pedagogy="definition" id="definitions">
+<div class="section-head"><div class="num">02</div><div><h2>Les briques, avant les scores</h2></div></div>
+<div class="gloss">
+<article class="term"><h3>Chunk</h3><p>Passage découpé dans un document et récupérable indépendamment.</p><div class="limit"><b>Trop petit :</b> sens perdu. <b>Trop grand :</b> bruit et budget gaspillé.</div></article>
+<article class="term"><h3>Overlap</h3><p>Chevauchement entre chunks voisins pour limiter les pertes aux frontières.</p><div class="limit"><b>Piège :</b> plus d’overlap n’est pas toujours meilleur.</div></article>
+<article class="term"><h3>Embedding de passage</h3><p>Vecteur représentant une question ou un passage pour une recherche sémantique.</p><div class="limit"><b>À distinguer :</b> ce n’est pas l’embedding initial d’un token dans le Transformer.</div></article>
+<article class="term"><h3>Vector store</h3><p>Système qui stocke des vecteurs et métadonnées pour rechercher des voisins proches.</p><div class="limit"><b>Piège :</b> « proche » ne signifie pas « vrai ».</div></article>
+<article class="term"><h3>Recherche lexicale</h3><p>Recherche fondée sur les termes partagés, par exemple BM25.</p><div class="limit"><b>Force :</b> identifiants, noms propres et références exactes.</div></article>
+<article class="term"><h3>Recherche vectorielle</h3><p>Compare des embeddings pour retrouver des passages proches sémantiquement.</p><div class="limit"><b>Limite :</b> une proximité peut manquer une négation ou un chiffre critique.</div></article>
+<article class="term"><h3>Nearest neighbors / ANN</h3><p>ANN cherche approximativement les voisins proches sans comparer naïvement la requête à tous les vecteurs.</p><div class="limit"><b>Compromis :</b> perdre un peu d’exactitude potentielle pour gagner beaucoup de vitesse.</div></article>
+<article class="term"><h3>Hybride</h3><p>Combine lexical et vectoriel. RRF peut fusionner des rangs sans additionner des scores incomparables.</p><div class="limit"><b>But :</b> profiter de forces complémentaires.</div></article>
+<article class="term"><h3>Reranker</h3><p>Réévalue plus précisément une petite liste de candidats déjà récupérés.</p><div class="limit"><b>Limite :</b> il ne peut pas récupérer un chunk absent des candidats.</div></article>
+<article class="term"><h3>Top-k</h3><p>Nombre de résultats conservés pour l’étape suivante.</p><div class="limit"><b>Compromis :</b> k plus grand peut améliorer recall mais ajouter du bruit.</div></article>
+<article class="term"><h3>Vérité terrain</h3><p>Liste connue des chunks pertinents pour une question d’évaluation.</p><div class="limit"><b>Sans elle :</b> on ne peut pas calculer objectivement recall/precision.</div></article>
+<article class="term"><h3>Grounding</h3><p>Ancrage d’une réponse sur des preuves fournies dans le contexte.</p><div class="limit"><b>Piège :</b> le RAG ne garantit pas une réponse vraie.</div></article>
+</div>
+</section>
+
+<section class="section" data-pedagogy="worked-example" id="exemple">
+<div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé — une recherche hybride à la main</h2><p>Question : « Pourquoi une recherche hybride aide-t-elle avec l’identifiant exact L.511-5 ? »</p></div></div>
+<div class="panel steps">
+<div class="worked-step"><div class="n">1</div><div><h3>Définir les passages pertinents</h3><p>Dans notre corpus contrôlé, C05 (BM25 / termes exacts), C06 (hybride / RRF) et C03 (embedding) sont pertinents, avec des niveaux différents.</p><div class="calc">vérité terrain = {C05:3, C06:3, C03:1}</div></div></div>
+<div class="worked-step"><div class="n">2</div><div><h3>Recherche lexicale</h3><p>BM25 favorise fortement C05 parce que « L.511-5 » et les termes exacts y sont explicitement présents.</p><div class="calc">force = correspondance exacte + rareté des termes</div></div></div>
+<div class="worked-step"><div class="n">3</div><div><h3>Recherche vectorielle</h3><p>La représentation sémantique peut faire remonter C06 même si la formulation diffère, car il parle de complémentarité lexical/vectoriel.</p><div class="calc">force = proximité de représentation</div></div></div>
+<div class="worked-step"><div class="n">4</div><div><h3>Fusionner les rangs</h3><p>RRF donne un bonus aux documents bien classés dans l’un ou l’autre moteur sans comparer directement un score BM25 à un cosinus.</p><div class="calc">RRF(d) = Σ 1 / (60 + rang_moteur(d))</div></div></div>
+<div class="worked-step"><div class="n">5</div><div><h3>Prendre top-3</h3><p>Supposons que le classement final soit C05, C06, C03. Les trois résultats sont pertinents.</p><div class="calc">Precision@3 = 3/3 = 1 · Recall@3 = 3/3 = 1</div></div></div>
+<div class="worked-step"><div class="n">6</div><div><h3>Premier pertinent</h3><p>Le premier résultat est pertinent.</p><div class="calc">RR = 1 / rang_du_premier_pertinent = 1/1 = 1</div></div></div>
+<div class="worked-step"><div class="n">7</div><div><h3>Ordre gradué</h3><p>C05 et C06 ont le grade maximal 3 ; C03 vaut 1. Comme les grades forts sont placés en premier, nDCG est élevé.</p><div class="calc">nDCG compare le DCG observé au meilleur ordre possible (IDCG)</div></div></div>
+<div class="worked-step"><div class="n">8</div><div><h3>Et MRR ?</h3><p>MRR ne se calcule pas sur une seule question : on moyenne le reciprocal rank du premier pertinent sur l’ensemble des questions d’évaluation.</p><div class="calc">MRR = moyenne(RR₁, RR₂, …, RRₙ)</div></div></div>
+</div>
+</section>
+
+<section class="section" data-pedagogy="completion" id="completer">
+<div class="section-head"><div class="num">04</div><div><h2>Je complète le pipeline RAG</h2></div></div>
+<div class="panel completion">
+<div class="completion-row"><strong>document long</strong><span class="arrow">→</span><select data-answer="chunks"><option value="">Choisir…</option><option value="chunks">découper en chunks</option><option value="generate">générer directement</option><option value="weights">modifier les poids</option></select></div>
+<div class="completion-row"><strong>question utilisateur</strong><span class="arrow">→</span><select data-answer="retrieve"><option value="">Choisir…</option><option value="retrieve">chercher des candidats pertinents</option><option value="train">réentraîner</option><option value="cache">KV cache</option></select></div>
+<div class="completion-row"><strong>liste de candidats</strong><span class="arrow">→</span><select data-answer="rerank"><option value="">Choisir…</option><option value="rerank">reranker éventuellement</option><option value="invent">inventer une preuve</option><option value="tokenize">retokeniser les documents source</option></select></div>
+<div class="completion-row"><strong>chunks sélectionnés</strong><span class="arrow">→</span><select data-answer="context"><option value="">Choisir…</option><option value="context">constituer le contexte augmenté</option><option value="truth">garantir la vérité</option><option value="weights">modifier automatiquement les paramètres</option></select></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback"></div>
+</div>
+</section>
+
+<section class="section" id="metrics-intro">
+<div class="section-head"><div class="num">05</div><div><h2>Lire les métriques sans les confondre</h2></div></div>
+<div class="grid2eq"><div class="panel"><div class="definition"><strong>Precision@k</strong><p>Parmi les k résultats renvoyés, quelle fraction est pertinente ?</p><code>pertinents_dans_top_k / k</code></div><div class="definition" style="margin-top:10px"><strong>Recall@k</strong><p>Parmi tous les passages pertinents connus, quelle fraction a été retrouvée ?</p><code>pertinents_retrouvés / pertinents_totaux</code></div></div>
+<div class="panel"><div class="definition"><strong>RR et MRR</strong><p>RR récompense le rang du premier pertinent ; MRR moyenne ce score sur plusieurs questions.</p><code>RR = 1 / rang</code></div><div class="definition" style="margin-top:10px"><strong>nDCG@k</strong><p>Évalue l’ordre quand la pertinence possède plusieurs niveaux : placer les meilleurs résultats tôt rapporte davantage.</p></div></div></div>
+<div class="notice" style="margin-top:12px"><strong>Une métrique ne répond qu’à une question précise.</strong> Precision mesure la propreté du panier ; Recall la couverture ; MRR l’arrivée rapide du premier pertinent ; nDCG la qualité globale de l’ordre gradué.</div>
+</section>
+
+<section class="section" data-pedagogy="guided-practice" id="experiment">
+    <div class="section-head"><div class="num">06</div><div><h2>Expérience de retrieval</h2><p>Changez une seule variable à la fois et observez le classement et les métriques.</p></div></div>
     <div class="lab">
       <aside class="panel sticky">
         <div class="field"><label for="questionSelect">Question de test</label><select id="questionSelect"></select></div>
@@ -89,12 +163,12 @@ button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
   </section>
 
   <section class="section" id="compare">
-    <div class="section-head"><div class="num">02</div><div><h2>Comparer les moteurs</h2><p>La même question est exécutée avec les quatre stratégies pour rendre les compromis visibles.</p></div></div>
+    <div class="section-head"><div class="num">07</div><div><h2>Comparer les moteurs</h2><p>La même question est exécutée avec les quatre stratégies pour rendre les compromis visibles.</p></div></div>
     <div class="compare" id="compareGrid"></div>
   </section>
 
   <section class="section" id="mechanics">
-    <div class="section-head"><div class="num">03</div><div><h2>Ce qui est réellement calculé</h2><p>Les formules restent visibles pour éviter l’effet « boîte noire ».</p></div></div>
+    <div class="section-head"><div class="num">08</div><div><h2>Ce qui est réellement calculé</h2><p>Les formules restent visibles pour éviter l’effet « boîte noire ».</p></div></div>
     <div class="panel">
       <p><b>Lexical.</b> BM25 simplifié : fréquence du terme, rareté dans le corpus et normalisation par longueur.</p>
       <div class="formula">BM25(q,d) = Σ IDF(t) × tf(t,d)×(k1+1) / (tf(t,d)+k1×(1-b+b×|d|/avgdl))</div>
@@ -108,12 +182,65 @@ button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max
   </section>
 
   <section class="section" id="corpus">
-    <div class="section-head"><div class="num">04</div><div><h2>Corpus contrôlé</h2><p>Douze chunks courts, avec métadonnées, pour que chaque classement soit inspectable.</p></div></div>
+    <div class="section-head"><div class="num">09</div><div><h2>Corpus contrôlé</h2><p>Douze chunks courts, avec métadonnées, pour que chaque classement soit inspectable.</p></div></div>
     <div class="corpus" id="corpusGrid"></div>
   </section>
 
-  <section class="section trainer-only">
-    <div class="section-head"><div class="num">05</div><div><h2>Débrief formateur</h2><p>Les idées à faire verbaliser avant de quitter le laboratoire.</p></div></div>
+  
+<section class="section" data-pedagogy="misconception" id="pieges">
+<div class="section-head"><div class="num">10</div><div><h2>Les confusions à éliminer</h2></div></div>
+<div class="misgrid">
+<article class="mis"><div class="wrong">« Plus gros chunk = plus d’information utile »</div><p>Un chunk trop grand dilue le signal et gaspille du contexte.</p><div class="right">Correction : la taille optimale dépend du corpus, des questions et du modèle d’embedding.</div></article>
+<article class="mis"><div class="wrong">« Cosinus élevé = passage vrai »</div><p>Le cosinus mesure une proximité de représentation.</p><div class="right">Correction : proximité ≠ factualité.</div></article>
+<article class="mis"><div class="wrong">« ANN retrouve forcément les mêmes voisins »</div><p>L’approximation vise la vitesse à grande échelle.</p><div class="right">Correction : on accepte une petite perte possible de recall.</div></article>
+<article class="mis"><div class="wrong">« Le reranker peut tout réparer »</div><p>Il ne voit que les candidats déjà récupérés.</p><div class="right">Correction : il ne peut pas récupérer un chunk absent de la liste.</div></article>
+<article class="mis"><div class="wrong">« Recall@k=1 ⇒ réponse vraie »</div><p>Toutes les preuves utiles peuvent être présentes et mal utilisées.</p><div class="right">Correction : retrieval et génération s’évaluent séparément.</div></article>
+<article class="mis"><div class="wrong">« k plus grand est toujours meilleur »</div><p>Le recall peut monter, mais le bruit et le coût de contexte aussi.</p><div class="right">Correction : choisir k par évaluation empirique.</div></article>
+</div>
+</section>
+
+<section class="section" data-pedagogy="self-explanation" id="expliquer">
+<div class="section-head"><div class="num">11</div><div><h2>Expliquez le retrieval à un novice</h2></div></div>
+<div class="panel selfbox"><label for="explain"><strong>Consigne.</strong> Expliquez pourquoi on peut préférer ANN à une comparaison exhaustive sur des millions de chunks, puis pourquoi un reranker arrive après.</label><textarea id="explain" placeholder="Votre explication…"></textarea><div class="criteria"><label><input type="checkbox"> J’ai expliqué le compromis vitesse / exactitude de ANN.</label><label><input type="checkbox"> J’ai dit que le reranker ne travaille que sur les candidats.</label><label><input type="checkbox"> J’ai séparé retrieval et génération.</label><label><input type="checkbox"> Je n’ai pas présenté le cosinus comme une mesure de vérité.</label></div></div>
+</section>
+
+<section class="section" data-pedagogy="retrieval" id="quiz">
+<div class="section-head"><div class="num">12</div><div><h2>Test de maîtrise</h2></div></div>
+<form class="quiz" id="quizForm">
+<fieldset class="q" data-answer="b"><legend>1. Pourquoi découper un document en chunks ?</legend><label><input type="radio" name="q1" value="a"> Pour modifier les poids du LLM.</label><label><input type="radio" name="q1" value="b"> Pour rendre des passages récupérables indépendamment.</label><label><input type="radio" name="q1" value="c"> Pour garantir la factualité.</label><div class="feedback" data-pedagogy="feedback">Le retriever travaille sur des unités récupérables ; le découpage influence donc directement ce qu’il peut retrouver.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. ANN sert surtout à…</legend><label><input type="radio" name="q2" value="a"> produire la réponse finale.</label><label><input type="radio" name="q2" value="b"> garantir le voisin exact.</label><label><input type="radio" name="q2" value="c"> accélérer la recherche vectorielle en acceptant une approximation.</label><div class="feedback">À grande échelle, on sacrifie une part potentielle de recall pour éviter une comparaison exhaustive.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>3. Un reranker…</legend><label><input type="radio" name="q3" value="a"> peut retrouver n’importe quel chunk du corpus.</label><label><input type="radio" name="q3" value="b"> réordonne plus finement une liste de candidats déjà récupérés.</label><div class="feedback">Un candidat absent ne peut pas être ressuscité par le reranker.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>4. Recall@k mesure…</legend><label><input type="radio" name="q4" value="a"> la fraction de tous les passages pertinents qui ont été retrouvés.</label><label><input type="radio" name="q4" value="b"> la vérité de la réponse.</label><label><input type="radio" name="q4" value="c"> le rang du premier pertinent seulement.</label><div class="feedback">Recall est une métrique de couverture des preuves pertinentes.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Pourquoi combiner lexical et vectoriel ?</legend><label><input type="radio" name="q5" value="a"> Parce que leurs scores sont identiques.</label><label><input type="radio" name="q5" value="b"> Pour supprimer le besoin d’évaluation.</label><label><input type="radio" name="q5" value="c"> Parce qu’ils ont des forces complémentaires.</label><div class="feedback">Le lexical excelle souvent sur les formes exactes ; le vectoriel sur les reformulations sémantiques.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>6. Recall@k=1 garantit-il une réponse finale correcte ?</legend><label><input type="radio" name="q6" value="a"> Oui.</label><label><input type="radio" name="q6" value="b"> Non, le générateur peut encore mal utiliser les preuves.</label><div class="feedback">Le retrieval et la génération sont deux étages distincts.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div>
+</form>
+</section>
+
+<section class="section" data-pedagogy="transfer" id="transfert">
+<div class="section-head"><div class="num">13</div><div><h2>Transfert — choisir la bonne stratégie</h2></div></div>
+<div class="transfer">
+<article class="transfer-card" data-answer="lexical"><h3>Référence juridique exacte</h3><p>La requête contient « article L.511-5 ».</p><select><option value="">Choisir…</option><option value="lexical">Le lexical est particulièrement utile pour l’identifiant exact.</option><option value="vector">Le lexical doit être désactivé.</option></select><div class="transfer-feedback">Les chaînes exactes et rares sont une force classique de BM25.</div></article>
+<article class="transfer-card" data-answer="ann"><h3>Cent millions de vecteurs</h3><p>Comparer exactement la requête à chaque vecteur devient trop lent.</p><select><option value="">Choisir…</option><option value="ann">Utiliser un index ANN et mesurer le recall obtenu.</option><option value="all">Toujours comparer exhaustivement malgré le coût.</option></select><div class="transfer-feedback">ANN est précisément destiné à ce compromis d’échelle.</div></article>
+<article class="transfer-card" data-answer="generation"><h3>Bonne preuve présente</h3><p>Le chunk exact est dans le top-3 mais la réponse finale le contredit.</p><select><option value="">Choisir…</option><option value="retrieval">Erreur de retrieval certaine.</option><option value="generation">Erreur de génération / usage des preuves.</option></select><div class="transfer-feedback">Le retrieval a bien fourni la preuve ; le problème apparaît ensuite.</div></article>
+</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div>
+</section>
+
+<section class="section" data-pedagogy="recap" id="synthese">
+<div class="section-head"><div class="num">14</div><div><h2>À retenir</h2></div></div>
+<div class="recap">
+<article><b>Chunking détermine ce qui peut être retrouvé.</b><p>Les frontières, taille et overlap changent le corpus de recherche.</p></article>
+<article><b>Lexical et vectoriel sont complémentaires.</b><p>Exactitude de surface contre proximité sémantique.</p></article>
+<article><b>ANN échange un peu d’exactitude contre beaucoup de vitesse.</b><p>Le compromis doit être mesuré.</p></article>
+<article><b>Le reranker intervient après le retriever.</b><p>Il ne peut pas réparer un candidat absent.</p></article>
+<article><b>Precision, Recall, MRR et nDCG répondent à des questions différentes.</b><p>Aucune métrique unique ne suffit.</p></article>
+<article><b>RAG ≠ garantie de vérité.</b><p>Preuve récupérée, contexte construit et génération doivent tous être évalués.</p></article>
+</div>
+<div class="intuition" style="margin-top:14px"><strong>Pont vers la suite.</strong> Le prochain niveau de qualité sera de relier retrieval et fiabilité : chunks sélectionnés → contexte → réponse → claims → preuves → citations → correction ou abstention.</div>
+</section>
+
+<section class="section trainer-only">
+    <div class="section-head"><div class="num">15</div><div><h2>Débrief formateur</h2><p>Les idées à faire verbaliser avant de quitter le laboratoire.</p></div></div>
     <div class="panel">
       <p><b>1.</b> Un excellent MRR ne garantit pas un bon Recall@k : le premier passage peut être parfait tout en laissant de côté d’autres preuves nécessaires.</p>
       <p><b>2.</b> Augmenter k tend à augmenter le recall, mais peut dégrader la précision et ajouter du bruit dans le contexte.</p>
@@ -306,6 +433,13 @@ function setProjectorMode(on){var rootEl=document.documentElement,btn=document.g
 document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!document.documentElement.classList.contains("projector"))});
 document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.documentElement.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
+
+document.getElementById("checkCompletion").addEventListener("click",function(){var score=0,total=0;document.querySelectorAll("[data-answer]").forEach(function(el){total++;if(el.value===el.dataset.answer)score++});var box=document.getElementById("completionFeedback");box.classList.add("show");box.innerHTML="<b>"+score+" / "+total+"</b> — "+(score===total?"Pipeline RAG correctement reconstruit.":"Reprenez l’exemple travaillé et le pipeline.")});
+document.getElementById("resetCompletion").addEventListener("click",function(){document.querySelectorAll("[data-answer]").forEach(function(el){el.value=""});document.getElementById("completionFeedback").classList.remove("show")});
+document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var score=0,total=0;document.querySelectorAll(".q").forEach(function(q){total++;var c=q.querySelector("input:checked"),ok=c&&c.value===q.dataset.answer;q.classList.toggle("okq",!!ok);q.classList.toggle("badq",!ok);if(ok)score++});document.getElementById("quizScore").textContent=score+" / "+total+(score===total?" · maîtrise solide":" · utilisez les feedbacks")});
+document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll(".q").forEach(function(q){q.classList.remove("okq","badq")});document.getElementById("quizScore").textContent=""});
+document.getElementById("checkTransfer").addEventListener("click",function(){var score=0,total=0;document.querySelectorAll(".transfer-card").forEach(function(c){total++;var good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});document.getElementById("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":"")});
+
 render();
 })();
 </script>
