@@ -95,6 +95,8 @@ Les embeddings, l'ANN et le reranker sont explicitement des modèles didactiques
 
 La plateforme suit désormais un contrat pédagogique explicite documenté dans [`docs/STANDARD_PEDAGOGIQUE_NOVICE.md`](docs/STANDARD_PEDAGOGIQUE_NOVICE.md).
 
+Le **Parcours 0 — Situer les LLM** est le premier module passé en `novice-ready` après reconstruction complète selon ce standard.
+
 Le manifeste [`data/pedagogy-manifest.json`](data/pedagogy-manifest.json) distingue :
 - les modules historiques encore en `remediation-required` ;
 - les futurs modules `novice-ready`, qui doivent contenir les blocs d'étayage obligatoires ;
