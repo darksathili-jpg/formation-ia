@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1.0",
-  "updated_on": "2026-09-17",
+  "updated_on": "2026-09-19",
   "domains": [
     {
       "id": "A",
@@ -22,6 +22,13 @@
       "title": "Transformer et attention",
       "order": 3,
       "description": "Comprendre comment le Transformer contextualise les représentations grâce à l'auto-attention, aux projections Query/Key/Value, au produit scalaire, au softmax, aux têtes multiples et au masque causal."
+    },
+    {
+      "id": "E",
+      "slug": "generation-decoding",
+      "title": "Génération et décodage",
+      "order": 5,
+      "description": "Comprendre comment les représentations finales sont projetées vers le vocabulaire, transformées en distribution de probabilité et décodées token par token."
     }
   ],
   "concepts": [
@@ -2036,6 +2043,478 @@
         "attention"
       ],
       "reviewed_on": "2026-09-17"
+    },
+    {
+      "id": "E01",
+      "slug": "inference-llm",
+      "title": "Inférence d'un LLM",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Phase d'utilisation d'un modèle entraîné pour calculer des sorties à partir d'un contexte, sans modifier normalement ses poids par simple conversation.",
+      "prerequisites": [
+        "C09"
+      ],
+      "learning_objectives": [
+        "Distinguer entraînement et inférence.",
+        "Comprendre qu'une conversation ordinaire modifie le contexte fourni, pas automatiquement les poids."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "L'inférence comme exécution du modèle entraîné sur un contexte.",
+          "La différence entre poids appris et contexte courant."
+        ],
+        "demonstrate": [
+          "Comparer une modification du prompt à une mise à jour de paramètres."
+        ],
+        "hard_questions": [
+          {
+            "question": "Le modèle apprend-il mes messages pendant la conversation ?",
+            "key_points": [
+              "La génération courante utilise le contexte sans mise à jour de gradient.",
+              "Une application peut stocker des données séparément ; cela ne signifie pas que les poids du modèle sont modifiés."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Chaque message réentraîne immédiatement le LLM.",
+          "correction": "L'inférence standard calcule des sorties avec des poids déjà appris ; mémoire applicative et entraînement sont distincts."
+        }
+      ],
+      "source_ids": [
+        "SRC-0004"
+      ],
+      "term_ids": [
+        "TERM-0043"
+      ],
+      "tags": [
+        "inference",
+        "generation"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E02",
+      "slug": "logit",
+      "title": "Logits de sortie",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Scores numériques non normalisés produits pour les candidats du vocabulaire avant transformation en probabilités.",
+      "prerequisites": [
+        "E01"
+      ],
+      "learning_objectives": [
+        "Distinguer logit et probabilité.",
+        "Lire un classement de candidats avant softmax."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Un logit est un score brut relatif, pas une probabilité ni un score de vérité."
+        ],
+        "demonstrate": [
+          "Appliquer un softmax à quelques logits et observer la normalisation."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un logit élevé signifie-t-il que l'énoncé est vrai ?",
+            "key_points": [
+              "Non : il indique une préférence relative du modèle pour le prochain token dans ce contexte.",
+              "Probabilité de token et vérité d'une proposition sont des notions différentes."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un logit de 4 signifie 400 % de probabilité.",
+          "correction": "Les logits ne sont pas des probabilités ; ils doivent être transformés, typiquement par softmax."
+        }
+      ],
+      "source_ids": [
+        "SRC-0012",
+        "SRC-0004"
+      ],
+      "term_ids": [
+        "TERM-0044"
+      ],
+      "tags": [
+        "logits",
+        "output"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E03",
+      "slug": "distribution-prochain-token",
+      "title": "Distribution du prochain token",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Distribution conditionnelle sur le vocabulaire obtenue à partir des logits pour le prochain token, compte tenu du contexte accessible.",
+      "prerequisites": [
+        "E02"
+      ],
+      "learning_objectives": [
+        "Distinguer softmax d'attention et softmax de sortie.",
+        "Interpréter une distribution comme P(token suivant | contexte), pas comme P(énoncé vrai)."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le softmax de sortie normalise des logits sur les candidats du vocabulaire.",
+          "La différence avec le softmax interne de l'attention."
+        ],
+        "demonstrate": [
+          "Afficher une distribution sur plusieurs tokens dont la somme vaut 1."
+        ],
+        "hard_questions": [
+          {
+            "question": "Une probabilité de 0,8 pour un token signifie-t-elle 80 % de chances que la réponse soit vraie ?",
+            "key_points": [
+              "Non : c'est une probabilité locale de token conditionnée par le contexte et le modèle.",
+              "La vérité s'évalue au niveau des affirmations et des preuves, pas via ce seul score."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "La probabilité du prochain token est une probabilité de vérité.",
+          "correction": "Elle mesure une préférence de continuation locale du modèle, pas la véracité globale de la réponse."
+        }
+      ],
+      "source_ids": [
+        "SRC-0004",
+        "SRC-0012"
+      ],
+      "term_ids": [
+        "TERM-0045"
+      ],
+      "tags": [
+        "softmax",
+        "next-token",
+        "distribution"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E04",
+      "slug": "decodage-glouton",
+      "title": "Décodage glouton",
+      "domain": "E",
+      "mastery_level": "important",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Stratégie qui sélectionne à chaque étape le token de probabilité maximale.",
+      "prerequisites": [
+        "E03"
+      ],
+      "learning_objectives": [
+        "Simuler une génération greedy.",
+        "Comprendre que localement maximal ne signifie ni globalement optimal ni factuellement correct."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Greedy = argmax à chaque étape."
+        ],
+        "demonstrate": [
+          "Comparer greedy à plusieurs tirages par sampling sur une même distribution."
+        ],
+        "hard_questions": [
+          {
+            "question": "Greedy garantit-il la meilleure réponse complète ?",
+            "key_points": [
+              "Non : il optimise un choix local token par token.",
+              "Le token le plus probable peut engager une continuation médiocre ou factuellement fausse."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Greedy choisit forcément la réponse la plus vraie.",
+          "correction": "Il choisit le token localement le plus probable selon le modèle."
+        }
+      ],
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "term_ids": [
+        "TERM-0046"
+      ],
+      "tags": [
+        "greedy",
+        "decoding"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E05",
+      "slug": "sampling",
+      "title": "Échantillonnage",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Sélection aléatoire pondérée d'un token selon une distribution de probabilité éventuellement transformée ou filtrée.",
+      "prerequisites": [
+        "E03"
+      ],
+      "learning_objectives": [
+        "Effectuer un tirage pondéré.",
+        "Comprendre pourquoi des générations peuvent diverger à contexte identique."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Sampling = tirage pondéré, pas choix uniforme."
+        ],
+        "demonstrate": [
+          "Répéter plusieurs tirages et visualiser les fréquences."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un token moins probable peut-il être choisi ?",
+            "key_points": [
+              "Oui s'il reste dans la distribution après filtrage.",
+              "Sa fréquence attendue dépend de sa probabilité."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Sampling signifie choisir n'importe quel token au hasard.",
+          "correction": "Le tirage est pondéré par la distribution ; les candidats plus probables restent favorisés."
+        }
+      ],
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "term_ids": [
+        "TERM-0047"
+      ],
+      "tags": [
+        "sampling",
+        "decoding"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E06",
+      "slug": "temperature",
+      "title": "Température",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Paramètre appliqué aux logits avant softmax : une température inférieure à 1 aiguise la distribution, supérieure à 1 l'aplatit.",
+      "prerequisites": [
+        "E02",
+        "E03"
+      ],
+      "learning_objectives": [
+        "Visualiser l'effet de T sur la distribution.",
+        "Éviter l'équation simpliste température basse = vérité."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "softmax(logits / T) pour T > 0.",
+          "T → 0 tend vers un comportement argmax ; la division littérale par zéro est indéfinie."
+        ],
+        "demonstrate": [
+          "Comparer les mêmes logits à T=0,4 ; 1 ; 1,8."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi une température basse peut-elle produire une erreur très stable ?",
+            "key_points": [
+              "Elle renforce le candidat déjà favorisé.",
+              "Si le candidat dominant est faux, réduire T ne le rend pas vrai."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Température basse = réponse correcte ; température haute = créativité.",
+          "correction": "La température contrôle la concentration de la distribution, pas directement la vérité ni la créativité."
+        }
+      ],
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "term_ids": [
+        "TERM-0048"
+      ],
+      "tags": [
+        "temperature",
+        "softmax",
+        "sampling"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E07",
+      "slug": "top-k",
+      "title": "Top-k",
+      "domain": "E",
+      "mastery_level": "important",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Filtrage conservant les k candidats les mieux classés avant renormalisation et sélection.",
+      "prerequisites": [
+        "E03",
+        "E05"
+      ],
+      "learning_objectives": [
+        "Appliquer un filtre top-k.",
+        "Comprendre que k fixe un nombre de candidats, pas une masse de probabilité."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Top-k garde un nombre fixe de candidats puis renormalise."
+        ],
+        "demonstrate": [
+          "Modifier k et observer quels tokens deviennent impossibles."
+        ],
+        "hard_questions": [
+          {
+            "question": "Top-k=5 signifie-t-il conserver 5 % de probabilité ?",
+            "key_points": [
+              "Non : il conserve cinq candidats quelle que soit leur masse cumulée."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Top-k est un seuil de probabilité.",
+          "correction": "C'est un seuil sur le nombre de candidats conservés."
+        }
+      ],
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "term_ids": [
+        "TERM-0049"
+      ],
+      "tags": [
+        "top-k",
+        "sampling"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E08",
+      "slug": "top-p",
+      "title": "Top-p / nucleus sampling",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Filtrage conservant le plus petit ensemble de candidats triés dont la probabilité cumulée atteint au moins p, avant renormalisation et tirage.",
+      "prerequisites": [
+        "E03",
+        "E05"
+      ],
+      "learning_objectives": [
+        "Construire le noyau top-p.",
+        "Distinguer nombre fixe de candidats et masse de probabilité adaptative."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Top-p adapte le nombre de candidats à la forme de la distribution."
+        ],
+        "demonstrate": [
+          "Comparer top-k et top-p sur une distribution concentrée puis plate."
+        ],
+        "hard_questions": [
+          {
+            "question": "Top-p=0,9 conserve-t-il toujours 90 % des tokens ?",
+            "key_points": [
+              "Non : il conserve une masse cumulée d'environ 0,9, avec un nombre variable de tokens."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Top-p=0,9 signifie garder 90 % du vocabulaire.",
+          "correction": "Il s'agit d'une masse de probabilité cumulée, pas d'une fraction du nombre de tokens."
+        }
+      ],
+      "source_ids": [
+        "SRC-0014"
+      ],
+      "term_ids": [
+        "TERM-0050"
+      ],
+      "tags": [
+        "top-p",
+        "nucleus-sampling"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "E09",
+      "slug": "generation-autoregressive",
+      "title": "Génération autorégressive",
+      "domain": "E",
+      "mastery_level": "indispensable",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Boucle dans laquelle un token est sélectionné, ajouté au contexte, puis utilisé pour calculer la distribution du token suivant.",
+      "prerequisites": [
+        "E03",
+        "E04",
+        "E05"
+      ],
+      "learning_objectives": [
+        "Décrire la boucle token → ajout au contexte → nouveau calcul.",
+        "Comprendre comment une décision précoce influence les distributions suivantes."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "La génération construit la sortie séquentiellement.",
+          "Chaque token sélectionné devient une partie du contexte des étapes suivantes."
+        ],
+        "demonstrate": [
+          "Faire diverger deux séquences après un premier choix différent."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi une erreur initiale peut-elle rester cohérente sur plusieurs tokens ?",
+            "key_points": [
+              "Le token erroné devient du contexte.",
+              "Le modèle peut produire ensuite une continuation cohérente avec cette prémisse devenue contextuelle."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Le modèle écrit toute la phrase d'un seul coup puis l'affiche progressivement.",
+          "correction": "Pour les LLM autoregressifs étudiés ici, la génération sélectionne successivement des tokens conditionnés par le contexte courant."
+        }
+      ],
+      "source_ids": [
+        "SRC-0004",
+        "SRC-0014"
+      ],
+      "term_ids": [
+        "TERM-0051"
+      ],
+      "tags": [
+        "autoregressive",
+        "next-token",
+        "generation"
+      ],
+      "reviewed_on": "2026-09-19"
     }
   ]
 }
