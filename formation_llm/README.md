@@ -2,6 +2,12 @@
 
 Plateforme de formation professionnelle consacrée aux modèles de langage, construite comme un référentiel pédagogique vérifiable et une collection de modules interactifs autonomes.
 
+## Application shell
+
+`index.html` est désormais le point d'entrée de la nouvelle application : tableau de bord, parcours 0→7, laboratoires, progression locale, mode stagiaire, mode formateur et mode projection. Le shell reste autonome, sans API ni dépendance réseau, et l'ancienne `formation_ia/` n'est pas modifiée.
+
+Architecture : [`docs/ARCHITECTURE_APP.md`](docs/ARCHITECTURE_APP.md).
+
 ## Module interactif — Domaine B
 
 Le premier module exploitable est disponible dans [`modules/domaine-b.html`](modules/domaine-b.html), avec une page d'entrée dans [`index.html`](index.html).
@@ -17,7 +23,11 @@ Il couvre le Domaine B — **Tokens, représentations et contexte** — de B01 �
 - un quiz de maîtrise formateur ;
 - un fonctionnement autonome sans API ni dépendance réseau.
 
-## Module interactif — Domaine C\n\nLe module [`modules/domaine-c.html`](modules/domaine-c.html) introduit **Transformer et attention** de C01 à C09. Il comprend un **Attention Lab** local qui rend visible la chaîne `Q·K → /√dₖ → masque causal → softmax → Σ poids·V`, une matrice d’attention complète, trois têtes simulées, un mode formateur et un quiz. Les vecteurs sont fictifs et déterministes : ils illustrent les opérations sans prétendre reproduire un modèle commercial.\n\n## Validation
+## Module interactif — Domaine C
+
+Le module [`modules/domaine-c.html`](modules/domaine-c.html) introduit **Transformer et attention** de C01 à C09. Il comprend un **Attention Lab** local qui rend visible la chaîne `Q·K → /√dₖ → masque causal → softmax → Σ poids·V`, une matrice d’attention complète, trois têtes simulées, un mode formateur et un quiz. Les vecteurs sont fictifs et déterministes : ils illustrent les opérations sans prétendre reproduire un modèle commercial.
+
+## Validation
 
 Depuis `formation_llm/` :
 
@@ -29,7 +39,7 @@ npm run validate
 La commande exécute deux contrôles :
 
 - `validate:data` : schémas JSON et intégrité référentielle du corpus pédagogique ;
-- `validate:web` : contrôle structurel des modules B et C, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
+- `validate:web` : contrôle structurel de l'application et des modules B et C, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
 
 Le workflow GitHub Actions `Validate Formation LLM` exécute cette validation à chaque modification pertinente.
 
