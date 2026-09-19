@@ -37,10 +37,17 @@ main{max-width:1220px;margin:auto;padding:0 22px 80px}.hero{display:grid;grid-te
 .trainer-banner strong{margin-right:8px}.trainer-on .trainer-banner{display:block}
 #trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
 
+
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}
+.projector .projector-exit{display:inline-flex;align-items:center;gap:7px}
+.projector .tools{display:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
 </style>
 </head>
 <body>
-<header class="topbar"><div class="topbar-inner"><div class="brand">Formation LLM · Parcours 1</div><nav class="nav" aria-label="Navigation"><a href="#pont">Du contexte à l’attention</a><a href="#qkv">Q/K/V</a><a href="#attention">Attention Lab</a><a href="#masque">Masque</a><a href="#concepts">9 notions</a><a href="#quiz">Quiz</a></nav><div class="tools"><button class="pill" id="themeBtn" type="button">◐ Thème</button><button class="pill" id="projectorBtn" type="button">▣ Projection</button><button class="pill" id="trainerBtn" type="button" aria-pressed="false">○ Mode stagiaire</button></div></div></header>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../index.html#parcours" style="text-decoration:none">← Formation LLM · Parcours 1</a><nav class="nav" aria-label="Navigation"><a href="#pont">Du contexte à l’attention</a><a href="#qkv">Q/K/V</a><a href="#attention">Attention Lab</a><a href="#masque">Masque</a><a href="#concepts">9 notions</a><a href="#quiz">Quiz</a></nav><div class="tools"><button class="pill" id="themeBtn" type="button">◐ Thème</button><button class="pill" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button><button class="pill" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button></div></div></header>
 <main>
 <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 <section class="hero"><div><div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 2</div><h1>Comment un token devient<br><em style="color:var(--accent)">contextuel</em></h1><p class="lead">L’étape précédente s’arrêtait à l’embedding initial. Ici, on observe comment une représentation peut intégrer des informations provenant d’autres positions de la séquence grâce à l’auto-attention.</p><div class="meta"><span class="badge">9 notions</span><span class="badge">Attention Lab interactif</span><span class="badge">100 % local · aucune API</span><span class="badge">≈ 1 h 30</span></div></div><aside class="hero-card"><h2>Fil rouge</h2><div class="flow"><div><span>01</span> Embedding initial</div><div><span>02</span> Projections Q · K · V</div><div><span>03</span> Scores Q·K / √dₖ</div><div><span>04</span> Masque causal</div><div><span>05</span> Softmax</div><div><span>06</span> Somme pondérée des V</div><div><span>07</span> Représentation contextualisée</div></div><p class="hero-note">Le laboratoire utilise des vecteurs fictifs déterministes : il montre le mécanisme, pas les poids d’un modèle commercial.</p></aside></section>
@@ -82,7 +89,7 @@ main{max-width:1220px;margin:auto;padding:0 22px 80px}.hero{display:grid;grid-te
 
 <section class="section"><div class="notice"><strong>Étape suivante — poursuivre le parcours 1</strong>Une fois ce laboratoire maîtrisé, nous ajouterons l’information de position (dont RoPE et variantes), le MLP/feed-forward, les connexions résiduelles, la normalisation, l’empilement des blocs, puis le KV cache. L’objectif est de voir le Transformer comme une chaîne de transformations, pas comme une boîte appelée « attention ».</div></section>
 <div class="footer">Formation LLM · Parcours 1 v0.1 · Simulation pédagogique autonome · Source conceptuelle principale : Vaswani et al., « Attention Is All You Need » (2017).</div>
-<nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-b.html">← Étape 1 · Tokens & contexte</a><div class="center">Attention ≠ Transformer complet. Le RAG Lab est un laboratoire transversal, pas la suite architecturale de C.</div><a href="rag-lab.html">Explorer le RAG Lab →</a></nav>
+<nav class="next-step" aria-label="Navigation du parcours"><a href="domaine-b.html">← Étape 1 · Tokens & contexte</a><div class="center">Attention ≠ Transformer complet. L’étape 3 complète le bloc ; le RAG Lab reste un laboratoire transversal du parcours 4.</div><a href="transformer-block-lab.html">Étape 3 · Bloc Transformer →</a></nav>
 </main>
 <script>
 (function(){
@@ -132,8 +139,11 @@ document.querySelectorAll("[data-head]").forEach(function(b){b.addEventListener(
 function applyTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem("llm-theme",t)}
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")});
 var saved=localStorage.getItem("llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
-document.getElementById("projectorBtn").addEventListener("click",function(){document.documentElement.classList.toggle("projector");this.setAttribute("aria-pressed",document.documentElement.classList.contains("projector"))});
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"◆ Mode formateur":"○ Mode stagiaire";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
+function setProjectorMode(on){var rootEl=document.documentElement,btn=document.getElementById("projectorBtn");rootEl.classList.toggle("projector",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection";}
+document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!document.documentElement.classList.contains("projector"))});
+document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.documentElement.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
 var savedRole;try{savedRole=localStorage.getItem("formation-llm-role")}catch(e){}setTrainerMode(savedRole==="trainer");
 document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!document.body.classList.contains("trainer-on"))});
 document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var qs=[].slice.call(document.querySelectorAll(".q"));var score=0;qs.forEach(function(q,i){var checked=q.querySelector("input[name=q"+(i+1)+"]:checked"),ok=checked&&checked.value===q.dataset.answer;q.classList.remove("correct","wrong");q.classList.add(ok?"correct":"wrong");if(ok)score++});document.getElementById("scoreBox").textContent=score+" / "+qs.length+(score===qs.length?" — maîtrise solide":" — reprenez les corrections")});
