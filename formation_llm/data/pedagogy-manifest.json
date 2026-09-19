@@ -37,9 +37,11 @@
     {
       "path": "modules/transformer-block-lab.html",
       "label": "Parcours 1 — Transformer Block Lab",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 4
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 4,
+      "reviewed_on": "2026-09-19",
+      "notes": "Bloc Transformer reconstruit : rôles des briques, exemple travaillé, Position/Block/Stack/KV labs guidés, pièges, récupération et transfert."
     },
     {
       "path": "modules/sampling-lab.html",
