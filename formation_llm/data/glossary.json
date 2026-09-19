@@ -1356,29 +1356,6 @@
       "reviewed_on": "2026-09-17"
     },
     {
-      "id": "TERM-0043",
-      "term": "Inférence",
-      "english_term": "Inference",
-      "slug": "inference",
-      "definition_short": "Utilisation d'un modèle entraîné pour calculer des sorties à partir d'entrées.",
-      "definition_precise": "Phase où les poids appris sont utilisés pour produire des prédictions ou générations à partir d'un contexte, sans mise à jour de gradient dans l'inférence standard.",
-      "common_misuses": [
-        {
-          "statement": "Inférence = entraînement en direct.",
-          "correction": "L'inférence standard utilise les poids existants ; l'entraînement modifie les paramètres."
-        }
-      ],
-      "stability": "stable",
-      "epistemic_status": "established",
-      "source_ids": [
-        "SRC-0004"
-      ],
-      "tags": [
-        "inference"
-      ],
-      "reviewed_on": "2026-09-19"
-    },
-    {
       "id": "TERM-0044",
       "term": "Logit",
       "english_term": "Logit",
