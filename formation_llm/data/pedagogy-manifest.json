@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "updated_on": "2026-09-19",
+  "policy": {
+    "new_modules_must_be_novice_ready": true,
+    "legacy_debt_allowed_only_for_listed_modules": true,
+    "note": "Le statut remediation-required est un héritage temporaire. Il ne doit pas être utilisé pour de nouveaux modules."
+  },
+  "modules": [
+    {
+      "path": "modules/domaine-a.html",
+      "label": "Parcours 0 — Situer les LLM",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 1
+    },
+    {
+      "path": "modules/domaine-b.html",
+      "label": "Parcours 1 — Tokens, représentations et contexte",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 2
+    },
+    {
+      "path": "modules/domaine-c.html",
+      "label": "Parcours 1 — Transformer et attention",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 3
+    },
+    {
+      "path": "modules/transformer-block-lab.html",
+      "label": "Parcours 1 — Transformer Block Lab",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 4
+    },
+    {
+      "path": "modules/sampling-lab.html",
+      "label": "Parcours 1 — Sampling Lab",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 5
+    },
+    {
+      "path": "modules/hallucination-lab.html",
+      "label": "Parcours 3 — Hallucination Lab",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 6
+    },
+    {
+      "path": "modules/rag-lab.html",
+      "label": "Parcours 4 — RAG Lab",
+      "status": "remediation-required",
+      "legacy_debt": true,
+      "priority": 7
+    }
+  ]
+}
