@@ -1,0 +1,17 @@
+import { readFile } from 'node:fs/promises';
+import vm from 'node:vm';
+const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+const errors=[];
+const must=['Tableau de bord','Parcours 0 → 7','Laboratoires','Progression','Mode stagiaire','Mode formateur','modules/domaine-b.html','modules/domaine-c.html','Tokenizer Lab','Attention Lab','RAG Lab','localStorage'];
+for(const marker of must) if(!html.includes(marker)) errors.push('marqueur manquant: '+marker);
+if(/<script\s+[^>]*src=/i.test(html)||/<link\s+[^>]*href=/i.test(html)) errors.push('dépendance externe détectée dans le shell');
+if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push('appel réseau détecté dans le shell');
+const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+const dup=ids.filter((id,i)=>ids.indexOf(id)!==i);
+if(dup.length) errors.push('id dupliqué(s): '+[...new Set(dup)].join(', '));
+const script=html.match(/<script>([\s\S]*?)<\/script>/i)?.[1];
+if(!script) errors.push('script applicatif introuvable'); else {try{new vm.Script(script)}catch(e){errors.push('JavaScript invalide: '+e.message)}}
+if(!/@media\(max-width:650px\)/.test(html)) errors.push('responsive mobile absent');
+if(!/@media\(prefers-reduced-motion:reduce\)/.test(html)) errors.push('prefers-reduced-motion absent');
+if(errors.length){console.error('\n❌ APPLICATION INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
+console.log('✅ Application shell valide — navigation, progression locale, modes et modules B/C présents.');
