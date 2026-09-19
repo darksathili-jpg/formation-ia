@@ -6,7 +6,7 @@ const must=[
  'Sampling Lab','Logits → distribution','Greedy ≠ sampling','Top-k ou top-p',
  'Autoregressive Loop Lab','température basse ≠ exactitude','softmax(logits / T)',
  'nucleus','formation-llm-role','Mode formateur actif','Quitter la projection',
- 'setProjectorMode','Test de maîtrise','SRC-0014'
+ 'setProjectorMode','Test de maîtrise','The Curious Case of Neural Text Degeneration'
 ];
 for(const m of must) if(!html.includes(m)) errors.push('marqueur manquant: '+m);
 if(/>[^<]*(?:Domaine [A-Z]|DOMAINE [A-Z]|[A-Z]\d{2})[^<]*</.test(html)) errors.push('nomenclature technique visible');
