@@ -29,6 +29,13 @@
       "title": "Génération et décodage",
       "order": 5,
       "description": "Comprendre comment les représentations finales sont projetées vers le vocabulaire, transformées en distribution de probabilité et décodées token par token."
+    },
+    {
+      "id": "I",
+      "slug": "fiabilite-evaluation",
+      "title": "Fiabilité, incertitude et évaluation",
+      "order": 9,
+      "description": "Distinguer fluidité, factualité, incertitude et preuve ; vérifier des affirmations, calibrer les niveaux de confiance et savoir s'abstenir."
     }
   ],
   "concepts": [
@@ -2513,6 +2520,428 @@
         "autoregressive",
         "next-token",
         "generation"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I01",
+      "slug": "hallucination-llm",
+      "title": "Hallucination / contenu non étayé",
+      "domain": "I",
+      "mastery_level": "foundation",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Production fluide contenant une affirmation fausse, inventée ou non étayée par les informations disponibles. Les définitions exactes varient selon les travaux ; le point opérationnel est l'absence de support fiable.",
+      "prerequisites": [
+        "E09"
+      ],
+      "learning_objectives": [
+        "Distinguer plausibilité linguistique et factualité.",
+        "Identifier une affirmation non étayée sans inférer une intention du modèle."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Un LLM optimise une continuation conditionnelle, pas un test direct de vérité.",
+          "Le terme hallucination recouvre plusieurs catégories d'erreurs selon les taxonomies."
+        ],
+        "demonstrate": [
+          "Comparer une réponse fluide à un corpus de preuves."
+        ],
+        "hard_questions": [
+          {
+            "question": "Une réponse très détaillée est-elle plus fiable ?",
+            "key_points": [
+              "Le détail et la fluidité sont des propriétés de forme.",
+              "La fiabilité demande des preuves ou des tests adaptés."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Une hallucination n'arrive que lorsque la température est élevée.",
+          "correction": "Une affirmation fausse peut aussi être le candidat dominant et sortir avec greedy ou faible température."
+        }
+      ],
+      "source_ids": [
+        "SRC-0009",
+        "SRC-0015"
+      ],
+      "term_ids": [
+        "TERM-0052"
+      ],
+      "tags": [
+        "hallucination",
+        "factuality",
+        "reliability"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I02",
+      "slug": "fluidite-vs-factualite",
+      "title": "Fluidité ≠ factualité",
+      "domain": "I",
+      "mastery_level": "foundation",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Une réponse peut être grammaticalement fluide, structurée et convaincante tout en contenant des affirmations incorrectes.",
+      "prerequisites": [
+        "I01"
+      ],
+      "learning_objectives": [
+        "Séparer qualité rédactionnelle et qualité factuelle.",
+        "Refuser d'utiliser le ton assuré comme indice suffisant de vérité."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "La génération linguistique et la validation factuelle sont deux problèmes différents."
+        ],
+        "demonstrate": [
+          "Présenter deux réponses également fluides dont une seule est soutenue par les sources."
+        ],
+        "hard_questions": [
+          {
+            "question": "Le modèle semble hésiter : cela signifie-t-il qu'il a moins de chances d'avoir raison ?",
+            "key_points": [
+              "Le style verbal ne fournit pas une mesure calibrée par défaut.",
+              "Il faut évaluer empiriquement la relation entre confiance et exactitude."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Plus une réponse est précise et bien écrite, plus elle est probablement vraie.",
+          "correction": "La forme ne remplace pas la vérification factuelle."
+        }
+      ],
+      "source_ids": [
+        "SRC-0009",
+        "SRC-0015"
+      ],
+      "term_ids": [
+        "TERM-0053"
+      ],
+      "tags": [
+        "fluency",
+        "factuality"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I03",
+      "slug": "premisse-fausse",
+      "title": "Prémisse fausse et contexte trompeur",
+      "domain": "I",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Une question contenant une prémisse fausse ou ambiguë peut pousser le modèle à poursuivre cette prémisse plutôt qu'à la contester.",
+      "prerequisites": [
+        "I01"
+      ],
+      "learning_objectives": [
+        "Détecter une prémisse à vérifier avant de répondre.",
+        "Comprendre que le contexte utilisateur devient une contrainte forte de génération."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Le modèle conditionne sa continuation sur le texte fourni, y compris les prémisses erronées."
+        ],
+        "demonstrate": [
+          "Comparer une question neutre à la même question avec une prémisse fausse."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi le modèle ne corrige-t-il pas toujours une prémisse fausse ?",
+            "key_points": [
+              "Il prédit une continuation plausible sous le contexte.",
+              "La détection/correction de prémisses n'est pas garantie sans vérification."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Le modèle rejettera automatiquement toute prémisse fausse.",
+          "correction": "Il peut au contraire produire une continuation cohérente avec cette prémisse."
+        }
+      ],
+      "source_ids": [
+        "SRC-0015",
+        "SRC-0009"
+      ],
+      "term_ids": [
+        "TERM-0054"
+      ],
+      "tags": [
+        "false-premise",
+        "context"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I04",
+      "slug": "incertitude-locale-vs-epistemique",
+      "title": "Incertitude locale ≠ incertitude factuelle",
+      "domain": "I",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Une distribution de prochain token plus ou moins concentrée décrit une incertitude locale de génération ; elle n'est pas une mesure directe de la vérité d'une proposition.",
+      "prerequisites": [
+        "E03",
+        "I01"
+      ],
+      "learning_objectives": [
+        "Distinguer incertitude de token et incertitude sur une affirmation.",
+        "Éviter de lire une probabilité locale comme score de vérité."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "P(token suivant | contexte) n'est pas P(énoncé vrai)."
+        ],
+        "demonstrate": [
+          "Montrer une distribution très concentrée menant à un fait faux."
+        ],
+        "hard_questions": [
+          {
+            "question": "Une faible entropie de sortie prouve-t-elle que le modèle sait ?",
+            "key_points": [
+              "Non : le modèle peut être très confiant dans une association erronée.",
+              "Une notion de connaissance nécessite une évaluation externe adaptée."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Une distribution très concentrée implique une affirmation vraie.",
+          "correction": "Elle indique seulement une forte préférence locale du modèle."
+        }
+      ],
+      "source_ids": [
+        "SRC-0009",
+        "SRC-0016"
+      ],
+      "term_ids": [
+        "TERM-0055"
+      ],
+      "tags": [
+        "uncertainty",
+        "epistemic"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I05",
+      "slug": "calibration",
+      "title": "Calibration",
+      "domain": "I",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Une mesure de confiance est calibrée si, sur un ensemble comparable de prédictions annoncées avec une confiance donnée, la fréquence empirique de réussite correspond approximativement à cette confiance.",
+      "prerequisites": [
+        "I04"
+      ],
+      "learning_objectives": [
+        "Comprendre la calibration comme propriété empirique d'un système.",
+        "Distinguer une phrase de confiance générée d'un score calibré."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "80 % de confiance calibrée signifie environ 80 % de réussite sur des cas comparables.",
+          "La calibration se mesure sur un ensemble, pas sur un seul exemple."
+        ],
+        "demonstrate": [
+          "Comparer confiance annoncée et fréquence de réussite sur 10 cas."
+        ],
+        "hard_questions": [
+          {
+            "question": "Le texte « je suis sûr à 95 % » est-il un score calibré ?",
+            "key_points": [
+              "Pas par défaut.",
+              "Il faut un protocole de mesure reliant le score à des fréquences de réussite observées."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Dire 90 % suffit pour être calibré.",
+          "correction": "La calibration est une relation empirique entre confiance et taux de réussite."
+        }
+      ],
+      "source_ids": [
+        "SRC-0016"
+      ],
+      "term_ids": [
+        "TERM-0056"
+      ],
+      "tags": [
+        "calibration",
+        "confidence"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I06",
+      "slug": "verification-externe",
+      "title": "Vérification externe et preuves",
+      "domain": "I",
+      "mastery_level": "foundation",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Pour les affirmations vérifiables, comparer les claims à des sources indépendantes ou outils adaptés est plus robuste que demander au même modèle de se rassurer lui-même.",
+      "prerequisites": [
+        "I01"
+      ],
+      "learning_objectives": [
+        "Décomposer une réponse en affirmations vérifiables.",
+        "Classer chaque affirmation comme confirmée, contredite ou insuffisamment étayée."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Une preuve doit être pertinente pour l'affirmation précise.",
+          "Une citation ne prouve rien si elle ne soutient pas le claim."
+        ],
+        "demonstrate": [
+          "Associer trois claims à trois extraits de source."
+        ],
+        "hard_questions": [
+          {
+            "question": "Pourquoi « es-tu sûr ? » est-il plus faible qu'une source indépendante ?",
+            "key_points": [
+              "Le même modèle peut répéter ou reformuler la même erreur.",
+              "Une source externe apporte une information indépendante du mécanisme de génération courant."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Une réponse avec des citations est automatiquement fiable.",
+          "correction": "Il faut vérifier que les sources existent, sont pertinentes et soutiennent réellement les affirmations."
+        }
+      ],
+      "source_ids": [
+        "SRC-0009"
+      ],
+      "term_ids": [
+        "TERM-0057"
+      ],
+      "tags": [
+        "verification",
+        "evidence",
+        "grounding"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I07",
+      "slug": "abstention",
+      "title": "Abstention / réponse sélective",
+      "domain": "I",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Un système fiable doit parfois demander une précision, déclarer l'insuffisance de preuve ou refuser de conclure plutôt que produire une affirmation non étayée.",
+      "prerequisites": [
+        "I05",
+        "I06"
+      ],
+      "learning_objectives": [
+        "Reconnaître les situations où l'abstention est préférable.",
+        "Formuler une réponse utile qui explicite ce qui manque."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "L'abstention réduit certaines erreurs au prix d'une couverture moindre."
+        ],
+        "demonstrate": [
+          "Comparer réponse forcée et réponse sélective sur un cas sans preuve suffisante."
+        ],
+        "hard_questions": [
+          {
+            "question": "S'abstenir signifie-t-il que le système est moins performant ?",
+            "key_points": [
+              "Cela dépend du critère.",
+              "Dans des contextes à coût d'erreur élevé, une abstention bien déclenchée peut améliorer la fiabilité utile."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Un bon assistant doit toujours répondre.",
+          "correction": "Dans certains cas, demander clarification ou s'abstenir est le comportement le plus fiable."
+        }
+      ],
+      "source_ids": [
+        "SRC-0009",
+        "SRC-0016"
+      ],
+      "term_ids": [
+        "TERM-0058"
+      ],
+      "tags": [
+        "abstention",
+        "selective-prediction"
+      ],
+      "reviewed_on": "2026-09-19"
+    },
+    {
+      "id": "I08",
+      "slug": "retrieval-vs-generation-error",
+      "title": "Erreur de retrieval ≠ erreur de génération",
+      "domain": "I",
+      "mastery_level": "intermediate",
+      "stability": "stable",
+      "epistemic_status": "established",
+      "summary": "Dans un système RAG, une réponse peut échouer parce que la bonne preuve n'a pas été récupérée ou parce que le modèle a mal utilisé une preuve pourtant présente.",
+      "prerequisites": [
+        "I06"
+      ],
+      "learning_objectives": [
+        "Diagnostiquer séparément retrieval et génération.",
+        "Éviter d'attribuer toute erreur RAG au LLM ou toute erreur au retriever."
+      ],
+      "trainer_mastery": {
+        "explain": [
+          "Retrieval error : preuve utile absente du contexte.",
+          "Generation error : preuve utile présente mais mal utilisée."
+        ],
+        "demonstrate": [
+          "Comparer deux traces RAG ayant la même réponse fausse mais des causes différentes."
+        ],
+        "hard_questions": [
+          {
+            "question": "Un Recall@k parfait garantit-il une réponse correcte ?",
+            "key_points": [
+              "Non.",
+              "Le générateur peut ignorer, mal interpréter ou contredire les preuves récupérées."
+            ]
+          }
+        ]
+      },
+      "misconceptions": [
+        {
+          "statement": "Si le RAG a récupéré le bon passage, la réponse est garantie.",
+          "correction": "Le grounding améliore la disponibilité des preuves mais ne garantit pas leur bon usage."
+        }
+      ],
+      "source_ids": [
+        "SRC-0009"
+      ],
+      "term_ids": [
+        "TERM-0059"
+      ],
+      "tags": [
+        "rag",
+        "diagnosis",
+        "evaluation"
       ],
       "reviewed_on": "2026-09-19"
     }
