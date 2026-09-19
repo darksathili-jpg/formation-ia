@@ -2528,7 +2528,7 @@
       "slug": "hallucination-llm",
       "title": "Hallucination / contenu non étayé",
       "domain": "I",
-      "mastery_level": "foundation",
+      "mastery_level": "indispensable",
       "stability": "stable",
       "epistemic_status": "established",
       "summary": "Production fluide contenant une affirmation fausse, inventée ou non étayée par les informations disponibles. Les définitions exactes varient selon les travaux ; le point opérationnel est l'absence de support fiable.",
@@ -2582,7 +2582,7 @@
       "slug": "fluidite-vs-factualite",
       "title": "Fluidité ≠ factualité",
       "domain": "I",
-      "mastery_level": "foundation",
+      "mastery_level": "indispensable",
       "stability": "stable",
       "epistemic_status": "established",
       "summary": "Une réponse peut être grammaticalement fluide, structurée et convaincante tout en contenant des affirmations incorrectes.",
@@ -2726,7 +2726,7 @@
         "SRC-0016"
       ],
       "term_ids": [
-        "TERM-0055"
+        "TERM-0058"
       ],
       "tags": [
         "uncertainty",
@@ -2778,7 +2778,7 @@
         "SRC-0016"
       ],
       "term_ids": [
-        "TERM-0056"
+        "TERM-0055"
       ],
       "tags": [
         "calibration",
@@ -2791,7 +2791,7 @@
       "slug": "verification-externe",
       "title": "Vérification externe et preuves",
       "domain": "I",
-      "mastery_level": "foundation",
+      "mastery_level": "indispensable",
       "stability": "stable",
       "epistemic_status": "established",
       "summary": "Pour les affirmations vérifiables, comparer les claims à des sources indépendantes ou outils adaptés est plus robuste que demander au même modèle de se rassurer lui-même.",
@@ -2830,7 +2830,7 @@
         "SRC-0009"
       ],
       "term_ids": [
-        "TERM-0057"
+        "TERM-0056"
       ],
       "tags": [
         "verification",
@@ -2884,7 +2884,7 @@
         "SRC-0016"
       ],
       "term_ids": [
-        "TERM-0058"
+        "TERM-0057"
       ],
       "tags": [
         "abstention",
