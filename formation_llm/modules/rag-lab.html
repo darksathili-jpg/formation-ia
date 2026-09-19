@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>RAG Lab — Formation LLM</title>
+<style>
+:root{
+  --bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#60717d;--line:rgba(16,32,45,.14);
+  --accent:#0b7894;--accent2:#6558ca;--green:#24704e;--greenSoft:#dcefe6;--amber:#9b6a25;--amberSoft:#f5e8cf;
+  --red:#a53b42;--redSoft:#f7dfe1;--blueSoft:#d7edf2;--violetSoft:#e9e4fb;--code:#101923;--shadow:0 14px 38px rgba(20,34,45,.08);
+  --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif;
+}
+[data-theme="dark"]{
+  --bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);
+  --accent:#54c3dd;--accent2:#aaa2ff;--green:#72d0a3;--greenSoft:#17392b;--amber:#efb966;--amberSoft:#3b2c18;
+  --red:#ef8186;--redSoft:#462226;--blueSoft:#153c48;--violetSoft:#2e2957;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.55}
+button,select,input{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max-width:1240px;margin:auto;padding:28px 22px 80px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:28px}.back{text-decoration:none;color:var(--accent);font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:8px 11px;font-weight:850;font-size:.8rem}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:26px;align-items:start}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:950}h1{font-family:var(--display);font-size:clamp(2.8rem,6vw,5.4rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{color:var(--muted);font-size:1.08rem;max-width:780px}.hero-card{background:var(--code);color:#edf7fa;border-radius:22px;padding:21px;box-shadow:var(--shadow)}.hero-card b{color:#95dcea}.pipeline{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.pipe{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.09);font-size:.75rem;font-weight:850}.arrow{opacity:.5;align-self:center}
+.notice{margin-top:22px;border-left:4px solid var(--accent2);background:var(--violetSoft);border-radius:13px;padding:15px 17px}.notice strong{display:block;margin-bottom:3px}
+.section{margin-top:40px}.section-head{display:flex;gap:12px;align-items:start;margin-bottom:14px}.num{width:38px;height:38px;border-radius:12px;background:var(--blueSoft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.75rem;margin:0}.section-head p{color:var(--muted);margin:2px 0 0}
+.lab{display:grid;grid-template-columns:360px 1fr;gap:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.sticky{position:sticky;top:14px;align-self:start}.field{margin-bottom:15px}.field label{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:var(--muted);margin-bottom:5px}.field select,.field input[type="range"]{width:100%}.field select{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px;border-radius:10px}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.range-row output{min-width:34px;text-align:right;font-weight:950;color:var(--accent)}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mode{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px;font-weight:850;text-align:left}.mode.active{background:var(--blueSoft);color:var(--accent);border-color:var(--accent)}.toggle{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:13px;margin-top:13px}.switch{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;padding:6px 10px;font-weight:900}.switch.on{background:var(--greenSoft);color:var(--green);border-color:var(--green)}
+.question{font-family:var(--display);font-size:1.18rem;margin:0 0 8px}.hint{font-size:.82rem;color:var(--muted)}.truth{display:none;margin-top:10px;padding:10px;border-radius:10px;background:var(--amberSoft);color:var(--amber);font-size:.8rem}.trainer-on .truth{display:block}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:14px}.metric{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:13px}.metric .v{font-size:1.5rem;font-weight:950}.metric .l{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}.metric .sub{font-size:.72rem;color:var(--muted);margin-top:3px}
+.explain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:14px}.explain div{background:var(--panel2);border-radius:12px;padding:11px;font-size:.8rem;color:var(--muted)}.explain b{color:var(--text)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:15px}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--panel2);position:sticky;top:0}tr:last-child td{border-bottom:0}.rank{font-weight:950;color:var(--accent)}.chunk-id{font-weight:950}.score{font-variant-numeric:tabular-nums;font-weight:850}.rel{display:inline-flex;min-width:28px;justify-content:center;border-radius:999px;padding:3px 7px;font-size:.72rem;font-weight:950;background:var(--panel2);color:var(--muted)}.rel.r1{background:var(--amberSoft);color:var(--amber)}.rel.r2,.rel.r3{background:var(--greenSoft);color:var(--green)}.snippet{max-width:520px;color:var(--muted);font-size:.83rem}.badge{display:inline-flex;border-radius:999px;padding:3px 7px;background:var(--blueSoft);color:var(--accent);font-size:.68rem;font-weight:900;margin:2px 3px 2px 0}
+.compare{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.compare-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.compare-card h3{margin:0 0 9px;font-size:.9rem}.mini-result{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:.78rem}.mini-result:last-child{border-bottom:0}.mini-result b{color:var(--accent)}.compare-metrics{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:.75rem;color:var(--muted)}
+.corpus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.doc{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.doc .meta{font-size:.7rem;color:var(--accent);font-weight:950;text-transform:uppercase;letter-spacing:.06em}.doc h3{font-size:.95rem;margin:5px 0}.doc p{font-size:.8rem;color:var(--muted);margin:0}.doc .tags{margin-top:8px}.formula{background:var(--code);color:#eaf4f7;border-radius:13px;padding:13px 15px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.8rem;overflow:auto}.trainer-only{display:none}.trainer-on .trainer-only{display:block}.trainer-box{margin-top:14px;background:var(--amberSoft);color:var(--text);border-radius:13px;padding:14px}.projector{font-size:19px}.projector .wrap{max-width:1500px}.footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+@media(max-width:980px){.hero,.lab{grid-template-columns:1fr}.sticky{position:static}.metrics{grid-template-columns:repeat(3,1fr)}.compare,.corpus{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.wrap{padding:18px 13px 60px}.top{align-items:flex-start}.metrics,.explain,.compare,.corpus{grid-template-columns:1fr}.mode-grid{grid-template-columns:1fr}h1{font-size:clamp(2.5rem,14vw,4rem)}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button">◆ Formateur</button><button class="tool" id="projectorBtn" type="button">▣ Projection</button></div></div>
+
+  <section class="hero">
+    <div><div class="eyebrow">Parcours 4 · Recherche & RAG</div><h1>RAG Lab</h1><p class="lead">Un laboratoire autonome pour observer ce qui se passe <strong>avant</strong> la génération : sélectionner des chunks, fusionner plusieurs moteurs, reranker et mesurer objectivement la qualité du retrieval.</p></div>
+    <aside class="hero-card"><b>Pipeline observable</b><div class="pipeline"><span class="pipe">question</span><span class="arrow">→</span><span class="pipe">retrieval</span><span class="arrow">→</span><span class="pipe">top-k</span><span class="arrow">→</span><span class="pipe">rerank</span><span class="arrow">→</span><span class="pipe">contexte</span></div><p style="font-size:.82rem;color:#b9cbd3;margin-bottom:0">Ici, aucun LLM distant : nous isolons le retrieval pour pouvoir l’évaluer sans confondre ses erreurs avec celles de la génération.</p></aside>
+  </section>
+
+  <div class="notice"><strong>Simulation didactique, calculs réels.</strong>BM25, cosinus, RRF et métriques sont calculés dans le navigateur. Le « modèle d’embedding », l’ANN et le reranker sont volontairement simplifiés et déterministes : ils enseignent les mécanismes sans prétendre reproduire les scores d’un moteur commercial.</div>
+
+  <section class="section" id="experiment">
+    <div class="section-head"><div class="num">01</div><div><h2>Expérience de retrieval</h2><p>Changez une seule variable à la fois et observez le classement et les métriques.</p></div></div>
+    <div class="lab">
+      <aside class="panel sticky">
+        <div class="field"><label for="questionSelect">Question de test</label><select id="questionSelect"></select></div>
+        <p class="question" id="questionText"></p><div class="hint" id="questionHint"></div><div class="truth" id="truthBox"></div>
+        <div class="field" style="margin-top:18px"><label>Mode de retrieval</label><div class="mode-grid"><button class="mode active" data-mode="lexical" type="button">Lexical · BM25</button><button class="mode" data-mode="vector" type="button">Vectoriel · cosinus</button><button class="mode" data-mode="ann" type="button">Vectoriel · ANN</button><button class="mode" data-mode="hybrid" type="button">Hybride · RRF</button></div></div>
+        <div class="field"><label for="topK">Top-k envoyé à l’étape suivante</label><div class="range-row"><input id="topK" type="range" min="1" max="8" value="5"><output id="topKOut">5</output></div></div>
+        <div class="field" id="annField" hidden><label for="annPool">ANN · candidats examinés</label><div class="range-row"><input id="annPool" type="range" min="4" max="12" value="7"><output id="annPoolOut">7 / 12</output></div></div>
+        <div class="toggle"><span><b>Reranking</b><br><small style="color:var(--muted)">Réévalue les candidats top-k.</small></span><button class="switch" id="rerankBtn" type="button" aria-pressed="false">OFF</button></div>
+        <div class="toggle"><span><b>Voir la vérité terrain</b><br><small style="color:var(--muted)">Mode formateur uniquement.</small></span><span style="font-size:.75rem;color:var(--muted)">◆</span></div>
+        <div class="trainer-only trainer-box"><b>Consigne formateur.</b> Faites d’abord prédire l’effet d’un changement de k ou du reranking. Demandez ensuite : « la réponse finale pourrait-elle être fausse même avec Recall@k = 1 ? » Attendu : oui, car le retrieval et la génération sont deux étapes distinctes.</div>
+      </aside>
+
+      <div>
+        <div class="metrics">
+          <div class="metric"><div class="v" id="precisionMetric">—</div><div class="l">Precision@k</div><div class="sub">propreté du panier</div></div>
+          <div class="metric"><div class="v" id="recallMetric">—</div><div class="l">Recall@k</div><div class="sub">couverture utile</div></div>
+          <div class="metric"><div class="v" id="rrMetric">—</div><div class="l">RR actuel</div><div class="sub">1 / rang du 1er pertinent</div></div>
+          <div class="metric"><div class="v" id="mrrMetric">—</div><div class="l">MRR corpus</div><div class="sub">moyenne sur 6 questions</div></div>
+          <div class="metric"><div class="v" id="ndcgMetric">—</div><div class="l">nDCG@k</div><div class="sub">qualité de l’ordre</div></div>
+        </div>
+        <div class="explain"><div><b>Precision@k</b><br>Parmi les k résultats, quelle fraction est pertinente ?</div><div><b>Recall@k</b><br>Parmi tous les chunks pertinents, quelle fraction a été retrouvée ?</div><div><b>MRR</b><br>Le premier bon résultat arrive-t-il tôt, en moyenne ?</div><div><b>nDCG@k</b><br>Les chunks les plus utiles sont-ils placés en haut ?</div></div>
+        <div class="table-wrap"><table><thead><tr><th>Rang</th><th>Chunk</th><th>Score moteur</th><th>Pertinence</th><th>Passage</th></tr></thead><tbody id="rankingBody"></tbody></table></div>
+        <p class="hint" id="diagnostic" style="margin-top:11px"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="compare">
+    <div class="section-head"><div class="num">02</div><div><h2>Comparer les moteurs</h2><p>La même question est exécutée avec les quatre stratégies pour rendre les compromis visibles.</p></div></div>
+    <div class="compare" id="compareGrid"></div>
+  </section>
+
+  <section class="section" id="mechanics">
+    <div class="section-head"><div class="num">03</div><div><h2>Ce qui est réellement calculé</h2><p>Les formules restent visibles pour éviter l’effet « boîte noire ».</p></div></div>
+    <div class="panel">
+      <p><b>Lexical.</b> BM25 simplifié : fréquence du terme, rareté dans le corpus et normalisation par longueur.</p>
+      <div class="formula">BM25(q,d) = Σ IDF(t) × tf(t,d)×(k1+1) / (tf(t,d)+k1×(1-b+b×|d|/avgdl))</div>
+      <p><b>Vectoriel.</b> Un mini modèle sémantique didactique projette les mots sur 8 axes (chunking, embeddings, lexical, hybride, reranking, ANN, métriques, fiabilité), puis calcule le cosinus.</p>
+      <div class="formula">cos(q,d) = (q · d) / (||q|| × ||d||)</div>
+      <p><b>Hybride.</b> Les rangs BM25 et vectoriels sont fusionnés avec Reciprocal Rank Fusion.</p>
+      <div class="formula">RRF(d) = Σ 1 / (60 + rang_moteur(d))</div>
+      <p><b>nDCG.</b> La vérité terrain comporte des niveaux 0 à 3. Les meilleurs grades placés tôt valent davantage.</p>
+      <div class="formula">DCG@k = Σ (2^rel_i - 1) / log2(i + 2) ; nDCG = DCG / IDCG</div>
+    </div>
+  </section>
+
+  <section class="section" id="corpus">
+    <div class="section-head"><div class="num">04</div><div><h2>Corpus contrôlé</h2><p>Douze chunks courts, avec métadonnées, pour que chaque classement soit inspectable.</p></div></div>
+    <div class="corpus" id="corpusGrid"></div>
+  </section>
+
+  <section class="section trainer-only">
+    <div class="section-head"><div class="num">05</div><div><h2>Débrief formateur</h2><p>Les idées à faire verbaliser avant de quitter le laboratoire.</p></div></div>
+    <div class="panel">
+      <p><b>1.</b> Un excellent MRR ne garantit pas un bon Recall@k : le premier passage peut être parfait tout en laissant de côté d’autres preuves nécessaires.</p>
+      <p><b>2.</b> Augmenter k tend à augmenter le recall, mais peut dégrader la précision et ajouter du bruit dans le contexte.</p>
+      <p><b>3.</b> Le reranker ne peut pas récupérer un chunk absent de la liste de candidats. Si le retriever l’a raté, il est trop tard.</p>
+      <p><b>4.</b> ANN échange une part de rappel potentiel contre de la vitesse. Dans ce petit corpus, il est volontairement artificiel : son intérêt réel apparaît à grande échelle.</p>
+      <p><b>5.</b> Une métrique de retrieval n’évalue pas la vérité de la réponse finale du LLM.</p>
+    </div>
+  </section>
+
+  <footer class="footer">Formation LLM · RAG Lab v0.1 · Corpus et modèles de scoring didactiques · Aucun appel réseau, aucune donnée envoyée.</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+
+var docs=[
+{id:"C01",title:"Découpage et frontières",section:"Chunking",text:"Le chunking découpe un document en passages récupérables. Des chunks trop petits perdent du contexte ; des chunks trop grands ajoutent du bruit. Les frontières naturelles comme titres et paragraphes sont souvent préférables à une coupe arbitraire."},
+{id:"C02",title:"Chevauchement des chunks",section:"Chunking",text:"L'overlap ou chevauchement répète une partie du texte entre deux chunks afin de réduire les pertes aux frontières. Plus d'overlap augmente stockage et redondance et n'améliore pas systématiquement le retrieval."},
+{id:"C03",title:"Embedding de passage",section:"Embeddings",text:"Un embedding de passage transforme un texte en vecteur pour permettre une recherche sémantique. Question et passage peuvent être proches même sans partager exactement les mêmes mots."},
+{id:"C04",title:"Cosinus et limites",section:"Embeddings",text:"La similarité cosinus mesure une proximité géométrique entre vecteurs. Un score élevé ne prouve ni la vérité d'un passage ni l'identité de sens et peut manquer une négation ou un nombre décisif."},
+{id:"C05",title:"BM25 et termes exacts",section:"Retrieval",text:"Une recherche lexicale telle que BM25 valorise les termes partagés et leur rareté. Elle est particulièrement utile pour un identifiant exact, un code, un nom propre ou une référence comme L.511-5."},
+{id:"C06",title:"Recherche hybride et RRF",section:"Retrieval",text:"La recherche hybride combine lexical et vectoriel. Reciprocal Rank Fusion ou RRF fusionne les rangs sans additionner directement des scores BM25 et cosinus qui ne sont pas sur la même échelle."},
+{id:"C07",title:"Reranking",section:"Retrieval",text:"Un reranker réévalue plus finement le couple question passage sur un petit ensemble de candidats. Il peut améliorer l'ordre mais ne peut pas récupérer un chunk que le retriever n'a jamais sélectionné."},
+{id:"C08",title:"ANN et compromis",section:"Index",text:"Approximate Nearest Neighbors ou ANN accélère la recherche vectorielle à grande échelle en évitant d'examiner tous les vecteurs. On accepte une petite perte potentielle de recall pour gagner fortement en vitesse."},
+{id:"C09",title:"Filtres et métadonnées",section:"Index",text:"Les métadonnées permettent de filtrer par document, date, section, langue ou droits avant ou pendant le retrieval. Un passage sémantiquement proche mais obsolète peut sinon remonter à tort."},
+{id:"C10",title:"RAG et vérité",section:"Fiabilité",text:"Le RAG améliore l'ancrage en fournissant des passages externes au modèle, mais ne garantit pas une réponse vraie. Le retrieval peut rater la preuve et le modèle peut mal interpréter un passage correct."},
+{id:"C11",title:"Precision et Recall",section:"Évaluation",text:"Precision@k mesure la proportion de résultats pertinents parmi les k résultats retournés. Recall@k mesure la proportion de tous les passages pertinents qui ont été retrouvés dans ces k résultats."},
+{id:"C12",title:"MRR et nDCG",section:"Évaluation",text:"MRR récompense un premier résultat pertinent placé tôt sur un ensemble de questions. nDCG tient aussi compte de plusieurs niveaux de pertinence et pénalise les documents très utiles placés trop bas."}
+];
+
+var questions=[
+{id:"Q1",text:"Pourquoi utiliser une recherche hybride pour une requête contenant un identifiant exact comme L.511-5 ?",hint:"Observez la complémentarité lexical / sémantique.",relevance:{C05:3,C06:3,C03:1}},
+{id:"Q2",text:"Que mesure Recall@k et pourquoi cette métrique est-elle importante dans un RAG ?",hint:"Cherchez la notion de couverture des passages utiles.",relevance:{C11:3,C12:1,C10:1}},
+{id:"Q3",text:"Pourquoi utiliser un reranker après une recherche ANN ?",hint:"Deux étapes, deux objectifs : vitesse puis précision du classement.",relevance:{C07:3,C08:2,C06:1}},
+{id:"Q4",text:"Un système RAG garantit-il que la réponse finale est vraie ?",hint:"Distinguez retrieval, contexte et génération.",relevance:{C10:3,C04:1,C09:1}},
+{id:"Q5",text:"Pourquoi augmenter le chevauchement entre chunks n'améliore-t-il pas toujours le retrieval ?",hint:"Pensez frontières, redondance et coût.",relevance:{C02:3,C01:2}},
+{id:"Q6",text:"Une similarité cosinus élevée prouve-t-elle qu'un passage est vrai ?",hint:"Proximité vectorielle et factualité sont deux choses différentes.",relevance:{C04:3,C10:2,C03:1}}
+];
+
+var groups=[
+["chunk","chunking","chunks","decoupage","découpage","overlap","chevauchement","frontiere","frontières","passage","paragraphes"],
+["embedding","embeddings","vecteur","vecteurs","vectoriel","vectorielle","cosinus","semantique","sémantique","similarite","similarité"],
+["bm25","lexical","lexicale","terme","termes","identifiant","exact","code","reference","référence","l.511-5"],
+["hybride","hybrid","fusion","rrf","combine","combiner","complementarite","complémentarité"],
+["reranker","reranking","reclasser","classement","cross","precision","précision","candidats"],
+["ann","approximate","nearest","neighbors","hnsw","vitesse","rapide","recall","rappel"],
+["recall","rappel","precision","précision","mrr","ndcg","metrique","métrique","evaluation","évaluation","pertinent","pertinents","top"],
+["verite","vérité","fiable","fiabilite","fiabilité","preuve","preuves","source","ancrage","hallucination","garantit","garantie"]
+];
+
+var stop=new Set(["le","la","les","un","une","des","de","du","d","et","ou","a","à","au","aux","en","dans","sur","pour","par","est","sont","que","qui","quoi","comme","plus","moins","ce","cette","ces","il","elle","ils","elles","ne","pas","se","son","sa","ses","avec","entre","afin","peut","peuvent","pourquoi","comment"]);
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9.\-]+/g," ").trim()}
+function toks(s){return norm(s).split(/\s+/).filter(function(x){return x && !stop.has(x)})}
+function countMap(arr){var m={};arr.forEach(function(x){m[x]=(m[x]||0)+1});return m}
+var docTokens=docs.map(function(d){return toks(d.title+" "+d.text)});
+var avgdl=docTokens.reduce(function(a,b){return a+b.length},0)/docs.length;
+function bm25(query){
+ var q=[...new Set(toks(query))],k1=1.5,b=.75;
+ return docs.map(function(d,di){
+   var dt=docTokens[di],tf=countMap(dt),score=0;
+   q.forEach(function(term){
+     var df=docTokens.filter(function(x){return x.includes(term)}).length;
+     if(!df||!tf[term])return;
+     var idf=Math.log(1+(docs.length-df+.5)/(df+.5));
+     var f=tf[term];
+     score+=idf*(f*(k1+1))/(f+k1*(1-b+b*dt.length/avgdl));
+   });
+   return {id:d.id,score:score,engine:"BM25"};
+ }).sort(function(a,b){return b.score-a.score});
+}
+function semanticVector(text){
+ var ts=toks(text),v=new Array(groups.length).fill(0);
+ ts.forEach(function(t){groups.forEach(function(g,i){if(g.map(norm).includes(t))v[i]+=1})});
+ var n=Math.sqrt(v.reduce(function(s,x){return s+x*x},0));return n?v.map(function(x){return x/n}):v;
+}
+var docVecs=docs.map(function(d){return semanticVector(d.title+" "+d.text)});
+function cosine(a,b){var dot=0,na=0,nb=0;for(var i=0;i<a.length;i++){dot+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i]}return na&&nb?dot/(Math.sqrt(na)*Math.sqrt(nb)):0}
+function vectorSearch(query){
+ var qv=semanticVector(query);
+ return docs.map(function(d,i){return{id:d.id,score:cosine(qv,docVecs[i]),engine:"COS"}}).sort(function(a,b){return b.score-a.score});
+}
+function annSearch(query,pool){
+ var qv=semanticVector(query);
+ var coarse=docs.map(function(d,i){
+   var dv=docVecs[i],dist=Math.abs((qv[0]+2*qv[2]+qv[5])-(dv[0]+2*dv[2]+dv[5]));
+   return{id:d.id,i:i,coarse:dist};
+ }).sort(function(a,b){return a.coarse-b.coarse}).slice(0,pool);
+ return coarse.map(function(c){return{id:c.id,score:cosine(qv,docVecs[c.i]),engine:"ANN"}}).sort(function(a,b){return b.score-a.score});
+}
+function rrf(query){
+ var a=bm25(query),b=vectorSearch(query),ranksA={},ranksB={};
+ a.forEach(function(x,i){ranksA[x.id]=i+1});b.forEach(function(x,i){ranksB[x.id]=i+1});
+ return docs.map(function(d){return{id:d.id,score:1/(60+ranksA[d.id])+1/(60+ranksB[d.id]),engine:"RRF"}}).sort(function(x,y){return y.score-x.score});
+}
+function retrieval(q,mode,pool){
+ if(mode==="lexical")return bm25(q.text);
+ if(mode==="vector")return vectorSearch(q.text);
+ if(mode==="ann"){
+   var found=annSearch(q.text,pool),seen=new Set(found.map(function(x){return x.id}));
+   docs.forEach(function(d){if(!seen.has(d.id))found.push({id:d.id,score:-1,engine:"ANN non examiné"})});
+   return found;
+ }
+ return rrf(q.text);
+}
+function rerank(q,items){
+ var lex=bm25(q.text),vec=vectorSearch(q.text),lm={},vm={},maxLex=Math.max.apply(null,lex.map(function(x){return x.score}).concat([1]));
+ lex.forEach(function(x){lm[x.id]=x.score/maxLex});vec.forEach(function(x){vm[x.id]=x.score});
+ var qt=toks(q.text);
+ return items.map(function(x){
+   var d=docs.find(function(z){return z.id===x.id}),dt=toks(d.title+" "+d.text),shared=qt.filter(function(t){return dt.includes(t)}),rare=shared.filter(function(t){return t.length>6}).length;
+   var pair=.55*(vm[x.id]||0)+.32*(lm[x.id]||0)+.13*Math.min(1,rare/2);
+   return{id:x.id,score:pair,engine:"RERANK"};
+ }).sort(function(a,b){return b.score-a.score});
+}
+function metrics(q,ranking,k){
+ var top=ranking.slice(0,k),rels=q.relevance,total=Object.keys(rels).filter(function(id){return rels[id]>0}).length;
+ var hits=top.filter(function(x){return (rels[x.id]||0)>0}).length;
+ var first=ranking.findIndex(function(x){return (rels[x.id]||0)>0}),rr=first>=0?1/(first+1):0;
+ function dcg(grades){return grades.reduce(function(sum,g,i){return sum+(Math.pow(2,g)-1)/Math.log2(i+2)},0)}
+ var grades=top.map(function(x){return rels[x.id]||0});
+ var ideal=Object.values(rels).sort(function(a,b){return b-a}).slice(0,k);
+ var idcg=dcg(ideal),ndcg=idcg?dcg(grades)/idcg:0;
+ return{precision:hits/k,recall:total?hits/total:0,rr:rr,ndcg:ndcg,hits:hits,total:total};
+}
+function corpusMRR(mode,k,pool,rerankOn){
+ var sum=0;
+ questions.forEach(function(q){
+   var r=retrieval(q,mode,pool),candidates=r.slice(0,k);
+   var final=rerankOn?rerank(q,candidates):candidates;
+   var first=final.findIndex(function(x){return (q.relevance[x.id]||0)>0});
+   sum+=first>=0?1/(first+1):0;
+ });
+ return sum/questions.length;
+}
+function fmt(x){return x.toFixed(2)}
+function scoreFmt(x){return x<0?"—":x.toFixed(3)}
+function docById(id){return docs.find(function(d){return d.id===id})}
+
+var questionSelect=document.getElementById("questionSelect"),questionText=document.getElementById("questionText"),questionHint=document.getElementById("questionHint"),truthBox=document.getElementById("truthBox");
+questions.forEach(function(q,i){var o=document.createElement("option");o.value=i;o.textContent=q.id+" · "+q.text;questionSelect.appendChild(o)});
+var state={q:0,mode:"lexical",k:5,pool:7,rerank:false};
+
+function relevanceLabel(g){return g===3?"essentiel":g===2?"très utile":g===1?"utile":"non pertinent"}
+function render(){
+ var q=questions[state.q],base=retrieval(q,state.mode,state.pool),candidates=base.slice(0,state.k),final=state.rerank?rerank(q,candidates):candidates,m=metrics(q,final,state.k);
+ questionText.textContent=q.text;questionHint.textContent=q.hint;
+ truthBox.textContent="Vérité terrain : "+Object.keys(q.relevance).sort(function(a,b){return q.relevance[b]-q.relevance[a]}).map(function(id){return id+" ("+q.relevance[id]+")"}).join(" · ");
+ document.getElementById("precisionMetric").textContent=fmt(m.precision);document.getElementById("recallMetric").textContent=fmt(m.recall);document.getElementById("rrMetric").textContent=fmt(m.rr);document.getElementById("mrrMetric").textContent=fmt(corpusMRR(state.mode,state.k,state.pool,state.rerank));document.getElementById("ndcgMetric").textContent=fmt(m.ndcg);
+ document.getElementById("topKOut").textContent=state.k;document.getElementById("annPoolOut").textContent=state.pool+" / "+docs.length;document.getElementById("annField").hidden=state.mode!=="ann";
+ var body=document.getElementById("rankingBody");body.innerHTML="";
+ final.forEach(function(x,i){
+   var d=docById(x.id),g=q.relevance[x.id]||0,tr=document.createElement("tr");
+   tr.innerHTML='<td class="rank">#'+(i+1)+'</td><td><span class="chunk-id">'+d.id+'</span><br><span class="badge">'+d.section+'</span></td><td class="score">'+scoreFmt(x.score)+'<br><small style="color:var(--muted)">'+x.engine+'</small></td><td><span class="rel r'+g+'">'+g+'</span><br><small>'+relevanceLabel(g)+'</small></td><td class="snippet"><b>'+d.title+'</b><br>'+d.text+'</td>';
+   body.appendChild(tr);
+ });
+ var diag=[];
+ if(m.recall<1)diag.push("Le retriever laisse de côté "+(m.total-m.hits)+" passage(s) pertinent(s).");
+ if(m.precision<.6)diag.push("Le top-k contient beaucoup de bruit.");
+ if(m.rr===1)diag.push("Le premier résultat est pertinent.");
+ if(state.rerank)diag.push("Le reranker ne travaille que sur les "+state.k+" candidats déjà récupérés.");
+ if(state.mode==="ann")diag.push("L'ANN didactique n'examine que "+state.pool+" chunks sur "+docs.length+".");
+ document.getElementById("diagnostic").textContent=diag.join(" ");
+ renderCompare(q);
+}
+function renderCompare(q){
+ var grid=document.getElementById("compareGrid");grid.innerHTML="";
+ [["lexical","BM25"],["vector","Vectoriel"],["ann","ANN"],["hybrid","Hybride RRF"]].forEach(function(pair){
+   var r=retrieval(q,pair[0],state.pool),c=r.slice(0,state.k),f=state.rerank?rerank(q,c):c,m=metrics(q,f,state.k),card=document.createElement("article");card.className="compare-card";
+   var lines=f.slice(0,3).map(function(x,i){return'<div class="mini-result"><span>#'+(i+1)+' '+x.id+'</span><b>rel '+(q.relevance[x.id]||0)+'</b></div>'}).join("");
+   card.innerHTML="<h3>"+pair[1]+"</h3>"+lines+'<div class="compare-metrics">P@k '+fmt(m.precision)+' · R@k '+fmt(m.recall)+'<br>RR '+fmt(m.rr)+' · nDCG '+fmt(m.ndcg)+"</div>";
+   grid.appendChild(card);
+ });
+}
+questionSelect.addEventListener("change",function(){state.q=Number(this.value);render()});
+document.querySelectorAll(".mode").forEach(function(btn){btn.addEventListener("click",function(){state.mode=btn.dataset.mode;document.querySelectorAll(".mode").forEach(function(b){b.classList.toggle("active",b===btn)});render()})});
+document.getElementById("topK").addEventListener("input",function(){state.k=Number(this.value);render()});
+document.getElementById("annPool").addEventListener("input",function(){state.pool=Number(this.value);render()});
+document.getElementById("rerankBtn").addEventListener("click",function(){state.rerank=!state.rerank;this.classList.toggle("on",state.rerank);this.textContent=state.rerank?"ON":"OFF";this.setAttribute("aria-pressed",String(state.rerank));render()});
+
+var corpusGrid=document.getElementById("corpusGrid");docs.forEach(function(d){var el=document.createElement("article");el.className="doc";el.innerHTML='<div class="meta">'+d.id+" · "+d.section+'</div><h3>'+d.title+'</h3><p>'+d.text+'</p><div class="tags"><span class="badge">'+d.section+'</span></div>';corpusGrid.appendChild(el)});
+
+function applyTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
+var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
+document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")});
+document.getElementById("trainerBtn").addEventListener("click",function(){document.body.classList.toggle("trainer-on")});
+document.getElementById("projectorBtn").addEventListener("click",function(){document.documentElement.classList.toggle("projector")});
+render();
+})();
+</script>
+</body>
+</html>
