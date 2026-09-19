@@ -39,6 +39,18 @@ Il couvre le Domaine B — **Tokens, représentations et contexte** — de B01 �
 
 Le module [`modules/domaine-c.html`](modules/domaine-c.html) introduit **Transformer et attention** de C01 à C09. Il comprend un **Attention Lab** local qui rend visible la chaîne `Q·K → /√dₖ → masque causal → softmax → Σ poids·V`, une matrice d’attention complète, trois têtes simulées, un mode formateur et un quiz. Les vecteurs sont fictifs et déterministes : ils illustrent les opérations sans prétendre reproduire un modèle commercial.
 
+## Transformer Block Lab
+
+Le laboratoire [`modules/transformer-block-lab.html`](modules/transformer-block-lab.html) constitue l'étape 3 du **Parcours 1 — Comprendre un LLM**. Il complète l'Attention Lab avec :
+- un Position Lab distinguant absence de position, ajout positionnel didactique et RoPE simplifié ;
+- une visualisation pré-norm d'un bloc avec normalisation, attention, résiduels et MLP ;
+- une distinction explicite « attention = communiquer / MLP = transformer » ;
+- un Stack Lab montrant la transformation progressive des représentations ;
+- un KV Cache Lab illustrant le compromis calcul / mémoire ;
+- un quiz de maîtrise et les modes stagiaire, formateur et projection.
+
+Le laboratoire précise que l'ordre exact des opérations et les variantes de normalisation, position et MLP dépendent de l'architecture réelle.
+
 ## RAG Lab
 
 Le laboratoire [`modules/rag-lab.html`](modules/rag-lab.html) isole le **retrieval** du reste du système RAG. Il contient un corpus contrôlé de 12 chunks et 6 questions avec vérité terrain graduée.
