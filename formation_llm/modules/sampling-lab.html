@@ -6,293 +6,190 @@
 <meta name="color-scheme" content="light dark">
 <title>Formation LLM — Parcours 1 · Sampling Lab</title>
 <style>
-:root{
- --bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#627481;--line:rgba(16,32,45,.14);
- --accent:#b94b6b;--accent2:#6558ca;--cyan:#0b7894;--soft:#f5dfe7;--violet:#e9e4fb;--ok:#24704e;--oksoft:#dcefe6;
- --gold:#99681f;--goldsoft:#f4e5c8;--danger:#a53b42;--dangersoft:#f7dfe1;--code:#101923;--shadow:0 14px 38px rgba(20,34,45,.08);
- --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--display:Georgia,"Times New Roman",serif
-}
-[data-theme="dark"]{
- --bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);
- --accent:#f18aa7;--accent2:#aaa2ff;--cyan:#55c3dc;--soft:#472632;--violet:#2e2957;--ok:#71d0a3;--oksoft:#17392b;
- --gold:#efb967;--goldsoft:#3d2e18;--danger:#ef8086;--dangersoft:#472226;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28)
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.56}
-button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max-width:1240px;margin:auto;padding:26px 22px 80px}
-.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:24px}.back{text-decoration:none;color:var(--cyan);font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:8px 11px;font-size:.8rem;font-weight:850}
-#trainerBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);color:var(--accent)}
-.trainer-banner{display:none;margin:8px 0 18px;padding:12px 16px;border:1px solid color-mix(in srgb,var(--accent) 38%,var(--line));border-left:5px solid var(--accent);border-radius:13px;background:var(--soft);font-size:.84rem}.trainer-on .trainer-banner{display:block}
-.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}.projector .projector-exit{display:inline-flex;align-items:center;gap:7px}.projector .tools{display:none}.projector{font-size:19px}.projector .wrap{max-width:1500px}
-.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:26px;align-items:start}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:var(--accent);font-weight:950}h1{font-family:var(--display);font-size:clamp(2.8rem,6vw,5.2rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{font-size:1.08rem;color:var(--muted);max-width:790px}.hero-card{background:var(--code);color:#edf7fa;border-radius:22px;padding:21px;box-shadow:var(--shadow)}.hero-card b{color:#f6aac0}.hero-card p{color:#bdccd4;font-size:.84rem}.pipeline{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.pipe{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.08);font-size:.72rem;font-weight:850}.arrow{opacity:.55;align-self:center}
-.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--cyan);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.8rem}
-.notice{padding:15px 17px;border-left:4px solid var(--accent);background:var(--soft);border-radius:13px}.notice strong{display:block;margin-bottom:3px}.section{margin-top:42px}.section-head{display:flex;gap:12px;align-items:start;margin-bottom:15px}.num{width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.8rem;margin:0}.section-head p{color:var(--muted);margin:2px 0 0}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.grid2{display:grid;grid-template-columns:360px 1fr;gap:14px}.controls{display:grid;gap:14px;align-content:start}.field label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;margin-bottom:5px}.field select,.field input[type=range],.field input[type=number]{width:100%}.field select,.field input[type=number]{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.range-row output{min-width:55px;text-align:right;font-weight:950;color:var(--accent)}
+:root{--bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#627481;--line:rgba(16,32,45,.14);--strong:rgba(16,32,45,.28);--accent:#b94b6b;--accent2:#6558ca;--cyan:#0b7894;--soft:#f5dfe7;--violet:#e9e4fb;--ok:#24704e;--oksoft:#dcefe6;--gold:#99681f;--goldsoft:#f4e5c8;--danger:#a53b42;--dangersoft:#f7dfe1;--code:#101923;--shadow:0 14px 38px rgba(20,34,45,.08);--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif}
+[data-theme="dark"]{--bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);--strong:rgba(238,244,246,.28);--accent:#f18aa7;--accent2:#aaa2ff;--cyan:#55c3dc;--soft:#472632;--violet:#2e2957;--ok:#71d0a3;--oksoft:#17392b;--gold:#efb967;--goldsoft:#3d2e18;--danger:#ef8086;--dangersoft:#472226;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--cyan)}.wrap{max-width:1240px;margin:auto;padding:26px 22px 80px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:22px}.back{text-decoration:none;color:var(--cyan);font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;padding:8px 11px;font-size:.8rem;font-weight:850}#trainerBtn[aria-pressed="true"]{border-color:var(--gold);background:var(--goldsoft);color:var(--gold)}
+.trainer-banner{display:none;margin:8px 0 18px;padding:12px 16px;border-left:5px solid var(--gold);border-radius:13px;background:var(--goldsoft);font-size:.84rem}.trainer-on .trainer-banner{display:block}.trainer-only{display:none}.trainer-on .trainer-only{display:block}
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}.projector .projector-exit{display:inline-flex}.projector .tools{display:none}.projector{font-size:19px}.projector .wrap{max-width:1500px}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:26px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:var(--accent);font-weight:950}h1{font-family:var(--display);font-size:clamp(2.8rem,6vw,5.2rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{font-size:1.08rem;color:var(--muted)}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.badge{padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.76rem;font-weight:850}.badge.good{background:var(--oksoft);color:var(--ok)}.hero-card{background:var(--code);color:#edf7fa;border-radius:22px;padding:21px;box-shadow:var(--shadow)}.hero-card b{color:#f6aac0}.hero-card p{color:#bdccd4;font-size:.84rem}.pipeline{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.pipe{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.08);font-size:.72rem;font-weight:850}.arrow{opacity:.55;align-self:center}
+.journey{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--cyan);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.82rem}
+.section{margin-top:42px}.section-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:15px}.num{width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.8rem;margin:0}.section-head p{color:var(--muted);margin:2px 0 0}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.grid2{display:grid;grid-template-columns:360px 1fr;gap:14px}.gridEqual{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.intuition{padding:14px 16px;border-left:4px solid var(--cyan);background:color-mix(in srgb,var(--cyan) 16%,var(--panel));border-radius:12px}.definition{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px}.notice{padding:14px 16px;border-left:4px solid var(--gold);background:var(--goldsoft);border-radius:12px}.muted{color:var(--muted)}
+.steps{display:grid;gap:10px}.worked-step{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.worked-step .n{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950}.worked-step h3{margin:0 0 4px;font-size:1rem}.worked-step p{margin:0;color:var(--muted);font-size:.86rem}.worked-step .calc{margin-top:7px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.8rem}
+.gloss{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.term{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.term h3{margin:0 0 6px;font-size:1rem}.term p{margin:0;color:var(--muted);font-size:.83rem}.term .limit{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:.78rem}.term .limit b{color:var(--danger)}
+.controls{display:grid;gap:14px;align-content:start}.field label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;margin-bottom:5px}.field select,.field input[type=range],.field input[type=number]{width:100%}.field select,.field input[type=number]{border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.range-row output{min-width:55px;text-align:right;font-weight:950;color:var(--accent)}
 .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mode{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px;font-weight:850;text-align:left}.mode.active{background:var(--soft);color:var(--accent);border-color:var(--accent)}.mode small{display:block;color:var(--muted);font-weight:600}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:15px}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}th{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--panel2)}tr:last-child td{border-bottom:0}.token{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-weight:900}.muted{color:var(--muted)}.eligible{display:inline-flex;padding:3px 7px;border-radius:999px;background:var(--oksoft);color:var(--ok);font-size:.68rem;font-weight:900}.blocked{display:inline-flex;padding:3px 7px;border-radius:999px;background:var(--dangersoft);color:var(--danger);font-size:.68rem;font-weight:900}
-.probbar{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden;min-width:130px}.probbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0}.choice{margin-top:12px;padding:14px;border-radius:13px;background:var(--code);color:#edf7fa}.choice b{color:#f6aac0}.choice .big{font-family:var(--display);font-size:1.55rem;margin-top:4px}
-.callout{margin-top:12px;padding:11px;border-radius:11px;background:var(--violet);font-size:.82rem}.callout b{color:var(--accent2)}.trainer-only{display:none}.trainer-on .trainer-only{display:block}.trainer-box{margin-top:12px;padding:13px;border-radius:12px;background:var(--goldsoft);font-size:.82rem}
-.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.compare-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.compare-card h3{margin:0 0 8px;font-size:1rem}.compare-card p{color:var(--muted);font-size:.82rem}.hist{display:grid;gap:7px;margin-top:10px}.histrow{display:grid;grid-template-columns:105px 1fr 38px;gap:8px;align-items:center;font-size:.78rem}.histbar{height:10px;border-radius:999px;background:var(--panel2);overflow:hidden}.histbar i{display:block;height:100%;background:var(--accent2)}
-.loop{display:grid;gap:10px}.context{background:var(--code);color:#edf7fa;border-radius:14px;padding:16px;min-height:78px}.context .generated{color:#f6aac0;font-weight:900}.steps{display:flex;gap:7px;flex-wrap:wrap}.step{padding:7px 9px;border:1px solid var(--line);background:var(--panel2);border-radius:9px;font-size:.76rem}.step.done{background:var(--oksoft);color:var(--ok);border-color:var(--ok)}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}
-.truth-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.truthbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.truthbox strong{display:block;margin-bottom:6px}.truthdist{display:grid;gap:8px}.truthline{display:grid;grid-template-columns:80px 1fr 54px;gap:8px;align-items:center;font-size:.78rem}
-.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900;padding:0 5px}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.q.ok{border-color:var(--ok)}.q.bad{border-color:var(--danger)}.q.ok .feedback,.q.bad .feedback{display:block}
-.refs{display:grid;gap:8px}.ref{border-left:3px solid var(--cyan);padding:9px 12px;background:var(--panel);border-radius:0 11px 11px 0;font-size:.82rem}
-.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--cyan)}.next-step .center{text-align:center;color:var(--muted);font-size:.8rem}.footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.77rem}
-:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
-@media(max-width:940px){.hero,.grid2,.truth-grid{grid-template-columns:1fr}.journey{grid-template-columns:1fr}}
-@media(max-width:650px){.wrap{padding:17px 13px 60px}.top{align-items:flex-start}.mode-grid,.compare{grid-template-columns:1fr}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:15px}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}th{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--panel2)}tr:last-child td{border-bottom:0}.token{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-weight:900}.eligible{display:inline-flex;padding:3px 7px;border-radius:999px;background:var(--oksoft);color:var(--ok);font-size:.68rem;font-weight:900}.blocked{display:inline-flex;padding:3px 7px;border-radius:999px;background:var(--dangersoft);color:var(--danger);font-size:.68rem;font-weight:900}.probbar{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden;min-width:130px}.probbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0}
+.choice{margin-top:12px;padding:14px;border-radius:13px;background:var(--code);color:#edf7fa}.choice b{color:#f6aac0}.choice .big{font-family:var(--display);font-size:1.55rem;margin-top:4px}.callout{margin-top:12px;padding:11px;border-radius:11px;background:var(--violet);font-size:.82rem}.trainer-box{margin-top:12px;padding:13px;border-radius:12px;background:var(--goldsoft);font-size:.82rem}
+.completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(170px,.8fr) 30px minmax(220px,1.2fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent);font-weight:950}.feedback-box{display:none;margin-top:10px;padding:11px;border-radius:10px;background:var(--panel2)}.feedback-box.show{display:block}
+.compare{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.compare-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.compare-card h3{margin:0 0 8px;font-size:1rem}.compare-card p{color:var(--muted);font-size:.82rem}.hist{display:grid;gap:7px;margin-top:10px}.histrow{display:grid;grid-template-columns:105px 1fr 38px;gap:8px;align-items:center;font-size:.78rem}.histbar{height:10px;border-radius:999px;background:var(--panel2);overflow:hidden}.histbar i{display:block;height:100%;background:var(--accent2)}
+.loop{display:grid;gap:10px}.context{background:var(--code);color:#edf7fa;border-radius:14px;padding:16px;min-height:78px}.context .generated{color:#f6aac0;font-weight:900}.loopsteps{display:flex;gap:7px;flex-wrap:wrap}.loopstep{padding:7px 9px;border:1px solid var(--line);background:var(--panel2);border-radius:9px;font-size:.76rem}.loopstep.done{background:var(--oksoft);color:var(--ok);border-color:var(--ok)}
+.truth-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.truthbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.truthdist{display:grid;gap:8px}.truthline{display:grid;grid-template-columns:90px 1fr 54px;gap:8px;align-items:center;font-size:.78rem}
+.misgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mis{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.mis .wrong{color:var(--danger);font-weight:900}.mis .right{color:var(--ok);font-weight:850;margin-top:8px}.mis p{color:var(--muted);font-size:.83rem;margin:5px 0}.selfbox textarea{width:100%;min-height:125px;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px}.criteria{display:grid;gap:6px;margin-top:9px}.criteria label{font-size:.82rem;color:var(--muted)}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.q.ok{border-color:var(--ok)}.q.bad{border-color:var(--danger)}.q.ok .feedback,.q.bad .feedback{display:block}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.scorebox{font-weight:950;color:var(--accent)}
+.transfer{display:grid;grid-template-columns:1fr 1fr;gap:11px}.transfer-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.transfer-card select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.transfer-feedback{display:none;margin-top:9px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.transfer-card.good .transfer-feedback,.transfer-card.bad .transfer-feedback{display:block}.transfer-card.good{border-color:var(--ok)}.transfer-card.bad{border-color:var(--danger)}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.recap article{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.recap b{display:block;margin-bottom:5px}.recap p{margin:0;color:var(--muted);font-size:.84rem}.refs{display:grid;gap:8px}.ref{border-left:3px solid var(--cyan);padding:9px 12px;background:var(--panel);border-radius:0 11px 11px 0;font-size:.82rem}.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900}.next-step .center{text-align:center;color:var(--muted);font-size:.82rem}.footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.77rem}:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+@media(max-width:940px){.hero,.grid2,.truth-grid,.gridEqual{grid-template-columns:1fr}.journey{grid-template-columns:1fr}.gloss{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.wrap{padding:17px 13px 60px}.top{align-items:flex-start}.mode-grid,.compare,.gloss,.misgrid,.transfer,.recap{grid-template-columns:1fr}.completion-row{grid-template-columns:1fr}.completion-row .arrow{transform:rotate(90deg)}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
 <main class="wrap">
 <div class="top"><div><a class="back" href="../index.html#parcours">← Formation LLM</a><span aria-hidden="true"> · </span><a class="back" href="transformer-block-lab.html">Étape 3 · Bloc Transformer</a></div><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
-<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Questions pièges, erreurs attendues et pistes de débrief sont visibles.</div>
+<div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Questions pièges, erreurs attendues et critères de réussite sont visibles.</div>
 
-<section class="hero">
-<div><div class="eyebrow">Parcours 1 · Comprendre un LLM · Étape 4</div><h1>Sampling Lab</h1><p class="lead">Comment passe-t-on d’une représentation finale à un texte ? Ce laboratoire rend visible la chaîne <strong>projection vocabulaire → logits → softmax → filtrage → sélection → ajout au contexte → répétition</strong>.</p></div>
-<aside class="hero-card"><b>Deux softmax, deux rôles</b><div class="pipeline"><span class="pipe">attention</span><span class="arrow">→</span><span class="pipe">poids sur positions</span></div><div class="pipeline"><span class="pipe">sortie</span><span class="arrow">→</span><span class="pipe">logits vocabulaire</span><span class="arrow">→</span><span class="pipe">probabilités</span></div><p>Le softmax d’attention combine des positions internes. Le softmax de sortie construit une distribution sur les candidats du prochain token.</p></aside>
+<section class="hero"><div><div class="eyebrow">Parcours 1 · Étape 4 · NOVICE-FIRST</div><h1>Sampling Lab</h1><p class="lead">Le Transformer produit une représentation, mais pas encore une phrase. Cette étape montre comment on passe à des <strong>scores sur le vocabulaire, une distribution du prochain token, puis une décision de décodage</strong>.</p><div class="meta"><span class="badge good">Guidage complet</span><span class="badge">≈ 70–90 min</span><span class="badge">9 notions</span></div></div>
+<aside class="hero-card"><b>Chaîne complète</b><div class="pipeline"><span class="pipe">représentation</span><span class="arrow">→</span><span class="pipe">logits</span><span class="arrow">→</span><span class="pipe">softmax</span><span class="arrow">→</span><span class="pipe">filtre</span><span class="arrow">→</span><span class="pipe">sélection</span></div><p>Le token sélectionné est ajouté au contexte, puis la boucle recommence.</p></aside></section>
+
+<section class="journey" data-pedagogy="prerequisites"><div class="journey-card"><div class="k">Prérequis</div><b>Bloc Transformer</b><p>Savoir que les blocs produisent une représentation finale pour les positions du contexte.</p></div><div class="journey-card"><div class="k">Objectif</div><b>Expliquer un choix de token</b><p>Logit ≠ probabilité ≠ vérité. Greedy et sampling sont des stratégies de sélection.</p></div><div class="journey-card"><div class="k">Après</div><b>Fiabilité</b><p>Comprendre pourquoi une continuation très probable peut malgré tout être factuellement fausse.</p></div></section>
+
+<div class="notice"><strong>Simulation didactique, pas un modèle commercial.</strong> Les logits et le petit vocabulaire sont fictifs. En revanche, softmax, température, top-k/top-p, renormalisation et tirage pondéré sont réellement calculés dans le navigateur.</div>
+
+<section class="section" data-pedagogy="intuition" id="intuition"><div class="section-head"><div class="num">01</div><div><h2>Pourquoi faut-il une stratégie de décodage ?</h2><p>Le modèle ne produit pas directement « le bon mot » : il attribue d’abord des scores à de nombreux candidats.</p></div></div>
+<div class="gridEqual"><div class="panel"><div class="intuition"><strong>Intuition</strong>À un carrefour, plusieurs routes sont possibles. Le modèle fournit une préférence relative pour chaque route. Une stratégie de décodage décide ensuite si l’on prend toujours la route la mieux classée ou si l’on tire parmi plusieurs routes plausibles.</div><p>Le point essentiel est que le modèle calcule une <strong>distribution conditionnelle du prochain token</strong>. Cette distribution répond à : « quel token est plausible ensuite, compte tenu du contexte et des poids du modèle ? »</p></div>
+<div class="panel"><div class="definition"><strong>Probabilité locale de continuation</strong><p>Une probabilité de 0,70 pour un token signifie qu’il reçoit 70 % de la masse dans cette distribution du prochain token. Cela ne signifie pas « la phrase sera vraie à 70 % ».</p></div><div class="notice" style="margin-top:12px"><strong>Deux softmax différents.</strong> Le softmax d’attention normalise des scores entre positions internes. Le softmax de sortie normalise des logits sur le vocabulaire.</div></div></div></section>
+
+<section class="section" data-pedagogy="definition" id="definitions"><div class="section-head"><div class="num">02</div><div><h2>Les 9 notions avant les curseurs</h2></div></div>
+<div class="gloss">
+<article class="term"><h3>Inférence</h3><p>Utilisation d’un modèle entraîné pour calculer des sorties sans modifier normalement ses poids par simple génération.</p><div class="limit"><b>Piège :</b> discuter avec le modèle ne signifie pas le réentraîner.</div></article>
+<article class="term"><h3>Logit</h3><p>Score brut non normalisé attribué à un candidat du vocabulaire.</p><div class="limit"><b>Piège :</b> un logit n’est pas une probabilité.</div></article>
+<article class="term"><h3>Distribution du prochain token</h3><p>Probabilités conditionnelles sur les candidats après normalisation.</p><div class="limit"><b>Piège :</b> ce n’est pas une distribution de vérité.</div></article>
+<article class="term"><h3>Greedy</h3><p>Choisir à chaque étape le candidat de probabilité maximale : l’argmax.</p><div class="limit"><b>Piège :</b> maximum local ≠ meilleure réponse globale.</div></article>
+<article class="term"><h3>Sampling</h3><p>Tirage aléatoire pondéré selon la distribution disponible.</p><div class="limit"><b>Piège :</b> ce n’est pas un hasard uniforme.</div></article>
+<article class="term"><h3>Température</h3><p>Pour T&gt;0, on applique typiquement <code>softmax(logits / T)</code>. T&lt;1 aiguise, T&gt;1 aplatit.</p><div class="limit"><b>Piège :</b> faible T ≠ vérité.</div></article>
+<article class="term"><h3>Top-k</h3><p>Conserve les k candidats les mieux classés avant renormalisation.</p><div class="limit"><b>Piège :</b> k est un nombre de candidats, pas un pourcentage.</div></article>
+<article class="term"><h3>Top-p / nucleus</h3><p>Conserve le plus petit ensemble de candidats dont la masse cumulée atteint au moins p.</p><div class="limit"><b>Piège :</b> p=0,9 ne garde pas 90 % du vocabulaire.</div></article>
+<article class="term"><h3>Génération autoregressive</h3><p>Le token choisi est ajouté au contexte ; la distribution suivante est alors recalculée.</p><div class="limit"><b>Piège :</b> la réponse n’est pas nécessairement écrite d’un seul coup.</div></article>
+</div></section>
+
+<section class="section" data-pedagogy="worked-example" id="exemple"><div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé — trois candidats seulement</h2><p>Nous calculons le choix du prochain token à la main.</p></div></div>
+<div class="panel steps">
+<div class="worked-step"><div class="n">1</div><div><h3>Logits bruts</h3><p>Supposons trois candidats : <code>chat</code>, <code>chien</code>, <code>table</code> avec des logits [2 ; 1 ; 0].</p><div class="calc">z = [2, 1, 0]</div></div></div>
+<div class="worked-step"><div class="n">2</div><div><h3>Exponentier</h3><p>Softmax utilise les exponentielles relatives des scores.</p><div class="calc">e²≈7,39 · e¹≈2,72 · e⁰=1</div></div></div>
+<div class="worked-step"><div class="n">3</div><div><h3>Normaliser</h3><p>La somme vaut environ 11,11. On divise chaque valeur par cette somme.</p><div class="calc">P ≈ [0,665 ; 0,245 ; 0,090]</div></div></div>
+<div class="worked-step"><div class="n">4</div><div><h3>Greedy</h3><p>Greedy sélectionne <code>chat</code>, car 0,665 est le maximum.</p><div class="calc">argmax(P) = chat</div></div></div>
+<div class="worked-step"><div class="n">5</div><div><h3>Sampling</h3><p>Un tirage pondéré peut choisir <code>chien</code> environ 24,5 % du temps sur de nombreux tirages, même s’il n’est pas premier.</p><div class="calc">sampling ≠ argmax systématique</div></div></div>
+<div class="worked-step"><div class="n">6</div><div><h3>Température basse</h3><p>Avec T=0,5, on divise les logits par 0,5 : [4 ; 2 ; 0]. La distribution devient beaucoup plus concentrée.</p><div class="calc">softmax([4,2,0]) ≈ [0,867 ; 0,117 ; 0,016]</div></div></div>
+<div class="worked-step"><div class="n">7</div><div><h3>Top-k et top-p</h3><p>Top-k=2 retire <code>table</code>. Top-p=0,8 conserve ici <code>chat</code> et <code>chien</code>, car 0,665 seul est insuffisant mais 0,665+0,245 dépasse 0,8.</p><div class="calc">filtrer → renormaliser → sélectionner</div></div></div>
+<div class="worked-step"><div class="n">8</div><div><h3>Reboucler</h3><p>Le token sélectionné est ajouté au contexte et le modèle recalcule de nouveaux logits pour l’étape suivante.</p><div class="calc">contexteₜ₊₁ = contexteₜ + token choisi</div></div></div>
+</div>
+<div class="notice" style="margin-top:12px"><strong>Cas T=0.</strong> T = 0 n’est pas utilisé comme division littérale, car la division par zéro est indéfinie. Les interfaces peuvent traiter T=0 comme un cas spécial ressemblant à l’argmax ; ici, nous séparons explicitement greedy et température.</div>
 </section>
 
-<section class="journey" aria-label="Repères du parcours">
-<div class="journey-card"><div class="k">Prérequis</div><b>Étape 3 · Bloc Transformer</b><p>La représentation finale du token courant résulte de blocs successifs ; elle peut ensuite être projetée vers le vocabulaire.</p></div>
-<div class="journey-card"><div class="k">Objectif de sortie</div><b>Expliquer la génération</b><p>Logit ≠ probabilité ≠ vérité. Greedy, sampling, température, top-k et top-p modifient la sélection.</p></div>
-<div class="journey-card"><div class="k">Après</div><b>Fiabilité & hallucinations</b><p>Une probabilité locale de token ne constitue pas une preuve factuelle. La suite exploitera précisément cette distinction.</p></div>
-</section>
+<section class="section" data-pedagogy="completion" id="completer"><div class="section-head"><div class="num">04</div><div><h2>Je complète la chaîne de décodage</h2></div></div>
+<div class="panel completion">
+<div class="completion-row"><strong>scores bruts du vocabulaire</strong><span class="arrow">→</span><select data-answer="logits"><option value="">Choisir…</option><option value="logits">logits</option><option value="truth">preuves</option><option value="ids">IDs du contexte</option></select></div>
+<div class="completion-row"><strong>logits / T puis softmax</strong><span class="arrow">→</span><select data-answer="dist"><option value="">Choisir…</option><option value="dist">distribution du prochain token</option><option value="rag">retrieval</option><option value="weights">poids du modèle</option></select></div>
+<div class="completion-row"><strong>top-k ou top-p</strong><span class="arrow">→</span><select data-answer="filter"><option value="">Choisir…</option><option value="filter">filtrer les candidats</option><option value="train">réentraîner</option><option value="verify">vérifier les faits</option></select></div>
+<div class="completion-row"><strong>token sélectionné</strong><span class="arrow">→</span><select data-answer="context"><option value="">Choisir…</option><option value="context">ajout au contexte puis nouvelle étape</option><option value="stop">fin obligatoire</option><option value="weights">modification des poids</option></select></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback"></div>
+</div></section>
 
-<div class="notice"><strong>Simulation didactique, pas un modèle commercial.</strong> Les logits et le petit vocabulaire sont fictifs mais les opérations de softmax, température, filtrage top-k/top-p, renormalisation et tirage pondéré sont réellement calculées dans le navigateur.</div>
-
-<section class="section" id="distribution">
-<div class="section-head"><div class="num">01</div><div><h2>Logits → distribution</h2><p>Un logit est un score brut. Softmax transforme les scores relatifs en probabilités positives dont la somme vaut 1.</p></div></div>
+<section class="section" data-pedagogy="guided-practice" id="distribution"><div class="section-head"><div class="num">05</div><div><h2>Sampling Lab — prédire puis manipuler</h2><p>Avant chaque changement de température ou filtre, annoncez ce que vous pensez voir arriver.</p></div></div>
 <div class="grid2">
 <aside class="panel controls">
 <div class="field"><label for="temperature">Température T</label><div class="range-row"><input id="temperature" type="range" min="0.2" max="2" step="0.1" value="1"><output id="temperatureOut">1,0</output></div></div>
-<div class="field"><label>Stratégie de décodage</label><div class="mode-grid">
-<button class="mode active" data-mode="greedy" type="button">Greedy<small>argmax</small></button>
-<button class="mode" data-mode="sample" type="button">Sampling<small>tirage pondéré</small></button>
-<button class="mode" data-mode="topk" type="button">Top-k<small>k candidats</small></button>
-<button class="mode" data-mode="topp" type="button">Top-p<small>masse cumulée</small></button>
-</div></div>
+<div class="field"><label>Stratégie de décodage</label><div class="mode-grid"><button class="mode active" data-mode="greedy" type="button">Greedy<small>argmax</small></button><button class="mode" data-mode="sample" type="button">Sampling<small>tirage pondéré</small></button><button class="mode" data-mode="topk" type="button">Top-k<small>k candidats</small></button><button class="mode" data-mode="topp" type="button">Top-p<small>masse cumulée</small></button></div></div>
 <div class="field" id="kField" hidden><label for="topK">k</label><div class="range-row"><input id="topK" type="range" min="1" max="8" value="4"><output id="topKOut">4</output></div></div>
 <div class="field" id="pField" hidden><label for="topP">p</label><div class="range-row"><input id="topP" type="range" min="0.4" max="0.99" step="0.01" value="0.9"><output id="topPOut">0,90</output></div></div>
 <div class="field"><label for="seed">Seed didactique</label><input id="seed" type="number" min="1" max="999999" value="42"></div>
 <div class="actions"><button class="primary" id="chooseBtn" type="button">Sélectionner un token</button><button class="secondary" id="nextSeedBtn" type="button">Changer le seed</button></div>
-<div class="trainer-only trainer-box"><b>Question à poser.</b> « Une probabilité de 0,62 pour un token signifie-t-elle 62 % de chances que la phrase soit vraie ? » Attendu : non, il s’agit d’une probabilité locale de continuation conditionnée par le contexte.</div>
+<div class="trainer-only trainer-box"><b>Question.</b> Une probabilité de 0,62 pour un token est-elle « 62 % de chance que la réponse soit vraie » ? Non : c’est une <strong>probabilité locale de continuation</strong>.</div>
 </aside>
-<div class="panel">
-<div class="table-wrap"><table><thead><tr><th>Token</th><th>Logit</th><th>P après T</th><th>Filtre</th></tr></thead><tbody id="distBody"></tbody></table></div>
-<div class="choice"><b>Token sélectionné</b><div class="big" id="chosenToken">—</div><div id="choiceMeta" class="muted"></div></div>
-<div class="callout"><b>Température.</b> Pour T &gt; 0, ce lab calcule <code>softmax(logits / T)</code>. Quand T diminue, la distribution se concentre ; quand T augmente, elle s’aplatit. T = 0 n’est pas utilisé comme division littérale : un comportement de type argmax se traite séparément par greedy.</div>
-</div>
-</div>
-</section>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>Token</th><th>Logit</th><th>P après T</th><th>Filtre</th></tr></thead><tbody id="distBody"></tbody></table></div><div class="choice"><b>Token sélectionné</b><div class="big" id="chosenToken">—</div><div id="choiceMeta" class="muted"></div></div><div class="callout"><b>À observer :</b> diminuer T concentre les probabilités ; top-k impose un nombre fixe de candidats ; top-p adapte le nombre de candidats à la masse cumulée.</div></div>
+</div></section>
 
-<section class="section" id="compare">
-<div class="section-head"><div class="num">02</div><div><h2>Greedy ≠ sampling</h2><p>Greedy choisit toujours le maximum local. Sampling autorise des candidats moins probables, avec une fréquence proportionnelle à leur poids.</p></div></div>
-<div class="compare">
-<article class="compare-card"><h3>20 tirages · T = 0,5</h3><p>Distribution plus concentrée. Ce n’est pas pour autant une vérification factuelle.</p><div class="hist" id="histLow"></div></article>
-<article class="compare-card"><h3>20 tirages · T = 1,6</h3><p>Distribution plus plate : davantage de candidats obtiennent une chance non négligeable.</p><div class="hist" id="histHigh"></div></article>
-</div>
-<div class="actions" style="margin-top:10px"><button class="secondary" id="rerunHist" type="button">Relancer avec le seed courant</button></div>
-</section>
+<section class="section" id="compare"><div class="section-head"><div class="num">06</div><div><h2>Greedy ≠ sampling</h2><p>Vingt tirages permettent de voir la différence entre une distribution concentrée et une distribution plus plate.</p></div></div>
+<div class="compare"><article class="compare-card"><h3>20 tirages · T = 0,5</h3><p>Les candidats dominants captent davantage de tirages.</p><div class="hist" id="histLow"></div></article><article class="compare-card"><h3>20 tirages · T = 1,6</h3><p>La masse est plus répartie ; davantage de candidats apparaissent.</p><div class="hist" id="histHigh"></div></article></div><div class="actions" style="margin-top:10px"><button class="secondary" id="rerunHist" type="button">Relancer avec le seed courant</button></div></section>
 
-<section class="section" id="filters">
-<div class="section-head"><div class="num">03</div><div><h2>Top-k ou top-p ?</h2><p>Les deux coupent la queue de distribution, mais pas selon la même règle.</p></div></div>
-<div class="compare">
-<div class="compare-card"><h3>Top-k</h3><p>Conserve un <strong>nombre fixe</strong> de candidats. Si k = 4, quatre tokens restent éligibles, quelle que soit leur masse cumulée.</p></div>
-<div class="compare-card"><h3>Top-p / nucleus</h3><p>Conserve le plus petit ensemble trié dont la <strong>masse de probabilité cumulée</strong> atteint au moins p. Le nombre de tokens varie avec la forme de la distribution.</p></div>
-</div>
-<div class="trainer-only trainer-box"><b>Piège classique.</b> Top-p = 0,9 ne signifie ni « 90 % du vocabulaire » ni « 90 % de qualité ». Il s’agit d’une masse cumulée de probabilité.</div>
-</section>
+<section class="section" id="filters"><div class="section-head"><div class="num">07</div><div><h2>Top-k ou top-p ?</h2></div></div>
+<div class="compare"><article class="compare-card"><h3>Top-k</h3><p>Conserve un <strong>nombre fixe</strong> de candidats. k=4 signifie quatre candidats éligibles, quelle que soit leur masse totale.</p></article><article class="compare-card"><h3>Top-p / nucleus sampling</h3><p>Conserve le plus petit préfixe trié dont la <strong>masse cumulée</strong> atteint au moins p. Le nombre de candidats varie donc selon la distribution.</p></article></div></section>
 
-<section class="section" id="loop">
-<div class="section-head"><div class="num">04</div><div><h2>Autoregressive Loop Lab</h2><p>Le token choisi est ajouté au contexte ; le modèle recalcule ensuite une distribution pour le token suivant.</p></div></div>
-<div class="grid2">
-<div class="panel controls">
-<div class="field"><label for="loopMode">Décodage de la boucle</label><select id="loopMode"><option value="greedy">Greedy</option><option value="sample">Sampling</option><option value="topk">Top-k (k=4)</option><option value="topp" selected>Top-p (p=0,90)</option></select></div>
-<div class="field"><label for="loopTemp">Température</label><div class="range-row"><input id="loopTemp" type="range" min="0.3" max="1.8" step="0.1" value="0.9"><output id="loopTempOut">0,9</output></div></div>
-<div class="actions"><button class="primary" id="generateOne" type="button">Générer 1 token</button><button class="secondary" id="generateAll" type="button">Générer 6 tokens</button><button class="secondary" id="resetLoop" type="button">Réinitialiser</button></div>
-<div class="trainer-only trainer-box"><b>À faire verbaliser.</b> Après chaque choix, le contexte a changé. Deux générations qui divergent sur un token peuvent donc recevoir des distributions différentes à toutes les étapes suivantes.</div>
-</div>
-<div class="panel loop">
-<div class="context"><span class="muted">Contexte :</span> <span id="loopPrompt">Le modèle</span><span class="generated" id="loopGenerated"></span></div>
-<div class="steps" id="loopSteps"></div>
-<div class="callout" id="loopInfo"><b>Boucle :</b> distribution → sélection → ajout au contexte → nouvelle distribution.</div>
-</div>
-</div>
-</section>
+<section class="section" id="loop"><div class="section-head"><div class="num">08</div><div><h2>Autoregressive Loop Lab</h2><p>Chaque choix modifie le contexte des choix suivants.</p></div></div>
+<div class="grid2"><div class="panel controls"><div class="field"><label for="loopMode">Décodage</label><select id="loopMode"><option value="greedy">Greedy</option><option value="sample">Sampling</option><option value="topk">Top-k (k=4)</option><option value="topp" selected>Top-p (p=0,90)</option></select></div><div class="field"><label for="loopTemp">Température</label><div class="range-row"><input id="loopTemp" type="range" min="0.3" max="1.8" step="0.1" value="0.9"><output id="loopTempOut">0,9</output></div></div><div class="actions"><button class="primary" id="generateOne" type="button">Générer 1 token</button><button class="secondary" id="generateAll" type="button">Générer 6 tokens</button><button class="secondary" id="resetLoop" type="button">Réinitialiser</button></div></div>
+<div class="panel loop"><div class="context"><span class="muted">Contexte :</span> <span id="loopPrompt">Le modèle</span><span class="generated" id="loopGenerated"></span></div><div class="loopsteps" id="loopSteps"></div><div class="callout" id="loopInfo"><b>Boucle :</b> distribution → sélection → ajout au contexte → nouvelle distribution.</div></div></div></section>
 
-<section class="section" id="truth">
-<div class="section-head"><div class="num">05</div><div><h2>Piège de vérité — température basse ≠ exactitude</h2><p>Si le candidat dominant est erroné, réduire la température peut rendre cette erreur plus stable au lieu de la corriger.</p></div></div>
-<div class="truth-grid">
-<div class="truthbox"><strong>Scénario fictif</strong><p class="muted">On suppose volontairement que le modèle favorise le mauvais candidat. Le but est d’isoler l’effet de température, pas de tester une connaissance réelle.</p><div class="field"><label for="truthTemp">Température</label><div class="range-row"><input id="truthTemp" type="range" min="0.2" max="2" step="0.1" value="1"><output id="truthTempOut">1,0</output></div></div></div>
-<div class="truthbox"><strong>Distribution simulée</strong><div class="truthdist" id="truthDist"></div><div class="callout"><b>Conclusion :</b> la température agit sur la distribution produite par le modèle. Elle ne consulte aucune preuve externe et ne transforme donc pas un candidat faux en candidat vrai.</div></div>
-</div>
-</section>
+<section class="section" id="truth"><div class="section-head"><div class="num">09</div><div><h2>Piège de vérité — température basse ≠ exactitude</h2><p>Si le modèle favorise un candidat faux, une température basse peut simplement rendre cette erreur plus dominante.</p></div></div>
+<div class="truth-grid"><div class="truthbox"><strong>Scénario fictif</strong><p class="muted">Le candidat faux reçoit volontairement le logit le plus élevé. Changez T et observez : aucune preuve externe n’est consultée.</p><div class="field"><label for="truthTemp">Température</label><div class="range-row"><input id="truthTemp" type="range" min="0.2" max="2" step="0.1" value="1"><output id="truthTempOut">1,0</output></div></div></div><div class="truthbox"><strong>Distribution simulée</strong><div class="truthdist" id="truthDist"></div><div class="callout"><b>Conclusion :</b> température = forme de distribution, pas mécanisme de vérification factuelle.</div></div></div></section>
 
-<section class="section" id="concepts">
-<div class="section-head"><div class="num">06</div><div><h2>9 notions à savoir expliquer</h2><p>Le vocabulaire minimum pour raisonner proprement sur une génération.</p></div></div>
-<div class="compare">
-<div class="compare-card"><h3>Inférence · logits · distribution</h3><p>L’inférence utilise les poids appris. Les logits sont des scores bruts ; le softmax de sortie produit une distribution sur les candidats du prochain token.</p></div>
-<div class="compare-card"><h3>Greedy · sampling</h3><p>Greedy = argmax local. Sampling = tirage pondéré ; un candidat moins probable peut être choisi s’il reste éligible.</p></div>
-<div class="compare-card"><h3>Température · top-k · top-p</h3><p>Température remodèle la concentration. Top-k conserve k candidats. Top-p conserve une masse cumulée adaptative.</p></div>
-<div class="compare-card"><h3>Autorégression</h3><p>Chaque token sélectionné est ajouté au contexte et influence les distributions des étapes suivantes.</p></div>
-</div>
-</section>
+<section class="section" data-pedagogy="misconception" id="pieges"><div class="section-head"><div class="num">10</div><div><h2>Les confusions à éviter</h2></div></div>
+<div class="misgrid">
+<article class="mis"><div class="wrong">« Logit = probabilité »</div><p>Un logit est un score brut réel, sans contrainte [0,1].</p><div class="right">Correction : softmax produit la distribution.</div></article>
+<article class="mis"><div class="wrong">« Greedy cherche la meilleure phrase complète »</div><p>Il choisit seulement le maximum à chaque étape.</p><div class="right">Correction : argmax local ≠ optimum global.</div></article>
+<article class="mis"><div class="wrong">« Sampling = hasard uniforme »</div><p>Les candidats ne sont pas équiprobables.</p><div class="right">Correction : le tirage est pondéré par la distribution filtrée.</div></article>
+<article class="mis"><div class="wrong">« Température basse = correct »</div><p>Elle concentre la distribution autour de ce que le modèle favorise déjà.</p><div class="right">Correction : une erreur dominante peut devenir plus stable.</div></article>
+<article class="mis"><div class="wrong">« Top-p=0,9 garde 90 % des tokens »</div><p>p porte sur la masse cumulée.</p><div class="right">Correction : le nombre de candidats varie.</div></article>
+<article class="mis"><div class="wrong">« Chaque token est indépendant »</div><p>Le token choisi est réinjecté dans le contexte.</p><div class="right">Correction : une décision précoce influence les étapes suivantes.</div></article>
+</div></section>
 
-<section class="section" id="quiz">
-<div class="section-head"><div class="num">07</div><div><h2>Test de maîtrise</h2><p>Vérifier que génération, hasard et vérité ne sont plus confondus.</p></div></div>
+<section class="section" data-pedagogy="self-explanation" id="expliquer"><div class="section-head"><div class="num">11</div><div><h2>Expliquez la génération sans dire « le modèle choisit un mot »</h2></div></div>
+<div class="panel selfbox"><label for="explain"><strong>Consigne.</strong> Expliquez en 5 phrases comment des logits deviennent un token. Faites apparaître softmax, stratégie de décodage et boucle autoregressive.</label><textarea id="explain" placeholder="Votre explication…"></textarea><div class="criteria"><label><input type="checkbox"> J’ai distingué score brut et probabilité.</label><label><input type="checkbox"> J’ai distingué greedy et sampling.</label><label><input type="checkbox"> J’ai expliqué que le token devient du contexte.</label><label><input type="checkbox"> Je n’ai pas assimilé probabilité de token et vérité.</label></div></div></section>
+
+<section class="section" data-pedagogy="retrieval" id="quiz"><div class="section-head"><div class="num">12</div><div><h2>Test de maîtrise</h2></div></div>
 <form class="quiz" id="quizForm">
-<fieldset class="q" data-answer="b"><legend>1. Un logit est…</legend><label><input type="radio" name="q1" value="a"> une probabilité entre 0 et 1.</label><label><input type="radio" name="q1" value="b"> un score brut avant normalisation.</label><label><input type="radio" name="q1" value="c"> une preuve de vérité.</label><div class="feedback">Le logit est un score brut ; softmax transforme l’ensemble des logits en distribution.</div></fieldset>
-<fieldset class="q" data-answer="c"><legend>2. Avec greedy, le modèle…</legend><label><input type="radio" name="q2" value="a"> choisit uniformément au hasard.</label><label><input type="radio" name="q2" value="b"> cherche toute la meilleure phrase future.</label><label><input type="radio" name="q2" value="c"> choisit à chaque étape le candidat de score maximal.</label><div class="feedback">Greedy est un argmax local, token après token.</div></fieldset>
-<fieldset class="q" data-answer="a"><legend>3. À logits identiques, augmenter T au-dessus de 1 tend à…</legend><label><input type="radio" name="q3" value="a"> aplatir la distribution.</label><label><input type="radio" name="q3" value="b"> prouver davantage la réponse.</label><label><input type="radio" name="q3" value="c"> supprimer le vocabulaire.</label><div class="feedback">T &gt; 1 réduit les écarts relatifs après softmax et distribue davantage de masse.</div></fieldset>
-<fieldset class="q" data-answer="b"><legend>4. Top-p = 0,9 signifie…</legend><label><input type="radio" name="q4" value="a"> garder 90 % des tokens du vocabulaire.</label><label><input type="radio" name="q4" value="b"> garder le plus petit ensemble atteignant une masse cumulée d’au moins 0,9.</label><label><input type="radio" name="q4" value="c"> produire une réponse correcte à 90 %.</label><div class="feedback">Le nombre de candidats conservés par top-p varie selon la distribution.</div></fieldset>
-<fieldset class="q" data-answer="c"><legend>5. Une faible température…</legend><label><input type="radio" name="q5" value="a"> vérifie automatiquement les faits.</label><label><input type="radio" name="q5" value="b"> garantit une réponse correcte.</label><label><input type="radio" name="q5" value="c"> concentre davantage la distribution autour des candidats déjà favorisés.</label><div class="feedback">Elle peut donc rendre une erreur dominante plus stable.</div></fieldset>
-<fieldset class="q" data-answer="b"><legend>6. Dans une génération autoregressive…</legend><label><input type="radio" name="q6" value="a"> toute la réponse est calculée comme une chaîne figée avant le premier token.</label><label><input type="radio" name="q6" value="b"> chaque token choisi devient une partie du contexte des étapes suivantes.</label><label><input type="radio" name="q6" value="c"> les poids sont réentraînés à chaque token.</label><div class="feedback">C’est cette boucle qui rend les choix précoces capables d’influencer toute la continuation.</div></fieldset>
-<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><strong id="quizScore"></strong></div>
-</form>
-</section>
+<fieldset class="q" data-answer="b"><legend>1. Un logit est…</legend><label><input type="radio" name="q1" value="a"> une probabilité.</label><label><input type="radio" name="q1" value="b"> un score brut avant normalisation.</label><label><input type="radio" name="q1" value="c"> une preuve.</label><div class="feedback" data-pedagogy="feedback">Le softmax transforme l’ensemble des logits en distribution.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. Greedy…</legend><label><input type="radio" name="q2" value="a"> tire uniformément.</label><label><input type="radio" name="q2" value="b"> optimise toute la phrase future.</label><label><input type="radio" name="q2" value="c"> choisit l’argmax à chaque étape.</label><div class="feedback">C’est une stratégie locale et déterministe à distribution donnée.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>3. Augmenter T au-dessus de 1 tend à…</legend><label><input type="radio" name="q3" value="a"> aplatir la distribution.</label><label><input type="radio" name="q3" value="b"> vérifier la réponse.</label><label><input type="radio" name="q3" value="c"> modifier les poids.</label><div class="feedback">Les écarts relatifs entre logits sont réduits après division par T.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>4. Top-p=0,9 signifie…</legend><label><input type="radio" name="q4" value="a"> garder 90 % du vocabulaire.</label><label><input type="radio" name="q4" value="b"> atteindre au moins 0,9 de masse cumulée avec le plus petit préfixe trié.</label><label><input type="radio" name="q4" value="c"> être vrai à 90 %.</label><div class="feedback">Top-p adapte le nombre de candidats à la forme de la distribution.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Une faible température…</legend><label><input type="radio" name="q5" value="a"> garantit la factualité.</label><label><input type="radio" name="q5" value="b"> consulte des sources.</label><label><input type="radio" name="q5" value="c"> concentre davantage la distribution.</label><div class="feedback">Elle ne constitue pas un mécanisme de vérification.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>6. En génération autoregressive…</legend><label><input type="radio" name="q6" value="a"> tous les tokens sont indépendants.</label><label><input type="radio" name="q6" value="b"> chaque token choisi devient une partie du contexte suivant.</label><label><input type="radio" name="q6" value="c"> les poids changent à chaque token.</label><div class="feedback">La boucle rend les choix précoces capables d’influencer toute la continuation.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div></form></section>
 
-<section class="section" id="sources">
-<div class="section-head"><div class="num">08</div><div><h2>Références</h2><p>Sources primaires utilisées pour le modèle mental de génération et de décodage.</p></div></div>
-<div class="refs">
-<div class="ref"><b>Brown et al., 2020 · Language Models are Few-Shot Learners</b> — exemple majeur de modèle de langage autoregressif de grande échelle.</div>
-<div class="ref"><b>Holtzman et al., 2020 · The Curious Case of Neural Text Degeneration</b> — analyse des stratégies de décodage et introduction du nucleus sampling.</div>
-<div class="ref"><b>Vaswani et al., 2017 · Attention Is All You Need</b> — Transformer et projection de sortie vers le vocabulaire.</div>
-</div>
-</section>
+<section class="section" data-pedagogy="transfer" id="transfert"><div class="section-head"><div class="num">13</div><div><h2>Transfert — raisonner sur d’autres réglages</h2></div></div>
+<div class="transfer">
+<article class="transfer-card" data-answer="error"><h3>Erreur dominante</h3><p>Le token factuellement faux possède déjà le plus grand logit. Que risque de faire T très basse ?</p><select><option value="">Choisir…</option><option value="fix">Corriger automatiquement.</option><option value="error">Renforcer encore sa domination.</option></select><div class="transfer-feedback">La température ne sait pas quel candidat est vrai.</div></article>
+<article class="transfer-card" data-answer="adaptive"><h3>Distribution très plate</h3><p>Quel filtre adapte automatiquement le nombre de candidats à la masse disponible ?</p><select><option value="">Choisir…</option><option value="fixed">Top-k</option><option value="adaptive">Top-p / nucleus</option></select><div class="transfer-feedback">Top-p conserve une masse, donc le nombre de candidats est variable.</div></article>
+<article class="transfer-card" data-answer="context"><h3>Premier token différent</h3><p>Deux tirages choisissent des tokens différents à l’étape 1. Que se passe-t-il ensuite ?</p><select><option value="">Choisir…</option><option value="same">Les distributions suivantes restent forcément identiques.</option><option value="context">Les contextes divergent, donc les distributions peuvent diverger.</option></select><div class="transfer-feedback">Le token généré devient une entrée de l’étape suivante.</div></article>
+</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div></section>
 
-<nav class="next-step" aria-label="Navigation du parcours"><a href="transformer-block-lab.html">← Étape 3 · Bloc Transformer</a><div class="center">Le pipeline du prochain token est maintenant complet. La suite reliera cette mécanique à l’incertitude, aux hallucinations et à la vérification.</div><span style="font-weight:900;color:var(--muted)">Parcours 3 · Fiabilité → prochaine construction</span></nav>
-<footer class="footer">Formation LLM · Parcours 1 · Étape 4 · Sampling Lab · Simulation pédagogique autonome.</footer>
+<section class="section" data-pedagogy="recap" id="synthese"><div class="section-head"><div class="num">14</div><div><h2>À retenir avant la fiabilité</h2></div></div>
+<div class="recap">
+<article><b>Logits = scores bruts.</b><p>Ils ne sont ni bornés ni directement interprétables comme probabilités.</p></article>
+<article><b>Softmax produit une distribution.</b><p>Cette distribution concerne le prochain token, pas la vérité globale.</p></article>
+<article><b>Greedy = argmax local.</b><p>Il n’explore pas toute la réponse future.</p></article>
+<article><b>Sampling = tirage pondéré.</b><p>Des candidats moins probables restent possibles.</p></article>
+<article><b>Température remodèle la concentration.</b><p>Elle ne vérifie aucun fait.</p></article>
+<article><b>Top-k et top-p filtrent différemment.</b><p>Nombre fixe contre masse cumulée adaptative.</p></article>
+<article><b>La génération est autoregressive.</b><p>Chaque token choisi influence les suivants.</p></article>
+</div><div class="intuition" style="margin-top:14px"><strong>Pont vers la fiabilité.</strong> Nous savons maintenant pourquoi un modèle peut produire une continuation très probable et très fluide. La prochaine question est : <em>qu’est-ce qui nous permet de dire qu’elle est vraie ?</em></div></section>
+
+<section class="section" id="sources"><div class="section-head"><div class="num">15</div><div><h2>Références</h2></div></div><div class="refs"><div class="ref"><b>Brown et al., 2020 · Language Models are Few-Shot Learners</b>.</div><div class="ref"><b>Holtzman et al., 2020 · The Curious Case of Neural Text Degeneration</b> — décodage et nucleus sampling.</div><div class="ref"><b>Vaswani et al., 2017 · Attention Is All You Need</b>.</div></div></section>
+
+<nav class="next-step"><a href="transformer-block-lab.html">← Étape 3 · Bloc Transformer</a><div class="center">Vous êtes prêt si vous pouvez expliquer : logits → softmax → filtre éventuel → sélection → nouveau contexte.</div><a href="hallucination-lab.html">Parcours 3 · Fiabilité →</a></nav>
+<footer class="footer">Formation LLM · Parcours 1 · Étape 4 · Version NOVICE-FIRST 1.0.</footer>
 </main>
-
 <script>
 (function(){
 "use strict";
-var root=document.documentElement,body=document.body;
-function applyTheme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
-var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
-document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
-setTrainerMode(localStorage.getItem("formation-llm-role")==="trainer");
-document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
-function setProjectorMode(on){root.classList.toggle("projector",on);var btn=document.getElementById("projectorBtn");btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection"}
-document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!root.classList.contains("projector"))});
-document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
+const root=document.documentElement,body=document.body,$=id=>document.getElementById(id);
+function theme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}const st=localStorage.getItem("formation-llm-theme");if(st)theme(st);else if(matchMedia("(prefers-color-scheme:dark)").matches)theme("dark");$("themeBtn").addEventListener("click",()=>theme(root.dataset.theme==="dark"?"light":"dark"));
+function trainer(on){body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}trainer(localStorage.getItem("formation-llm-role")==="trainer");$("trainerBtn").addEventListener("click",()=>trainer(!body.classList.contains("trainer-on")));
+function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"▣ Quitter projection":"▣ Activer projection"}$("projectorBtn").addEventListener("click",()=>setProjectorMode(!root.classList.contains("projector")));$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
 
-var vocab=["▁calcule","▁choisit","▁distribution","▁token","▁réponse","▁probable","▁vraie","▁fausse"];
-var logits=[4.2,3.45,2.85,2.35,1.5,.8,.15,-.7];
-var mode="greedy",temperature=1,topK=4,topP=.9,chosen=null;
+const vocab=["▁calcule","▁choisit","▁distribution","▁token","▁réponse","▁probable","▁vraie","▁fausse"],logits=[4.2,3.45,2.85,2.35,1.5,.8,.15,-.7];let mode="greedy",temperature=1,topK=4,topP=.9;
+function softmax(xs,t){const sc=xs.map(x=>x/t),m=Math.max(...sc),ex=sc.map(x=>Math.exp(x-m)),sum=ex.reduce((a,b)=>a+b,0);return ex.map(x=>x/sum)}
+function normalize(ps){const s=ps.reduce((a,b)=>a+b,0);return s?ps.map(x=>x/s):ps}
+function filtered(ps,kind,k,p){let mask=new Array(ps.length).fill(true);if(kind==="topk"){const keep=ps.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]).slice(0,k).map(x=>x[1]);mask=mask.map((_,i)=>keep.includes(i))}else if(kind==="topp"){const sorted=ps.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]);let cum=0,keep=[];for(const [v,i] of sorted){keep.push(i);cum+=v;if(cum>=p)break}mask=mask.map((_,i)=>keep.includes(i))}return{mask,probs:normalize(ps.map((v,i)=>mask[i]?v:0))}}
+function rng(seed){let a=seed>>>0;return function(){a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function draw(ps,r){const x=r();let c=0;for(let i=0;i<ps.length;i++){c+=ps[i];if(x<=c)return i}return ps.length-1}
+function current(kind=mode,temp=temperature,k=topK,p=topP){const base=softmax(logits,temp),f=filtered(base,kind,k,p);return{base,mask:f.mask,probs:f.probs}}
+function renderDist(){const d=current();$("distBody").innerHTML="";vocab.forEach((tok,i)=>{const tr=document.createElement("tr"),pct=(d.base[i]*100).toFixed(1);tr.innerHTML="<td class='token'>"+tok+"</td><td>"+logits[i].toFixed(2)+"</td><td><div class='probbar'><i style='width:"+pct+"%'></i></div><small>"+pct+" %</small></td><td>"+(d.mask[i]?"<span class='eligible'>éligible</span>":"<span class='blocked'>filtré</span>")+"</td>";$("distBody").appendChild(tr)});$("temperatureOut").textContent=temperature.toFixed(1).replace(".",",");$("topKOut").textContent=topK;$("topPOut").textContent=topP.toFixed(2).replace(".",",");$("kField").hidden=mode!=="topk";$("pField").hidden=mode!=="topp"}
+function choose(){const d=current();let idx=mode==="greedy"?d.probs.indexOf(Math.max(...d.probs)):draw(d.probs,rng(Number($("seed").value)||1));$("chosenToken").textContent=vocab[idx];$("choiceMeta").textContent=(mode==="greedy"?"argmax":"tirage pondéré")+" · p filtrée = "+(d.probs[idx]*100).toFixed(1)+" %"}
+document.querySelectorAll(".mode").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.mode;document.querySelectorAll(".mode").forEach(x=>x.classList.toggle("active",x===b));renderDist()}));$("temperature").addEventListener("input",function(){temperature=Number(this.value);renderDist()});$("topK").addEventListener("input",function(){topK=Number(this.value);renderDist()});$("topP").addEventListener("input",function(){topP=Number(this.value);renderDist()});$("chooseBtn").addEventListener("click",choose);$("nextSeedBtn").addEventListener("click",()=>{$("seed").value=(Number($("seed").value)||1)+1;choose();renderHists()});
+function histogram(temp,seed){const d=current("sample",temp,topK,topP),r=rng(seed),counts=new Array(vocab.length).fill(0);for(let i=0;i<20;i++)counts[draw(d.probs,r)]++;return counts}function renderHist(id,temp,seed){const counts=histogram(temp,seed),el=$(id);el.innerHTML="";counts.forEach((c,i)=>{if(!c)return;const row=document.createElement("div");row.className="histrow";row.innerHTML="<span class='token'>"+vocab[i]+"</span><div class='histbar'><i style='width:"+(c/20*100)+"%'></i></div><b>"+c+"</b>";el.appendChild(row)})}function renderHists(){const s=Number($("seed").value)||1;renderHist("histLow",.5,s);renderHist("histHigh",1.6,s)}$("rerunHist").addEventListener("click",renderHists);
 
-function softmax(xs,t){var scaled=xs.map(x=>x/t),m=Math.max(...scaled),ex=scaled.map(x=>Math.exp(x-m)),sum=ex.reduce((a,b)=>a+b,0);return ex.map(x=>x/sum)}
-function normalize(ps){var s=ps.reduce((a,b)=>a+b,0);return s?ps.map(x=>x/s):ps}
-function eligibleMask(ps,kind,k,p){
- var mask=new Array(ps.length).fill(true);
- if(kind==="topk"){
-  var ids=ps.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]).slice(0,k).map(x=>x[1]);
-  mask=mask.map((_,i)=>ids.includes(i));
- }else if(kind==="topp"){
-  var sorted=ps.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]),cum=0,keep=[];
-  for(const [v,i] of sorted){keep.push(i);cum+=v;if(cum>=p)break}
-  mask=mask.map((_,i)=>keep.includes(i));
- }
- return mask;
-}
-function filtered(ps,kind,k,p){
- var mask=eligibleMask(ps,kind,k,p);
- var out=ps.map((v,i)=>mask[i]?v:0);
- return {mask:mask,probs:normalize(out)};
-}
-function rng(seed){var a=seed>>>0;return function(){a+=0x6D2B79F5;var t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
-function draw(ps,rand){var r=rand(),c=0;for(var i=0;i<ps.length;i++){c+=ps[i];if(r<=c)return i}return ps.length-1}
-function currentDistribution(kind,temp,k,p){
- var base=softmax(logits,temp),f=filtered(base,kind,k,p);
- return{base:base,mask:f.mask,probs:f.probs};
-}
-function renderDist(){
- var d=currentDistribution(mode,temperature,topK,topP),bodyEl=document.getElementById("distBody");bodyEl.innerHTML="";
- vocab.forEach(function(tok,i){
-  var tr=document.createElement("tr"),pct=(d.base[i]*100).toFixed(1),elig=d.mask[i];
-  tr.innerHTML='<td class="token">'+tok+'</td><td>'+logits[i].toFixed(2)+'</td><td><div class="probbar"><i style="width:'+pct+'%"></i></div><small>'+pct+' %</small></td><td>'+(elig?'<span class="eligible">éligible</span>':'<span class="blocked">filtré</span>')+'</td>';
-  bodyEl.appendChild(tr);
- });
- document.getElementById("temperatureOut").textContent=temperature.toFixed(1).replace(".",",");
- document.getElementById("topKOut").textContent=topK;
- document.getElementById("topPOut").textContent=topP.toFixed(2).replace(".",",");
- document.getElementById("kField").hidden=mode!=="topk";document.getElementById("pField").hidden=mode!=="topp";
-}
-function choose(){
- var d=currentDistribution(mode,temperature,topK,topP),idx;
- if(mode==="greedy")idx=d.probs.indexOf(Math.max(...d.probs));
- else idx=draw(d.probs,rng(Number(document.getElementById("seed").value)||1));
- chosen=idx;
- document.getElementById("chosenToken").textContent=vocab[idx];
- document.getElementById("choiceMeta").textContent=(mode==="greedy"?"argmax":"tirage pondéré avec seed")+" · p filtrée = "+(d.probs[idx]*100).toFixed(1)+" %";
-}
-document.querySelectorAll(".mode").forEach(function(btn){btn.addEventListener("click",function(){mode=btn.dataset.mode;document.querySelectorAll(".mode").forEach(b=>b.classList.toggle("active",b===btn));renderDist()})});
-document.getElementById("temperature").addEventListener("input",function(){temperature=Number(this.value);renderDist()});
-document.getElementById("topK").addEventListener("input",function(){topK=Number(this.value);renderDist()});
-document.getElementById("topP").addEventListener("input",function(){topP=Number(this.value);renderDist()});
-document.getElementById("chooseBtn").addEventListener("click",choose);
-document.getElementById("nextSeedBtn").addEventListener("click",function(){var n=(Number(document.getElementById("seed").value)||1)+1;document.getElementById("seed").value=n;choose();renderHists()});
+const loopVocab=["▁le","▁modèle","▁calcule","▁une","▁distribution","▁puis","▁choisit","▁token","▁probable","."],target=[2,3,4,5,6,7];let loopStep=0,loopTokens=[];
+function loopLogits(step,prev){const a=loopVocab.map((_,i)=>-1.8+((i*13+step*7)%9)*.12),t=target[step%target.length];a[t]=4.2;a[(t+2)%a.length]=3.1;if(prev!=null)a[(prev+3)%a.length]+=.55;return a}
+function loopSelect(kind,temp,seed){const lg=loopLogits(loopStep,loopTokens.at(-1)),ps=softmax(lg,temp),d=kind==="topk"?filtered(ps,"topk",4,.9).probs:kind==="topp"?filtered(ps,"topp",4,.9).probs:ps;return kind==="greedy"?d.indexOf(Math.max(...d)):draw(d,rng(seed+loopStep*997))}
+function renderLoop(){$("loopGenerated").textContent=loopTokens.map(i=>loopVocab[i].replace("▁"," ")).join("");$("loopSteps").innerHTML="";for(let i=0;i<6;i++){const s=document.createElement("span");s.className="loopstep"+(i<loopStep?" done":"");s.textContent=i<loopStep?"✓ étape "+(i+1):"étape "+(i+1);$("loopSteps").appendChild(s)}}
+function generateOne(){if(loopStep>=6)return;const idx=loopSelect($("loopMode").value,Number($("loopTemp").value),Number($("seed").value)||1);loopTokens.push(idx);loopStep++;renderLoop();$("loopInfo").innerHTML="<b>Dernier choix :</b> "+loopVocab[idx]+" est maintenant dans le contexte."}$("generateOne").addEventListener("click",generateOne);$("generateAll").addEventListener("click",()=>{while(loopStep<6)generateOne()});$("resetLoop").addEventListener("click",()=>{loopStep=0;loopTokens=[];renderLoop();$("loopInfo").innerHTML="<b>Boucle :</b> distribution → sélection → ajout au contexte → nouvelle distribution."});$("loopTemp").addEventListener("input",function(){$("loopTempOut").textContent=Number(this.value).toFixed(1).replace(".",",")});
 
-function histogram(temp,seed){
- var d=currentDistribution("sample",temp,topK,topP),r=rng(seed),counts=new Array(vocab.length).fill(0);
- for(var i=0;i<20;i++)counts[draw(d.probs,r)]++;
- return counts;
-}
-function renderHist(elId,temp,seed){
- var counts=histogram(temp,seed),el=document.getElementById(elId);el.innerHTML="";
- counts.forEach(function(c,i){if(c===0)return;var row=document.createElement("div");row.className="histrow";row.innerHTML='<span class="token">'+vocab[i]+'</span><div class="histbar"><i style="width:'+(c/20*100)+'%"></i></div><b>'+c+'</b>';el.appendChild(row)});
-}
-function renderHists(){var s=Number(document.getElementById("seed").value)||1;renderHist("histLow",.5,s);renderHist("histHigh",1.6,s)}
-document.getElementById("rerunHist").addEventListener("click",renderHists);
+function renderTruth(){const t=Number($("truthTemp").value),ps=softmax([3.2,2.35,.4],t),labels=["candidat faux","candidat vrai","autre"];$("truthTempOut").textContent=t.toFixed(1).replace(".",",");$("truthDist").innerHTML="";ps.forEach((p,i)=>{const row=document.createElement("div");row.className="truthline";row.innerHTML="<span>"+labels[i]+"</span><div class='probbar'><i style='width:"+(p*100).toFixed(1)+"%'></i></div><b>"+(p*100).toFixed(1)+" %</b>";$("truthDist").appendChild(row)})}$("truthTemp").addEventListener("input",renderTruth);
 
-var loopVocab=["▁le","▁modèle","▁calcule","▁une","▁distribution","▁puis","▁choisit","▁token","▁probable","▁au","▁hasard","."];
-var target=[2,3,4,5,6,7];
-var loopStep=0,loopTokens=[];
-function loopLogits(step,prev){
- var arr=loopVocab.map((_,i)=>-1.8+((i*13+step*7)%9)*.12);
- var t=target[step%target.length];arr[t]=4.2;arr[(t+2)%arr.length]=3.1;arr[(t+5)%arr.length]=2.25;
- if(prev!=null)arr[(prev+3)%arr.length]+=0.55;
- return arr;
-}
-function loopSelect(kind,temp,seed){
- var lg=loopLogits(loopStep,loopTokens.length?loopTokens[loopTokens.length-1]:null),ps=softmax(lg,temp),d;
- if(kind==="topk")d=filtered(ps,"topk",4,.9).probs;
- else if(kind==="topp")d=filtered(ps,"topp",4,.9).probs;
- else d=ps;
- if(kind==="greedy")return d.indexOf(Math.max(...d));
- return draw(d,rng(seed+loopStep*997));
-}
-function renderLoop(){
- document.getElementById("loopGenerated").textContent=loopTokens.map(i=>loopVocab[i].replace("▁"," ")).join("");
- var steps=document.getElementById("loopSteps");steps.innerHTML="";
- for(var i=0;i<6;i++){var s=document.createElement("span");s.className="step"+(i<loopStep?" done":"");s.textContent=i<loopStep?"✓ étape "+(i+1):"étape "+(i+1);steps.appendChild(s)}
-}
-function generateOne(){
- if(loopStep>=6)return;
- var kind=document.getElementById("loopMode").value,temp=Number(document.getElementById("loopTemp").value),seed=Number(document.getElementById("seed").value)||1;
- var idx=loopSelect(kind,temp,seed);loopTokens.push(idx);loopStep++;renderLoop();
- document.getElementById("loopInfo").innerHTML='<b>Dernier choix :</b> '+loopVocab[idx]+' est maintenant ajouté au contexte et influencera le calcul suivant.';
-}
-document.getElementById("generateOne").addEventListener("click",generateOne);
-document.getElementById("generateAll").addEventListener("click",function(){while(loopStep<6)generateOne()});
-document.getElementById("resetLoop").addEventListener("click",function(){loopStep=0;loopTokens=[];renderLoop();document.getElementById("loopInfo").innerHTML='<b>Boucle :</b> distribution → sélection → ajout au contexte → nouvelle distribution.'});
-document.getElementById("loopTemp").addEventListener("input",function(){document.getElementById("loopTempOut").textContent=Number(this.value).toFixed(1).replace(".",",")});
-
-function renderTruth(){
- var t=Number(document.getElementById("truthTemp").value),ps=softmax([3.2,2.35,.4],t),labels=["candidat faux","candidat vrai","autre"];
- document.getElementById("truthTempOut").textContent=t.toFixed(1).replace(".",",");
- var el=document.getElementById("truthDist");el.innerHTML="";
- ps.forEach(function(p,i){var row=document.createElement("div");row.className="truthline";row.innerHTML='<span>'+labels[i]+'</span><div class="probbar"><i style="width:'+(p*100).toFixed(1)+'%"></i></div><b>'+(p*100).toFixed(1)+' %</b>';el.appendChild(row)});
-}
-document.getElementById("truthTemp").addEventListener("input",renderTruth);
-
-document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var qs=[...document.querySelectorAll(".q")],score=0;qs.forEach(function(q,i){var c=q.querySelector('input[name="q'+(i+1)+'"]:checked'),ok=c&&c.value===q.dataset.answer;q.classList.toggle("ok",!!ok);q.classList.toggle("bad",!ok);if(ok)score++});document.getElementById("quizScore").textContent=score+" / "+qs.length+(score===qs.length?" · maîtrise solide":"")});
-document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("ok","bad"));document.getElementById("quizScore").textContent=""});
-
+$("checkCompletion").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll("[data-answer]").forEach(s=>{total++;if(s.value===s.dataset.answer)score++});$("completionFeedback").classList.add("show");$("completionFeedback").innerHTML="<b>"+score+" / "+total+"</b> — "+(score===total?"Chaîne de décodage maîtrisée.":"Reprenez l’exemple numérique.")});$("resetCompletion").addEventListener("click",()=>{document.querySelectorAll("[data-answer]").forEach(s=>s.value="");$("completionFeedback").classList.remove("show")});
+$("quizForm").addEventListener("submit",e=>{e.preventDefault();let score=0,total=0;document.querySelectorAll(".q").forEach(q=>{total++;const c=q.querySelector("input:checked"),ok=c&&c.value===q.dataset.answer;q.classList.toggle("ok",!!ok);q.classList.toggle("bad",!ok);if(ok)score++});$("quizScore").textContent=score+" / "+total+(score===total?" · maîtrise solide":" · utilisez les feedbacks")});$("resetQuiz").addEventListener("click",()=>{$("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("ok","bad"));$("quizScore").textContent=""});
+$("checkTransfer").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll(".transfer-card").forEach(c=>{total++;const good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});$("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":"")});
 renderDist();renderHists();renderLoop();renderTruth();
 })();
 </script>
