@@ -35,6 +35,16 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 @media(max-width:1000px){.hero{grid-template-columns:1fr}.map{grid-template-columns:repeat(3,1fr)}.classifier,.concepts{grid-template-columns:repeat(2,1fr)}.openness{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.wrap{padding:17px 13px 60px}.grid2,.classifier,.concepts,.openness,.map{grid-template-columns:1fr}.node.wide{grid-column:auto}.node.rel:after{display:none}.top{align-items:flex-start}h1{font-size:clamp(2.5rem,14vw,4.2rem)}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 8px}
+.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}
+.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}
+.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.8rem}
+.recall-check{margin-top:9px}.recall-check details{border-top:1px solid var(--line);padding:7px 0}.recall-check summary{cursor:pointer;font-weight:850;font-size:.78rem}.recall-check div{padding-top:5px;color:var(--muted);font-size:.77rem}
+.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.8rem}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+@media(max-width:720px){.journey{grid-template-columns:1fr}.next-step{align-items:flex-start;flex-direction:column}.next-step .center{text-align:left}}
+
 </style>
 </head>
 <body>
@@ -45,11 +55,16 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 <div><div class="eyebrow">Parcours 0 · Domaine A</div><h1>Situer les LLM</h1><p class="lead">Avant de manipuler tokens, attention ou RAG, il faut savoir <strong>de quoi l’on parle</strong>. Ce module construit une carte mentale fiable : IA, machine learning, deep learning, TAL, IA générative, modèles de langage, LLM, foundation models et applications.</p></div>
 <aside class="hero-card"><b>La question directrice</b><p>Quand un participant dit « l’IA », « ChatGPT », « le modèle » ou « une IA open source », parle-t-il vraiment de la même chose ?</p><div class="ladder"><span>IA · champ large</span><span>Machine learning · méthodes apprenantes</span><span>Deep learning · réseaux profonds</span><span>LLM · modèles de langage de grande échelle</span></div></aside>
 </section>
+<section class="journey" aria-label="Repères du parcours">
+<div class="journey-card"><div class="k">Point de départ</div><b>Aucun prérequis technique</b><p>On part du vocabulaire courant et on le rend précis.</p></div>
+<div class="journey-card"><div class="k">Objectif de sortie</div><b>Expliquer 4 distinctions</b><p>IA ≠ chatbot · LLM ≠ application · poids ≠ documents · open weights ≠ open source.</p></div>
+<div class="journey-card"><div class="k">Ensuite</div><b>Domaine B</b><p>Une fois le vocabulaire stabilisé : tokens, IDs, embeddings et contexte.</p></div>
+</section>
 
 <div class="notice"><strong>Objectif formateur.</strong>À la fin, vous devez pouvoir corriger sans jargon quatre confusions fréquentes : <em>IA = chatbot</em>, <em>LLM = application</em>, <em>paramètres = base de données</em> et <em>open weights = automatiquement open source</em>.</div>
 
 <section class="section" id="carte">
-<div class="section-head"><div class="num">01</div><div><h2>Concept Map Lab — carte mentale interactive</h2><p>Cliquez sur une notion. Les relations indiquent des appartenances ou des proximités, pas des synonymes.</p></div></div>
+<div class="section-head"><div class="num">01</div><div><h2>Concept Map Lab — carte mentale interactive</h2><p>La chaîne IA → ML → deep learning → LLM décrit un chemin d’appartenance fréquent pour les LLM modernes. Modèle de langage, TAL, IA générative, foundation model et application sont des notions liées, mais ne forment pas une unique hiérarchie emboîtée.</p></div></div>
 <div class="panel">
 <div class="map" id="conceptMap">
 <button class="node rel active" data-key="ai"><span class="id">A01</span><b>Intelligence artificielle</b><small>Champ général</small></button>
@@ -151,6 +166,7 @@ h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98
 </div>
 </section>
 
+<nav class="next-step" aria-label="Navigation du parcours"><a href="../index.html#parcours">← Tableau de bord</a><div class="center">A acquis ? Vous devez pouvoir expliquer les quatre distinctions sans réciter les cartes.</div><a href="domaine-b.html">Domaine B →</a></nav>
 <footer class="footer">Formation LLM · Domaine A v1.0 · Module autonome · Progression : A → B → C, puis parcours transversaux comme RAG.</footer>
 </main>
 <script>
