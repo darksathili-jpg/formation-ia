@@ -10,9 +10,11 @@
     {
       "path": "modules/domaine-a.html",
       "label": "Parcours 0 — Situer les LLM",
-      "status": "remediation-required",
-      "legacy_debt": true,
-      "priority": 1
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 1,
+      "reviewed_on": "2026-09-19",
+      "notes": "Module pilote reconstruit selon le standard NOVICE-FIRST : exemple travaillé, guidage progressif, auto-explication, récupération active, transfert et synthèse."
     },
     {
       "path": "modules/domaine-b.html",
