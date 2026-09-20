@@ -24,6 +24,15 @@ for(const m of manifest.modules){
  const html=await readFile(new URL('../'+m.path,import.meta.url),'utf8');
  const words=visible(html).split(/\s+/).filter(Boolean).length;
  const present=Object.fromEntries(required.map(k=>[k,html.includes('data-pedagogy="'+k+'"')]));
+ const pedagogicOrder=['prerequisites','intuition','definition','worked-example','guided-practice','completion','misconception','self-explanation','retrieval','transfer','recap'];
+ const positions=pedagogicOrder.map(k=>html.indexOf('data-pedagogy="'+k+'"'));
+ let previous=-1;
+ for(let i=0;i<pedagogicOrder.length;i++){
+   if(positions[i]>=0){
+     if(previous>positions[i]) errors.push(m.path+': ordre novice-first rompu autour de '+pedagogicOrder[i]);
+     previous=positions[i];
+   }
+ }
  rows.push({module:m.label,status:m.status,words,present:required.filter(k=>present[k]).length,total:required.length});
  if(m.status==='novice-ready'){
    for(const k of required) if(!present[k]) errors.push(m.path+': bloc pédagogique obligatoire absent: '+k);
