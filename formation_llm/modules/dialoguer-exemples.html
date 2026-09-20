@@ -430,17 +430,48 @@ html.projector .journey-card .k{color:#245c62!important}
  vertical-align:middle!important;
 }
 </style>
-<style data-p2s2-visual-audit="v1">
-/* P2S1 : confort mobile + lisibilité du Prompt Builder. */
-#builder .criteria label{color:var(--text)!important;line-height:1.4}
-#builder .criteria input{margin-top:.16rem}
+<style data-p2s2-visual-audit="v2">
+/* P2S2 : Example Lab, densité des pièges, transfert et modes clair/sombre/projection. */
+#builder .criteria{gap:8px!important}
+#builder .criteria label{
+ min-height:44px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;
+ background:var(--panel2);color:var(--text)!important;line-height:1.4;align-items:center
+}
+#builder .criteria input{width:18px;height:18px;margin:0;flex:0 0 auto}
 #builderOutput{min-height:180px}
+#builderOutput p{
+ margin:.48rem 0;padding:.58rem .68rem;border-left:2px solid var(--accent);
+ border-radius:6px;background:rgba(255,255,255,.055);line-height:1.5
+}
+#builderOutput p:first-child{margin-top:0}
+#builderOutput p:last-child{margin-bottom:0}
+#pieges .misgrid{align-items:stretch}
+#pieges .mis{
+ display:grid;grid-template-rows:auto 1fr auto;gap:8px;min-height:100%;
+ border-top:2px solid color-mix(in srgb,var(--red) 68%,var(--line))!important
+}
+#pieges .mis p{margin:0!important;line-height:1.55}
+#pieges .mis .right{
+ margin-top:0!important;padding-top:8px;border-top:1px solid var(--line);line-height:1.5
+}
+#transfert .transfer-card{display:flex;flex-direction:column;gap:8px}
+#transfert .transfer-card h3{margin:0}
+#transfert .transfer-card p{margin:0;color:var(--muted);line-height:1.55}
+#transfert .transfer-card label{font-weight:850;margin-top:2px}
+#transfert .transfer-card select{margin-top:auto}
+#transfert .transfer-feedback{line-height:1.5}
 @media(max-width:650px){
  .hero h1{font-size:clamp(2.25rem,12vw,3.35rem)!important;line-height:.96!important;letter-spacing:-.035em!important}
  #builder .panel{padding:16px!important}
  #builderOutput{min-height:0}
+ #builder .criteria label{min-height:48px;padding:10px}
+ #pieges .mis,#transfert .transfer-card{padding:14px!important}
+ #pieges .mis p,#pieges .mis .right,#transfert .transfer-card p{font-size:.88rem!important}
 }
-html.projector #builder .criteria label{color:#000000!important}
+html.projector #builder .criteria label{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector #builderOutput p{background:#ffffff!important;color:#000000!important;border-left-color:#005a62!important}
+html.projector #pieges .mis{border-top-color:#8b1f2b!important}
+html.projector #pieges .mis .right{border-top-color:#7a878a!important}
 </style>
 <script data-latent-safe-storage="v1">
 (function(){
