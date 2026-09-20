@@ -44,6 +44,14 @@ if(!embeddedDiagnostic||JSON.stringify(embeddedDiagnostic)!==JSON.stringify(expe
 const expectedReview=(cfg.review_bank||[]).map(q=>[q.id,q.module,q.misconception,q.q,q.choices,q.answer]);
 const embeddedReview=extractEmbeddedArray(review,'bank=');
 if(!embeddedReview||JSON.stringify(embeddedReview)!==JSON.stringify(expectedReview)) errors.push('review.html: banque embarquée désynchronisée de learning-system.json');
+const embeddedIntervals=extractEmbeddedArray(review,'INTERVALS=');
+if(!embeddedIntervals||JSON.stringify(embeddedIntervals)!==JSON.stringify(cfg.spacing_policy?.intervals_days||[])) errors.push('review.html: intervalles embarqués désynchronisés de learning-system.json');
+const expectedAll=(cfg.modules||[]).map(m=>m.id);
+const embeddedAll=extractEmbeddedArray(index,'ALL_MODULES=');
+if(!embeddedAll||JSON.stringify(embeddedAll)!==JSON.stringify(expectedAll)) errors.push('index.html: ALL_MODULES désynchronisé de learning-system.json');
+const expectedGuided=[...new Set((cfg.diagnostic?.questions||[]).map(q=>q.module))];
+const embeddedGuided=extractEmbeddedArray(index,'GUIDED=');
+if(!embeddedGuided||JSON.stringify(embeddedGuided)!==JSON.stringify(expectedGuided)) errors.push('index.html: GUIDED désynchronisé des modules réellement diagnostiqués');
 for(const m of cfg.modules||[]){
  const html=await readFile(new URL('../'+m.href,import.meta.url),'utf8');
  const quizCount=(html.match(/<fieldset class="q"/g)||[]).length;
@@ -64,6 +72,9 @@ for(const m of cfg.modules||[]){
  if(!html.includes('function resolveMis')) errors.push(m.href+': résolution des misconceptions absente');
  if(!html.includes('trainerToggle')) errors.push(m.href+': synchronisation mode formateur/guidage absente');
  if(!html.includes('data-learning-system="v2"')) errors.push(m.href+': intégration Learning System V2 absente');
+ if(!html.includes('MODULE="'+m.id+'"')) errors.push(m.href+': identifiant MODULE désynchronisé ('+m.id+')');
+ if(!html.includes('qr>=.8&&tr>=.8')) errors.push(m.href+': règle de maîtrise 80% quiz ET 80% transfert absente');
+ if(!html.includes('Date.now()+86400000')) errors.push(m.href+': première réactivation à J+1 absente');
 }
 for(const [name,html] of [['diagnostic.html',diag],['review.html',review]]){
  if(!html) errors.push(name+' absent');
@@ -72,6 +83,8 @@ for(const [name,html] of [['diagnostic.html',diag],['review.html',review]]){
   if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push(name+': appel réseau détecté');
   if(!html.includes(':focus-visible')) errors.push(name+': focus clavier absent');
   if(name==='review.html' && !html.includes('resolvedAt')) errors.push('review.html: résolution des remédiations absente');
+  if(name==='review.html' && !html.includes('ratio>=.8')) errors.push('review.html: seuil de réussite 80% absent');
+  if(name==='review.html' && !html.includes('days=passed?INTERVALS[level]:1')) errors.push('review.html: échec de réactivation ne revient pas à J+1');
  }
 }
 if(!diag.includes('resolvedAt:null,resolvedSource:null')) errors.push('diagnostic.html: une misconception résolue ne peut pas être rouverte lors d’un nouveau diagnostic');
