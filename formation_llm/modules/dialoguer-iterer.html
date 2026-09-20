@@ -438,6 +438,9 @@ html.projector .journey-card .k{color:#245c62!important}
 #builderOutput{min-height:220px}
 #builderOutput p{margin:.48rem 0;padding:.58rem .68rem;border-left:2px solid var(--accent);border-radius:6px;background:rgba(255,255,255,.055);line-height:1.5}
 #builderOutput p:first-child{margin-top:0}#builderOutput p:last-child{margin-bottom:0}
+#builderOutput .experiment-title{border-left-color:var(--accent2)!important;font-size:1rem}
+#builderOutput p b{color:var(--text)}
+html:not(.projector) #builderOutput p b{color:#ffffff}
 #pieges .misgrid{align-items:stretch}
 #pieges .mis{display:grid;grid-template-rows:auto 1fr auto;gap:8px;min-height:100%;border-top:2px solid color-mix(in srgb,var(--red) 68%,var(--line))!important}
 #pieges .mis p{margin:0!important;line-height:1.55}
@@ -457,6 +460,7 @@ html.projector .journey-card .k{color:#245c62!important}
 }
 html.projector #builder .criteria label{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
 html.projector #builderOutput p{background:#ffffff!important;color:#000000!important;border-left-color:#005a62!important}
+html.projector #builderOutput p b{color:#000000!important}
 html.projector #pieges .mis{border-top-color:#8b1f2b!important}
 html.projector #pieges .mis .right{border-top-color:#7a878a!important}
 </style>
@@ -555,10 +559,10 @@ html.projector #pieges .mis .right{border-top-color:#7a878a!important}
 <h3>Baseline : 4 / 6</h3>
 <p class="muted">T1 BUG simple ✓ · T2 FONCTIONNALITÉ ✓ · T3 QUESTION ✓ · T4 frontière ✕ · T5 hors domaine ✕ · T6 BUG contrastif ✓</p>
 <div class="criteria" id="builderOptions" role="radiogroup" aria-label="Modification à tester">
-<label><input type="radio" name="iterationChange" data-builder="targeted" checked> A — Ajouter uniquement une règle explicite pour À_CLARIFIER.</label>
-<label><input type="radio" name="iterationChange" data-builder="oneExample"> B — Ajouter uniquement un exemple du ticket T4.</label>
-<label><input type="radio" name="iterationChange" data-builder="expertRole"> C — Ajouter uniquement « Tu es un expert du support logiciel ».</label>
-<label><input type="radio" name="iterationChange" data-builder="multi"> D — Ajouter rôle + deux exemples + nouvelle règle en même temps.</label>
+<label><input type="radio" name="iterationChange" data-builder="targeted" checked> A — H1 : la règle de clarification manque → ajouter uniquement cette règle.</label>
+<label><input type="radio" name="iterationChange" data-builder="oneExample"> B — H2 : un exemple frontière manque → ajouter uniquement l’exemple T4.</label>
+<label><input type="radio" name="iterationChange" data-builder="expertRole"> C — H3 : le cadrage de rôle manque → ajouter uniquement « Tu es un expert du support logiciel ».</label>
+<label><input type="radio" name="iterationChange" data-builder="multi"> D — Modifier rôle + exemples + règle simultanément : aucune hypothèse isolable.</label>
 </div>
 <div class="actions"><button class="primary" id="runIteration" type="button">Comparer à la baseline</button><button class="secondary" id="resetIteration" type="button">Revenir à A</button></div>
 </div>
@@ -660,16 +664,16 @@ document.getElementById("projectorExit").addEventListener("click",function(){set
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
 
 var iterationResults={
- targeted:{score:6,cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✓","T5 ✓","T6 ✓"],title:"A — règle ciblée",note:"La modification corrige les deux cas liés au manque d’information sans régression visible sur les quatre anciens succès.",decision:"CONSERVER provisoirement : hypothèse soutenue par ce jeu de tests."},
- oneExample:{score:5,cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✓","T5 ✕","T6 ✓"],title:"B — un exemple de T4",note:"T4 passe, mais T5 reste faux : la modification semble coller au cas montré sans résoudre toute la famille d’échecs.",decision:"NE PAS CONCLURE trop vite : amélioration locale, généralisation incomplète."},
- expertRole:{score:4,cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✕","T5 ✕","T6 ✓"],title:"C — rôle d’expert",note:"Aucun des deux échecs ciblés n’est corrigé. La modification ne traite pas l’hypothèse formulée.",decision:"ANNULER : aucun gain mesuré sur le problème observé."},
- multi:{score:6,cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✓","T5 ✓","T6 ✓"],title:"D — trois changements simultanés",note:"Le score augmente, mais impossible d’attribuer le gain à la règle, aux exemples ou au rôle. La version est moins interprétable.",decision:"RETESTER en isolant les variables avant de conserver."}
+ targeted:{score:6,delta:"+2",hypothesis:"H1 — Les deux échecs viennent d’une règle de clarification absente.",variable:"Une seule variable : ajout de la règle À_CLARIFIER.",cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✓","T5 ✓","T6 ✓"],regression:"Aucune régression observée sur les quatre anciens succès.",title:"A — règle ciblée",note:"Les deux échecs de même famille sont corrigés. Le résultat est cohérent avec H1 sur ce jeu de tests.",decision:"CONSERVER provisoirement : hypothèse soutenue, puis enrichir le banc avec de futurs échecs réels."},
+ oneExample:{score:5,delta:"+1",hypothesis:"H2 — Un exemple de frontière manque.",variable:"Une seule variable : ajout de l’exemple T4.",cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✓","T5 ✕","T6 ✓"],regression:"Aucune ancienne réussite cassée, mais T5 reste en échec.",title:"B — un exemple de T4",note:"Le cas montré est corrigé sans résoudre le second cas de la même famille : le gain reste local.",decision:"NE PAS CONCLURE trop vite : amélioration locale, généralisation incomplète."},
+ expertRole:{score:4,delta:"0",hypothesis:"H3 — Le cadrage de rôle expliquerait les erreurs.",variable:"Une seule variable : ajout du rôle d’expert.",cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✕","T5 ✕","T6 ✓"],regression:"Aucune régression, mais aucun échec ciblé n’est corrigé.",title:"C — rôle d’expert",note:"Les observations ne soutiennent pas H3 sur ce banc.",decision:"ANNULER : aucun gain mesuré sur le problème observé."},
+ multi:{score:6,delta:"+2",hypothesis:"Aucune hypothèse isolable : trois familles de changements sont mélangées.",variable:"Trois variables changent : rôle + exemples + règle.",cases:["T1 ✓","T2 ✓","T3 ✓","T4 ✓","T5 ✓","T6 ✓"],regression:"Aucune régression visible, mais la cause du gain est indéterminée.",title:"D — trois changements simultanés",note:"Le score augmente, mais l’expérience ne permet pas d’attribuer le gain à une cause précise.",decision:"REVENIR À LA BASELINE puis tester les variables séparément."}
 };
 function selectedIteration(){return document.querySelector('[data-builder]:checked')?.dataset.builder||"targeted"}
 function renderIteration(){
  const x=iterationResults[selectedIteration()],out=document.getElementById("builderOutput"),notice=document.getElementById("builderNotice");
- out.innerHTML="<p><b>"+x.title+"</b></p><p>Score : <b>"+x.score+" / 6</b> · baseline : 4 / 6</p><p>"+x.cases.join(" · ")+"</p><p>"+x.note+"</p>";
- notice.innerHTML="<strong>Décision.</strong> "+x.decision;
+ out.innerHTML="<p class='experiment-title'><b>"+x.title+"</b></p><p><b>Hypothèse.</b> "+x.hypothesis+"</p><p><b>Variable testée.</b> "+x.variable+"</p><p><b>Résultats.</b> "+x.cases.join(" · ")+"</p><p><b>Régressions.</b> "+x.regression+"</p><p><b>Mesure.</b> "+x.score+" / 6 · baseline 4 / 6 · Δ "+x.delta+"</p><p>"+x.note+"</p>";
+ notice.innerHTML="<strong>Décision expérimentale.</strong> "+x.decision;
 }
 document.querySelectorAll("[data-builder]").forEach(x=>x.addEventListener("change",renderIteration));
 document.getElementById("runIteration").addEventListener("click",renderIteration);
