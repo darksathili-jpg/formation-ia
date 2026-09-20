@@ -179,10 +179,23 @@ th{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-siz
 @media(max-width:650px){.wrap{padding-top:9px!important}.top{top:5px;border-radius:9px}.top>div:first-child{max-width:100%}.tools{width:100%;margin-left:0}.hero{padding-top:18px}.hero h1{font-size:clamp(2.7rem,15vw,4.2rem)!important}.hero-card{min-height:250px}.section{margin-top:44px!important}.learning-guide{position:relative!important;top:auto!important}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 </style>
-</head>
-<body>
+<style data-latent-access="v1">
+.skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.skip-link:focus{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
+</style><style data-latent-nav="v1">
+.layer-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:70;width:48px;max-height:72vh;overflow:auto;padding:8px 5px;border:1px solid rgba(92,240,210,.15);border-radius:12px;background:rgba(7,20,25,.90);backdrop-filter:blur(13px);box-shadow:0 15px 45px rgba(0,0,0,.18);scrollbar-width:none}
+.layer-nav::-webkit-scrollbar{display:none}.layer-nav:before{content:"LAYERS";display:block;writing-mode:vertical-rl;transform:rotate(180deg);height:50px;margin:0 auto 7px;color:#557c76;font:750 .49rem ui-monospace,monospace;letter-spacing:.14em}
+.layer-nav button{display:grid;place-items:center;width:36px;min-height:36px;margin:3px 0;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:#0b2026;color:#6e9690;font:750 .61rem ui-monospace,monospace;cursor:pointer}
+.layer-nav button[aria-current="step"]{color:#071419;background:#5cf0d2;border-color:#5cf0d2;box-shadow:0 0 16px rgba(92,240,210,.24)}
+.layer-nav button:disabled{opacity:.22;cursor:not-allowed}.layer-nav button:not(:disabled):hover{color:#edfffb;border-color:rgba(92,240,210,.32)}
+.layer-nav button:focus-visible{outline:3px solid #5cf0d2;outline-offset:2px}
+@media(max-width:1260px){.layer-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.layer-nav{scroll-behavior:auto}.layer-nav button{transition:none!important}}
+</style></head>
+<body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
-<main class="wrap">
+<main class="wrap" id="mainContent">
   <div class="top"><a class="back" href="../index.html#labs">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
   <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 
@@ -592,6 +605,18 @@ const anchor=document.querySelector(".journey")||document.querySelector(".hero")
 document.getElementById("learningNext")?.addEventListener("click",next);document.getElementById("learningAll")?.addEventListener("click",toggleAll);
 function updateGuide(){const s=ensure(load()),m=s.modules[MODULE]||{},status=m.mastery?.status,route=s.diagnostic?.routes?.[MODULE],meta=document.getElementById("learningGuideMeta"),title=document.getElementById("learningGuideTitle");if(!meta||!title)return;title.innerHTML=status==="mastered"?'<span class="learning-mastered">✓ Maîtrise démontrée</span>':"Guidage adaptatif";meta.textContent=(route==="fast"?"Voie rapide issue du diagnostic · ":route==="full"?"Guidage complet recommandé · ":"")+(allVisible||roleTrainer()?"page complète":("étape "+(Math.min(unlocked+1,segments.length))+" / "+segments.length));const n=document.getElementById("learningNext");if(n)n.hidden=allVisible||roleTrainer()||unlocked>=segments.length-1;const a=document.getElementById("learningAll");if(a)a.textContent=allVisible?"Revenir au guidage":"Tout afficher"}
 const trainerToggle=document.getElementById("trainerBtn");if(trainerToggle)trainerToggle.addEventListener("click",function(){setTimeout(function(){applySegments();updateGuide()},0)});initialUnlock();applySegments();
+})();
+</script><script data-latent-nav="v1">
+(function(){"use strict";
+const sections=[...document.querySelectorAll("main > section")].filter(s=>!s.classList.contains("hero"));
+if(!sections.length)return;
+const nav=document.createElement("nav");nav.className="layer-nav";nav.setAttribute("aria-label","Sections du module");
+const buttons=sections.map((section,i)=>{const b=document.createElement("button");b.type="button";b.textContent=String(i+1).padStart(2,"0");const title=section.querySelector("h2,h3")?.textContent?.trim()||("Section "+(i+1));b.title=title;b.setAttribute("aria-label",(i+1)+". "+title);b.addEventListener("click",()=>{if(!section.hidden)section.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})});nav.appendChild(b);return b});
+document.body.appendChild(nav);
+function syncLocks(){sections.forEach((s,i)=>buttons[i].disabled=!!s.hidden)}
+syncLocks();
+new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
+if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;const idx=sections.indexOf(visible.target);buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
 })();
 </script></body>
 </html>
