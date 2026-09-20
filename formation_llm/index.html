@@ -331,6 +331,29 @@ html:not(.projector) .hero-panel{
 html:not(.projector) #learningSequence .module:after{background:#173a42!important}
 html:not(.projector) .module-actions .open{background:#173a42!important}
 </style>
+<style data-mobile-cockpit-controls="v1">
+.mobile-modebar{display:none}
+@media(max-width:980px){
+ .mobile-modebar{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+  width:100%;padding:7px 14px 8px;border-bottom:1px solid rgba(92,240,210,.16);
+  background:#173a42;color:#edfffb
+ }
+ .mobile-modebar button{
+  min-width:0;min-height:44px;border:1px solid rgba(255,255,255,.13);border-radius:10px;
+  background:rgba(255,255,255,.055);color:#edfffb;padding:8px 7px;
+  font:800 .74rem ui-monospace,SFMono-Regular,Consolas,monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+ }
+ .mobile-modebar button:hover,.mobile-modebar button:focus-visible{border-color:rgba(92,240,210,.42);background:rgba(92,240,210,.10)}
+ .mobile-modebar button[aria-pressed="true"]{border-color:rgba(92,240,210,.58);background:rgba(92,240,210,.16);color:#ffffff}
+}
+@media(max-width:430px){
+ .mobile-modebar{padding-left:8px;padding-right:8px;gap:5px}
+ .mobile-modebar button{font-size:.69rem;padding-left:4px;padding-right:4px}
+}
+.projector .mobile-modebar{display:none!important}
+</style>
 <script data-latent-safe-storage="v1">
 (function(){
  "use strict";
@@ -379,6 +402,11 @@ html:not(.projector) .module-actions .open{background:#173a42!important}
 </aside>
 <div class="main">
 <nav class="mobile-nav" aria-label="Navigation mobile"><button class="active" data-view="dashboard" aria-current="page">Accueil</button><button data-view="apprentissage">Apprentissage</button><button data-view="parcours">Parcours</button><button data-view="labs">Labs</button><button data-view="progression">Progression</button><button data-view="referentiel">Référentiel</button></nav>
+<div class="mobile-modebar" aria-label="Profil et modes d’affichage">
+ <button id="mobileThemeBtn" type="button" aria-label="Changer le thème clair ou sombre">◐ Thème</button>
+ <button id="mobileTrainerBtn" type="button" aria-pressed="false" aria-label="Changer de profil">◆ Formateur</button>
+ <button id="mobileProjectorBtn" type="button" aria-pressed="false" aria-label="Activer le mode projection">▣ Projection</button>
+</div>
 <header class="topbar"><div class="topbar-inner"><div class="crumb" id="crumb">Formation LLM / Tableau de bord</div><div class="top-actions"><span class="status-pill" id="rolePill" role="status" aria-live="polite">Profil : stagiaire</span><button class="pill" id="resetProgress" type="button">Réinitialiser apprentissage</button></div></div></header>
 <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 <main class="content" id="mainContent">
@@ -505,6 +533,39 @@ document.getElementById("projectorExit").addEventListener("click",function(){set
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.documentElement.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
 document.getElementById("resetProgress").addEventListener("click",function(){if(confirm("Réinitialiser le diagnostic, les preuves de maîtrise, les réactivations et les remédiations stockés localement ?")){window.LATENT_STORAGE.remove(LEARNING_KEY);window.LATENT_STORAGE.remove("formation-llm-state");updateProgress()}});
 renderPaths("dashboardPaths");renderPaths("allPaths");updateProgress();var initial=location.hash.replace("#","");if(["dashboard","apprentissage","parcours","labs","progression","referentiel","architecture"].includes(initial))showView(initial);
+})();
+</script>
+<script data-mobile-cockpit-controls-runtime="v1">
+(function(){
+ "use strict";
+ const desktopTheme=document.getElementById("themeBtn");
+ const desktopTrainer=document.getElementById("trainerBtn");
+ const desktopProjector=document.getElementById("projectorBtn");
+ const mobileTheme=document.getElementById("mobileThemeBtn");
+ const mobileTrainer=document.getElementById("mobileTrainerBtn");
+ const mobileProjector=document.getElementById("mobileProjectorBtn");
+ if(!desktopTheme||!desktopTrainer||!desktopProjector||!mobileTheme||!mobileTrainer||!mobileProjector)return;
+ function sync(){
+  const trainerOn=document.body.classList.contains("trainer-on");
+  const projectorOn=document.documentElement.classList.contains("projector");
+  mobileTrainer.setAttribute("aria-pressed",String(trainerOn));
+  mobileTrainer.textContent=trainerOn?"○ Stagiaire":"◆ Formateur";
+  mobileTrainer.setAttribute("aria-label",trainerOn?"Revenir au profil stagiaire":"Activer le profil formateur");
+  mobileProjector.setAttribute("aria-pressed",String(projectorOn));
+  mobileProjector.textContent=projectorOn?"✕ Quitter":"▣ Projection";
+  mobileProjector.setAttribute("aria-label",projectorOn?"Quitter le mode projection":"Activer le mode projection");
+ }
+ mobileTheme.addEventListener("click",function(){desktopTheme.click();sync()});
+ mobileTrainer.addEventListener("click",function(){desktopTrainer.click();sync()});
+ mobileProjector.addEventListener("click",function(){desktopProjector.click();sync()});
+ const observer=new MutationObserver(sync);
+ observer.observe(document.documentElement,{attributes:true,attributeFilter:["class","data-theme"]});
+ observer.observe(document.body,{attributes:true,attributeFilter:["class"]});
+ document.getElementById("projectorExit")?.addEventListener("click",function(){
+  sync();
+  if(matchMedia("(max-width:980px)").matches)requestAnimationFrame(function(){mobileProjector.focus()});
+ });
+ sync();
 })();
 </script>
 </body>
