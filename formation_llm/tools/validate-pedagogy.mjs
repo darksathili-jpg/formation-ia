@@ -28,6 +28,9 @@ for(const m of manifest.modules){
  if(m.status==='novice-ready'){
    for(const k of required) if(!present[k]) errors.push(m.path+': bloc pédagogique obligatoire absent: '+k);
    if(words<1200) errors.push(m.path+': contenu visible très court pour un module novice-ready ('+words+' mots) — revue humaine obligatoire');
+   if(!html.includes('data-learning-system="v2"')) errors.push(m.path+': moteur Learning System V2 absent');
+   if(!html.includes('learning-guide')) errors.push(m.path+': progressive disclosure absent');
+   if(!html.includes('formation-llm-learning-v2')) errors.push(m.path+': stockage de maîtrise V2 absent');
  }
  if(m.status==='remediation-required' && !m.legacy_debt){
    errors.push(m.path+': remediation-required interdit sans legacy_debt explicite');
