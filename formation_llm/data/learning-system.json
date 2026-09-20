@@ -1,0 +1,629 @@
+{
+  "version": "2.0.0",
+  "updated_on": "2026-09-20",
+  "storage_key": "formation-llm-learning-v2",
+  "mastery_policy": {
+    "quiz_threshold": 0.8,
+    "transfer_threshold": 0.8,
+    "diagnostic_grants_mastery": false,
+    "note": "Le diagnostic adapte le parcours mais ne certifie pas la maîtrise. La maîtrise exige quiz et transfert."
+  },
+  "spacing_policy": {
+    "intervals_days": [
+      1,
+      3,
+      7,
+      14,
+      30
+    ],
+    "pass_threshold": 0.8,
+    "failure_resets_to_days": 1,
+    "note": "Politique d'espacement révisable ; elle opérationnalise la réactivation distribuée sans prétendre à un calendrier universel."
+  },
+  "progressive_disclosure": {
+    "default_for_students": true,
+    "default_for_trainers": false,
+    "initial_segments": 2,
+    "direct_anchor_unlocks_target": true
+  },
+  "modules": [
+    {
+      "id": "A",
+      "label": "Parcours 0 · Situer les LLM",
+      "href": "modules/domaine-a.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "A.MODEL_APP",
+          "label": "Modèle ≠ application",
+          "anchor": "exemple"
+        },
+        {
+          "id": "A.PARAMETERS",
+          "label": "Paramètres ≠ base documentaire",
+          "anchor": "pieges"
+        },
+        {
+          "id": "A.OPENNESS",
+          "label": "Open weights ≠ open source",
+          "anchor": "pieges"
+        },
+        {
+          "id": "A.GPAI",
+          "label": "GPAI : catégorie juridique européenne",
+          "anchor": "definitions"
+        },
+        {
+          "id": "A.LM_LLM",
+          "label": "Modèle de langage ≠ LLM moderne",
+          "anchor": "definitions"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Parcours 1 · Tokens & contexte",
+      "href": "modules/domaine-b.html",
+      "quiz_total": 8,
+      "transfer_total": 3,
+      "misconceptions": [
+        {
+          "id": "B.TOKEN_WORD",
+          "label": "Token ≠ mot",
+          "anchor": "pieges"
+        },
+        {
+          "id": "B.ID_SEMANTICS",
+          "label": "ID ≠ sens",
+          "anchor": "pieges"
+        },
+        {
+          "id": "B.EMBEDDING_CONTEXT",
+          "label": "Embedding initial ≠ représentation contextualisée",
+          "anchor": "synthese"
+        },
+        {
+          "id": "B.COSINE_TRUTH",
+          "label": "Cosinus ≠ vérité",
+          "anchor": "pieges"
+        },
+        {
+          "id": "B.CONTEXT_MEMORY",
+          "label": "Contexte ≠ mémoire",
+          "anchor": "contexte"
+        },
+        {
+          "id": "B.SUBWORD",
+          "label": "Pourquoi les sous-mots",
+          "anchor": "definitions"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "label": "Parcours 1 · Attention",
+      "href": "modules/domaine-c.html",
+      "quiz_total": 6,
+      "transfer_total": 3,
+      "misconceptions": [
+        {
+          "id": "C.QKV_OBJECTS",
+          "label": "Q/K/V sont des vecteurs, pas des métaphores littérales",
+          "anchor": "qkv"
+        },
+        {
+          "id": "C.DOT_PROB",
+          "label": "Q·K ≠ probabilité",
+          "anchor": "pieges"
+        },
+        {
+          "id": "C.SCALING",
+          "label": "Rôle de √dₖ",
+          "anchor": "exemple"
+        },
+        {
+          "id": "C.SOFTMAX",
+          "label": "Softmax d’attention = poids locaux",
+          "anchor": "exemple"
+        },
+        {
+          "id": "C.CAUSAL",
+          "label": "Masque causal et futur interdit",
+          "anchor": "masque"
+        },
+        {
+          "id": "C.ATTENTION_TRUTH",
+          "label": "Poids d’attention ≠ vérité / explication globale",
+          "anchor": "pieges"
+        }
+      ]
+    },
+    {
+      "id": "P1S3",
+      "label": "Parcours 1 · Bloc Transformer",
+      "href": "modules/transformer-block-lab.html",
+      "quiz_total": 6,
+      "transfer_total": 3,
+      "misconceptions": [
+        {
+          "id": "P1S3.ATTENTION_ONLY",
+          "label": "Transformer ≠ attention seule",
+          "anchor": "intuition"
+        },
+        {
+          "id": "P1S3.MLP",
+          "label": "Attention communique, MLP transforme",
+          "anchor": "mlp"
+        },
+        {
+          "id": "P1S3.RESIDUAL",
+          "label": "Connexion résiduelle x + F(x)",
+          "anchor": "exemple"
+        },
+        {
+          "id": "P1S3.POSITION",
+          "label": "Rôle de la position / RoPE",
+          "anchor": "position"
+        },
+        {
+          "id": "P1S3.KV_MEMORY",
+          "label": "KV cache ≠ mémoire applicative",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P1S3.STACK",
+          "label": "Les représentations évoluent bloc après bloc",
+          "anchor": "stack"
+        }
+      ]
+    },
+    {
+      "id": "P1S4",
+      "label": "Parcours 1 · Sampling",
+      "href": "modules/sampling-lab.html",
+      "quiz_total": 6,
+      "transfer_total": 3,
+      "misconceptions": [
+        {
+          "id": "P1S4.LOGIT_PROB",
+          "label": "Logit ≠ probabilité",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P1S4.GREEDY_GLOBAL",
+          "label": "Greedy = argmax local, pas optimum global",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P1S4.TEMP",
+          "label": "Température remodèle la distribution",
+          "anchor": "exemple"
+        },
+        {
+          "id": "P1S4.TOPP",
+          "label": "Top-p = masse cumulée",
+          "anchor": "filters"
+        },
+        {
+          "id": "P1S4.TEMP_TRUTH",
+          "label": "Température basse ≠ factualité",
+          "anchor": "truth"
+        },
+        {
+          "id": "P1S4.AUTOREGRESSIVE",
+          "label": "Chaque token devient du contexte",
+          "anchor": "loop"
+        }
+      ]
+    },
+    {
+      "id": "HALL",
+      "label": "Parcours 3 · Hallucination",
+      "href": "modules/hallucination-lab.html",
+      "quiz_total": 6,
+      "transfer_total": 3,
+      "misconceptions": [
+        {
+          "id": "HALL.FLUENCY_TRUTH",
+          "label": "Fluidité ≠ factualité",
+          "anchor": "pieges"
+        },
+        {
+          "id": "HALL.CALIBRATION",
+          "label": "Confiance verbale ≠ calibration",
+          "anchor": "calibration"
+        },
+        {
+          "id": "HALL.VERIFICATION",
+          "label": "Auto-révision ≠ preuve indépendante",
+          "anchor": "scenarios"
+        },
+        {
+          "id": "HALL.ABSTENTION",
+          "label": "Savoir demander une preuve ou s’abstenir",
+          "anchor": "abstention"
+        },
+        {
+          "id": "HALL.CITATION",
+          "label": "Citation ≠ preuve pertinente",
+          "anchor": "pieges"
+        },
+        {
+          "id": "HALL.NO_EVIDENCE",
+          "label": "Absence de preuve ≠ contradiction",
+          "anchor": "pieges"
+        }
+      ]
+    },
+    {
+      "id": "RAG",
+      "label": "Parcours 4 · RAG",
+      "href": "modules/rag-lab.html",
+      "quiz_total": 6,
+      "transfer_total": 3,
+      "misconceptions": [
+        {
+          "id": "RAG.CHUNKING",
+          "label": "Chunking : taille, frontières, overlap",
+          "anchor": "definitions"
+        },
+        {
+          "id": "RAG.ANN",
+          "label": "ANN = compromis vitesse / recall",
+          "anchor": "pieges"
+        },
+        {
+          "id": "RAG.RERANK",
+          "label": "Le reranker ne récupère pas un candidat absent",
+          "anchor": "pieges"
+        },
+        {
+          "id": "RAG.RECALL",
+          "label": "Recall mesure la couverture, pas la vérité",
+          "anchor": "metrics-intro"
+        },
+        {
+          "id": "RAG.HYBRID",
+          "label": "Lexical + vectoriel : forces complémentaires",
+          "anchor": "exemple"
+        },
+        {
+          "id": "RAG.RETRIEVAL_GENERATION",
+          "label": "Retrieval ≠ génération",
+          "anchor": "synthese"
+        }
+      ]
+    }
+  ],
+  "diagnostic": {
+    "pass_per_module": 2,
+    "questions": [
+      {
+        "id": "D-A1",
+        "module": "A",
+        "misconception": "A.MODEL_APP",
+        "q": "Un assistant conversationnel peut utiliser un LLM, une mémoire et des outils. Le LLM est…",
+        "choices": [
+          "l'application entière",
+          "un composant modèle de l'application",
+          "la mémoire"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-A2",
+        "module": "A",
+        "misconception": "A.PARAMETERS",
+        "q": "Les paramètres d'un LLM sont principalement…",
+        "choices": [
+          "des valeurs numériques apprises",
+          "une liste de pages web",
+          "l'historique utilisateur"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "D-A3",
+        "module": "A",
+        "misconception": "A.OPENNESS",
+        "q": "Des poids téléchargeables suffisent-ils à conclure « open source » ?",
+        "choices": [
+          "oui",
+          "non, il faut examiner licence et éléments fournis"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-B1",
+        "module": "B",
+        "misconception": "B.TOKEN_WORD",
+        "q": "Un token est-il toujours un mot complet ?",
+        "choices": [
+          "oui",
+          "non, il dépend du tokenizer"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-B2",
+        "module": "B",
+        "misconception": "B.COSINE_TRUTH",
+        "q": "Une similarité cosinus de 0,92 signifie-t-elle « 92 % vrai » ?",
+        "choices": [
+          "oui",
+          "non"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-B3",
+        "module": "B",
+        "misconception": "B.CONTEXT_MEMORY",
+        "q": "Une mémoire applicative persistante et la fenêtre de contexte sont-elles le même objet ?",
+        "choices": [
+          "oui",
+          "non"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-C1",
+        "module": "C",
+        "misconception": "C.QKV_OBJECTS",
+        "q": "Q, K et V sont principalement…",
+        "choices": [
+          "des phrases cachées",
+          "des projections vectorielles apprises",
+          "des types de tokens"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-C2",
+        "module": "C",
+        "misconception": "C.DOT_PROB",
+        "q": "Q·K est directement…",
+        "choices": [
+          "une probabilité",
+          "un score brut de compatibilité"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-C3",
+        "module": "C",
+        "misconception": "C.CAUSAL",
+        "q": "Le masque causal empêche une position d'utiliser…",
+        "choices": [
+          "les positions futures",
+          "toutes les positions passées"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "D-T1",
+        "module": "P1S3",
+        "misconception": "P1S3.ATTENTION_ONLY",
+        "q": "Un bloc Transformer se réduit-il à l'attention ?",
+        "choices": [
+          "oui",
+          "non"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-T2",
+        "module": "P1S3",
+        "misconception": "P1S3.RESIDUAL",
+        "q": "x + F(x) décrit typiquement…",
+        "choices": [
+          "une connexion résiduelle",
+          "une tokenisation"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "D-T3",
+        "module": "P1S3",
+        "misconception": "P1S3.KV_MEMORY",
+        "q": "Le KV cache est-il une mémoire utilisateur durable ?",
+        "choices": [
+          "oui",
+          "non"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-S1",
+        "module": "P1S4",
+        "misconception": "P1S4.LOGIT_PROB",
+        "q": "Un logit est…",
+        "choices": [
+          "un score brut",
+          "une probabilité normalisée"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "D-S2",
+        "module": "P1S4",
+        "misconception": "P1S4.TEMP_TRUTH",
+        "q": "Baisser fortement la température garantit-il une réponse plus vraie ?",
+        "choices": [
+          "oui",
+          "non"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "D-S3",
+        "module": "P1S4",
+        "misconception": "P1S4.AUTOREGRESSIVE",
+        "q": "Après sélection d'un token, il…",
+        "choices": [
+          "est ajouté au contexte de l'étape suivante",
+          "n'influence plus la suite"
+        ],
+        "answer": 0
+      }
+    ]
+  },
+  "review_bank": [
+    {
+      "id": "R-A1",
+      "module": "A",
+      "misconception": "A.MODEL_APP",
+      "q": "Une application consulte un calendrier. Cette capacité prouve-t-elle que le calendrier est dans les poids du LLM ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-A2",
+      "module": "A",
+      "misconception": "A.PARAMETERS",
+      "q": "Les poids sont-ils une base de documents adressables ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-B1",
+      "module": "B",
+      "misconception": "B.ID_SEMANTICS",
+      "q": "L'ID 9000 possède-t-il plus de sens que l'ID 12 ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-B2",
+      "module": "B",
+      "misconception": "B.CONTEXT_MEMORY",
+      "q": "Une information en mémoire externe doit-elle être réinjectée pour influencer le calcul courant ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-C1",
+      "module": "C",
+      "misconception": "C.DOT_PROB",
+      "q": "Q·K est-il déjà le poids d'attention final ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-C2",
+      "module": "C",
+      "misconception": "C.ATTENTION_TRUTH",
+      "q": "Un poids d'attention élevé constitue-t-il une preuve factuelle ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-T1",
+      "module": "P1S3",
+      "misconception": "P1S3.MLP",
+      "q": "Quelle brique transforme chaque position non linéairement ?",
+      "choices": [
+        "MLP",
+        "KV cache",
+        "Tokenizer"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-T2",
+      "module": "P1S3",
+      "misconception": "P1S3.KV_MEMORY",
+      "q": "Le KV cache réduit-il certains recalculs tout en consommant davantage de mémoire quand le contexte croît ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-S1",
+      "module": "P1S4",
+      "misconception": "P1S4.GREEDY_GLOBAL",
+      "q": "Greedy optimise-t-il toute la réponse future ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-S2",
+      "module": "P1S4",
+      "misconception": "P1S4.TOPP",
+      "q": "Top-p fixe-t-il un nombre constant de candidats ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-H1",
+      "module": "HALL",
+      "misconception": "HALL.NO_EVIDENCE",
+      "q": "Aucune preuve disponible : peut-on conclure automatiquement que le claim est faux ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-H2",
+      "module": "HALL",
+      "misconception": "HALL.CITATION",
+      "q": "Une citation réelle suffit-elle si elle ne soutient pas l'affirmation ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-R1",
+      "module": "RAG",
+      "misconception": "RAG.RERANK",
+      "q": "Un reranker peut-il faire revenir un chunk absent de la liste candidate ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-R2",
+      "module": "RAG",
+      "misconception": "RAG.RETRIEVAL_GENERATION",
+      "q": "Recall@k=1 garantit-il que la réponse générée utilisera correctement les preuves ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    }
+  ]
+}
