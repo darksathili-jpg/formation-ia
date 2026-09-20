@@ -31,7 +31,7 @@ for(const page of pages){
 
   if(!/id="projectorBtn"[^>]*aria-pressed="false"/.test(html)) errors.push(prefix+'bouton Projection sans état aria-pressed initial');
   if(!html.includes('id="projectorExit"')) errors.push(prefix+'sortie fixe de projection absente');
-  if(!html.includes('Quitter la projection')) errors.push(prefix+'libellé de sortie de projection absent');
+  if(!/id="projectorExit"[^>]*>✕ Quitter · Échap<\/button>/.test(html)) errors.push(prefix+'libellé compact de sortie de projection absent');
   if(!html.includes('setProjectorMode')) errors.push(prefix+'fonction setProjectorMode absente');
   if(!/e\.key===["']Escape["']/.test(html)) errors.push(prefix+'sortie clavier Échap absente');
   if(!html.includes('.projector .projector-exit')) errors.push(prefix+'bouton de sortie non forcé visible en projection');
