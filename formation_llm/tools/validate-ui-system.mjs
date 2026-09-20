@@ -83,6 +83,14 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(!html.includes('@media(max-width:1380px){.layer-nav{display:none!important}}')) errors.push(page+': seuil anti-chevauchement Layer Navigator absent');
  if(!html.includes('.q label{min-height:44px')) errors.push(page+': cibles tactiles du quiz non harmonisées');
 }
+// Le cockpit mobile doit conserver les trois commandes globales même lorsque la sidebar desktop disparaît.
+for(const marker of ['data-mobile-cockpit-controls="v1"','data-mobile-cockpit-controls-runtime="v1"','class="mobile-modebar"','id="mobileThemeBtn"','id="mobileTrainerBtn"','id="mobileProjectorBtn"']){
+ if(!index.includes(marker)) errors.push('index.html: cockpit mobile sans commandes de profil/vision ('+marker+')');
+}
+if(!index.includes('.mobile-modebar{')||!index.includes('grid-template-columns:repeat(3,minmax(0,1fr))')) errors.push('index.html: barre de modes mobile non répartie sur trois cibles tactiles');
+if(!index.includes('.projector .mobile-modebar{display:none!important}')) errors.push('index.html: barre de modes mobile non neutralisée en projection');
+if(!index.includes('mobileTrainer.textContent=trainerOn?"○ Stagiaire":"◆ Formateur"')) errors.push('index.html: libellé du profil mobile non synchronisé');
+if(!index.includes('mobileProjector.textContent=projectorOn?"✕ Quitter":"▣ Projection"')) errors.push('index.html: libellé projection mobile non synchronisé');
 if(!index.includes('data-ux-audit="v1"')||!index.includes('.mobile-nav{height:57px')||!index.includes('.topbar{top:57px')) errors.push('index.html: empilement sticky mobile non verrouillé');
 if(!index.includes('.app{grid-template-columns:minmax(0,1fr)!important')||!index.includes('.main{grid-column:1/-1!important;width:100%!important')) errors.push('index.html: grille mobile peut retomber dans la colonne LATENT de 250px');
 if(!index.includes('.topbar{position:relative!important;top:auto!important}')) errors.push('index.html: double barre sticky mobile encore possible');
