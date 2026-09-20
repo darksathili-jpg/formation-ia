@@ -34,7 +34,12 @@ const projectionPages=['index.html',...pages.filter(p=>p.startsWith('modules/'))
 for(const page of projectionPages){
  const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
  if(!html.includes('data-projection-ux="v2"')) errors.push(page+': palette projection haute luminance absente');
+ if(!html.includes('data-projection-audit="v3"')) errors.push(page+': garde-fous projection V3 absents');
+ if(!html.includes('max-width:calc(100vw - 20px)!important')) errors.push(page+': sortie projection peut déborder du viewport');
+ if(!html.includes('>✕ Quitter · Échap</button>')) errors.push(page+': libellé de sortie projection non compact');
  if(page.startsWith('modules/')&&!html.includes('html.projector .layer-nav{display:none!important}')) errors.push(page+': Layer Navigator non neutralisé en projection');
+ if(page.startsWith('modules/')&&!html.includes('data-projection-module-audit="v3"')) errors.push(page+': neutralisation des surfaces sombres de module absente');
+ if(page.startsWith('modules/')&&!html.includes('html.projector .section-head .num')) errors.push(page+': numéros de section sombres non neutralisés');
  if(!html.includes('--bg:#ffffff')||!html.includes('--text:#000000')) errors.push(page+': contraste structurel projection non verrouillé');
 }
 for(const page of pages.filter(p=>p.startsWith('modules/'))){

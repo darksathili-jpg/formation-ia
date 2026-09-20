@@ -253,9 +253,56 @@ html.projector .latent-map text{fill:#263b40!important}
  #trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}
 }
 </style>
+<style data-projection-audit="v3">
+html.projector,html.projector body{overflow-x:clip!important}
+html.projector .projector-exit{
+ position:fixed!important;top:10px!important;right:10px!important;left:auto!important;
+ max-width:calc(100vw - 20px)!important;min-width:0!important;box-sizing:border-box!important;
+ padding:8px 12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ font-size:clamp(.78rem,.9vw,.95rem)!important;line-height:1.15!important
+}
+</style>
+<style data-projection-module-audit="v3">
+html.projector .wrap,
+html.projector main{width:auto!important;max-width:min(1500px,calc(100vw - 24px))!important}
+html.projector .top{padding-right:160px!important}
+html.projector .top:before{margin-right:10px!important}
+html.projector .top>.back,
+html.projector .top>div:first-child{margin-right:auto!important}
+html.projector .section-head .num,
+html.projector .step .n,
+html.projector .worked-step .n,
+html.projector .stage .n{
+ background:#e4f3f1!important;color:#005a62!important;border:2px solid #6f7e81!important;
+ box-shadow:none!important
+}
+html.projector .system-view,
+html.projector .formula,
+html.projector .vec,
+html.projector .choice,
+html.projector .context,
+html.projector .answer{
+ background:#f3f5f4!important;color:#000000!important;border:1px solid #7a878a!important;
+ box-shadow:none!important
+}
+html.projector .system-view p,
+html.projector .formula p,
+html.projector .vec p,
+html.projector .choice p,
+html.projector .context p,
+html.projector .answer p{color:#263b40!important}
+html.projector .arch-box,
+html.projector .verdict{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .hero-card:before{color:#37474c!important}
+html.projector .hero-card b{color:#000000!important}
+@media(max-width:900px){
+ html.projector .top{padding-right:12px!important}
+ html.projector .projector-exit{top:8px!important;right:8px!important}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
-<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
 <header class="topbar"><div class="topbar-inner"><a class="brand" href="../index.html#parcours">← Formation LLM · Parcours 1</a><nav class="nav"><a href="#intuition">Problème</a><a href="#exemple">Exemple</a><a href="#attention">Attention Lab</a><a href="#pieges">Pièges</a><a href="#quiz">Quiz</a></nav><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button></div></div></header>
 <div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Les questions, erreurs attendues et critères de réussite sont visibles.</div>
 <main id="mainContent">
