@@ -86,6 +86,11 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(!html.includes('.journey-card .k{')||!html.includes('color:#356d73!important')) errors.push(page+': micro-titres de parcours insuffisamment contrastés');
  if(!html.includes('.intuition>strong:first-child')) errors.push(page+': séparation structurelle des libellés inline absente');
 }
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(html.includes('querySelectorAll("[data-answer]")')) errors.push(page+': activité de complétion utilise encore un sélecteur global data-answer');
+ if(html.includes('id="completer"')&&html.includes('id="checkCompletion"')&&!html.includes('querySelectorAll("#completer [data-answer]")')&&!page.endsWith('domaine-a.html')) errors.push(page+': activité de complétion non limitée à sa propre section');
+}
 
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');
