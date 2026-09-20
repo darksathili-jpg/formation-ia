@@ -257,6 +257,45 @@
       ]
     },
     {
+      "id": "P2S2",
+      "label": "Parcours 2 · Exemples, frontières & format",
+      "href": "modules/dialoguer-exemples.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P2S2.EXAMPLE_RULE",
+          "label": "Few-shot = démonstrations, pas règle complète",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P2S2.DIVERSITY",
+          "label": "Diversité utile > répétition",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S2.BOUNDARY",
+          "label": "Cas frontière = arbitrage près d’une limite",
+          "anchor": "intuition"
+        },
+        {
+          "id": "P2S2.FORMAT",
+          "label": "Format demandé ≠ garantie de schéma",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S2.FORMAT_TRUTH",
+          "label": "Structure valide ≠ contenu vrai",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S2.FEW_SHOT_TRAINING",
+          "label": "Few-shot ≠ réentraînement des poids",
+          "anchor": "pieges"
+        }
+      ]
+    },
+    {
       "id": "HALL",
       "label": "Parcours 3 · Hallucination",
       "href": "modules/hallucination-lab.html",
@@ -680,6 +719,28 @@
       "module": "P2S1",
       "misconception": "P2S1.FORMAT",
       "q": "Demander une sortie JSON suffit-il à garantir qu'elle sera structurellement valide ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P2S2-1",
+      "module": "P2S2",
+      "misconception": "P2S2.BOUNDARY",
+      "q": "Un cas frontière sert-il surtout à montrer comment arbitrer entre deux sorties plausibles ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-P2S2-2",
+      "module": "P2S2",
+      "misconception": "P2S2.FORMAT_TRUTH",
+      "q": "Une sortie conforme à un schéma structuré garantit-elle que les faits qu’elle contient sont vrais ?",
       "choices": [
         "Oui",
         "Non"
