@@ -9,7 +9,8 @@ const pages=[
   'modules/transformer-block-lab.html',
   'modules/sampling-lab.html',
   'modules/hallucination-lab.html',
-  'modules/rag-lab.html'
+  'modules/rag-lab.html',
+  'modules/dialoguer-specifier.html'
 ];
 const errors=[];
 const appRoutes=new Set(['dashboard','apprentissage','parcours','labs','progression','referentiel','architecture']);

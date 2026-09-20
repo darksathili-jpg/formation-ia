@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr" data-ui-system="latent-v1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Parcours 2 — Spécifier une tâche · Formation LLM</title>
+<style>
+:root{
+--bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#637581;--line:rgba(16,32,45,.14);
+--accent:#b35425;--accent2:#0b7894;--soft:#f3dfd1;--cyan:#d9edf2;--green:#24704e;--greenSoft:#dcefe6;--amber:#99681f;--amberSoft:#f4e5c8;
+--red:#a63b42;--redSoft:#f6dfe1;--violet:#6558ca;--violetSoft:#e9e4fb;--code:#111a24;--shadow:0 14px 38px rgba(20,34,45,.08);
+--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif}
+[data-theme="dark"]{--bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);
+--accent:#f09664;--accent2:#55c3dc;--soft:#462a20;--cyan:#153d48;--green:#71d0a3;--greenSoft:#17392b;--amber:#efba67;--amberSoft:#3d2d18;
+--red:#ef8086;--redSoft:#472226;--violet:#aaa2ff;--violetSoft:#2f2958;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}
+button,select,input,textarea{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max-width:1220px;margin:auto;padding:26px 22px 80px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:22px}.back{color:var(--accent2);text-decoration:none;font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:8px 11px;border-radius:999px;font-size:.8rem;font-weight:850}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(290px,.75fr);gap:26px;align-items:start}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.75rem;color:var(--accent);font-weight:950}
+h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{font-size:1.08rem;color:var(--muted);max-width:790px}
+.hero-card{background:var(--code);color:#eef7fa;border-radius:22px;padding:22px;box-shadow:var(--shadow)}.hero-card b{color:#f6ad84}.hero-card p{color:#bccbd4;font-size:.86rem}
+.statusline{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;background:var(--panel2);color:var(--muted);font-size:.7rem;font-weight:900}.badge.good{background:var(--greenSoft);color:var(--green)}
+.trainer-banner{display:none;max-width:1220px;margin:10px auto 18px;padding:12px 16px;border-left:5px solid var(--accent);border-radius:13px;background:var(--soft);font-size:.84rem}.trainer-on .trainer-banner{display:block}.trainer-only{display:none}.trainer-on .trainer-only{display:block}
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}.projector .projector-exit{display:inline-flex}.projector .tools{display:none}.projector{font-size:19px}.projector .wrap{max-width:1500px}
+.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.82rem}
+.section{margin-top:44px;scroll-margin-top:20px}.section-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:15px}.num{width:40px;height:40px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.9rem;margin:0}.section-head p{color:var(--muted);margin:3px 0 0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:19px}.notice{padding:15px 17px;border-left:4px solid var(--accent2);background:var(--cyan);border-radius:13px}.notice strong{display:block;margin-bottom:3px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.checklist{display:grid;gap:9px}.check{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;background:var(--panel2)}.check b{display:block}.check small{color:var(--muted)}
+.lesson{display:grid;gap:13px}.lesson p{margin:0}.definition{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px}.definition strong{display:block;margin-bottom:4px}.intuition{padding:14px 16px;border-left:4px solid var(--accent2);background:var(--cyan);border-radius:12px}.intuition strong{display:block;margin-bottom:4px}
+.steps{display:grid;gap:10px}.step{display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:start;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.step .n{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950}.step h3{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted);font-size:.86rem}.step .why{margin-top:7px;color:var(--text);font-size:.82rem}
+.example-result{margin-top:13px;padding:13px;border-radius:12px;background:var(--greenSoft);color:var(--green);font-weight:850}
+.map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.node{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:15px;padding:14px;text-align:left;min-height:118px}.node:hover,.node.active{border-color:var(--accent);box-shadow:var(--shadow)}.node .id{font-size:.68rem;color:var(--accent);font-weight:950}.node b{display:block;margin-top:5px}.node small{display:block;color:var(--muted);margin-top:5px}.detail{margin-top:12px;background:var(--panel2);border-radius:14px;padding:15px;min-height:112px}.detail h3{margin:0 0 6px;font-family:var(--display)}.detail p{margin:0;color:var(--muted)}
+.stack{display:grid;gap:10px}.layer{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:13px;display:flex;justify-content:space-between;gap:12px;align-items:center}.layer.on{border-color:var(--accent2);background:var(--cyan)}.switch{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:6px 10px;font-weight:900}.switch.on{background:var(--greenSoft);color:var(--green);border-color:var(--green)}
+.system-view{background:var(--code);color:#edf7fa;border-radius:16px;padding:17px;min-height:100%}.system-view h3{margin-top:0;font-family:var(--display)}.system-view p{color:#c8d4db}.architecture{display:grid;gap:7px;margin-top:14px}.arch-box{padding:10px;border-radius:10px;background:rgba(255,255,255,.08);font-size:.82rem}.arch-box.core{border:1px solid #75d1e4}.arch-box.extra{border:1px dashed rgba(255,255,255,.28)}.verdict{margin-top:15px;padding:11px;border-radius:11px;background:rgba(255,255,255,.08);font-weight:850}
+.classifier{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.case{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.case .tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);font-weight:950}.case h3{font-size:1rem;margin:5px 0}.case p{font-size:.84rem;color:var(--muted);min-height:58px}.case select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.case .feedback{display:none;margin-top:9px;font-size:.8rem}.case.correct .feedback,.case.wrong .feedback{display:block}.case.correct{border-color:var(--green)}.case.correct .feedback{color:var(--green)}.case.wrong{border-color:var(--red)}.case.wrong .feedback{color:var(--red)}
+.completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(160px,.8fr) 34px minmax(240px,1.2fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent2);font-weight:950}.completion-feedback{display:none;margin-top:12px;padding:12px;border-radius:11px;background:var(--panel2)}.completion-feedback.show{display:block}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.primary{border:0;background:var(--accent2);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.scorebox{font-weight:950;color:var(--accent2)}
+.misgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mis{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.mis .wrong{color:var(--red);font-weight:900}.mis .right{margin-top:8px;color:var(--green);font-weight:850}.mis p{margin:5px 0 0;color:var(--muted);font-size:.84rem}
+.selfbox textarea{width:100%;min-height:130px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px;resize:vertical}.criteria{margin-top:10px;display:grid;gap:6px}.criteria label{display:flex;gap:8px;align-items:flex-start;font-size:.83rem;color:var(--muted)}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900;padding:0 5px}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.82rem}.q.ok{border-color:var(--green)}.q.bad{border-color:var(--red)}.q.ok .feedback,.q.bad .feedback{display:block}
+.transfer{display:grid;grid-template-columns:1fr 1fr;gap:12px}.transfer-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:16px}.transfer-card h3{margin-top:0}.transfer-card select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.transfer-feedback{display:none;margin-top:9px;padding:10px;border-radius:10px;background:var(--panel2);font-size:.82rem}.transfer-card.good .transfer-feedback,.transfer-card.bad .transfer-feedback{display:block}.transfer-card.good{border-color:var(--green)}.transfer-card.bad{border-color:var(--red)}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.recap article{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.recap b{display:block;margin-bottom:5px}.recap p{margin:0;color:var(--muted);font-size:.84rem}
+.refs{display:grid;gap:8px}.ref{border-left:3px solid var(--accent2);padding:9px 12px;background:var(--panel);border-radius:0 11px 11px 0;font-size:.82rem}.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.82rem}.footer{margin-top:46px;border-top:1px solid var(--line);padding-top:17px;color:var(--muted);font-size:.77rem}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+@media(max-width:1000px){.hero,.grid2{grid-template-columns:1fr}.map{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}.journey{grid-template-columns:1fr}.classifier,.misgrid,.transfer,.recap{grid-template-columns:1fr}}
+@media(max-width:680px){.wrap{padding:17px 13px 60px}.map,.grid3{grid-template-columns:1fr}.top{align-items:flex-start}.completion-row{grid-template-columns:1fr}.completion-row .arrow{transform:rotate(90deg)}h1{font-size:clamp(2.5rem,14vw,4.2rem)}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.learning-guide{position:sticky;top:10px;z-index:35;margin:16px 0;padding:11px 13px;border:1px solid var(--line);border-left:4px solid var(--accent2,var(--accent));border-radius:13px;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(10px);box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.learning-guide strong{display:block}.learning-guide small{color:var(--muted)}.learning-guide-actions{display:flex;gap:7px;flex-wrap:wrap}.learning-guide button{border:1px solid var(--strong,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:7px 10px;font-weight:850}.learning-guide button.primary-learning{background:var(--accent2,var(--accent));color:white;border-color:transparent}.learning-mastered{color:var(--ok);font-weight:900}
+</style>
+
+<style data-latent-ui="v1">
+:root{
+ --bg:#eef3f1;--panel:#f9fbfa;--panel2:#e7eeeb;--text:#09171c;--muted:#617177;
+ --line:rgba(9,23,28,.12);--strong:rgba(9,23,28,.26);--accent:#087f87;--accent2:#6c5ce7;
+ --soft:#d8f2ee;--cyan:#d8f2ee;--violet:#e8e3ff;--ok:#2a7954;--oksoft:#dff2e7;
+ --gold:#9a651d;--goldsoft:#f6e8ce;--warn:#9a651d;--warnsoft:#f6e8ce;
+ --danger:#a53b42;--dangersoft:#f7dfe1;--red:#a53b42;--green:#2a7954;
+ --code:#071419;--shadow:0 18px 55px rgba(13,37,40,.10);
+ --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ --display:"Segoe UI Variable Display","Segoe UI",ui-sans-serif,system-ui,sans-serif;
+ --latent-cyan:#5cf0d2;--latent-violet:#8b7cf6;--latent-coral:#ff7584;--latent-lime:#b8f36b;--ink:#071419;
+}
+[data-theme="dark"]{
+ --bg:#061015;--panel:#0c1a20;--panel2:#12252c;--text:#edf7f5;--muted:#91a8ae;
+ --line:rgba(226,247,243,.11);--strong:rgba(226,247,243,.24);--accent:#5cf0d2;--accent2:#998bff;
+ --soft:#10352f;--cyan:#10352f;--violet:#272450;--ok:#8be3b3;--oksoft:#17382c;
+ --gold:#f3bc62;--goldsoft:#3b2b17;--warn:#f3bc62;--warnsoft:#3b2b17;
+ --danger:#ef8086;--dangersoft:#472226;--red:#ef8086;--green:#8be3b3;--code:#03090c;
+ --shadow:0 22px 70px rgba(0,0,0,.34);
+}
+html{background:var(--bg)}
+body{
+ background:
+ radial-gradient(circle at 88% 8%,color-mix(in srgb,var(--accent2) 10%,transparent),transparent 25%),
+ radial-gradient(circle at 12% 72%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 25%),
+ var(--bg);
+ font-feature-settings:"ss01" 1,"cv11" 1;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.22;
+ background-image:radial-gradient(circle,color-mix(in srgb,var(--accent) 35%,transparent) 1px,transparent 1.4px);
+ background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+button,.primary,.secondary,.tool,.back{min-height:44px}
+.wrap{max-width:1180px;padding-top:18px}
+.top{
+ position:sticky;top:10px;z-index:80;margin:0 0 26px;padding:8px 9px 8px 14px;border:1px solid var(--line);
+ border-radius:12px;background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(16px);
+ box-shadow:0 10px 40px rgba(5,20,24,.08);
+}
+.top:before{
+ content:"LATENT / LEARNING NODE";font:700 .58rem ui-monospace,SFMono-Regular,Consolas,monospace;
+ letter-spacing:.16em;color:var(--muted);margin-right:auto
+}
+.top>div:first-child{display:flex;align-items:center;gap:7px}.back{display:inline-flex;align-items:center;padding:0 8px;border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.71rem;text-transform:uppercase;letter-spacing:.06em}
+.tools{margin-left:auto}.tool{border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.68rem}
+#trainerBtn[aria-pressed="true"]{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 55%,transparent)}
+.hero{min-height:390px;align-items:center;padding:32px 0 22px;position:relative}
+.eyebrow{
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.66rem!important;
+ letter-spacing:.15em!important;color:var(--accent)!important
+}
+h1,.section-head h2{font-family:var(--display)!important;font-weight:820;letter-spacing:-.055em}
+h1{font-size:clamp(3.1rem,7vw,6.3rem)!important;line-height:.88!important;max-width:760px;margin-top:.17em!important}
+.lead{font-size:1rem!important;line-height:1.75!important;max-width:730px}
+.hero-card{
+ position:relative;min-height:300px;border:1px solid rgba(92,240,210,.20)!important;border-radius:20px!important;
+ background:
+ linear-gradient(rgba(92,240,210,.035) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.035) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(139,124,246,.18),transparent 33%),
+ #071419!important;background-size:28px 28px,28px 28px,auto,auto!important;
+ box-shadow:0 28px 80px rgba(3,14,17,.25)!important;padding:26px!important;overflow:hidden
+}
+.hero-card:before{content:"MODEL INSPECTOR";position:absolute;right:17px;top:14px;color:#507a75;font:700 .56rem ui-monospace,monospace;letter-spacing:.15em}
+.hero-card b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.03em}
+.hero-card .flow>div,.hero-card .pipeline .pipe{border:1px solid rgba(92,240,210,.10);background:rgba(255,255,255,.04)!important;border-radius:7px!important}
+.meta{gap:6px}.badge{border-radius:7px!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.65rem!important}
+.journey{gap:8px!important;margin-top:4px!important}
+.journey-card{
+ border-radius:11px!important;background:color-mix(in srgb,var(--panel) 90%,transparent)!important;box-shadow:none!important;
+ position:relative;overflow:hidden
+}
+.journey-card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent)}
+.journey-card .k{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.61rem!important}
+.learning-guide{
+ top:68px!important;border:1px solid rgba(92,240,210,.18)!important;border-left:0!important;border-radius:11px!important;
+ background:rgba(7,20,25,.94)!important;color:#eafffa!important;box-shadow:0 15px 45px rgba(0,0,0,.20)!important;padding:10px 12px!important
+}
+.learning-guide:before{content:"RUNTIME";font:800 .55rem ui-monospace,monospace;letter-spacing:.16em;color:#5cf0d2;margin-right:3px}
+.learning-guide strong{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.74rem}.learning-guide small{color:#7fa09b!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.65rem}
+.learning-guide button{min-height:40px!important;border-radius:7px!important;background:#0d252b!important;color:#b8d6d0!important;border-color:rgba(255,255,255,.08)!important}
+.learning-guide button.primary-learning{background:var(--latent-cyan)!important;color:#061116!important}
+.section{margin-top:58px!important;position:relative;scroll-margin-top:130px}
+.section-head{align-items:center!important;margin-bottom:18px!important}
+.section-head .num{
+ width:42px!important;height:42px!important;border-radius:9px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;
+ border:1px solid rgba(92,240,210,.24)!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.7rem!important;
+ box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 5%,transparent)
+}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.2rem)!important}
+.section-head:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent);margin-left:10px}
+.panel,.step,.worked-step,.role,.compare-card,.mis,.transfer-card,.q,.term,.metric,.truthbox,.cal-card{
+ border-radius:11px!important;box-shadow:none!important;background:color-mix(in srgb,var(--panel) 92%,transparent)!important;
+}
+.panel{border-color:var(--line)!important}
+.intuition,.definition,.notice,.callout,.trainer-box{border-radius:9px!important;border-left-width:2px!important}
+.steps{gap:7px!important}.step,.worked-step{border-color:var(--line)!important}
+.step .n,.worked-step .n,.stage .n{border-radius:7px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.stage{border-radius:9px!important}
+.vec,.calc,.value,.token,.qmeta{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important}
+.primary{border-radius:8px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;border:1px solid rgba(92,240,210,.22)!important}
+.secondary{border-radius:8px!important}
+input,select,textarea{border-radius:8px!important}
+.table-wrap{border-radius:10px!important}
+th{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.62rem!important;letter-spacing:.08em}
+.next-step{
+ border-radius:11px!important;background:color-mix(in srgb,var(--panel) 92%,transparent)!important;border-color:var(--line)!important;
+ position:relative;overflow:hidden
+}
+.next-step:before{content:"NEXT SIGNAL";position:absolute;right:12px;top:8px;font:700 .54rem ui-monospace,monospace;letter-spacing:.14em;color:var(--muted)}
+.footer{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.62rem!important;letter-spacing:.04em}
+.trainer-banner{border-radius:9px!important;box-shadow:none!important}
+.projector-exit{min-height:44px;border-radius:8px!important}
+:focus-visible{outline:3px solid var(--latent-cyan)!important;outline-offset:3px}
+@media(max-width:900px){.top:before{display:none}.hero{min-height:0}.learning-guide{top:8px!important}}
+@media(max-width:650px){.wrap{padding-top:9px!important}.top{top:5px;border-radius:9px}.top>div:first-child{max-width:100%}.tools{width:100%;margin-left:0}.hero{padding-top:18px}.hero h1{font-size:clamp(2.7rem,15vw,4.2rem)!important}.hero-card{min-height:250px}.section{margin-top:44px!important}.learning-guide{position:relative!important;top:auto!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+<style data-latent-access="v1">
+.skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.skip-link:focus{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
+</style><style data-latent-nav="v1">
+.layer-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:70;width:48px;max-height:72vh;overflow:auto;padding:8px 5px;border:1px solid rgba(92,240,210,.15);border-radius:12px;background:rgba(7,20,25,.90);backdrop-filter:blur(13px);box-shadow:0 15px 45px rgba(0,0,0,.18);scrollbar-width:none}
+.layer-nav::-webkit-scrollbar{display:none}.layer-nav:before{content:"LAYERS";display:block;writing-mode:vertical-rl;transform:rotate(180deg);height:50px;margin:0 auto 7px;color:#557c76;font:750 .49rem ui-monospace,monospace;letter-spacing:.14em}
+.layer-nav button{display:grid;place-items:center;width:36px;min-height:44px;margin:3px 0;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:#0b2026;color:#6e9690;font:750 .61rem ui-monospace,monospace;cursor:pointer}
+.layer-nav button[aria-current="step"]{color:#071419;background:#5cf0d2;border-color:#5cf0d2;box-shadow:0 0 16px rgba(92,240,210,.24)}
+.layer-nav button:disabled{opacity:.22;cursor:not-allowed}.layer-nav button:not(:disabled):hover{color:#edfffb;border-color:rgba(92,240,210,.32)}
+.layer-nav button:focus-visible{outline:3px solid #5cf0d2;outline-offset:2px}
+@media(max-width:1260px){.layer-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.layer-nav{scroll-behavior:auto}.layer-nav button{transition:none!important}}
+</style><style data-projection-ux="v2">
+/* Projection haute luminance : indépendante du thème clair/sombre de travail. */
+html.projector{
+ color-scheme:light;
+ --bg:#ffffff;--panel:#ffffff;--panel2:#f1f3f2;--text:#000000;--muted:#37474c;
+ --line:rgba(0,0,0,.24);--strong:rgba(0,0,0,.52);--accent:#005a62;--accent2:#3f318e;
+ --soft:#e4f3f1;--cyan:#e4f3f1;--violet:#ece9ff;--ok:#145b3b;--oksoft:#e4f2e9;
+ --warn:#744700;--warnsoft:#fff0cf;--gold:#744700;--goldsoft:#fff0cf;--goldSoft:#fff0cf;
+ --danger:#8b1f2b;--dangersoft:#fde7e9;--red:#8b1f2b;--green:#145b3b;
+ --code:#f3f5f4;--codetext:#000000;--codeText:#000000;--shadow:none;
+ --latent-cyan:#005a62;--latent-violet:#3f318e;--latent-coral:#8b1f2b;--latent-lime:#356600;
+ --ink:#000000;--accentSoft:#e4f3f1;
+ background:#ffffff!important;
+}
+html.projector body{background:#ffffff!important;color:#000000!important}
+html.projector body:before{display:none!important}
+html.projector .content{background:#ffffff!important}
+html.projector .topbar{background:#ffffff!important;border-bottom:2px solid #68777a!important;box-shadow:none!important;backdrop-filter:none!important}
+html.projector .projector-exit{background:#ffffff!important;color:#000000!important;border:2px solid #000000!important;box-shadow:none!important}
+html.projector .hero-panel,
+html.projector .hero-card{background:#f3f5f4!important;color:#000000!important;border:2px solid #68777a!important;box-shadow:none!important}
+html.projector .hero-panel:after,
+html.projector .hero-panel small,
+html.projector .hero-panel .resume-meta,
+html.projector .hero-card h2,
+html.projector .hero-card p,
+html.projector .flow-mini span{color:#263b40!important}
+html.projector .flow-mini div{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .learning-guide{background:#ffffff!important;color:#000000!important;border:2px solid #005a62!important;box-shadow:none!important;backdrop-filter:none!important}
+html.projector .learning-guide:before{color:#005a62!important}
+html.projector .learning-guide small{color:#37474c!important}
+html.projector .learning-guide button{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
+html.projector .learning-guide button.primary-learning,
+html.projector .primary,
+html.projector .open,
+html.projector .resume-btn{background:#005a62!important;color:#ffffff!important;border-color:#005a62!important}
+html.projector .secondary,
+html.projector .complete,
+html.projector .tool,
+html.projector .mode-btn,
+html.projector .pill{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
+html.projector .layer-nav{display:none!important}
+html.projector .card,
+html.projector .module,
+html.projector .metric,
+html.projector .path-card,
+html.projector .lab-card,
+html.projector .learning-card,
+html.projector .term,
+html.projector .q,
+html.projector .transfer-card,
+html.projector .result,
+html.projector .recommend,
+html.projector .callout{box-shadow:none!important}
+html.projector pre,
+html.projector .codebox{background:#f3f5f4!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .latent-map .gridline{stroke:rgba(0,0,0,.22)!important}
+html.projector .latent-map .path{stroke:#005a62!important;filter:none!important}
+html.projector .latent-map .node{fill:#ffffff!important;stroke:#005a62!important}
+html.projector .latent-map .node.v{stroke:#3f318e!important}
+html.projector .latent-map .pulse{fill:#356600!important;filter:none!important}
+html.projector .latent-map text{fill:#263b40!important}
+@media(max-width:980px){html.projector .topbar{top:0!important}}
+</style>
+<style data-ux-audit="v1">
+@media(max-width:900px){.learning-guide{position:relative!important;top:auto!important}}
+@media(max-width:1380px){.layer-nav{display:none!important}}
+.q label{min-height:44px;display:flex;align-items:center;gap:10px;padding:9px 8px}
+.q label input{flex:0 0 auto}
+</style>
+<style data-mobile-module-ux="v1">
+.cockpit-return{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:7px 10px;border:1px solid var(--strong,var(--line));border-radius:8px;background:var(--panel);color:var(--text);font-weight:900;text-decoration:none}
+.next-step .center .cockpit-return,.next-step .muted .cockpit-return{margin-top:8px}
+@media(max-width:650px){
+ .topbar-inner,.top{flex-wrap:wrap!important;gap:8px!important;align-items:center!important}
+ .topbar-inner>.brand,.top>.back,.top>div:first-child{flex:1 1 100%!important;max-width:none!important}
+ .tools{width:100%!important;margin-left:0!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+ .tool{min-height:44px!important;padding:7px 5px!important;font-size:0!important;display:flex!important;align-items:center!important;justify-content:center!important;white-space:nowrap}
+ #themeBtn::after{content:"◐ Thème";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn::after{content:"▣ Projection";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}
+ #trainerBtn::after{content:"◆ Formateur";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}
+}
+</style>
+<style data-projection-audit="v3">
+html.projector,html.projector body{overflow-x:clip!important}
+html.projector .projector-exit{
+ position:fixed!important;top:10px!important;right:10px!important;left:auto!important;
+ max-width:calc(100vw - 20px)!important;min-width:0!important;box-sizing:border-box!important;
+ padding:8px 12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ font-size:clamp(.78rem,.9vw,.95rem)!important;line-height:1.15!important
+}
+</style>
+<style data-projection-module-audit="v3">
+html.projector .wrap,
+html.projector main{width:auto!important;max-width:min(1500px,calc(100vw - 24px))!important}
+html.projector .top{padding-right:160px!important}
+html.projector .top:before{margin-right:10px!important}
+html.projector .top>.back,
+html.projector .top>div:first-child{margin-right:auto!important}
+html.projector .section-head .num,
+html.projector .step .n,
+html.projector .worked-step .n,
+html.projector .stage .n{
+ background:#e4f3f1!important;color:#005a62!important;border:2px solid #6f7e81!important;
+ box-shadow:none!important
+}
+html.projector .system-view,
+html.projector .formula,
+html.projector .vec,
+html.projector .choice,
+html.projector .context,
+html.projector .answer{
+ background:#f3f5f4!important;color:#000000!important;border:1px solid #7a878a!important;
+ box-shadow:none!important
+}
+html.projector .system-view p,
+html.projector .formula p,
+html.projector .vec p,
+html.projector .choice p,
+html.projector .context p,
+html.projector .answer p{color:#263b40!important}
+html.projector .arch-box,
+html.projector .verdict{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .hero-card:before{color:#37474c!important}
+html.projector .hero-card b{color:#000000!important}
+@media(max-width:900px){
+ html.projector .top{padding-right:12px!important}
+ html.projector .projector-exit{top:8px!important;right:8px!important}
+}
+</style>
+<style data-classic-surface-tuning="v1">
+/* Mode classique : surfaces techniques pétrole, moins proches du noir pur. */
+html:not(.projector){
+ --ink:#173a42;
+ --code:#16353d;
+}
+html[data-theme="dark"]:not(.projector){
+ --bg:#0d1a20;--panel:#14282f;--panel2:#1c343c;
+ --text:#edf7f5;--muted:#a7bdc1;
+ --line:rgba(226,247,243,.14);--strong:rgba(226,247,243,.28);
+ --soft:#16413a;--cyan:#16413a;--violet:#302c59;
+ --oksoft:#1d4435;--goldsoft:#46331c;--warnsoft:#46331c;--dangersoft:#53292e;
+ --ink:#183f47;--code:#14313a;
+ --shadow:0 20px 60px rgba(4,15,19,.27);
+}
+</style>
+<style data-classic-module-surfaces="v1">
+html:not(.projector) .hero-card{
+ background:
+ linear-gradient(rgba(92,240,210,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.045) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(153,139,255,.20),transparent 34%),
+ #173a42!important;
+ background-size:28px 28px,28px 28px,auto,auto!important;
+ border-color:rgba(92,240,210,.28)!important;
+ box-shadow:0 24px 58px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .learning-guide{
+ background:rgba(23,58,66,.96)!important;
+ border-color:rgba(92,240,210,.25)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.18)!important;
+}
+html:not(.projector) .learning-guide button{
+ background:#204851!important;color:#d9ebe7!important;
+ border-color:rgba(255,255,255,.12)!important;
+}
+html:not(.projector) .learning-guide button.primary-learning{
+ background:#5cf0d2!important;color:#0d252b!important;
+}
+html:not(.projector) .layer-nav{
+ background:rgba(20,49,57,.96)!important;
+ border-color:rgba(92,240,210,.22)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .layer-nav button{
+ background:#1b4149!important;color:#9abbb6!important;
+ border-color:rgba(255,255,255,.10)!important;
+}
+html:not(.projector) .section-head .num,
+html:not(.projector) .step .n,
+html:not(.projector) .worked-step .n,
+html:not(.projector) .stage .n{
+ background:#173a42!important;
+}
+</style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
+<style data-completion-ux="v1">
+#completer select{min-height:44px}
+#completionFeedback[role="status"]{line-height:1.4}
+@media(max-width:650px){
+ #completer .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #completer .actions button{width:100%!important;min-width:0!important}
+ #completionFeedback.show{min-height:44px;display:flex;align-items:center}
+}
+</style>
+<style data-step-badge-layout="v1">
+/* Numérotation canonique : centrage indépendant des styles historiques du module. */
+.section-head .num,
+.section-head .section-num{
+ display:grid!important;
+ place-items:center!important;
+ flex:0 0 42px!important;
+ width:42px!important;
+ min-width:42px!important;
+ height:42px!important;
+ padding:0!important;
+ margin:0!important;
+ box-sizing:border-box!important;
+ line-height:1!important;
+ text-align:center!important;
+ font-style:normal!important;
+ vertical-align:middle!important;
+}
+</style>
+</head>
+<body><a class="skip-link" href="#mainContent">Passer au contenu</a>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
+<main class="wrap" id="mainContent">
+<div class="top"><a class="back" href="../index.html#parcours">← Formation LLM · Parcours 2</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
+<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues, critères de réussite et pistes de débrief sont affichés.</div>
+
+<section class="hero">
+<div><div class="eyebrow">Parcours 2 · Dialoguer efficacement · Étape 1 · NOVICE-FIRST</div><h1>Un bon prompt n’est pas une formule magique</h1><p class="lead">Un prompt utile ressemble moins à une incantation qu’à une <strong>spécification de tâche</strong> : quel résultat produire, pour qui, avec quelles informations, quelles contraintes et comment vérifier qu’il convient.</p>
+<div class="statusline"><span class="badge good">P2S1 novice-ready</span><span class="badge">≈ 45–60 min</span><span class="badge">Aucun appel réseau</span></div></div>
+<aside class="hero-card"><b>Mission</b><p>À la fin, vous devrez pouvoir transformer une demande vague en consigne testable, puis expliquer pourquoi chaque information ajoutée est utile — sans chercher une phrase “secrète” censée garantir une bonne réponse.</p></aside>
+</section>
+
+<section class="journey" data-pedagogy="prerequisites" aria-label="Prérequis et objectifs">
+<div class="journey-card"><div class="k">Vous devez déjà savoir</div><b>Modèle ≠ application</b><p>Un LLM produit une réponse à partir du contexte qu’il reçoit ; l’application peut ajouter d’autres composants.</p></div>
+<div class="journey-card"><div class="k">Vous allez apprendre</div><b>6 éléments d’une spécification</b><p>Objectif, destinataire, contexte, contraintes, format et critère de réussite.</p></div>
+<div class="journey-card" data-success-criterion="v1"><div class="k">Critère de réussite</div><b>Rendre une demande testable</b><p>Vous saurez améliorer une demande floue et justifier chaque ajout sans allonger inutilement le prompt.</p></div>
+</section>
+
+<section class="section" data-pedagogy="intuition" id="intuition">
+<div class="section-head"><div class="num">01</div><div><h2>Le problème : “fais-moi quelque chose de bien”</h2><p>Le modèle ne peut pas deviner les critères que vous n’avez pas rendus observables.</p></div></div>
+<div class="grid2">
+<div class="panel lesson"><div class="intuition"><strong>Intuition</strong> Donner une tâche à un LLM ressemble à déléguer un travail à une personne compétente qui ne connaît pas votre intention cachée. « Fais un bon résumé » laisse ouvertes la longueur, le public, les idées indispensables et la forme attendue.</div>
+<p>Le but n’est pas d’écrire le prompt le plus long possible. Le but est de fournir <strong>les informations qui changent réellement la décision ou la sortie</strong>.</p>
+<p>Une demande peut donc être courte et excellente si la tâche est simple et le contexte partagé ; elle peut être plus structurée lorsqu’il faut contrôler plusieurs dimensions.</p></div>
+<div class="panel checklist">
+<div class="check"><span>①</span><div><b>Objectif</b><small>Quelle action doit être réalisée ?</small></div></div>
+<div class="check"><span>②</span><div><b>Destinataire</b><small>Pour qui la sortie est-elle produite ?</small></div></div>
+<div class="check"><span>③</span><div><b>Contexte utile</b><small>Quelles informations sont nécessaires pour réussir ?</small></div></div>
+<div class="check"><span>④</span><div><b>Contraintes et format</b><small>Quelles limites et quelle forme rendent la sortie exploitable ?</small></div></div>
+</div></div>
+<div class="trainer-only trainer-box"><b>Question formateur.</b> Demander : « Si je vous dis seulement “prépare un exercice”, quelles décisions reste-t-il à prendre ? » Faire émerger les critères avant d’introduire le vocabulaire.</div>
+</section>
+
+<section class="section" data-pedagogy="definition" id="definitions">
+<div class="section-head"><div class="num">02</div><div><h2>Six éléments pour spécifier une tâche</h2><p>Ce sont des repères, pas un formulaire obligatoire à remplir à chaque prompt.</p></div></div>
+<div class="grid3">
+<article class="panel lesson"><h3>Objectif</h3><p>L’action attendue : résumer, comparer, extraire, expliquer, classer, transformer, proposer…</p><p class="muted"><b>Limite :</b> « aider » ou « améliorer » restent difficiles à évaluer sans préciser ce qui doit changer.</p></article>
+<article class="panel lesson"><h3>Destinataire</h3><p>Le public ou l’utilisateur de la sortie. Il influence vocabulaire, profondeur, ton et prérequis.</p><p class="muted"><b>Limite :</b> inventer un “rôle d’expert” au modèle ne remplace pas la description du vrai destinataire.</p></article>
+<article class="panel lesson"><h3>Contexte utile</h3><p>Informations dont la tâche dépend réellement : document source, situation, données, hypothèses autorisées.</p><p class="muted"><b>Limite :</b> ajouter des informations sans rapport peut créer du bruit plutôt qu’aider.</p></article>
+<article class="panel lesson"><h3>Contraintes</h3><p>Limites vérifiables : longueur, éléments obligatoires, éléments interdits, langue, niveau, périmètre.</p><p class="muted"><b>Repère :</b> une contrainte utile réduit une ambiguïté réelle.</p></article>
+<article class="panel lesson"><h3>Format de sortie</h3><p>Forme attendue : paragraphe, tableau, liste, champs nommés, structure JSON lorsqu’un système le requiert.</p><p class="muted"><b>Limite :</b> demander un format ne garantit pas que le contenu soit juste ni que la structure soit techniquement valide dans tous les environnements.</p></article>
+<article class="panel lesson"><h3>Critère de réussite</h3><p>Ce qui permettra de contrôler la sortie : couverture des idées, absence d’ajout, respect du niveau, présence de champs, etc.</p><p class="muted"><b>Question clé :</b> « Comment saurai-je que le résultat convient ? »</p></article>
+</div>
+</section>
+
+<section class="section" data-pedagogy="worked-example" id="exemple">
+<div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé : d’une demande vague à un contrat testable</h2><p>Nous améliorons le prompt uniquement quand une information réduit une ambiguïté utile.</p></div></div>
+<div class="panel">
+<p><strong>Demande initiale.</strong> « Résume ce texte. »</p>
+<div class="steps">
+<div class="step"><div class="n">1</div><div><h3>Fixer l’objectif</h3><p>« Résume le document source. »</p><div class="why"><b>Ce que cela règle :</b> l’action demandée est explicite.</div></div></div>
+<div class="step"><div class="n">2</div><div><h3>Nommer le destinataire</h3><p>« Pour un élève de Terminale qui découvre le sujet. »</p><div class="why"><b>Pourquoi ?</b> Le niveau de langage et la quantité d’explications deviennent contrôlables.</div></div></div>
+<div class="step"><div class="n">3</div><div><h3>Délimiter le contexte</h3><p>« Utilise uniquement le document fourni ; n’ajoute pas d’information extérieure. »</p><div class="why"><b>Pourquoi ?</b> La source autorisée est claire.</div></div></div>
+<div class="step"><div class="n">4</div><div><h3>Ajouter des contraintes observables</h3><p>« 120 à 150 mots ; conserve les trois idées principales. »</p><div class="why"><b>Pourquoi ?</b> Longueur et couverture peuvent être vérifiées.</div></div></div>
+<div class="step"><div class="n">5</div><div><h3>Préciser la forme</h3><p>« Un paragraphe suivi de trois mots-clés. »</p><div class="why"><b>Pourquoi ?</b> La sortie devient immédiatement exploitable.</div></div></div>
+<div class="step"><div class="n">6</div><div><h3>Énoncer le contrôle</h3><p>« Le résumé est réussi s’il reprend les trois idées sans ajouter de fait absent du document. »</p><div class="why"><b>Conclusion :</b> on a construit une tâche testable, pas une incantation.</div></div></div>
+</div>
+<div class="example-result"><b>Prompt obtenu :</b> Résume le document source pour un élève de Terminale qui découvre le sujet. Utilise uniquement ce document. Produis 120 à 150 mots, conserve les trois idées principales, puis ajoute trois mots-clés. N’ajoute aucun fait absent de la source.</div>
+</div>
+</section>
+
+<section class="section" data-pedagogy="guided-practice" id="builder">
+<div class="section-head"><div class="num">04</div><div><h2>Prompt Builder — ajoutez seulement ce qui sert</h2><p>Activez ou retirez des éléments et observez ce que la spécification contrôle réellement.</p></div></div>
+<div class="grid2">
+<div class="panel">
+<h3>Tâche : transformer une note de cours en fiche de révision</h3>
+<div class="criteria" id="builderOptions">
+<label><input type="checkbox" data-builder="objective" checked> Objectif : produire une fiche de révision.</label>
+<label><input type="checkbox" data-builder="audience"> Destinataire : élève de Première.</label>
+<label><input type="checkbox" data-builder="context"> Contexte : utiliser uniquement la note fournie.</label>
+<label><input type="checkbox" data-builder="constraints"> Contraintes : 5 idées maximum, aucun ajout extérieur.</label>
+<label><input type="checkbox" data-builder="format"> Format : titres courts + puces.</label>
+<label><input type="checkbox" data-builder="criteria"> Réussite : toutes les notions indispensables de la note sont couvertes.</label>
+</div>
+</div>
+<div class="panel"><h3>Spécification obtenue</h3><div class="system-view" id="builderOutput"></div><div class="notice" id="builderNotice"><strong>Observation.</strong> Activez plusieurs éléments puis demandez-vous : lequel change réellement la sortie ?</div></div>
+</div>
+<div class="trainer-only trainer-box"><b>Débrief formateur.</b> Faire remarquer que « destinataire » peut être inutile dans certaines tâches purement mécaniques, tandis que le contexte source devient crucial dès qu’on interdit les ajouts.</div>
+</section>
+
+<section class="section" data-pedagogy="completion" id="completer">
+<div class="section-head"><div class="num">05</div><div><h2>Je complète — quel élément manque ?</h2><p>Associez chaque faiblesse du prompt au levier le plus direct.</p></div></div>
+<div class="panel completion">
+<div class="completion-row"><strong>« Fais une explication simple » — simple pour qui ?</strong><span class="arrow">→</span><select data-completion="audience"><option value="">Choisir…</option><option value="audience">Destinataire</option><option value="format">Format</option><option value="role">Rôle fictif</option></select></div>
+<div class="completion-row"><strong>« Analyse ce dossier » — aucune pièce n’est fournie</strong><span class="arrow">→</span><select data-completion="context"><option value="">Choisir…</option><option value="context">Contexte utile</option><option value="tone">Ton</option><option value="length">Longueur</option></select></div>
+<div class="completion-row"><strong>La réponse est correcte mais inutilisable par un programme</strong><span class="arrow">→</span><select data-completion="format"><option value="">Choisir…</option><option value="format">Format de sortie</option><option value="audience">Destinataire</option><option value="role">Rôle</option></select></div>
+<div class="completion-row"><strong>On ne sait pas dire si le résultat est acceptable</strong><span class="arrow">→</span><select data-completion="criteria"><option value="">Choisir…</option><option value="criteria">Critère de réussite</option><option value="context">Contexte</option><option value="tone">Ton</option></select></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div>
+<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
+</div>
+</section>
+
+<section class="section" data-pedagogy="misconception" id="pieges">
+<div class="section-head"><div class="num">06</div><div><h2>Six pièges qui ressemblent à de bonnes pratiques</h2><p>Une technique n’est utile que si elle résout le problème réel de la tâche.</p></div></div>
+<div class="misgrid">
+<article class="mis"><div class="wrong">« Plus le prompt est long, meilleur il est »</div><p>On confond quantité d’instructions et information utile.</p><div class="right">Correction : chaque détail doit réduire une ambiguïté ou fournir une donnée nécessaire.</div></article>
+<article class="mis"><div class="wrong">« Tu es le meilleur expert mondial… » garantit la qualité</div><p>Un rôle peut orienter style ou cadre, mais ne crée pas une compétence ni une preuve.</p><div class="right">Correction : préciser la tâche, le contexte et les critères est plus contrôlable.</div></article>
+<article class="mis"><div class="wrong">« Sois précis » est une contrainte précise</div><p>Le mot semble exigeant mais ne dit pas ce qui sera mesuré.</p><div class="right">Correction : transformer l’intention en critères observables.</div></article>
+<article class="mis"><div class="wrong">« Réponds en JSON » garantit un JSON exploitable</div><p>Le format demandé peut être mal formé ou ne pas respecter un schéma attendu.</p><div class="right">Correction : distinguer instruction de format et validation structurelle.</div></article>
+<article class="mis"><div class="wrong">« Donne tout le contexte possible »</div><p>On suppose que plus d’information ne peut qu’aider.</p><div class="right">Correction : le contexte doit être pertinent, délimité et proportionné à la tâche.</div></article>
+<article class="mis"><div class="wrong">« Le prompt parfait fonctionne partout »</div><p>Les modèles, interfaces et tâches changent.</p><div class="right">Correction : traiter le prompt comme une spécification à tester et à réviser.</div></article>
+</div>
+</section>
+
+<section class="section" data-pedagogy="self-explanation" id="expliquer">
+<div class="section-head"><div class="num">07</div><div><h2>Expliquez avec vos mots</h2><p>Le but est de reconstruire la logique, pas de mémoriser six rubriques.</p></div></div>
+<div class="panel selfbox">
+<label for="explainText"><strong>Consigne.</strong> Un collègue vous dit : « J’ai ajouté “Tu es un expert” et trois paragraphes d’instructions, donc mon prompt est forcément meilleur. » Répondez-lui en 4 à 6 phrases.</label>
+<textarea id="explainText" placeholder="Écrivez votre explication ici…"></textarea>
+<div class="criteria">
+<label><input type="checkbox"> J’ai expliqué que longueur et qualité ne sont pas synonymes.</label>
+<label><input type="checkbox"> J’ai distingué rôle, contexte, contraintes et critères.</label>
+<label><input type="checkbox"> J’ai donné au moins un exemple d’information réellement utile.</label>
+<label><input type="checkbox"> J’ai mentionné qu’un prompt doit être testé sur les sorties.</label>
+</div>
+</div>
+</section>
+
+<section class="section" data-pedagogy="retrieval" id="quiz">
+<div class="section-head"><div class="num">08</div><div><h2>Récupération active — sans relire les définitions</h2><p>Le feedback explique le raisonnement attendu après votre réponse.</p></div></div>
+<form class="quiz" id="quizForm">
+<fieldset class="q" data-answer="b"><legend>1. La meilleure amélioration de « Explique-moi ça simplement » est d’abord…</legend><label><input type="radio" name="q1" value="a"> ajouter « tu es un expert mondial ».</label><label><input type="radio" name="q1" value="b"> préciser le destinataire et ce qu’il doit comprendre.</label><label><input type="radio" name="q1" value="c"> demander une réponse très longue.</label><div class="feedback" data-pedagogy="feedback"><b>Pourquoi ?</b> « Simple » dépend du public et de l’objectif. Un rôle prestigieux ne résout pas cette ambiguïté.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. Ajouter du contexte est utile surtout quand…</legend><label><input type="radio" name="q2" value="a"> on veut rendre le prompt plus impressionnant.</label><label><input type="radio" name="q2" value="b"> le contexte est long.</label><label><input type="radio" name="q2" value="c"> l’information fournie change la façon de résoudre la tâche.</label><div class="feedback"><b>Pourquoi ?</b> Un contexte pertinent réduit l’incertitude ; du bruit supplémentaire peut au contraire compliquer la tâche.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>3. « Réponse réussie = 3 idées du document, aucune information ajoutée » est…</legend><label><input type="radio" name="q3" value="a"> un critère de réussite observable.</label><label><input type="radio" name="q3" value="b"> un rôle.</label><label><input type="radio" name="q3" value="c"> une donnée de contexte.</label><div class="feedback"><b>Pourquoi ?</b> On peut contrôler la couverture des trois idées et l’absence d’ajout.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>4. Demander « réponds en JSON » signifie que…</legend><label><input type="radio" name="q4" value="a"> la sortie sera toujours structurellement valide.</label><label><input type="radio" name="q4" value="b"> on exprime un format souhaité, qui peut encore nécessiter une validation.</label><label><input type="radio" name="q4" value="c"> le contenu sera automatiquement vrai.</label><div class="feedback"><b>Pourquoi ?</b> La forme demandée et la validité effective sont deux choses différentes.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Un prompt très long mais contradictoire est…</legend><label><input type="radio" name="q5" value="a"> forcément robuste.</label><label><input type="radio" name="q5" value="b"> meilleur qu’un prompt court.</label><label><input type="radio" name="q5" value="c"> une mauvaise spécification malgré sa longueur.</label><div class="feedback"><b>Pourquoi ?</b> La cohérence et la pertinence des instructions comptent davantage que le volume.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>6. Le meilleur réflexe après une première sortie imparfaite est…</legend><label><input type="radio" name="q6" value="a"> identifier quel critère ou contexte manque puis tester une révision.</label><label><input type="radio" name="q6" value="b"> ajouter systématiquement « réfléchis davantage ».</label><label><input type="radio" name="q6" value="c"> recopier le même prompt jusqu’à obtenir la sortie désirée.</label><div class="feedback"><b>Pourquoi ?</b> Le prompting robuste est itératif : observer l’échec, formuler une hypothèse, modifier puis retester.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger le test</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
+</form>
+</section>
+
+<section class="section" data-pedagogy="transfer" id="transfert">
+<div class="section-head"><div class="num">09</div><div><h2>Transfert — quatre situations nouvelles</h2><p>Choisissez l’amélioration qui traite réellement le défaut de la demande.</p></div></div>
+<div class="transfer">
+<article class="transfer-card" data-answer="context"><h3>Document administratif</h3><p>« Dis-moi si cette demande est complète. » Aucun formulaire ni règle n’est fourni.</p><label>Quel ajout est prioritaire ?</label><select><option value="">Choisir…</option><option value="role">Un rôle d’expert</option><option value="context">Le formulaire et les règles de complétude</option><option value="tone">Un ton formel</option></select><div class="transfer-feedback">La décision dépend des pièces et règles à appliquer : le contexte est indispensable.</div></article>
+<article class="transfer-card" data-answer="criteria"><h3>Correction d’un texte</h3><p>« Améliore ce texte. » La personne veut seulement corriger l’orthographe sans changer le style.</p><label>Que faut-il rendre explicite ?</label><select><option value="">Choisir…</option><option value="criteria">Le périmètre : corriger l’orthographe, préserver le style et le sens</option><option value="role">Le modèle doit être écrivain</option><option value="length">La réponse doit être longue</option></select><div class="transfer-feedback">Le mot « améliorer » cache plusieurs objectifs possibles ; le périmètre doit devenir observable.</div></article>
+<article class="transfer-card" data-answer="format"><h3>Extraction de données</h3><p>Une application doit récupérer nom, date et montant depuis une réponse.</p><label>Quel élément devient crucial ?</label><select><option value="">Choisir…</option><option value="audience">Le destinataire humain</option><option value="format">Un format de sortie défini et ensuite validé</option><option value="role">Un rôle créatif</option></select><div class="transfer-feedback">Quand une autre application consomme la sortie, la structure devient une exigence fonctionnelle.</div></article>
+<article class="transfer-card" data-answer="audience"><h3>Explication scientifique</h3><p>La même notion doit être expliquée à un collégien puis à un étudiant de licence.</p><label>Quel paramètre change directement ?</label><select><option value="">Choisir…</option><option value="audience">Le destinataire et ses prérequis</option><option value="context">Le sujet scientifique lui-même</option><option value="format">Le fait d’utiliser du texte</option></select><div class="transfer-feedback">Le contenu de fond reste le même mais profondeur, vocabulaire et exemples doivent s’adapter aux prérequis.</div></article>
+</div>
+<div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
+</section>
+
+<section class="section" data-pedagogy="recap" id="synthese">
+<div class="section-head"><div class="num">10</div><div><h2>À retenir : spécifier plutôt qu’incanter</h2><p>Six idées suffisent pour construire une base solide.</p></div></div>
+<div class="recap">
+<article><b>1. Commencez par l’objectif.</b><p>Une action claire vaut mieux qu’une formule vague comme « aide-moi ».</p></article>
+<article><b>2. Décrivez le destinataire quand il change la réponse.</b><p>Niveau, vocabulaire et profondeur dépendent souvent du public.</p></article>
+<article><b>3. Fournissez le contexte nécessaire, pas tout ce que vous possédez.</b><p>Pertinence et délimitation comptent plus que volume.</p></article>
+<article><b>4. Rendez les contraintes observables.</b><p>Longueur, éléments obligatoires et périmètre peuvent être contrôlés.</p></article>
+<article><b>5. Distinguez format demandé et validation réelle.</b><p>Une consigne de forme n’est pas une garantie technique ni une preuve de vérité.</p></article>
+<article><b>6. Testez et révisez.</b><p>Un prompt est une spécification à éprouver, pas un objet parfait et universel.</p></article>
+</div>
+<div class="notice" style="margin-top:14px"><strong>Pont vers la suite.</strong> Une spécification claire réduit l’ambiguïté. L’étape suivante montrera quand des <em>exemples</em> et des <em>cas frontières</em> apportent davantage qu’une règle formulée en mots.</div>
+</section>
+
+<nav class="next-step" aria-label="Navigation du parcours"><a class="cockpit-return" href="../index.html#dashboard">← Cockpit</a><div class="center">Vous êtes prêt si vous pouvez améliorer une demande floue sans ajouter d’instructions inutiles.</div><a href="../index.html#progression">Progression →</a></nav>
+<footer class="footer">Formation LLM · Parcours 2 · P2S1 · NOVICE-FIRST 1.0 · Aucun appel réseau.</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var root=document.documentElement,body=document.body;
+function applyTheme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
+var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
+document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
+setTrainerMode(localStorage.getItem("formation-llm-role")==="trainer");
+document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
+function setProjectorMode(on){root.classList.toggle("projector",on);var btn=document.getElementById("projectorBtn");btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection"}
+document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!root.classList.contains("projector"))});
+document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
+
+var builder={
+ objective:"Produis une fiche de révision à partir de la note fournie.",
+ audience:"Elle s’adresse à un élève de Première qui découvre la notion.",
+ context:"Utilise uniquement les informations présentes dans la note source.",
+ constraints:"Limite-toi à cinq idées essentielles et n’ajoute aucune information extérieure.",
+ format:"Présente des titres courts suivis de puces.",
+ criteria:"La fiche est réussie si toutes les notions indispensables de la note sont couvertes sans ajout."
+};
+function renderBuilder(){var selected=[...document.querySelectorAll("[data-builder]:checked")].map(x=>builder[x.dataset.builder]),out=document.getElementById("builderOutput"),notice=document.getElementById("builderNotice");out.innerHTML=selected.length?selected.map((x,i)=>"<p><b>"+(i+1)+".</b> "+x+"</p>").join(""):"<p class='muted'>Aucune spécification : le modèle doit deviner presque tout.</p>";var n=selected.length;notice.innerHTML="<strong>Observation.</strong> "+(n<2?"La tâche reste très sous-spécifiée.":n<4?"Vous contrôlez une partie de la sortie, mais plusieurs décisions restent ouvertes.":"La spécification couvre "+n+" dimensions. Vérifiez maintenant que chacune est réellement utile à la tâche.")}document.querySelectorAll("[data-builder]").forEach(x=>x.addEventListener("change",renderBuilder));renderBuilder();
+
+document.getElementById("checkCompletion").addEventListener("click",function(){var total=0,ok=0;document.querySelectorAll("#completer [data-completion]").forEach(function(s){total++;if(s.value===s.dataset.completion)ok++});var box=document.getElementById("completionFeedback");box.classList.add("show");box.innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Vous identifiez correctement le levier qui réduit chaque ambiguïté.":"Recherchez ce qui manque pour rendre la tâche ou son résultat vérifiable.")});
+document.getElementById("resetCompletion").addEventListener("click",function(){document.querySelectorAll("#completer [data-completion]").forEach(s=>s.value="");document.getElementById("completionFeedback").classList.remove("show")});
+
+document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var ok=0,total=0;document.querySelectorAll("#quizForm .q").forEach(function(q){total++;var chosen=q.querySelector("input:checked"),good=chosen&&chosen.value===q.dataset.answer;q.classList.toggle("ok",!!good);q.classList.toggle("bad",!good);if(good)ok++});document.getElementById("quizScore").textContent=ok+" / "+total+(ok===total?" · maîtrise solide":" · relisez les feedbacks")});
+document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll("#quizForm .q").forEach(q=>q.classList.remove("ok","bad"));document.getElementById("quizScore").textContent=""});
+document.getElementById("checkTransfer").addEventListener("click",function(){var score=0,total=0;document.querySelectorAll(".transfer-card").forEach(function(c){total++;var good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});document.getElementById("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":" · analysez le défaut de la demande")});
+})();
+</script><script data-learning-system="v2" data-step-registry="v1">
+(function(){"use strict";
+const KEY="formation-llm-learning-v2",MODULE="P2S1",QUIZ_MIS=["P2S1.VAGUE","P2S1.CONTEXT","P2S1.CRITERIA","P2S1.FORMAT","P2S1.LONGER","P2S1.ROLE_MAGIC"],TRANSFER_MIS=["P2S1.CONTEXT","P2S1.CRITERIA","P2S1.FORMAT","P2S1.VAGUE"],META={"A.MODEL_APP":["Modèle ≠ application","exemple"],"A.PARAMETERS":["Paramètres ≠ base documentaire","pieges"],"A.OPENNESS":["Open weights ≠ open source","pieges"],"A.GPAI":["GPAI : catégorie juridique européenne","definitions"],"A.LM_LLM":["Modèle de langage ≠ LLM moderne","definitions"],"B.TOKEN_WORD":["Token ≠ mot","pieges"],"B.ID_SEMANTICS":["ID ≠ sens","pieges"],"B.EMBEDDING_CONTEXT":["Embedding initial ≠ représentation contextualisée","synthese"],"B.COSINE_TRUTH":["Cosinus ≠ vérité","pieges"],"B.CONTEXT_MEMORY":["Contexte ≠ mémoire","contexte"],"B.SUBWORD":["Pourquoi les sous-mots","definitions"],"C.QKV_OBJECTS":["Q/K/V sont des vecteurs","qkv"],"C.DOT_PROB":["Q·K ≠ probabilité","pieges"],"C.SCALING":["Rôle de √dₖ","exemple"],"C.SOFTMAX":["Softmax d’attention = poids locaux","exemple"],"C.CAUSAL":["Masque causal et futur interdit","masque"],"C.ATTENTION_TRUTH":["Poids d’attention ≠ vérité","pieges"],"P1S3.ATTENTION_ONLY":["Transformer ≠ attention seule","intuition"],"P1S3.MLP":["Attention communique, MLP transforme","mlp"],"P1S3.RESIDUAL":["Connexion résiduelle x + F(x)","exemple"],"P1S3.POSITION":["Rôle de la position / RoPE","position"],"P1S3.KV_MEMORY":["KV cache ≠ mémoire applicative","pieges"],"P1S3.STACK":["Les représentations évoluent bloc après bloc","stack"],"P1S4.LOGIT_PROB":["Logit ≠ probabilité","pieges"],"P1S4.GREEDY_GLOBAL":["Greedy = argmax local","pieges"],"P1S4.TEMP":["Température et distribution","exemple"],"P1S4.TOPP":["Top-p = masse cumulée","filters"],"P1S4.TEMP_TRUTH":["Température basse ≠ factualité","truth"],"P1S4.AUTOREGRESSIVE":["Chaque token devient du contexte","loop"],"HALL.FLUENCY_TRUTH":["Fluidité ≠ factualité","pieges"],"HALL.CALIBRATION":["Confiance verbale ≠ calibration","calibration"],"HALL.VERIFICATION":["Auto-révision ≠ preuve indépendante","scenarios"],"HALL.ABSTENTION":["Clarification ou abstention","abstention"],"HALL.CITATION":["Citation ≠ preuve pertinente","pieges"],"HALL.NO_EVIDENCE":["Absence de preuve ≠ contradiction","pieges"],"RAG.CHUNKING":["Chunking : taille, frontières, overlap","definitions"],"RAG.ANN":["ANN = compromis vitesse / recall","pieges"],"RAG.RERANK":["Reranker : candidats déjà récupérés","pieges"],"RAG.RECALL":["Recall = couverture, pas vérité","metrics-intro"],"RAG.HYBRID":["Lexical + vectoriel","exemple"],"RAG.RETRIEVAL_GENERATION":["Retrieval ≠ génération","synthese"],"P2S1.VAGUE":["Objectif vague ≠ liberté utile","intuition"],"P2S1.LONGER":["Prompt long ≠ prompt meilleur","pieges"],"P2S1.ROLE_MAGIC":["Rôle ≠ garantie de compétence","pieges"],"P2S1.FORMAT":["Format demandé ≠ validité garantie","pieges"],"P2S1.CONTEXT":["Plus de contexte ≠ meilleur contexte","pieges"],"P2S1.CRITERIA":["Critère de réussite observable","definitions"]};
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function ensure(s){s.version=2;s.modules=s.modules||{};s.modules[MODULE]=s.modules[MODULE]||{};s.misconceptions=s.misconceptions||{};s.preferences=s.preferences||{progressive:true};return s}
+function addMis(s,id,source){if(!id)return;const old=s.misconceptions[id]||{},meta=META[id]||[id,""];s.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),resolvedAt:null,module:MODULE,label:meta[0],anchor:meta[1],source:source}}function resolveMis(s,id,source){if(!id||!s.misconceptions[id])return;s.misconceptions[id].resolvedAt=new Date().toISOString();s.misconceptions[id].resolvedSource=source}
+function mastery(s){const m=s.modules[MODULE]||{},qr=m.quiz?m.quiz.score/m.quiz.total:0,tr=m.transfer?m.transfer.score/m.transfer.total:0,had=m.mastery?.status==="mastered",ok=qr>=.8&&tr>=.8;m.mastery=m.mastery||{};if(ok){m.mastery.status="mastered";if(!m.mastery.masteredAt)m.mastery.masteredAt=new Date().toISOString();if(!m.review?.nextDue){const next=new Date(Date.now()+86400000).toISOString();m.review={level:0,nextDue:next,lastAt:null,lastScore:null}}}else if(m.quiz||m.transfer)m.mastery.status="evidence";else m.mastery.status="learning";s.modules[MODULE]=m;return ok}
+function saveQuiz(){const form=document.getElementById("quizForm");if(!form)return;const qs=[...form.querySelectorAll(".q")];let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();qs.forEach((q,i)=>{const id=QUIZ_MIS[i];seen.add(id);const c=q.querySelector("input:checked"),ok=!!c&&c.value===q.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-quiz"):resolveMis(s,id,"module-quiz"));s.modules[MODULE].quiz={score,total:qs.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
+function saveTransfer(){const cards=[...document.querySelectorAll(".transfer-card")];if(!cards.length)return;let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();cards.forEach((c,i)=>{const id=TRANSFER_MIS[i];seen.add(id);const sel=c.querySelector("select"),ok=!!sel&&sel.value===c.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-transfer"):resolveMis(s,id,"module-transfer"));s.modules[MODULE].transfer={score,total:cards.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
+function saveSelf(){const boxes=[...document.querySelectorAll(".criteria input[type=checkbox]")];if(!boxes.length)return;const s=ensure(load());s.modules[MODULE].selfExplanation={checked:boxes.filter(x=>x.checked).length,total:boxes.length,at:new Date().toISOString()};save(s)}
+const form=document.getElementById("quizForm");if(form)form.addEventListener("submit",saveQuiz);
+const transferBtn=document.getElementById("checkTransfer");if(transferBtn)transferBtn.addEventListener("click",saveTransfer);
+document.querySelectorAll(".criteria input[type=checkbox]").forEach(x=>x.addEventListener("change",saveSelf));
+let currentStep=0;
+const segments=[...document.querySelectorAll("main > section.section")].filter(x=>!x.classList.contains("trainer-only"));
+window.LATENT_STEP_REGISTRY=segments;
+segments.forEach((seg,i)=>{seg.dataset.step=String(i+1);const badge=seg.querySelector(".section-head .num,.section-head .section-num");if(badge){badge.textContent=String(i+1).padStart(2,"0");badge.dataset.stepNumber=String(i+1)}});
+let allVisible=false,unlocked=0;
+function roleTrainer(){return localStorage.getItem("formation-llm-role")==="trainer"}
+function initialUnlock(){const s=ensure(load()),mod=s.modules[MODULE]||{},saved=mod.progressiveStepIndex,legacy=mod.progressiveIndex,route=s.diagnostic?.routes?.[MODULE],fastIndex=Math.max(0,segments.findIndex(x=>x.dataset.pedagogy==="worked-example"));unlocked=Number.isInteger(saved)?saved:Number.isInteger(legacy)?Math.max(0,legacy-1):(route==="fast"?fastIndex:route==="normal"?1:0);if(location.hash){const target=document.querySelector(location.hash);if(target){const seg=target.closest("section.section");const idx=segments.indexOf(seg);if(idx>=0){unlocked=Math.max(unlocked,idx);currentStep=idx}}}unlocked=Math.min(Math.max(unlocked,0),Math.max(0,segments.length-1));currentStep=Math.min(Math.max(currentStep,0),unlocked);}
+function applySegments(){const s=ensure(load()),guided=s.preferences.progressive!==false&&!roleTrainer()&&!allVisible;segments.forEach((seg,i)=>{seg.hidden=guided&&i>unlocked});document.querySelectorAll(".next-step,.footer").forEach(x=>x.hidden=guided&&unlocked<segments.length-1);s.modules[MODULE].progressiveStepIndex=unlocked;s.modules[MODULE].progressiveIndex=unlocked+1;s.lastActivity={module:MODULE,anchor:location.hash||"",at:new Date().toISOString()};save(s);updateGuide()}
+function next(){if(unlocked<segments.length-1){unlocked++;currentStep=unlocked;applySegments();segments[unlocked]?.scrollIntoView({behavior:"smooth",block:"start"})}}
+function toggleAll(){allVisible=!allVisible;applySegments()}
+const guide=document.createElement("div");guide.className="learning-guide";guide.innerHTML='<div><strong id="learningGuideTitle">Guidage adaptatif</strong><small id="learningGuideMeta"></small></div><div class="learning-guide-actions"><button type="button" id="learningAll">Tout afficher</button><button type="button" class="primary-learning" id="learningNext">Continuer →</button></div>';
+const anchor=document.querySelector(".journey")||document.querySelector(".hero");if(anchor)anchor.insertAdjacentElement("afterend",guide);
+document.getElementById("learningNext")?.addEventListener("click",next);document.getElementById("learningAll")?.addEventListener("click",toggleAll);
+function updateGuide(){const s=ensure(load()),m=s.modules[MODULE]||{},status=m.mastery?.status,route=s.diagnostic?.routes?.[MODULE],meta=document.getElementById("learningGuideMeta"),title=document.getElementById("learningGuideTitle");if(!meta||!title)return;title.innerHTML=status==="mastered"?'<span class="learning-mastered">✓ Maîtrise démontrée</span>':"Guidage adaptatif";const prefix=route==="fast"?"Voie rapide issue du diagnostic · ":route==="full"?"Guidage complet recommandé · ":"",stepText="étape "+String(Math.min(currentStep+1,segments.length)).padStart(2,"0")+" / "+String(segments.length).padStart(2,"0");meta.textContent=prefix+stepText+(allVisible||roleTrainer()?" · page complète":"");const n=document.getElementById("learningNext");if(n)n.hidden=allVisible||roleTrainer()||unlocked>=segments.length-1;const a=document.getElementById("learningAll");if(a)a.textContent=allVisible?"Revenir au guidage":"Tout afficher"}
+window.addEventListener("latent:stepchange",e=>{const i=e.detail?.index;if(Number.isInteger(i)&&i>=0&&i<segments.length){currentStep=i;updateGuide()}});
+const trainerToggle=document.getElementById("trainerBtn");if(trainerToggle)trainerToggle.addEventListener("click",function(){setTimeout(function(){applySegments();updateGuide()},0)});initialUnlock();applySegments();
+})();
+</script><script data-latent-nav="v2">
+(function(){"use strict";
+const sections=window.LATENT_STEP_REGISTRY||[...document.querySelectorAll("main > section.section")].filter(s=>!s.classList.contains("trainer-only"));
+if(!sections.length)return;
+const nav=document.createElement("nav");nav.className="layer-nav";nav.setAttribute("aria-label","Sections du module");
+const buttons=sections.map((section,i)=>{const b=document.createElement("button");b.type="button";const number=String(i+1).padStart(2,"0");b.textContent=number;const title=section.querySelector("h2,h3")?.textContent?.trim()||("Section "+number);b.title=title;b.setAttribute("aria-label",number+". "+title);b.addEventListener("click",()=>{if(!section.hidden){window.dispatchEvent(new CustomEvent("latent:stepchange",{detail:{index:i,total:sections.length}}));section.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}});nav.appendChild(b);return b});
+document.body.appendChild(nav);
+function syncLocks(){sections.forEach((s,i)=>buttons[i].disabled=!!s.hidden)}
+syncLocks();
+new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
+function setCurrent(idx){if(idx<0||idx>=sections.length)return;buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"));window.dispatchEvent(new CustomEvent("latent:stepchange",{detail:{index:idx,total:sections.length}}))}
+if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;setCurrent(sections.indexOf(visible.target))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
+const hashTarget=location.hash?document.querySelector(location.hash):null,hashIndex=hashTarget?sections.indexOf(hashTarget.closest("section.section")):-1;setCurrent(hashIndex>=0?hashIndex:0);
+})();
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+<script data-completion-guard="v1">
+(function(){
+ "use strict";
+ const section=document.getElementById("completer");
+ const button=document.getElementById("checkCompletion");
+ const feedback=document.getElementById("completionFeedback");
+ if(!section||!button)return;
+ const fields=[...section.querySelectorAll("select")];
+ fields.forEach(field=>field.setAttribute("required",""));
+ button.addEventListener("click",function(e){
+   const missing=fields.filter(field=>!field.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(feedback){
+     feedback.classList.add("show");
+     feedback.textContent=missing.length+" choix restant"+(missing.length>1?"s":"")+" avant vérification.";
+   }
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
+</html>

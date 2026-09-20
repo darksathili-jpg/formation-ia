@@ -4,7 +4,7 @@ const pages=[
  'index.html','diagnostic.html','review.html',
  'modules/domaine-a.html','modules/domaine-b.html','modules/domaine-c.html',
  'modules/transformer-block-lab.html','modules/sampling-lab.html',
- 'modules/hallucination-lab.html','modules/rag-lab.html'
+ 'modules/hallucination-lab.html','modules/rag-lab.html','modules/dialoguer-specifier.html'
 ];
 const errors=[];
 for(const page of pages){

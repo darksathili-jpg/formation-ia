@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "updated_on": "2026-09-20",
   "policy": {
     "new_modules_must_be_novice_ready": true,
@@ -69,6 +69,15 @@
       "priority": 7,
       "reviewed_on": "2026-09-20",
       "notes": "RAG reconstruit : chunking, retrieval, ANN, hybride, reranking et métriques introduits avant le lab, exemple manuel, transfert et synthèse."
+    },
+    {
+      "path": "modules/dialoguer-specifier.html",
+      "label": "Parcours 2 — Spécifier une tâche",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 8,
+      "reviewed_on": "2026-09-20",
+      "notes": "Premier module natif post-gel V1 : spécification de tâche, Prompt Builder, misconceptions sur rôle/longueur/contexte/format, récupération et transfert."
     }
   ]
 }

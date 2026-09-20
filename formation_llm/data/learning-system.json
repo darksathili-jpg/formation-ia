@@ -218,6 +218,45 @@
       ]
     },
     {
+      "id": "P2S1",
+      "label": "Parcours 2 · Spécifier une tâche",
+      "href": "modules/dialoguer-specifier.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P2S1.VAGUE",
+          "label": "Objectif vague ≠ liberté utile",
+          "anchor": "intuition"
+        },
+        {
+          "id": "P2S1.LONGER",
+          "label": "Prompt long ≠ prompt meilleur",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S1.ROLE_MAGIC",
+          "label": "Rôle ≠ garantie de compétence",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S1.FORMAT",
+          "label": "Format demandé ≠ validité garantie",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S1.CONTEXT",
+          "label": "Plus de contexte ≠ meilleur contexte",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S1.CRITERIA",
+          "label": "Critère de réussite observable",
+          "anchor": "definitions"
+        }
+      ]
+    },
+    {
       "id": "HALL",
       "label": "Parcours 3 · Hallucination",
       "href": "modules/hallucination-lab.html",
@@ -619,6 +658,28 @@
       "module": "RAG",
       "misconception": "RAG.RETRIEVAL_GENERATION",
       "q": "Recall@k=1 garantit-il que la réponse générée utilisera correctement les preuves ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P2S1-1",
+      "module": "P2S1",
+      "misconception": "P2S1.LONGER",
+      "q": "Un prompt plus long est-il nécessairement meilleur ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P2S1-2",
+      "module": "P2S1",
+      "misconception": "P2S1.FORMAT",
+      "q": "Demander une sortie JSON suffit-il à garantir qu'elle sera structurellement valide ?",
       "choices": [
         "Oui",
         "Non"
