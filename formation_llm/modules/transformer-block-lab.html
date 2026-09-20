@@ -386,6 +386,15 @@ html:not(.projector) .stage .n{
 [data-theme="dark"] .journey-card .k{color:#89d9cf!important}
 html.projector .journey-card .k{color:#245c62!important}
 </style>
+<style data-completion-ux="v1">
+#completer select{min-height:44px}
+#completionFeedback[role="status"]{line-height:1.4}
+@media(max-width:650px){
+ #completer .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #completer .actions button{width:100%!important;min-width:0!important}
+ #completionFeedback.show{min-height:44px;display:flex;align-items:center}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -430,7 +439,7 @@ html.projector .journey-card .k{color:#245c62!important}
 <div class="completion-row"><strong>Après Attention(x)</strong><span class="arrow">→</span><select data-answer="res1"><option value="">Choisir…</option><option value="res1">Ajouter x : résiduel</option><option value="tokenize">Retokeniser</option><option value="softmax">Softmax vocabulaire</option></select></div>
 <div class="completion-row"><strong>Après Norm(x₁)</strong><span class="arrow">→</span><select data-answer="mlp"><option value="">Choisir…</option><option value="mlp">MLP / feed-forward</option><option value="qkv">Recréer le tokenizer</option><option value="rag">Faire du retrieval</option></select></div>
 <div class="completion-row"><strong>Après MLP</strong><span class="arrow">→</span><select data-answer="res2"><option value="">Choisir…</option><option value="res2">Deuxième résiduel</option><option value="output">Réponse texte immédiate</option><option value="memory">Mémoire applicative</option></select></div>
-<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback"></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
 </div></section>
 
 <section class="section" data-pedagogy="guided-practice" id="position"><div class="section-head"><div class="num">05</div><div><h2>Position Lab — pourquoi l’ordre doit entrer dans le calcul</h2><p>Comparez « Le chien mord l’homme » et « L’homme mord le chien ».</p></div></div>
@@ -585,6 +594,27 @@ if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>
    if(!missing.length)return;
    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
    say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+<script data-completion-guard="v1">
+(function(){
+ "use strict";
+ const section=document.getElementById("completer");
+ const button=document.getElementById("checkCompletion");
+ const feedback=document.getElementById("completionFeedback");
+ if(!section||!button)return;
+ const fields=[...section.querySelectorAll("select")];
+ fields.forEach(field=>field.setAttribute("required",""));
+ button.addEventListener("click",function(e){
+   const missing=fields.filter(field=>!field.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(feedback){
+     feedback.classList.add("show");
+     feedback.textContent=missing.length+" choix restant"+(missing.length>1?"s":"")+" avant vérification.";
+   }
    missing[0].focus();
  },true);
 })();

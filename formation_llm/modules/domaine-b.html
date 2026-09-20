@@ -405,6 +405,15 @@ html:not(.projector) .stage .n{
 [data-theme="dark"] .journey-card .k{color:#89d9cf!important}
 html.projector .journey-card .k{color:#245c62!important}
 </style>
+<style data-completion-ux="v1">
+#completer select{min-height:44px}
+#completionFeedback[role="status"]{line-height:1.4}
+@media(max-width:650px){
+ #completer .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #completer .actions button{width:100%!important;min-width:0!important}
+ #completionFeedback.show{min-height:44px;display:flex;align-items:center}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -496,7 +505,7 @@ html.projector .journey-card .k{color:#245c62!important}
 <div class="completion-row"><strong>4317</strong><span class="arrow">→</span><select data-answer="id"><option value="">Quel objet ?</option><option value="token">Token</option><option value="id">ID de token</option><option value="context">Contexte</option></select></div>
 <div class="completion-row"><strong>[0.41, -0.09, 0.72, …]</strong><span class="arrow">→</span><select data-answer="embedding"><option value="">Quel objet ?</option><option value="id">ID</option><option value="embedding">Vecteur / embedding</option><option value="word">Mot brut</option></select></div>
 <div class="completion-row"><strong>séquence accessible au calcul courant</strong><span class="arrow">→</span><select data-answer="context"><option value="">Quel objet ?</option><option value="context">Fenêtre de contexte</option><option value="memory">Poids du modèle</option><option value="token">Token unique</option></select></div>
-<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback"></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
 </div>
 </section>
 
@@ -704,6 +713,27 @@ if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>
    if(!missing.length)return;
    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
    say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+<script data-completion-guard="v1">
+(function(){
+ "use strict";
+ const section=document.getElementById("completer");
+ const button=document.getElementById("checkCompletion");
+ const feedback=document.getElementById("completionFeedback");
+ if(!section||!button)return;
+ const fields=[...section.querySelectorAll("select")];
+ fields.forEach(field=>field.setAttribute("required",""));
+ button.addEventListener("click",function(e){
+   const missing=fields.filter(field=>!field.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(feedback){
+     feedback.classList.add("show");
+     feedback.textContent=missing.length+" choix restant"+(missing.length>1?"s":"")+" avant vérification.";
+   }
    missing[0].focus();
  },true);
 })();

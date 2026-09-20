@@ -91,6 +91,13 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(html.includes('querySelectorAll("[data-answer]")')) errors.push(page+': activité de complétion utilise encore un sélecteur global data-answer');
  if(html.includes('id="completer"')&&html.includes('id="checkCompletion"')&&!html.includes('querySelectorAll("#completer [data-answer]")')&&!page.endsWith('domaine-a.html')) errors.push(page+': activité de complétion non limitée à sa propre section');
 }
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-completion-ux="v1"')||!html.includes('data-completion-guard="v1"')) errors.push(page+': garde-fou de complétion incomplète absent');
+ if(!html.includes('id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"')) errors.push(page+': feedback de complétion non annoncé');
+ if(!html.includes('#completer select{min-height:44px}')) errors.push(page+': sélecteurs de complétion trop petits');
+ if(!html.includes('choix restant"+(missing.length>1?"s":"")+" avant vérification.')) errors.push(page+': complétion vide encore comptée comme erreur');
+}
 
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');
