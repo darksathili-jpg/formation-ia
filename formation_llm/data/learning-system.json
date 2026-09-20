@@ -374,6 +374,50 @@
       ]
     },
     {
+      "id": "P2S5",
+      "label": "Parcours 2 · Décomposer et piloter une tâche complexe",
+      "href": "modules/dialoguer-tache-complexe.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P2S5.MORE_STEPS",
+          "label": "Plus d’étapes ≠ meilleur plan",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S5.PARALLEL",
+          "label": "Plusieurs sous-tâches ≠ parallélisables",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S5.DEPENDENCY",
+          "label": "Dépendance impose un ordre",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P2S5.CHECKPOINT",
+          "label": "Plan ≠ exécution validée",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S5.STOP",
+          "label": "Boucle sans critère d’arrêt",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P2S5.REVALIDATE",
+          "label": "Changement amont → revalidation ciblée",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S5.BLOCKER",
+          "label": "Information bloquante avant planification",
+          "anchor": "definitions"
+        }
+      ]
+    },
+    {
       "id": "HALL",
       "label": "Parcours 3 · Hallucination",
       "href": "modules/hallucination-lab.html",
@@ -868,6 +912,28 @@
         "Non"
       ],
       "answer": 1
+    },
+    {
+      "id": "R-P2S5-1",
+      "module": "P2S5",
+      "misconception": "P2S5.PARALLEL",
+      "q": "Deux sous-tâches indépendantes doivent-elles forcément être exécutées l’une après l’autre ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P2S5-2",
+      "module": "P2S5",
+      "misconception": "P2S5.STOP",
+      "q": "Un workflow d’amélioration sans critère d’arrêt explicite peut-il tourner inutilement en boucle ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
     }
   ]
 }
