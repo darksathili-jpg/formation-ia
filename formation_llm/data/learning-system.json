@@ -296,6 +296,45 @@
       ]
     },
     {
+      "id": "P2S3",
+      "label": "Parcours 2 · Tester et itérer un prompt",
+      "href": "modules/dialoguer-iterer.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P2S3.FEEL",
+          "label": "« Ça semble mieux » ≠ preuve",
+          "anchor": "intuition"
+        },
+        {
+          "id": "P2S3.MULTI_CHANGE",
+          "label": "Plusieurs changements ≠ cause identifiable",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S3.TEST_SET",
+          "label": "Jeu de tests : représentativité > volume",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P2S3.REGRESSION",
+          "label": "Amélioration locale peut créer une régression",
+          "anchor": "exemple"
+        },
+        {
+          "id": "P2S3.OVERFIT",
+          "label": "Optimiser les tests visibles ≠ généraliser",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S3.SCORE_ONLY",
+          "label": "Score agrégé ≠ analyse des erreurs",
+          "anchor": "pieges"
+        }
+      ]
+    },
+    {
       "id": "HALL",
       "label": "Parcours 3 · Hallucination",
       "href": "modules/hallucination-lab.html",
@@ -741,6 +780,28 @@
       "module": "P2S2",
       "misconception": "P2S2.FORMAT_TRUTH",
       "q": "Une sortie conforme à un schéma structuré garantit-elle que les faits qu’elle contient sont vrais ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P2S3-1",
+      "module": "P2S3",
+      "misconception": "P2S3.REGRESSION",
+      "q": "Un cas fautif passe après une modification. Faut-il aussi rejouer les anciens cas réussis ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-P2S3-2",
+      "module": "P2S3",
+      "misconception": "P2S3.OVERFIT",
+      "q": "Copier tous les cas d’évaluation dans le prompt comme exemples conserve-t-il une mesure indépendante de généralisation ?",
       "choices": [
         "Oui",
         "Non"
