@@ -116,7 +116,7 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
 for(const page of pages.filter(p=>p.startsWith('modules/'))){
  const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
  if(html.includes('querySelectorAll("[data-answer]")')) errors.push(page+': activité de complétion utilise encore un sélecteur global data-answer');
- if(html.includes('id="completer"')&&html.includes('id="checkCompletion"')&&!html.includes('querySelectorAll("#completer [data-answer]")')&&!page.endsWith('domaine-a.html')) errors.push(page+': activité de complétion non limitée à sa propre section');
+ if(html.includes('id="completer"')&&html.includes('id="checkCompletion"')&&!html.includes('querySelectorAll("#completer [data-answer]")')&&!html.includes('querySelectorAll("#completer [data-completion]")')) errors.push(page+': activité de complétion non limitée à sa propre section');
 }
 for(const page of pages.filter(p=>p.startsWith('modules/'))){
  const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
