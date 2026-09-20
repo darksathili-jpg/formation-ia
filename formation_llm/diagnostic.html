@@ -60,6 +60,38 @@ button,.primary,.secondary,.tool,.back,.recommend a{min-height:44px}
  .recommend-actions a{width:100%}
 }
 </style>
+<script data-latent-safe-storage="v1">
+(function(){
+ "use strict";
+ const memory=new Map();
+ function usable(name){
+  try{
+   const store=window[name],key="__latent_storage_probe__";
+   store.setItem(key,"1");store.removeItem(key);return store;
+  }catch(e){return null}
+ }
+ const local=usable("localStorage"),session=usable("sessionStorage"),primary=local||session;
+ window.LATENT_STORAGE={
+  mode:local?"local":session?"session":"memory",
+  get(key){
+   let value=null;
+   try{if(primary)value=primary.getItem(key)}catch(e){}
+   if(value!==null)return value;
+   return memory.has(key)?memory.get(key):null;
+  },
+  set(key,value){
+   const v=String(value);memory.set(key,v);
+   try{if(primary){primary.setItem(key,v);return true}}catch(e){}
+   return false;
+  },
+  remove(key){
+   memory.delete(key);
+   try{if(primary)primary.removeItem(key)}catch(e){}
+  }
+ };
+ document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
+})();
+</script>
 </head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent">
 <div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
 <section class="hero"><div class="eyebrow">LATENT / PLACEMENT VECTOR · Diagnostic non noté</div><h1>Où commencer ?</h1><p class="lead">15 questions courtes servent uniquement à doser le guidage. Elles ne donnent aucun badge de maîtrise et ne vous empêchent jamais d’ouvrir un module.</p></section>
@@ -73,9 +105,9 @@ const questions=[["D-A1","A","A.MODEL_APP","Un assistant conversationnel peut ut
 const labels={"A":"Parcours 0 · Fondamentaux","B":"Parcours 1 · Tokens & contexte","C":"Parcours 1 · Attention","P1S3":"Parcours 1 · Bloc Transformer","P1S4":"Parcours 1 · Sampling"};
 const hrefs={A:"modules/domaine-a.html",B:"modules/domaine-b.html",C:"modules/domaine-c.html",P1S3:"modules/transformer-block-lab.html",P1S4:"modules/sampling-lab.html"};
 let i=0,answers={};
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
-function save(x){localStorage.setItem(KEY,JSON.stringify(x))}
-function theme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}const st=localStorage.getItem("formation-llm-theme");if(st)theme(st);document.getElementById("themeBtn").onclick=()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+function load(){try{return JSON.parse(window.LATENT_STORAGE.get(KEY)||"{}")}catch(e){return{}}}
+function save(x){window.LATENT_STORAGE.set(KEY,JSON.stringify(x))}
+function theme(t){document.documentElement.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}const st=window.LATENT_STORAGE.get("formation-llm-theme");if(st)theme(st);document.getElementById("themeBtn").onclick=()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark");
 function render(){const x=questions[i];document.getElementById("bar").style.width=((i+1)/questions.length*100)+"%";document.getElementById("qmeta").textContent=(i+1)+" / "+questions.length+" · "+labels[x[1]];document.getElementById("question").textContent=x[3];const c=document.getElementById("choices");c.innerHTML="";x[4].forEach((v,n)=>{const l=document.createElement("label");l.className="choice";l.innerHTML='<input type="radio" name="answer" value="'+n+'" '+(answers[x[0]]===n?"checked":"")+'> <span>'+v+'</span>';c.appendChild(l)});document.getElementById("prev").disabled=i===0;document.getElementById("next").textContent=i===questions.length-1?"Analyser mon diagnostic":"Suivant →"}
 function record(){const c=document.querySelector('input[name="answer"]:checked');if(c)answers[questions[i][0]]=Number(c.value);return !!c}
 document.getElementById("prev").onclick=()=>{record();if(i>0){i--;render()}};

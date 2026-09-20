@@ -442,6 +442,38 @@ html.projector .journey-card .k{color:#245c62!important}
 }
 html.projector #builder .criteria label{color:#000000!important}
 </style>
+<script data-latent-safe-storage="v1">
+(function(){
+ "use strict";
+ const memory=new Map();
+ function usable(name){
+  try{
+   const store=window[name],key="__latent_storage_probe__";
+   store.setItem(key,"1");store.removeItem(key);return store;
+  }catch(e){return null}
+ }
+ const local=usable("localStorage"),session=usable("sessionStorage"),primary=local||session;
+ window.LATENT_STORAGE={
+  mode:local?"local":session?"session":"memory",
+  get(key){
+   let value=null;
+   try{if(primary)value=primary.getItem(key)}catch(e){}
+   if(value!==null)return value;
+   return memory.has(key)?memory.get(key):null;
+  },
+  set(key,value){
+   const v=String(value);memory.set(key,v);
+   try{if(primary){primary.setItem(key,v);return true}}catch(e){}
+   return false;
+  },
+  remove(key){
+   memory.delete(key);
+   try{if(primary)primary.removeItem(key)}catch(e){}
+  }
+ };
+ document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
+})();
+</script>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -605,11 +637,11 @@ html.projector #builder .criteria label{color:#000000!important}
 (function(){
 "use strict";
 var root=document.documentElement,body=document.body;
-function applyTheme(t){root.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
-var saved=localStorage.getItem("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
+function applyTheme(t){root.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}
+var saved=window.LATENT_STORAGE.get("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";localStorage.setItem("formation-llm-role",on?"trainer":"student")}
-setTrainerMode(localStorage.getItem("formation-llm-role")==="trainer");
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}
+setTrainerMode(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");
 document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
 function setProjectorMode(on){root.classList.toggle("projector",on);var btn=document.getElementById("projectorBtn");btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection"}
 document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!root.classList.contains("projector"))});
@@ -636,8 +668,8 @@ document.getElementById("checkTransfer").addEventListener("click",function(){var
 </script><script data-learning-system="v2" data-step-registry="v1">
 (function(){"use strict";
 const KEY="formation-llm-learning-v2",MODULE="P2S1",QUIZ_MIS=["P2S1.VAGUE","P2S1.CONTEXT","P2S1.CRITERIA","P2S1.FORMAT","P2S1.LONGER","P2S1.ROLE_MAGIC"],TRANSFER_MIS=["P2S1.CONTEXT","P2S1.CRITERIA","P2S1.FORMAT","P2S1.VAGUE"],META={"A.MODEL_APP":["Modèle ≠ application","exemple"],"A.PARAMETERS":["Paramètres ≠ base documentaire","pieges"],"A.OPENNESS":["Open weights ≠ open source","pieges"],"A.GPAI":["GPAI : catégorie juridique européenne","definitions"],"A.LM_LLM":["Modèle de langage ≠ LLM moderne","definitions"],"B.TOKEN_WORD":["Token ≠ mot","pieges"],"B.ID_SEMANTICS":["ID ≠ sens","pieges"],"B.EMBEDDING_CONTEXT":["Embedding initial ≠ représentation contextualisée","synthese"],"B.COSINE_TRUTH":["Cosinus ≠ vérité","pieges"],"B.CONTEXT_MEMORY":["Contexte ≠ mémoire","contexte"],"B.SUBWORD":["Pourquoi les sous-mots","definitions"],"C.QKV_OBJECTS":["Q/K/V sont des vecteurs","qkv"],"C.DOT_PROB":["Q·K ≠ probabilité","pieges"],"C.SCALING":["Rôle de √dₖ","exemple"],"C.SOFTMAX":["Softmax d’attention = poids locaux","exemple"],"C.CAUSAL":["Masque causal et futur interdit","masque"],"C.ATTENTION_TRUTH":["Poids d’attention ≠ vérité","pieges"],"P1S3.ATTENTION_ONLY":["Transformer ≠ attention seule","intuition"],"P1S3.MLP":["Attention communique, MLP transforme","mlp"],"P1S3.RESIDUAL":["Connexion résiduelle x + F(x)","exemple"],"P1S3.POSITION":["Rôle de la position / RoPE","position"],"P1S3.KV_MEMORY":["KV cache ≠ mémoire applicative","pieges"],"P1S3.STACK":["Les représentations évoluent bloc après bloc","stack"],"P1S4.LOGIT_PROB":["Logit ≠ probabilité","pieges"],"P1S4.GREEDY_GLOBAL":["Greedy = argmax local","pieges"],"P1S4.TEMP":["Température et distribution","exemple"],"P1S4.TOPP":["Top-p = masse cumulée","filters"],"P1S4.TEMP_TRUTH":["Température basse ≠ factualité","truth"],"P1S4.AUTOREGRESSIVE":["Chaque token devient du contexte","loop"],"HALL.FLUENCY_TRUTH":["Fluidité ≠ factualité","pieges"],"HALL.CALIBRATION":["Confiance verbale ≠ calibration","calibration"],"HALL.VERIFICATION":["Auto-révision ≠ preuve indépendante","scenarios"],"HALL.ABSTENTION":["Clarification ou abstention","abstention"],"HALL.CITATION":["Citation ≠ preuve pertinente","pieges"],"HALL.NO_EVIDENCE":["Absence de preuve ≠ contradiction","pieges"],"RAG.CHUNKING":["Chunking : taille, frontières, overlap","definitions"],"RAG.ANN":["ANN = compromis vitesse / recall","pieges"],"RAG.RERANK":["Reranker : candidats déjà récupérés","pieges"],"RAG.RECALL":["Recall = couverture, pas vérité","metrics-intro"],"RAG.HYBRID":["Lexical + vectoriel","exemple"],"RAG.RETRIEVAL_GENERATION":["Retrieval ≠ génération","synthese"],"P2S1.VAGUE":["Objectif vague ≠ liberté utile","intuition"],"P2S1.LONGER":["Prompt long ≠ prompt meilleur","pieges"],"P2S1.ROLE_MAGIC":["Rôle ≠ garantie de compétence","pieges"],"P2S1.FORMAT":["Format demandé ≠ validité garantie","pieges"],"P2S1.CONTEXT":["Plus de contexte ≠ meilleur contexte","pieges"],"P2S1.CRITERIA":["Critère de réussite observable","definitions"]};
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
-function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function load(){try{return JSON.parse(window.LATENT_STORAGE.get(KEY)||"{}")}catch(e){return{}}}
+function save(s){try{window.LATENT_STORAGE.set(KEY,JSON.stringify(s))}catch(e){}}
 function ensure(s){s.version=2;s.modules=s.modules||{};s.modules[MODULE]=s.modules[MODULE]||{};s.misconceptions=s.misconceptions||{};s.preferences=s.preferences||{progressive:true};return s}
 function addMis(s,id,source){if(!id)return;const old=s.misconceptions[id]||{},meta=META[id]||[id,""];s.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),resolvedAt:null,module:MODULE,label:meta[0],anchor:meta[1],source:source}}function resolveMis(s,id,source){if(!id||!s.misconceptions[id])return;s.misconceptions[id].resolvedAt=new Date().toISOString();s.misconceptions[id].resolvedSource=source}
 function mastery(s){const m=s.modules[MODULE]||{},qr=m.quiz?m.quiz.score/m.quiz.total:0,tr=m.transfer?m.transfer.score/m.transfer.total:0,had=m.mastery?.status==="mastered",ok=qr>=.8&&tr>=.8;m.mastery=m.mastery||{};if(ok){m.mastery.status="mastered";if(!m.mastery.masteredAt)m.mastery.masteredAt=new Date().toISOString();if(!m.review?.nextDue){const next=new Date(Date.now()+86400000).toISOString();m.review={level:0,nextDue:next,lastAt:null,lastScore:null}}}else if(m.quiz||m.transfer)m.mastery.status="evidence";else m.mastery.status="learning";s.modules[MODULE]=m;return ok}
@@ -652,7 +684,7 @@ const segments=[...document.querySelectorAll("main > section.section")].filter(x
 window.LATENT_STEP_REGISTRY=segments;
 segments.forEach((seg,i)=>{seg.dataset.step=String(i+1);const badge=seg.querySelector(".section-head .num,.section-head .section-num");if(badge){badge.textContent=String(i+1).padStart(2,"0");badge.dataset.stepNumber=String(i+1)}});
 let allVisible=false,unlocked=0;
-function roleTrainer(){return localStorage.getItem("formation-llm-role")==="trainer"}
+function roleTrainer(){return window.LATENT_STORAGE.get("formation-llm-role")==="trainer"}
 function initialUnlock(){const s=ensure(load()),mod=s.modules[MODULE]||{},saved=mod.progressiveStepIndex,legacy=mod.progressiveIndex,route=s.diagnostic?.routes?.[MODULE],fastIndex=Math.max(0,segments.findIndex(x=>x.dataset.pedagogy==="worked-example"));unlocked=Number.isInteger(saved)?saved:Number.isInteger(legacy)?Math.max(0,legacy-1):(route==="fast"?fastIndex:route==="normal"?1:0);if(location.hash){const target=document.querySelector(location.hash);if(target){const seg=target.closest("section.section");const idx=segments.indexOf(seg);if(idx>=0){unlocked=Math.max(unlocked,idx);currentStep=idx}}}unlocked=Math.min(Math.max(unlocked,0),Math.max(0,segments.length-1));currentStep=Math.min(Math.max(currentStep,0),unlocked);}
 function applySegments(){const s=ensure(load()),guided=s.preferences.progressive!==false&&!roleTrainer()&&!allVisible;segments.forEach((seg,i)=>{seg.hidden=guided&&i>unlocked});document.querySelectorAll(".next-step,.footer").forEach(x=>x.hidden=guided&&unlocked<segments.length-1);s.modules[MODULE].progressiveStepIndex=unlocked;s.modules[MODULE].progressiveIndex=unlocked+1;s.lastActivity={module:MODULE,anchor:location.hash||"",at:new Date().toISOString()};save(s);updateGuide()}
 function next(){if(unlocked<segments.length-1){unlocked++;currentStep=unlocked;applySegments();segments[unlocked]?.scrollIntoView({behavior:"smooth",block:"start"})}}

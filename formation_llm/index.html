@@ -331,6 +331,38 @@ html:not(.projector) .hero-panel{
 html:not(.projector) #learningSequence .module:after{background:#173a42!important}
 html:not(.projector) .module-actions .open{background:#173a42!important}
 </style>
+<script data-latent-safe-storage="v1">
+(function(){
+ "use strict";
+ const memory=new Map();
+ function usable(name){
+  try{
+   const store=window[name],key="__latent_storage_probe__";
+   store.setItem(key,"1");store.removeItem(key);return store;
+  }catch(e){return null}
+ }
+ const local=usable("localStorage"),session=usable("sessionStorage"),primary=local||session;
+ window.LATENT_STORAGE={
+  mode:local?"local":session?"session":"memory",
+  get(key){
+   let value=null;
+   try{if(primary)value=primary.getItem(key)}catch(e){}
+   if(value!==null)return value;
+   return memory.has(key)?memory.get(key):null;
+  },
+  set(key,value){
+   const v=String(value);memory.set(key,v);
+   try{if(primary){primary.setItem(key,v);return true}}catch(e){}
+   return false;
+  },
+  remove(key){
+   memory.delete(key);
+   try{if(primary)primary.removeItem(key)}catch(e){}
+  }
+ };
+ document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
+})();
+</script>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -431,8 +463,8 @@ const MIS_META={
 "P2S1.VAGUE":["Objectif vague ≠ liberté utile","P2S1","intuition"],"P2S1.LONGER":["Prompt long ≠ prompt meilleur","P2S1","pieges"],"P2S1.ROLE_MAGIC":["Rôle ≠ garantie de compétence","P2S1","pieges"],"P2S1.FORMAT":["Format demandé ≠ validité garantie","P2S1","pieges"],"P2S1.CONTEXT":["Plus de contexte ≠ meilleur contexte","P2S1","pieges"],"P2S1.CRITERIA":["Critère de réussite observable","P2S1","definitions"],
 "HALL.FLUENCY_TRUTH":["Fluidité ≠ factualité","HALL","pieges"],"HALL.CALIBRATION":["Confiance verbale ≠ calibration","HALL","calibration"],"HALL.VERIFICATION":["Auto-révision ≠ preuve indépendante","HALL","scenarios"],"HALL.ABSTENTION":["Clarification ou abstention","HALL","abstention"],"HALL.CITATION":["Citation ≠ preuve pertinente","HALL","pieges"],"HALL.NO_EVIDENCE":["Absence de preuve ≠ contradiction","HALL","pieges"],
 "RAG.CHUNKING":["Chunking : taille, frontières, overlap","RAG","definitions"],"RAG.ANN":["ANN = compromis vitesse / recall","RAG","pieges"],"RAG.RERANK":["Reranker : candidats déjà récupérés","RAG","pieges"],"RAG.RECALL":["Recall = couverture, pas vérité","RAG","metrics-intro"],"RAG.HYBRID":["Lexical + vectoriel","RAG","exemple"],"RAG.RETRIEVAL_GENERATION":["Retrieval ≠ génération","RAG","synthese"]};
-function getLearningState(){try{return JSON.parse(localStorage.getItem(LEARNING_KEY)||"{}")}catch(e){return{}}}
-function saveLearningState(x){localStorage.setItem(LEARNING_KEY,JSON.stringify(x))}
+function getLearningState(){try{return JSON.parse(window.LATENT_STORAGE.get(LEARNING_KEY)||"{}")}catch(e){return{}}}
+function saveLearningState(x){window.LATENT_STORAGE.set(LEARNING_KEY,JSON.stringify(x))}
 function renderPaths(target){var el=document.getElementById(target);el.innerHTML="";paths.forEach(function(p){var a=document.createElement("article");a.className="path-card"+(p.kind==="live"?" current":"");a.innerHTML='<div class="path-n">'+p.n+'</div><div><h3>'+p.title+'</h3><p>'+p.desc+'</p></div><span class="state '+p.kind+'">'+p.state+'</span>';el.appendChild(a)})}
 function moduleStatus(s,id){var m=s.modules&&s.modules[id]||{},st=m.mastery&&m.mastery.status;if(st==="mastered"&&m.review&&m.review.nextDue&&new Date(m.review.nextDue).getTime()<=Date.now())return"review-due";return st||"not-started"}
 function updateProgress(){
@@ -461,17 +493,17 @@ function showView(name){document.querySelectorAll(".view").forEach(function(v){v
 document.querySelectorAll("[data-view]").forEach(function(b){b.addEventListener("click",function(){showView(b.dataset.view)})});
 document.querySelectorAll(".track-open,[data-evaluate]").forEach(function(a){a.addEventListener("click",function(){var s=getLearningState();s.lastActivity={module:a.dataset.module||a.dataset.evaluate,anchor:(a.getAttribute("href").split("#")[1]||""),at:new Date().toISOString()};saveLearningState(s)})});
 document.getElementById("progressiveBtn")?.addEventListener("click",function(){var s=getLearningState();s.preferences=s.preferences||{};s.preferences.progressive=s.preferences.progressive===false?true:false;saveLearningState(s);updateProgress()});
-function applyTheme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}
+function applyTheme(t){document.documentElement.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}
 document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")});
-var savedTheme=localStorage.getItem("formation-llm-theme");if(savedTheme)applyTheme(savedTheme);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";document.getElementById("rolePill").textContent=on?"Profil : formateur":"Profil : stagiaire";try{localStorage.setItem("formation-llm-role",on?"trainer":"student")}catch(e){}}
-var savedRole;try{savedRole=localStorage.getItem("formation-llm-role")}catch(e){}setTrainerMode(savedRole==="trainer");
+var savedTheme=window.LATENT_STORAGE.get("formation-llm-theme");if(savedTheme)applyTheme(savedTheme);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");document.body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";document.getElementById("rolePill").textContent=on?"Profil : formateur":"Profil : stagiaire";try{window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}catch(e){}}
+var savedRole;try{savedRole=window.LATENT_STORAGE.get("formation-llm-role")}catch(e){}setTrainerMode(savedRole==="trainer");
 document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!document.body.classList.contains("trainer-on"))});
 function setProjectorMode(on){var rootEl=document.documentElement,btn=document.getElementById("projectorBtn");rootEl.classList.toggle("projector",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection";}
 document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!document.documentElement.classList.contains("projector"))});
 document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.documentElement.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
-document.getElementById("resetProgress").addEventListener("click",function(){if(confirm("Réinitialiser le diagnostic, les preuves de maîtrise, les réactivations et les remédiations stockés localement ?")){localStorage.removeItem(LEARNING_KEY);localStorage.removeItem("formation-llm-state");updateProgress()}});
+document.getElementById("resetProgress").addEventListener("click",function(){if(confirm("Réinitialiser le diagnostic, les preuves de maîtrise, les réactivations et les remédiations stockés localement ?")){window.LATENT_STORAGE.remove(LEARNING_KEY);window.LATENT_STORAGE.remove("formation-llm-state");updateProgress()}});
 renderPaths("dashboardPaths");renderPaths("allPaths");updateProgress();var initial=location.hash.replace("#","");if(["dashboard","apprentissage","parcours","labs","progression","referentiel","architecture"].includes(initial))showView(initial);
 })();
 </script>

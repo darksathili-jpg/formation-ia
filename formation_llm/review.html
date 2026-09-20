@@ -34,7 +34,39 @@ button,.primary,.secondary,.tool,.back,.recommend a{min-height:44px}
 .skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
 .skip-link:focus{transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
-</style></head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent"><div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
+</style><script data-latent-safe-storage="v1">
+(function(){
+ "use strict";
+ const memory=new Map();
+ function usable(name){
+  try{
+   const store=window[name],key="__latent_storage_probe__";
+   store.setItem(key,"1");store.removeItem(key);return store;
+  }catch(e){return null}
+ }
+ const local=usable("localStorage"),session=usable("sessionStorage"),primary=local||session;
+ window.LATENT_STORAGE={
+  mode:local?"local":session?"session":"memory",
+  get(key){
+   let value=null;
+   try{if(primary)value=primary.getItem(key)}catch(e){}
+   if(value!==null)return value;
+   return memory.has(key)?memory.get(key):null;
+  },
+  set(key,value){
+   const v=String(value);memory.set(key,v);
+   try{if(primary){primary.setItem(key,v);return true}}catch(e){}
+   return false;
+  },
+  remove(key){
+   memory.delete(key);
+   try{if(primary)primary.removeItem(key)}catch(e){}
+  }
+ };
+ document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
+})();
+</script>
+</head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent"><div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
 <section class="hero"><div class="eyebrow">LATENT / MEMORY TRACE · Réactivation cumulative</div><h1>Ce qui doit revenir aujourd’hui</h1><p class="lead">Les questions mélangent les modules arrivés à échéance. Une réussite espace la prochaine réactivation ; une difficulté rapproche la notion et crée une remédiation ciblée.</p></section>
 <div class="notice"><strong>Ce n’est pas un examen.</strong> L’objectif est de récupérer l’information de mémoire. Une erreur maintenant est utile si elle déclenche une correction et une nouvelle tentative plus tard.</div>
 <div id="empty" class="empty" hidden></div><div id="test" hidden><section class="card"><div class="qmeta" id="qmeta"></div><div class="question" id="question"></div><div class="choices" id="choices"></div><div class="nav"><button class="secondary" id="prev" type="button">← Précédent</button><button class="primary" id="next" type="button">Suivant →</button></div></section></div>
@@ -42,8 +74,8 @@ button,.primary,.secondary,.tool,.back,.recommend a{min-height:44px}
 </main><script>
 (function(){"use strict";
 const KEY="formation-llm-learning-v2",INTERVALS=[1,3,7,14,30],bank=[["R-A1","A","A.MODEL_APP","Une application consulte un calendrier. Cette capacité prouve-t-elle que le calendrier est dans les poids du LLM ?",["Oui","Non"],1],["R-A2","A","A.PARAMETERS","Les poids sont-ils une base de documents adressables ?",["Oui","Non"],1],["R-B1","B","B.ID_SEMANTICS","L'ID 9000 possède-t-il plus de sens que l'ID 12 ?",["Oui","Non"],1],["R-B2","B","B.CONTEXT_MEMORY","Une information en mémoire externe doit-elle être réinjectée pour influencer le calcul courant ?",["Oui","Non"],0],["R-C1","C","C.DOT_PROB","Q·K est-il déjà le poids d'attention final ?",["Oui","Non"],1],["R-C2","C","C.ATTENTION_TRUTH","Un poids d'attention élevé constitue-t-il une preuve factuelle ?",["Oui","Non"],1],["R-T1","P1S3","P1S3.MLP","Quelle brique transforme chaque position non linéairement ?",["MLP","KV cache","Tokenizer"],0],["R-T2","P1S3","P1S3.KV_MEMORY","Le KV cache réduit-il certains recalculs tout en consommant davantage de mémoire quand le contexte croît ?",["Oui","Non"],0],["R-S1","P1S4","P1S4.GREEDY_GLOBAL","Greedy optimise-t-il toute la réponse future ?",["Oui","Non"],1],["R-S2","P1S4","P1S4.TOPP","Top-p fixe-t-il un nombre constant de candidats ?",["Oui","Non"],1],["R-H1","HALL","HALL.NO_EVIDENCE","Aucune preuve disponible : peut-on conclure automatiquement que le claim est faux ?",["Oui","Non"],1],["R-H2","HALL","HALL.CITATION","Une citation réelle suffit-elle si elle ne soutient pas l'affirmation ?",["Oui","Non"],1],["R-R1","RAG","RAG.RERANK","Un reranker peut-il faire revenir un chunk absent de la liste candidate ?",["Oui","Non"],1],["R-R2","RAG","RAG.RETRIEVAL_GENERATION","Recall@k=1 garantit-il que la réponse générée utilisera correctement les preuves ?",["Oui","Non"],1],["R-P2S1-1","P2S1","P2S1.LONGER","Un prompt plus long est-il nécessairement meilleur ?",["Oui","Non"],1],["R-P2S1-2","P2S1","P2S1.FORMAT","Demander une sortie JSON suffit-il à garantir qu'elle sera structurellement valide ?",["Oui","Non"],1]],labels={"A":"Parcours 0","B":"Tokens & contexte","C":"Attention","P1S3":"Bloc Transformer","P1S4":"Sampling","P2S1":"Dialoguer · spécifier","HALL":"Fiabilité","RAG":"RAG"},hrefs={"A":"modules/domaine-a.html","B":"modules/domaine-b.html","C":"modules/domaine-c.html","P1S3":"modules/transformer-block-lab.html","P1S4":"modules/sampling-lab.html","P2S1":"modules/dialoguer-specifier.html","HALL":"modules/hallucination-lab.html","RAG":"modules/rag-lab.html"};
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}function save(x){localStorage.setItem(KEY,JSON.stringify(x))}
-function theme(t){document.documentElement.dataset.theme=t;localStorage.setItem("formation-llm-theme",t)}const st=localStorage.getItem("formation-llm-theme");if(st)theme(st);document.getElementById("themeBtn").onclick=()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+function load(){try{return JSON.parse(window.LATENT_STORAGE.get(KEY)||"{}")}catch(e){return{}}}function save(x){window.LATENT_STORAGE.set(KEY,JSON.stringify(x))}
+function theme(t){document.documentElement.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}const st=window.LATENT_STORAGE.get("formation-llm-theme");if(st)theme(st);document.getElementById("themeBtn").onclick=()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark");
 const state=load(),mods=state.modules||{},now=Date.now(),due=[];
 Object.keys(mods).forEach(m=>{const r=mods[m]?.review;if(r?.nextDue&&new Date(r.nextDue).getTime()<=now)due.push(m)});
 let questions=[];due.forEach(m=>{const pool=bank.filter(q=>q[1]===m);questions.push(...pool.slice(0,2))});
