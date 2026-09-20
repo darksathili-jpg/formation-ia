@@ -346,6 +346,19 @@ html:not(.projector) .stage .n{
  background:#173a42!important;
 }
 </style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -424,14 +437,14 @@ html:not(.projector) .stage .n{
 <fieldset class="q" data-answer="a"><legend>4. Aucune preuve disponible ne permet de conclure.</legend><label><input type="radio" name="q4" value="a"> Demander une précision ou s’abstenir peut être correct.</label><label><input type="radio" name="q4" value="b"> Il faut produire la meilleure supposition.</label><div class="feedback">L’abstention réduit la couverture mais peut améliorer la fiabilité utile.</div></fieldset>
 <fieldset class="q" data-answer="c"><legend>5. Une source réelle mais hors sujet…</legend><label><input type="radio" name="q5" value="a"> confirme quand même le claim.</label><label><input type="radio" name="q5" value="b"> suffit si elle est prestigieuse.</label><label><input type="radio" name="q5" value="c"> ne constitue pas une preuve pertinente de ce claim.</label><div class="feedback">Il faut vérifier ce que la source soutient effectivement.</div></fieldset>
 <fieldset class="q" data-answer="b"><legend>6. Un claim sans preuve est…</legend><label><input type="radio" name="q6" value="a"> forcément faux.</label><label><input type="radio" name="q6" value="b"> insuffisamment étayé dans le corpus disponible.</label><div class="feedback">Absence de preuve et contradiction sont deux états distincts.</div></fieldset>
-<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div></form></section>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div></form></section>
 
 <section class="section" data-pedagogy="transfer" id="transfert"><div class="section-head"><div class="num">11</div><div><h2>Transfert — hors de l’univers Vega</h2></div></div>
 <div class="transfer">
 <article class="transfer-card" data-answer="premise"><h3>Question historique</h3><p>« Pourquoi Marie Curie a-t-elle reçu son troisième prix Nobel ? » La prémisse vous paraît douteuse.</p><select><option value="">Choisir…</option><option value="accept">Répondre quand même à « pourquoi ».</option><option value="premise">Vérifier d’abord la prémisse factuelle.</option></select><div class="transfer-feedback">Une prémisse fausse peut entraîner toute la réponse dans une direction erronée.</div></article>
 <article class="transfer-card" data-answer="evidence"><h3>Réponse avec citation</h3><p>Une réponse cite un rapport officiel, mais l’extrait cité ne parle pas du chiffre annoncé.</p><select><option value="">Choisir…</option><option value="citation">La citation suffit.</option><option value="evidence">Le claim reste non étayé par cette source.</option></select><div class="transfer-feedback">La présence d’une source ne suffit pas ; il faut un soutien pertinent.</div></article>
 <article class="transfer-card" data-answer="abstain"><h3>Information introuvable</h3><p>Le corpus ne contient aucune donnée sur la date demandée.</p><select><option value="">Choisir…</option><option value="guess">Inventer la date la plus plausible.</option><option value="abstain">Signaler l’insuffisance et demander une source.</option></select><div class="transfer-feedback">L’abstention est préférable à une précision fabriquée.</div></article>
-</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div></section>
+</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div></section>
 
 <section class="section" data-pedagogy="recap" id="synthese"><div class="section-head"><div class="num">12</div><div><h2>À retenir avant le RAG</h2></div></div>
 <div class="recap">
@@ -511,5 +524,33 @@ syncLocks();
 new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
 if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;const idx=sections.indexOf(visible.target);buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
 })();
-</script></body>
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
 </html>

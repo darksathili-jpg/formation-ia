@@ -370,6 +370,19 @@ html:not(.projector) .stage .n{
  background:#173a42!important;
 }
 </style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -522,7 +535,7 @@ html:not(.projector) .stage .n{
 <fieldset class="q" data-answer="b"><legend>4. « Open weights » signifie au minimum que…</legend><label><input type="radio" name="q4" value="a"> tout le système est open source.</label><label><input type="radio" name="q4" value="b"> les poids sont accessibles selon les conditions annoncées.</label><label><input type="radio" name="q4" value="c"> le service est gratuit.</label><div class="feedback"><b>Pourquoi ?</b> L’ouverture est multidimensionnelle : poids, code, licence, données/documentation et droits doivent être distingués.</div></fieldset>
 <fieldset class="q" data-answer="c"><legend>5. GPAI est ici surtout…</legend><label><input type="radio" name="q5" value="a"> un algorithme de tokenisation.</label><label><input type="radio" name="q5" value="b"> un synonyme scientifique universel de foundation model.</label><label><input type="radio" name="q5" value="c"> une catégorie juridique du cadre européen de l’IA.</label><div class="feedback"><b>Pourquoi ?</b> Une catégorie juridique et une catégorie scientifique peuvent se recouvrir partiellement sans être synonymes.</div></fieldset>
 <fieldset class="q" data-answer="b"><legend>6. Un modèle de langage historique à n-grammes…</legend><label><input type="radio" name="q6" value="a"> est nécessairement un LLM moderne.</label><label><input type="radio" name="q6" value="b"> montre que la notion de modèle de langage est plus ancienne que les LLM.</label><label><input type="radio" name="q6" value="c"> est une application de chat.</label><div class="feedback"><b>Pourquoi ?</b> « Modèle de langage » est une catégorie plus large et plus ancienne ; LLM désigne un sous-ensemble moderne à grande échelle.</div></fieldset>
-<div class="actions"><button class="primary" type="submit">Corriger le test</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div>
+<div class="actions"><button class="primary" type="submit">Corriger le test</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
 </form>
 </section>
 
@@ -534,7 +547,7 @@ html:not(.projector) .stage .n{
 <article class="transfer-card" data-answer="ml"><h3>Détection de fraude</h3><p>Un modèle est entraîné sur des transactions passées pour classer de nouvelles opérations.</p><label>Quelle famille est directement décrite ?</label><select><option value="">Choisir…</option><option value="ml">Machine learning</option><option value="llm">LLM</option><option value="app">Chatbot</option></select><div class="transfer-feedback">Le système apprend à partir de données : c’est du machine learning. Aucun élément n’impose un LLM.</div></article>
 <article class="transfer-card" data-answer="openweights"><h3>Modèle téléchargeable</h3><p>Une entreprise publie ses poids sous une licence spécifique mais ne fournit pas tous les éléments de développement.</p><label>Quelle formulation est la plus prudente ?</label><select><option value="">Choisir…</option><option value="opensource">Forcément open source</option><option value="openweights">Open weights ; vérifier la licence et les autres éléments</option><option value="free">Forcément libre car téléchargeable</option></select><div class="transfer-feedback">L’accès aux poids est une information précise ; le statut open source demande une analyse plus large.</div></article>
 </div>
-<div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div>
+<div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
 </section>
 
 <section class="section" data-pedagogy="recap" id="synthese">
@@ -658,5 +671,33 @@ syncLocks();
 new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
 if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;const idx=sections.indexOf(visible.target);buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
 })();
-</script></body>
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
 </html>

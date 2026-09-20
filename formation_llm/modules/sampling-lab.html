@@ -355,6 +355,19 @@ html:not(.projector) .stage .n{
  background:#173a42!important;
 }
 </style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -457,14 +470,14 @@ html:not(.projector) .stage .n{
 <fieldset class="q" data-answer="b"><legend>4. Top-p=0,9 signifie…</legend><label><input type="radio" name="q4" value="a"> garder 90 % du vocabulaire.</label><label><input type="radio" name="q4" value="b"> atteindre au moins 0,9 de masse cumulée avec le plus petit préfixe trié.</label><label><input type="radio" name="q4" value="c"> être vrai à 90 %.</label><div class="feedback">Top-p adapte le nombre de candidats à la forme de la distribution.</div></fieldset>
 <fieldset class="q" data-answer="c"><legend>5. Une faible température…</legend><label><input type="radio" name="q5" value="a"> garantit la factualité.</label><label><input type="radio" name="q5" value="b"> consulte des sources.</label><label><input type="radio" name="q5" value="c"> concentre davantage la distribution.</label><div class="feedback">Elle ne constitue pas un mécanisme de vérification.</div></fieldset>
 <fieldset class="q" data-answer="b"><legend>6. En génération autoregressive…</legend><label><input type="radio" name="q6" value="a"> tous les tokens sont indépendants.</label><label><input type="radio" name="q6" value="b"> chaque token choisi devient une partie du contexte suivant.</label><label><input type="radio" name="q6" value="c"> les poids changent à chaque token.</label><div class="feedback">La boucle rend les choix précoces capables d’influencer toute la continuation.</div></fieldset>
-<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div></form></section>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div></form></section>
 
 <section class="section" data-pedagogy="transfer" id="transfert"><div class="section-head"><div class="num">13</div><div><h2>Transfert — raisonner sur d’autres réglages</h2></div></div>
 <div class="transfer">
 <article class="transfer-card" data-answer="error"><h3>Erreur dominante</h3><p>Le token factuellement faux possède déjà le plus grand logit. Que risque de faire T très basse ?</p><select><option value="">Choisir…</option><option value="fix">Corriger automatiquement.</option><option value="error">Renforcer encore sa domination.</option></select><div class="transfer-feedback">La température ne sait pas quel candidat est vrai.</div></article>
 <article class="transfer-card" data-answer="adaptive"><h3>Distribution très plate</h3><p>Quel filtre adapte automatiquement le nombre de candidats à la masse disponible ?</p><select><option value="">Choisir…</option><option value="fixed">Top-k</option><option value="adaptive">Top-p / nucleus</option></select><div class="transfer-feedback">Top-p conserve une masse, donc le nombre de candidats est variable.</div></article>
 <article class="transfer-card" data-answer="context"><h3>Premier token différent</h3><p>Deux tirages choisissent des tokens différents à l’étape 1. Que se passe-t-il ensuite ?</p><select><option value="">Choisir…</option><option value="same">Les distributions suivantes restent forcément identiques.</option><option value="context">Les contextes divergent, donc les distributions peuvent diverger.</option></select><div class="transfer-feedback">Le token généré devient une entrée de l’étape suivante.</div></article>
-</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div></section>
+</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div></section>
 
 <section class="section" data-pedagogy="recap" id="synthese"><div class="section-head"><div class="num">14</div><div><h2>À retenir avant la fiabilité</h2></div></div>
 <div class="recap">
@@ -555,5 +568,33 @@ syncLocks();
 new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
 if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;const idx=sections.indexOf(visible.target);buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
 })();
-</script></body>
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
 </html>

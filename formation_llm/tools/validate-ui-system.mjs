@@ -71,6 +71,14 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(!html.includes('#projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}')) errors.push(page+': libellé mobile de projection non synchronisé');
  if(!html.includes('href="../index.html#dashboard"')) errors.push(page+': retour cockpit absent en fin de module');
 }
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-assessment-ux="v1"')||!html.includes('data-assessment-guard="v1"')) errors.push(page+': garde-fous ergonomiques quiz/transfert absents');
+ if(!html.includes('aria-live="polite" aria-atomic="true"')) errors.push(page+': résultat d’évaluation non annoncé');
+ if(!html.includes('.transfer-card select{min-height:44px}')) errors.push(page+': sélecteurs de transfert trop petits');
+ if(!html.includes('réponse"+(missing.length>1?"s":"")+" restante')) errors.push(page+': quiz incomplet peut encore être corrigé');
+ if(!html.includes('choix restant"+(missing.length>1?"s":"")+" avant correction.')) errors.push(page+': transfert incomplet peut encore être corrigé');
+}
 
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');

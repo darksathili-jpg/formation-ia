@@ -354,6 +354,19 @@ html:not(.projector) .stage .n{
  background:#173a42!important;
 }
 </style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -439,14 +452,14 @@ html:not(.projector) .stage .n{
 <fieldset class="q" data-answer="b"><legend>4. RoPE agit principalement ici sur…</legend><label><input type="radio" name="q4" value="a"> le texte brut.</label><label><input type="radio" name="q4" value="b"> Q/K afin que leurs interactions portent de l’information positionnelle.</label><label><input type="radio" name="q4" value="c"> la base RAG.</label><div class="feedback">RoPE encode la position par rotations dans des composantes des projections.</div></fieldset>
 <fieldset class="q" data-answer="c"><legend>5. Le KV cache…</legend><label><input type="radio" name="q5" value="a"> modifie les poids à chaque token.</label><label><input type="radio" name="q5" value="b"> supprime toute dépendance à la longueur du contexte.</label><label><input type="radio" name="q5" value="c"> réutilise des K/V passés mais consomme une mémoire croissante.</label><div class="feedback">C’est un compromis calcul/mémoire pendant la génération.</div></fieldset>
 <fieldset class="q" data-answer="b"><legend>6. Le bloc suivant reçoit…</legend><label><input type="radio" name="q6" value="a"> toujours l’embedding initial intact.</label><label><input type="radio" name="q6" value="b"> la représentation produite par le bloc précédent.</label><label><input type="radio" name="q6" value="c"> uniquement les token IDs.</label><div class="feedback">Les représentations sont transformées couche après couche.</div></fieldset>
-<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore"></span></div></form></section>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div></form></section>
 
 <section class="section" data-pedagogy="transfer" id="transfert"><div class="section-head"><div class="num">13</div><div><h2>Transfert — raisonner sur un modèle inconnu</h2></div></div>
 <div class="transfer">
 <article class="transfer-card" data-answer="variant"><h3>Architecture différente</h3><p>Un modèle utilise RMSNorm et SwiGLU au lieu de LayerNorm et ReLU.</p><select><option value="">Choisir…</option><option value="wrong">Ce n’est plus un Transformer.</option><option value="variant">C’est une variante architecturale compatible avec le modèle mental général.</option></select><div class="transfer-feedback">Le schéma général reste utile même si les briques précises varient.</div></article>
 <article class="transfer-card" data-answer="res"><h3>Mise à jour locale</h3><p>Une sous-couche produit F(x). Que traduit x + F(x) ?</p><select><option value="">Choisir…</option><option value="res">Une mise à jour résiduelle.</option><option value="cache">Un KV cache.</option></select><div class="transfer-feedback">Le signal entrant est conservé et enrichi d’une correction.</div></article>
 <article class="transfer-card" data-answer="cache"><h3>Long contexte</h3><p>Pourquoi une génération longue peut-elle consommer beaucoup de mémoire même avec un cache ?</p><select><option value="">Choisir…</option><option value="weights">Parce que les poids grossissent à chaque token.</option><option value="cache">Parce que les K/V conservés augmentent avec le contexte.</option></select><div class="transfer-feedback">Les poids restent fixes ; c’est le cache d’états intermédiaires qui croît.</div></article>
-</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore"></span></div></section>
+</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div></section>
 
 <section class="section" data-pedagogy="recap" id="synthese"><div class="section-head"><div class="num">14</div><div><h2>À retenir avant la génération</h2></div></div>
 <div class="recap">
@@ -529,5 +542,33 @@ syncLocks();
 new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
 if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;const idx=sections.indexOf(visible.target);buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
 })();
-</script></body>
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
 </html>
