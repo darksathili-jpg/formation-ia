@@ -20,12 +20,19 @@ if((cfg.review_bank||[]).length<14) errors.push('banque de réactivation trop co
 const diag=await readFile(new URL('../diagnostic.html',import.meta.url),'utf8').catch(()=> '');
 const review=await readFile(new URL('../review.html',import.meta.url),'utf8').catch(()=> '');
 const index=await readFile(new URL('../index.html',import.meta.url),'utf8');
+for(const m of cfg.modules||[]){
+ const html=await readFile(new URL('../'+m.href,import.meta.url),'utf8');
+ if(!html.includes('function resolveMis')) errors.push(m.href+': résolution des misconceptions absente');
+ if(!html.includes('trainerToggle')) errors.push(m.href+': synchronisation mode formateur/guidage absente');
+ if(!html.includes('data-learning-system="v2"')) errors.push(m.href+': intégration Learning System V2 absente');
+}
 for(const [name,html] of [['diagnostic.html',diag],['review.html',review]]){
  if(!html) errors.push(name+' absent');
  else {
   if(!html.includes(cfg.storage_key)) errors.push(name+': stockage v2 absent');
   if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push(name+': appel réseau détecté');
   if(!html.includes(':focus-visible')) errors.push(name+': focus clavier absent');
+  if(name==='review.html' && !html.includes('resolvedAt')) errors.push('review.html: résolution des remédiations absente');
  }
 }
 if(index.includes('Marquer acquis')) errors.push('index: auto-déclaration « Marquer acquis » encore présente');
@@ -33,5 +40,6 @@ if(!index.includes('Évaluer ma maîtrise')) errors.push('index: action de maît
 if(!index.includes('diagnostic.html')) errors.push('index: diagnostic non intégré');
 if(!index.includes('review.html')) errors.push('index: réactivation non intégrée');
 if(!index.includes(cfg.storage_key)) errors.push('index: moteur v2 non branché');
+if(!index.includes('resolvedAt')) errors.push('index: les misconceptions résolues ne sont pas filtrées');
 if(errors.length){console.error('\n❌ LEARNING SYSTEM V2 INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ Learning System V2 valide — diagnostic, maîtrise, misconceptions, répétition espacée et intégration vérifiés.');
