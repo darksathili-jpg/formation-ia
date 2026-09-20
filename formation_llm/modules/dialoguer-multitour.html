@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="fr" data-ui-system="latent-v1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Parcours 2 — Maintenir un dialogue multi-tour · Formation LLM</title>
+<style>
+:root{
+--bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#637581;--line:rgba(16,32,45,.14);
+--accent:#b35425;--accent2:#0b7894;--soft:#f3dfd1;--cyan:#d9edf2;--green:#24704e;--greenSoft:#dcefe6;--amber:#99681f;--amberSoft:#f4e5c8;
+--red:#a63b42;--redSoft:#f6dfe1;--violet:#6558ca;--violetSoft:#e9e4fb;--code:#111a24;--shadow:0 14px 38px rgba(20,34,45,.08);
+--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif}
+[data-theme="dark"]{--bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);
+--accent:#f09664;--accent2:#55c3dc;--soft:#462a20;--cyan:#153d48;--green:#71d0a3;--greenSoft:#17392b;--amber:#efba67;--amberSoft:#3d2d18;
+--red:#ef8086;--redSoft:#472226;--violet:#aaa2ff;--violetSoft:#2f2958;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}
+button,select,input,textarea{font:inherit}button{cursor:pointer}a{color:inherit}.wrap{max-width:1220px;margin:auto;padding:26px 22px 80px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:22px}.back{color:var(--accent2);text-decoration:none;font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:8px 11px;border-radius:999px;font-size:.8rem;font-weight:850}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(290px,.75fr);gap:26px;align-items:start}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.75rem;color:var(--accent);font-weight:950}
+h1{font-family:var(--display);font-size:clamp(2.9rem,6vw,5.3rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{font-size:1.08rem;color:var(--muted);max-width:790px}
+.hero-card{background:var(--code);color:#eef7fa;border-radius:22px;padding:22px;box-shadow:var(--shadow)}.hero-card b{color:#f6ad84}.hero-card p{color:#bccbd4;font-size:.86rem}
+.statusline{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;background:var(--panel2);color:var(--muted);font-size:.7rem;font-weight:900}.badge.good{background:var(--greenSoft);color:var(--green)}
+.trainer-banner{display:none;max-width:1220px;margin:10px auto 18px;padding:12px 16px;border-left:5px solid var(--accent);border-radius:13px;background:var(--soft);font-size:.84rem}.trainer-on .trainer-banner{display:block}.trainer-only{display:none}.trainer-on .trainer-only{display:block}
+.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}.projector .projector-exit{display:inline-flex}.projector .tools{display:none}.projector{font-size:19px}.projector .wrap{max-width:1500px}
+.journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.82rem}
+.section{margin-top:44px;scroll-margin-top:20px}.section-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:15px}.num{width:40px;height:40px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.9rem;margin:0}.section-head p{color:var(--muted);margin:3px 0 0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:19px}.notice{padding:15px 17px;border-left:4px solid var(--accent2);background:var(--cyan);border-radius:13px}.notice strong{display:block;margin-bottom:3px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.checklist{display:grid;gap:9px}.check{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;background:var(--panel2)}.check b{display:block}.check small{color:var(--muted)}
+.lesson{display:grid;gap:13px}.lesson p{margin:0}.definition{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px}.definition strong{display:block;margin-bottom:4px}.intuition{padding:14px 16px;border-left:4px solid var(--accent2);background:var(--cyan);border-radius:12px}.intuition strong{display:block;margin-bottom:4px}
+.steps{display:grid;gap:10px}.step{display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:start;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.step .n{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950}.step h3{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted);font-size:.86rem}.step .why{margin-top:7px;color:var(--text);font-size:.82rem}
+.example-result{margin-top:13px;padding:13px;border-radius:12px;background:var(--greenSoft);color:var(--green);font-weight:850}
+.map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.node{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:15px;padding:14px;text-align:left;min-height:118px}.node:hover,.node.active{border-color:var(--accent);box-shadow:var(--shadow)}.node .id{font-size:.68rem;color:var(--accent);font-weight:950}.node b{display:block;margin-top:5px}.node small{display:block;color:var(--muted);margin-top:5px}.detail{margin-top:12px;background:var(--panel2);border-radius:14px;padding:15px;min-height:112px}.detail h3{margin:0 0 6px;font-family:var(--display)}.detail p{margin:0;color:var(--muted)}
+.stack{display:grid;gap:10px}.layer{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:13px;display:flex;justify-content:space-between;gap:12px;align-items:center}.layer.on{border-color:var(--accent2);background:var(--cyan)}.switch{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:6px 10px;font-weight:900}.switch.on{background:var(--greenSoft);color:var(--green);border-color:var(--green)}
+.system-view{background:var(--code);color:#edf7fa;border-radius:16px;padding:17px;min-height:100%}.system-view h3{margin-top:0;font-family:var(--display)}.system-view p{color:#c8d4db}.architecture{display:grid;gap:7px;margin-top:14px}.arch-box{padding:10px;border-radius:10px;background:rgba(255,255,255,.08);font-size:.82rem}.arch-box.core{border:1px solid #75d1e4}.arch-box.extra{border:1px dashed rgba(255,255,255,.28)}.verdict{margin-top:15px;padding:11px;border-radius:11px;background:rgba(255,255,255,.08);font-weight:850}
+.classifier{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.case{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.case .tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);font-weight:950}.case h3{font-size:1rem;margin:5px 0}.case p{font-size:.84rem;color:var(--muted);min-height:58px}.case select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.case .feedback{display:none;margin-top:9px;font-size:.8rem}.case.correct .feedback,.case.wrong .feedback{display:block}.case.correct{border-color:var(--green)}.case.correct .feedback{color:var(--green)}.case.wrong{border-color:var(--red)}.case.wrong .feedback{color:var(--red)}
+.completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(160px,.8fr) 34px minmax(240px,1.2fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent2);font-weight:950}.completion-feedback{display:none;margin-top:12px;padding:12px;border-radius:11px;background:var(--panel2)}.completion-feedback.show{display:block}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.primary{border:0;background:var(--accent2);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.scorebox{font-weight:950;color:var(--accent2)}
+.misgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mis{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.mis .wrong{color:var(--red);font-weight:900}.mis .right{margin-top:8px;color:var(--green);font-weight:850}.mis p{margin:5px 0 0;color:var(--muted);font-size:.84rem}
+.selfbox textarea{width:100%;min-height:130px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px;resize:vertical}.criteria{margin-top:10px;display:grid;gap:6px}.criteria label{display:flex;gap:8px;align-items:flex-start;font-size:.83rem;color:var(--muted)}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900;padding:0 5px}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.82rem}.q.ok{border-color:var(--green)}.q.bad{border-color:var(--red)}.q.ok .feedback,.q.bad .feedback{display:block}
+.transfer{display:grid;grid-template-columns:1fr 1fr;gap:12px}.transfer-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:16px}.transfer-card h3{margin-top:0}.transfer-card select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.transfer-feedback{display:none;margin-top:9px;padding:10px;border-radius:10px;background:var(--panel2);font-size:.82rem}.transfer-card.good .transfer-feedback,.transfer-card.bad .transfer-feedback{display:block}.transfer-card.good{border-color:var(--green)}.transfer-card.bad{border-color:var(--red)}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.recap article{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.recap b{display:block;margin-bottom:5px}.recap p{margin:0;color:var(--muted);font-size:.84rem}
+.refs{display:grid;gap:8px}.ref{border-left:3px solid var(--accent2);padding:9px 12px;background:var(--panel);border-radius:0 11px 11px 0;font-size:.82rem}.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900;color:var(--accent2)}.next-step .center{text-align:center;color:var(--muted);font-size:.82rem}.footer{margin-top:46px;border-top:1px solid var(--line);padding-top:17px;color:var(--muted);font-size:.77rem}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+@media(max-width:1000px){.hero,.grid2{grid-template-columns:1fr}.map{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}.journey{grid-template-columns:1fr}.classifier,.misgrid,.transfer,.recap{grid-template-columns:1fr}}
+@media(max-width:680px){.wrap{padding:17px 13px 60px}.map,.grid3{grid-template-columns:1fr}.top{align-items:flex-start}.completion-row{grid-template-columns:1fr}.completion-row .arrow{transform:rotate(90deg)}h1{font-size:clamp(2.5rem,14vw,4.2rem)}.next-step{flex-direction:column;align-items:flex-start}.next-step .center{text-align:left}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.learning-guide{position:sticky;top:10px;z-index:35;margin:16px 0;padding:11px 13px;border:1px solid var(--line);border-left:4px solid var(--accent2,var(--accent));border-radius:13px;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(10px);box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.learning-guide strong{display:block}.learning-guide small{color:var(--muted)}.learning-guide-actions{display:flex;gap:7px;flex-wrap:wrap}.learning-guide button{border:1px solid var(--strong,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:7px 10px;font-weight:850}.learning-guide button.primary-learning{background:var(--accent2,var(--accent));color:white;border-color:transparent}.learning-mastered{color:var(--ok);font-weight:900}
+</style>
+
+<style data-latent-ui="v1">
+:root{
+ --bg:#eef3f1;--panel:#f9fbfa;--panel2:#e7eeeb;--text:#09171c;--muted:#617177;
+ --line:rgba(9,23,28,.12);--strong:rgba(9,23,28,.26);--accent:#087f87;--accent2:#6c5ce7;
+ --soft:#d8f2ee;--cyan:#d8f2ee;--violet:#e8e3ff;--ok:#2a7954;--oksoft:#dff2e7;
+ --gold:#9a651d;--goldsoft:#f6e8ce;--warn:#9a651d;--warnsoft:#f6e8ce;
+ --danger:#a53b42;--dangersoft:#f7dfe1;--red:#a53b42;--green:#2a7954;
+ --code:#071419;--shadow:0 18px 55px rgba(13,37,40,.10);
+ --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ --display:"Segoe UI Variable Display","Segoe UI",ui-sans-serif,system-ui,sans-serif;
+ --latent-cyan:#5cf0d2;--latent-violet:#8b7cf6;--latent-coral:#ff7584;--latent-lime:#b8f36b;--ink:#071419;
+}
+[data-theme="dark"]{
+ --bg:#061015;--panel:#0c1a20;--panel2:#12252c;--text:#edf7f5;--muted:#91a8ae;
+ --line:rgba(226,247,243,.11);--strong:rgba(226,247,243,.24);--accent:#5cf0d2;--accent2:#998bff;
+ --soft:#10352f;--cyan:#10352f;--violet:#272450;--ok:#8be3b3;--oksoft:#17382c;
+ --gold:#f3bc62;--goldsoft:#3b2b17;--warn:#f3bc62;--warnsoft:#3b2b17;
+ --danger:#ef8086;--dangersoft:#472226;--red:#ef8086;--green:#8be3b3;--code:#03090c;
+ --shadow:0 22px 70px rgba(0,0,0,.34);
+}
+html{background:var(--bg)}
+body{
+ background:
+ radial-gradient(circle at 88% 8%,color-mix(in srgb,var(--accent2) 10%,transparent),transparent 25%),
+ radial-gradient(circle at 12% 72%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 25%),
+ var(--bg);
+ font-feature-settings:"ss01" 1,"cv11" 1;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.22;
+ background-image:radial-gradient(circle,color-mix(in srgb,var(--accent) 35%,transparent) 1px,transparent 1.4px);
+ background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+button,.primary,.secondary,.tool,.back{min-height:44px}
+.wrap{max-width:1180px;padding-top:18px}
+.top{
+ position:sticky;top:10px;z-index:80;margin:0 0 26px;padding:8px 9px 8px 14px;border:1px solid var(--line);
+ border-radius:12px;background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(16px);
+ box-shadow:0 10px 40px rgba(5,20,24,.08);
+}
+.top:before{
+ content:"LATENT / LEARNING NODE";font:700 .58rem ui-monospace,SFMono-Regular,Consolas,monospace;
+ letter-spacing:.16em;color:var(--muted);margin-right:auto
+}
+.top>div:first-child{display:flex;align-items:center;gap:7px}.back{display:inline-flex;align-items:center;padding:0 8px;border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.71rem;text-transform:uppercase;letter-spacing:.06em}
+.tools{margin-left:auto}.tool{border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.68rem}
+#trainerBtn[aria-pressed="true"]{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 55%,transparent)}
+.hero{min-height:390px;align-items:center;padding:32px 0 22px;position:relative}
+.eyebrow{
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.66rem!important;
+ letter-spacing:.15em!important;color:var(--accent)!important
+}
+h1,.section-head h2{font-family:var(--display)!important;font-weight:820;letter-spacing:-.055em}
+h1{font-size:clamp(3.1rem,7vw,6.3rem)!important;line-height:.88!important;max-width:760px;margin-top:.17em!important}
+.lead{font-size:1rem!important;line-height:1.75!important;max-width:730px}
+.hero-card{
+ position:relative;min-height:300px;border:1px solid rgba(92,240,210,.20)!important;border-radius:20px!important;
+ background:
+ linear-gradient(rgba(92,240,210,.035) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.035) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(139,124,246,.18),transparent 33%),
+ #071419!important;background-size:28px 28px,28px 28px,auto,auto!important;
+ box-shadow:0 28px 80px rgba(3,14,17,.25)!important;padding:26px!important;overflow:hidden
+}
+.hero-card:before{content:"MODEL INSPECTOR";position:absolute;right:17px;top:14px;color:#507a75;font:700 .56rem ui-monospace,monospace;letter-spacing:.15em}
+.hero-card b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.03em}
+.hero-card .flow>div,.hero-card .pipeline .pipe{border:1px solid rgba(92,240,210,.10);background:rgba(255,255,255,.04)!important;border-radius:7px!important}
+.meta{gap:6px}.badge{border-radius:7px!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.65rem!important}
+.journey{gap:8px!important;margin-top:4px!important}
+.journey-card{
+ border-radius:11px!important;background:color-mix(in srgb,var(--panel) 90%,transparent)!important;box-shadow:none!important;
+ position:relative;overflow:hidden
+}
+.journey-card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent)}
+.journey-card .k{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.61rem!important}
+.learning-guide{
+ top:68px!important;border:1px solid rgba(92,240,210,.18)!important;border-left:0!important;border-radius:11px!important;
+ background:rgba(7,20,25,.94)!important;color:#eafffa!important;box-shadow:0 15px 45px rgba(0,0,0,.20)!important;padding:10px 12px!important
+}
+.learning-guide:before{content:"RUNTIME";font:800 .55rem ui-monospace,monospace;letter-spacing:.16em;color:#5cf0d2;margin-right:3px}
+.learning-guide strong{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.74rem}.learning-guide small{color:#7fa09b!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.65rem}
+.learning-guide button{min-height:40px!important;border-radius:7px!important;background:#0d252b!important;color:#b8d6d0!important;border-color:rgba(255,255,255,.08)!important}
+.learning-guide button.primary-learning{background:var(--latent-cyan)!important;color:#061116!important}
+.section{margin-top:58px!important;position:relative;scroll-margin-top:130px}
+.section-head{align-items:center!important;margin-bottom:18px!important}
+.section-head .num{
+ width:42px!important;height:42px!important;border-radius:9px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;
+ border:1px solid rgba(92,240,210,.24)!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.7rem!important;
+ box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 5%,transparent)
+}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.2rem)!important}
+.section-head:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent);margin-left:10px}
+.panel,.step,.worked-step,.role,.compare-card,.mis,.transfer-card,.q,.term,.metric,.truthbox,.cal-card{
+ border-radius:11px!important;box-shadow:none!important;background:color-mix(in srgb,var(--panel) 92%,transparent)!important;
+}
+.panel{border-color:var(--line)!important}
+.intuition,.definition,.notice,.callout,.trainer-box{border-radius:9px!important;border-left-width:2px!important}
+.steps{gap:7px!important}.step,.worked-step{border-color:var(--line)!important}
+.step .n,.worked-step .n,.stage .n{border-radius:7px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.stage{border-radius:9px!important}
+.vec,.calc,.value,.token,.qmeta{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important}
+.primary{border-radius:8px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;border:1px solid rgba(92,240,210,.22)!important}
+.secondary{border-radius:8px!important}
+input,select,textarea{border-radius:8px!important}
+.table-wrap{border-radius:10px!important}
+th{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.62rem!important;letter-spacing:.08em}
+.next-step{
+ border-radius:11px!important;background:color-mix(in srgb,var(--panel) 92%,transparent)!important;border-color:var(--line)!important;
+ position:relative;overflow:hidden
+}
+.next-step:before{content:"NEXT SIGNAL";position:absolute;right:12px;top:8px;font:700 .54rem ui-monospace,monospace;letter-spacing:.14em;color:var(--muted)}
+.footer{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.62rem!important;letter-spacing:.04em}
+.trainer-banner{border-radius:9px!important;box-shadow:none!important}
+.projector-exit{min-height:44px;border-radius:8px!important}
+:focus-visible{outline:3px solid var(--latent-cyan)!important;outline-offset:3px}
+@media(max-width:900px){.top:before{display:none}.hero{min-height:0}.learning-guide{top:8px!important}}
+@media(max-width:650px){.wrap{padding-top:9px!important}.top{top:5px;border-radius:9px}.top>div:first-child{max-width:100%}.tools{width:100%;margin-left:0}.hero{padding-top:18px}.hero h1{font-size:clamp(2.7rem,15vw,4.2rem)!important}.hero-card{min-height:250px}.section{margin-top:44px!important}.learning-guide{position:relative!important;top:auto!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+<style data-latent-access="v1">
+.skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.skip-link:focus{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
+</style><style data-latent-nav="v1">
+.layer-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:70;width:48px;max-height:72vh;overflow:auto;padding:8px 5px;border:1px solid rgba(92,240,210,.15);border-radius:12px;background:rgba(7,20,25,.90);backdrop-filter:blur(13px);box-shadow:0 15px 45px rgba(0,0,0,.18);scrollbar-width:none}
+.layer-nav::-webkit-scrollbar{display:none}.layer-nav:before{content:"LAYERS";display:block;writing-mode:vertical-rl;transform:rotate(180deg);height:50px;margin:0 auto 7px;color:#557c76;font:750 .49rem ui-monospace,monospace;letter-spacing:.14em}
+.layer-nav button{display:grid;place-items:center;width:36px;min-height:44px;margin:3px 0;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:#0b2026;color:#6e9690;font:750 .61rem ui-monospace,monospace;cursor:pointer}
+.layer-nav button[aria-current="step"]{color:#071419;background:#5cf0d2;border-color:#5cf0d2;box-shadow:0 0 16px rgba(92,240,210,.24)}
+.layer-nav button:disabled{opacity:.22;cursor:not-allowed}.layer-nav button:not(:disabled):hover{color:#edfffb;border-color:rgba(92,240,210,.32)}
+.layer-nav button:focus-visible{outline:3px solid #5cf0d2;outline-offset:2px}
+@media(max-width:1260px){.layer-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.layer-nav{scroll-behavior:auto}.layer-nav button{transition:none!important}}
+</style><style data-projection-ux="v2">
+/* Projection haute luminance : indépendante du thème clair/sombre de travail. */
+html.projector{
+ color-scheme:light;
+ --bg:#ffffff;--panel:#ffffff;--panel2:#f1f3f2;--text:#000000;--muted:#37474c;
+ --line:rgba(0,0,0,.24);--strong:rgba(0,0,0,.52);--accent:#005a62;--accent2:#3f318e;
+ --soft:#e4f3f1;--cyan:#e4f3f1;--violet:#ece9ff;--ok:#145b3b;--oksoft:#e4f2e9;
+ --warn:#744700;--warnsoft:#fff0cf;--gold:#744700;--goldsoft:#fff0cf;--goldSoft:#fff0cf;
+ --danger:#8b1f2b;--dangersoft:#fde7e9;--red:#8b1f2b;--green:#145b3b;
+ --code:#f3f5f4;--codetext:#000000;--codeText:#000000;--shadow:none;
+ --latent-cyan:#005a62;--latent-violet:#3f318e;--latent-coral:#8b1f2b;--latent-lime:#356600;
+ --ink:#000000;--accentSoft:#e4f3f1;
+ background:#ffffff!important;
+}
+html.projector body{background:#ffffff!important;color:#000000!important}
+html.projector body:before{display:none!important}
+html.projector .content{background:#ffffff!important}
+html.projector .topbar{background:#ffffff!important;border-bottom:2px solid #68777a!important;box-shadow:none!important;backdrop-filter:none!important}
+html.projector .projector-exit{background:#ffffff!important;color:#000000!important;border:2px solid #000000!important;box-shadow:none!important}
+html.projector .hero-panel,
+html.projector .hero-card{background:#f3f5f4!important;color:#000000!important;border:2px solid #68777a!important;box-shadow:none!important}
+html.projector .hero-panel:after,
+html.projector .hero-panel small,
+html.projector .hero-panel .resume-meta,
+html.projector .hero-card h2,
+html.projector .hero-card p,
+html.projector .flow-mini span{color:#263b40!important}
+html.projector .flow-mini div{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .learning-guide{background:#ffffff!important;color:#000000!important;border:2px solid #005a62!important;box-shadow:none!important;backdrop-filter:none!important}
+html.projector .learning-guide:before{color:#005a62!important}
+html.projector .learning-guide small{color:#37474c!important}
+html.projector .learning-guide button{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
+html.projector .learning-guide button.primary-learning,
+html.projector .primary,
+html.projector .open,
+html.projector .resume-btn{background:#005a62!important;color:#ffffff!important;border-color:#005a62!important}
+html.projector .secondary,
+html.projector .complete,
+html.projector .tool,
+html.projector .mode-btn,
+html.projector .pill{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
+html.projector .layer-nav{display:none!important}
+html.projector .card,
+html.projector .module,
+html.projector .metric,
+html.projector .path-card,
+html.projector .lab-card,
+html.projector .learning-card,
+html.projector .term,
+html.projector .q,
+html.projector .transfer-card,
+html.projector .result,
+html.projector .recommend,
+html.projector .callout{box-shadow:none!important}
+html.projector pre,
+html.projector .codebox{background:#f3f5f4!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .latent-map .gridline{stroke:rgba(0,0,0,.22)!important}
+html.projector .latent-map .path{stroke:#005a62!important;filter:none!important}
+html.projector .latent-map .node{fill:#ffffff!important;stroke:#005a62!important}
+html.projector .latent-map .node.v{stroke:#3f318e!important}
+html.projector .latent-map .pulse{fill:#356600!important;filter:none!important}
+html.projector .latent-map text{fill:#263b40!important}
+@media(max-width:980px){html.projector .topbar{top:0!important}}
+</style>
+<style data-ux-audit="v1">
+@media(max-width:900px){.learning-guide{position:relative!important;top:auto!important}}
+@media(max-width:1380px){.layer-nav{display:none!important}}
+.q label{min-height:44px;display:flex;align-items:center;gap:10px;padding:9px 8px}
+.q label input{flex:0 0 auto}
+</style>
+<style data-mobile-module-ux="v1">
+.cockpit-return{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:7px 10px;border:1px solid var(--strong,var(--line));border-radius:8px;background:var(--panel);color:var(--text);font-weight:900;text-decoration:none}
+.next-step .center .cockpit-return,.next-step .muted .cockpit-return{margin-top:8px}
+@media(max-width:650px){
+ .topbar-inner,.top{flex-wrap:wrap!important;gap:8px!important;align-items:center!important}
+ .topbar-inner>.brand,.top>.back,.top>div:first-child{flex:1 1 100%!important;max-width:none!important}
+ .tools{width:100%!important;margin-left:0!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+ .tool{min-height:44px!important;padding:7px 5px!important;font-size:0!important;display:flex!important;align-items:center!important;justify-content:center!important;white-space:nowrap}
+ #themeBtn::after{content:"◐ Thème";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn::after{content:"▣ Projection";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}
+ #trainerBtn::after{content:"◆ Formateur";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}
+}
+</style>
+<style data-projection-audit="v3">
+html.projector,html.projector body{overflow-x:clip!important}
+html.projector .projector-exit{
+ position:fixed!important;top:10px!important;right:10px!important;left:auto!important;
+ max-width:calc(100vw - 20px)!important;min-width:0!important;box-sizing:border-box!important;
+ padding:8px 12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ font-size:clamp(.78rem,.9vw,.95rem)!important;line-height:1.15!important
+}
+</style>
+<style data-projection-module-audit="v3">
+html.projector .wrap,
+html.projector main{width:auto!important;max-width:min(1500px,calc(100vw - 24px))!important}
+html.projector .top{padding-right:160px!important}
+html.projector .top:before{margin-right:10px!important}
+html.projector .top>.back,
+html.projector .top>div:first-child{margin-right:auto!important}
+html.projector .section-head .num,
+html.projector .step .n,
+html.projector .worked-step .n,
+html.projector .stage .n{
+ background:#e4f3f1!important;color:#005a62!important;border:2px solid #6f7e81!important;
+ box-shadow:none!important
+}
+html.projector .system-view,
+html.projector .formula,
+html.projector .vec,
+html.projector .choice,
+html.projector .context,
+html.projector .answer{
+ background:#f3f5f4!important;color:#000000!important;border:1px solid #7a878a!important;
+ box-shadow:none!important
+}
+html.projector .system-view p,
+html.projector .formula p,
+html.projector .vec p,
+html.projector .choice p,
+html.projector .context p,
+html.projector .answer p{color:#263b40!important}
+html.projector .arch-box,
+html.projector .verdict{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .hero-card:before{color:#37474c!important}
+html.projector .hero-card b{color:#000000!important}
+@media(max-width:900px){
+ html.projector .top{padding-right:12px!important}
+ html.projector .projector-exit{top:8px!important;right:8px!important}
+}
+</style>
+<style data-classic-surface-tuning="v1">
+/* Mode classique : surfaces techniques pétrole, moins proches du noir pur. */
+html:not(.projector){
+ --ink:#173a42;
+ --code:#16353d;
+}
+html[data-theme="dark"]:not(.projector){
+ --bg:#0d1a20;--panel:#14282f;--panel2:#1c343c;
+ --text:#edf7f5;--muted:#a7bdc1;
+ --line:rgba(226,247,243,.14);--strong:rgba(226,247,243,.28);
+ --soft:#16413a;--cyan:#16413a;--violet:#302c59;
+ --oksoft:#1d4435;--goldsoft:#46331c;--warnsoft:#46331c;--dangersoft:#53292e;
+ --ink:#183f47;--code:#14313a;
+ --shadow:0 20px 60px rgba(4,15,19,.27);
+}
+</style>
+<style data-classic-module-surfaces="v1">
+html:not(.projector) .hero-card{
+ background:
+ linear-gradient(rgba(92,240,210,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.045) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(153,139,255,.20),transparent 34%),
+ #173a42!important;
+ background-size:28px 28px,28px 28px,auto,auto!important;
+ border-color:rgba(92,240,210,.28)!important;
+ box-shadow:0 24px 58px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .learning-guide{
+ background:rgba(23,58,66,.96)!important;
+ border-color:rgba(92,240,210,.25)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.18)!important;
+}
+html:not(.projector) .learning-guide button{
+ background:#204851!important;color:#d9ebe7!important;
+ border-color:rgba(255,255,255,.12)!important;
+}
+html:not(.projector) .learning-guide button.primary-learning{
+ background:#5cf0d2!important;color:#0d252b!important;
+}
+html:not(.projector) .layer-nav{
+ background:rgba(20,49,57,.96)!important;
+ border-color:rgba(92,240,210,.22)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .layer-nav button{
+ background:#1b4149!important;color:#9abbb6!important;
+ border-color:rgba(255,255,255,.10)!important;
+}
+html:not(.projector) .section-head .num,
+html:not(.projector) .step .n,
+html:not(.projector) .worked-step .n,
+html:not(.projector) .stage .n{
+ background:#173a42!important;
+}
+</style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
+<style data-completion-ux="v1">
+#completer select{min-height:44px}
+#completionFeedback[role="status"]{line-height:1.4}
+@media(max-width:650px){
+ #completer .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #completer .actions button{width:100%!important;min-width:0!important}
+ #completionFeedback.show{min-height:44px;display:flex;align-items:center}
+}
+</style>
+<style data-step-badge-layout="v1">
+/* Numérotation canonique : centrage indépendant des styles historiques du module. */
+.section-head .num,
+.section-head .section-num{
+ display:grid!important;
+ place-items:center!important;
+ flex:0 0 42px!important;
+ width:42px!important;
+ min-width:42px!important;
+ height:42px!important;
+ padding:0!important;
+ margin:0!important;
+ box-sizing:border-box!important;
+ line-height:1!important;
+ text-align:center!important;
+ font-style:normal!important;
+ vertical-align:middle!important;
+}
+</style>
+<style data-p2s4-visual-audit="v1">
+/* P2S4 : Context Ledger Lab, états conversationnels, pièges et transfert. */
+.context-ledger-mini{display:grid;gap:7px;margin-bottom:12px;padding:12px;border-radius:9px;background:var(--panel2)}
+.context-ledger-mini p{margin:0}
+.turn-list{display:grid;gap:9px}
+.turn-case{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel)}
+.turn-case>b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent2)}
+.turn-case p{margin:4px 0 9px;line-height:1.5}
+.turn-case select{width:100%;min-height:44px}
+.turn-case .turn-feedback{display:none;margin-top:8px;padding:9px;border-radius:8px;background:var(--panel2);font-size:.82rem;line-height:1.45}
+.turn-case.good{border-color:var(--green)}.turn-case.bad{border-color:var(--red)}
+.turn-case.good .turn-feedback,.turn-case.bad .turn-feedback{display:block}
+#builderOutput{min-height:250px}
+#builderOutput p{margin:.48rem 0;padding:.58rem .68rem;border-left:2px solid var(--accent);border-radius:6px;background:rgba(255,255,255,.055);line-height:1.5}
+#builderOutput p:first-child{margin-top:0}#builderOutput p:last-child{margin-bottom:0}
+#builderOutput p b{color:#ffffff}
+#pieges .misgrid{align-items:stretch}
+#pieges .mis{display:grid;grid-template-rows:auto 1fr auto;gap:8px;min-height:100%;border-top:2px solid color-mix(in srgb,var(--red) 68%,var(--line))!important}
+#pieges .mis p{margin:0!important;line-height:1.55}
+#pieges .mis .right{margin-top:0!important;padding-top:8px;border-top:1px solid var(--line);line-height:1.5}
+#transfert .transfer-card{display:flex;flex-direction:column;gap:8px}
+#transfert .transfer-card h3{margin:0}
+#transfert .transfer-card p{margin:0;color:var(--muted);line-height:1.55}
+#transfert .transfer-card label{font-weight:850;margin-top:2px}
+#transfert .transfer-card select{margin-top:auto}
+#transfert .transfer-feedback{line-height:1.5}
+@media(max-width:650px){
+ .hero h1{font-size:clamp(2.25rem,12vw,3.35rem)!important;line-height:.96!important;letter-spacing:-.035em!important}
+ #builder .panel{padding:16px!important}#builderOutput{min-height:0}
+ .turn-case{padding:11px}.turn-case select{min-height:48px}
+ #pieges .mis,#transfert .transfer-card{padding:14px!important}
+ #pieges .mis p,#pieges .mis .right,#transfert .transfer-card p{font-size:.88rem!important}
+}
+html.projector .context-ledger-mini,html.projector .turn-case,html.projector .turn-case .turn-feedback{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector #builderOutput p{background:#ffffff!important;color:#000000!important;border-left-color:#005a62!important}
+html.projector #builderOutput p b{color:#000000!important}
+html.projector #pieges .mis{border-top-color:#8b1f2b!important}
+html.projector #pieges .mis .right{border-top-color:#7a878a!important}
+</style>
+<script data-latent-safe-storage="v1">
+(function(){
+ "use strict";
+ const memory=new Map();
+ function usable(name){
+  try{
+   const store=window[name],key="__latent_storage_probe__";
+   store.setItem(key,"1");store.removeItem(key);return store;
+  }catch(e){return null}
+ }
+ const local=usable("localStorage"),session=usable("sessionStorage"),primary=local||session;
+ window.LATENT_STORAGE={
+  mode:local?"local":session?"session":"memory",
+  get(key){
+   let value=null;
+   try{if(primary)value=primary.getItem(key)}catch(e){}
+   if(value!==null)return value;
+   return memory.has(key)?memory.get(key):null;
+  },
+  set(key,value){
+   const v=String(value);memory.set(key,v);
+   try{if(primary){primary.setItem(key,v);return true}}catch(e){}
+   return false;
+  },
+  remove(key){
+   memory.delete(key);
+   try{if(primary)primary.removeItem(key)}catch(e){}
+  }
+ };
+ document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
+})();
+</script>
+</head>
+<body><a class="skip-link" href="#mainContent">Passer au contenu</a>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
+<main class="wrap" id="mainContent">
+<div class="top"><a class="back" href="../index.html#parcours">← Formation LLM · Parcours 2</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
+<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues, critères de réussite et pistes de débrief sont affichés.</div>
+
+<section class="hero">
+<div><div class="eyebrow">Parcours 2 · Dialoguer efficacement · Étape 4 · NOVICE-FIRST</div><h1>Une conversation doit garder son cap</h1><p class="lead">À chaque tour, le modèle reçoit un <strong>contexte de travail</strong>, pas une mémoire parfaite de vos intentions. Une conversation robuste maintient un contrat actif : ce qui reste vrai, ce qui vient de changer, ce qui manque encore et ce qui ne doit plus encombrer la tâche.</p>
+<div class="statusline"><span class="badge good">P2S4 novice-ready</span><span class="badge">≈ 50–65 min</span><span class="badge">Aucun appel réseau</span></div></div>
+<aside class="hero-card"><b>Mission</b><p>À la fin, vous devrez savoir maintenir une tâche sur plusieurs tours sans répéter tout l’historique : préserver les contraintes stables, appliquer les modifications explicites, redemander les informations absentes et repérer une dérive de consigne.</p></aside>
+</section>
+<section class="journey" data-pedagogy="prerequisites" aria-label="Prérequis et objectifs">
+<div class="journey-card"><div class="k">Vous devez déjà savoir</div><b>Spécifier, exemplifier, tester</b><p>P2S1 a posé le contrat de tâche ; P2S2 les exemples ; P2S3 la boucle de test et de révision.</p></div>
+<div class="journey-card"><div class="k">Vous allez apprendre</div><b>Maintenir un état conversationnel</b><p>Contrat stable, demande courante, mise à jour, clarification, checkpoint et dérive.</p></div>
+<div class="journey-card" data-success-criterion="v1"><div class="k">Critère de réussite</div><b>Reconstruire le contrat actif</b><p>Après plusieurs tours, vous saurez dire ce qui reste applicable, ce qui a été remplacé, ce qui doit être redemandé et ce qui peut être écarté.</p></div>
+</section>
+<section class="section" data-pedagogy="intuition" id="intuition">
+<div class="section-head"><div class="num">01</div><div><h2>Le problème : l’historique n’est pas le contrat</h2><p>Une conversation contient des décisions utiles, des demandes temporaires, des corrections et parfois du bruit.</p></div></div>
+<div class="grid2">
+<div class="panel lesson"><div class="intuition"><strong>Intuition</strong> Au premier tour, vous demandez « 8 questions de Première NSI, strictement dans le programme, sans POO, correction séparée ». Trois tours plus tard, vous dites seulement « rends-les plus difficiles ». La nouvelle phrase ne remplace pas automatiquement les contraintes précédentes.</div>
+<p>Le bon réflexe consiste à distinguer <strong>le contrat stable</strong> de <strong>la demande du tour courant</strong>. Le premier donne le cap ; la seconde indique ce qu’il faut faire maintenant.</p>
+<p>Mais l’inverse est aussi vrai : une instruction explicite plus récente peut <strong>modifier</strong> une ancienne contrainte. Le maintien de contexte n’est donc ni « tout garder » ni « ne regarder que le dernier message ».</p></div>
+<div class="panel checklist">
+<div class="check"><span>①</span><div><b>Stable</b><small>Ce qui reste vrai tant que l’utilisateur ne le modifie pas.</small></div></div>
+<div class="check"><span>②</span><div><b>Courant</b><small>Ce qui concerne seulement l’action ou le sous-problème du tour présent.</small></div></div>
+<div class="check"><span>③</span><div><b>Ouvert</b><small>Ce qui manque encore et doit être clarifié avant d’inventer.</small></div></div>
+<div class="check"><span>④</span><div><b>Écarté</b><small>Ce qui n’aide plus la tâche active et ne mérite pas d’être propagé.</small></div></div>
+</div></div>
+<div class="trainer-only trainer-box"><b>Question formateur.</b> Donner successivement « sans POO », puis « fais-les plus difficiles ». Demander : « La deuxième phrase annule-t-elle la première ? » Puis remplacer le second tour par « finalement, utilise la POO » pour faire apparaître la notion de mise à jour explicite.</div>
+</section>
+<section class="section" data-pedagogy="definition" id="definitions">
+<div class="section-head"><div class="num">02</div><div><h2>Six repères pour tenir une conversation sans perdre le contrat</h2><p>Le but n’est pas de mémoriser tous les mots : il est de maintenir l’information utile à la prochaine décision.</p></div></div>
+<div class="grid3">
+<article class="panel lesson"><h3>Contrat actif</h3><p>Ensemble des objectifs, contraintes et décisions encore applicables.</p><p class="muted"><b>Exemple :</b> public visé, format, périmètre, critères de réussite.</p></article>
+<article class="panel lesson"><h3>Contexte transitoire</h3><p>Information utile pour quelques tours ou pour un sous-problème, sans devenir automatiquement une règle permanente.</p><p class="muted"><b>Question :</b> faudra-t-il encore cette donnée après l’action courante ?</p></article>
+<article class="panel lesson"><h3>Mise à jour explicite</h3><p>Une nouvelle instruction remplace ou précise une décision antérieure : « finalement », « remplace », « désormais », etc.</p><p class="muted"><b>Réflexe :</b> conserver la nouvelle version, pas les deux contraintes incompatibles.</p></article>
+<article class="panel lesson"><h3>Clarification</h3><p>Question posée lorsqu’une information nécessaire n’est pas disponible ou lorsqu’un changement entre en conflit avec le contrat.</p><p class="muted"><b>Limite :</b> clarifier ce qui est réellement bloquant, pas chaque détail.</p></article>
+<article class="panel lesson"><h3>Checkpoint</h3><p>Reformulation compacte de l’état : objectif, contraintes actives, décisions prises et questions ouvertes.</p><p class="muted"><b>Intérêt :</b> réancrer une conversation longue sans recopier tous les tours.</p></article>
+<article class="panel lesson"><h3>Dérive de consigne</h3><p>Le travail s’éloigne progressivement du contrat sans qu’une modification ait été explicitement décidée.</p><p class="muted"><b>Signal :</b> une réponse commence à violer une contrainte pourtant toujours active.</p></article>
+</div>
+</section>
+<section class="section" data-pedagogy="worked-example" id="exemple">
+<div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé : reconstruire l’état plutôt que relire tout le dialogue</h2><p>Une conversation de cinq tours suffit à montrer la différence entre mémoire brute et contrat actif.</p></div></div>
+<div class="panel">
+<p><strong>Tour 1.</strong> « Crée 8 questions de Première NSI sur les dictionnaires, strictement dans le programme, sans POO, avec correction séparée. »</p>
+<div class="steps">
+<div class="step"><div class="n">1</div><div><h3>Extraire les invariants utiles</h3><p>Public = Première NSI · nombre = 8 · périmètre = programme · POO interdite · correction séparée.</p><div class="why"><b>État :</b> ce sont les contraintes actives tant qu’elles ne sont pas modifiées.</div></div></div>
+<div class="step"><div class="n">2</div><div><h3>Tour 2 : « Ajoute deux exercices de listes, mais garde 8 questions au total. »</h3><p>Le contenu évolue, le total reste explicitement stable.</p><div class="why"><b>Action :</b> mettre à jour la répartition, conserver les autres invariants.</div></div></div>
+<div class="step"><div class="n">3</div><div><h3>Tour 3 : « Mets finalement la correction juste après chaque question. »</h3><p>Cette instruction contredit volontairement « correction séparée ».</p><div class="why"><b>Action :</b> remplacer l’ancienne règle par la nouvelle ; ne pas garder deux versions incompatibles.</div></div></div>
+<div class="step"><div class="n">4</div><div><h3>Tour 4 : « Ajoute un exercice sur les arbres binaires. »</h3><p>Cette demande entre en tension avec le périmètre « strictement Première NSI ».</p><div class="why"><b>Action :</b> demander si le périmètre peut être élargi plutôt que de supposer silencieusement que la contrainte a disparu.</div></div></div>
+<div class="step"><div class="n">5</div><div><h3>Faire un checkpoint</h3><p>« Contrat actuel : 8 questions, Première NSI, dictionnaires + listes, sans POO, correction après chaque question. Question ouverte : souhaitez-vous sortir du périmètre Première pour ajouter les arbres binaires ? »</p><div class="why"><b>Effet :</b> un état compact remplace la relecture mentale de tous les tours.</div></div></div>
+</div>
+<div class="example-result"><b>Principe obtenu :</b> conserver les décisions actives, supprimer les versions remplacées, isoler les questions ouvertes et ne pas transformer une information absente en supposition.</div>
+</div>
+</section>
+<section class="section" data-pedagogy="guided-practice" id="builder">
+<div class="section-head"><div class="num">04</div><div><h2>Context Ledger Lab — que faire de chaque nouveau tour ?</h2><p>Pour chaque message, choisissez l’opération qui protège le mieux le contrat actif.</p></div></div>
+<div class="grid2">
+<div class="panel">
+<h3>Contrat initial</h3>
+<div class="context-ledger-mini"><p><b>Objectif :</b> 8 questions d’entraînement.</p><p><b>Public :</b> Première NSI, strictement dans le programme.</p><p><b>Contraintes :</b> dictionnaires · sans POO · correction séparée.</p></div>
+<div class="turn-list" id="conversationTurns">
+<article class="turn-case" data-answer="update"><b>T2</b><p>« Ajoute deux exercices de listes, mais garde 8 questions au total. »</p><select data-turn><option value="">Décider…</option><option value="keep">CONSERVER sans changement</option><option value="update">METTRE À JOUR le contrat</option><option value="ask">REDEMANDER une précision</option><option value="drop">ÉCARTER du contexte actif</option></select><div class="turn-feedback">La répartition du contenu change ; le total de 8 est confirmé.</div></article>
+<article class="turn-case" data-answer="update"><b>T3</b><p>« Mets finalement la correction juste après chaque question. »</p><select data-turn><option value="">Décider…</option><option value="keep">CONSERVER sans changement</option><option value="update">METTRE À JOUR le contrat</option><option value="ask">REDEMANDER une précision</option><option value="drop">ÉCARTER du contexte actif</option></select><div class="turn-feedback">« Finalement » remplace explicitement l’ancienne règle « correction séparée ».</div></article>
+<article class="turn-case" data-answer="ask"><b>T4</b><p>« Ajoute un exercice sur les arbres binaires. »</p><select data-turn><option value="">Décider…</option><option value="keep">CONSERVER sans changement</option><option value="update">METTRE À JOUR le contrat</option><option value="ask">REDEMANDER une précision</option><option value="drop">ÉCARTER du contexte actif</option></select><div class="turn-feedback">La demande entre en conflit avec le périmètre Première NSI ; il faut savoir si ce périmètre est volontairement levé.</div></article>
+<article class="turn-case" data-answer="ask"><b>T5</b><p>« Comme la dernière fois, conserve le même barème. »</p><select data-turn><option value="">Décider…</option><option value="keep">CONSERVER sans changement</option><option value="update">METTRE À JOUR le contrat</option><option value="ask">REDEMANDER une précision</option><option value="drop">ÉCARTER du contexte actif</option></select><div class="turn-feedback">Aucun barème antérieur n’est disponible dans cette conversation : il faut le demander plutôt que l’inventer.</div></article>
+<article class="turn-case" data-answer="drop"><b>T6</b><p>« Au fait, mon imprimante est en panne. »</p><select data-turn><option value="">Décider…</option><option value="keep">CONSERVER sans changement</option><option value="update">METTRE À JOUR le contrat</option><option value="ask">REDEMANDER une précision</option><option value="drop">ÉCARTER du contexte actif</option></select><div class="turn-feedback">Cette information n’aide pas la génération des questions ; elle ne doit pas devenir une contrainte persistante.</div></article>
+</div>
+<div class="actions"><button class="primary" id="runLedger" type="button">Vérifier les décisions</button><button class="secondary" id="resetLedger" type="button">Réinitialiser</button></div>
+</div>
+<div class="panel"><h3>Checkpoint du contrat</h3><div class="system-view" id="builderOutput" role="status" aria-live="polite" aria-atomic="true"></div><div class="notice" id="builderNotice"><strong>Principe.</strong> Le bon contexte est celui qui rend la prochaine décision possible sans transporter inutilement toute la conversation.</div></div>
+</div>
+<div class="trainer-only trainer-box"><b>Débrief formateur.</b> Faire distinguer T4 et T5 : dans T4, l’information nouvelle existe mais crée un conflit ; dans T5, l’information de référence n’existe pas du tout. Dans les deux cas on redemande, mais pour deux raisons différentes.</div>
+</section>
+<section class="section" data-pedagogy="completion" id="completer">
+<div class="section-head"><div class="num">05</div><div><h2>Je complète — maintenir ou redemander ?</h2><p>Choisissez le geste qui préserve le contrat avec le moins d’hypothèses inutiles.</p></div></div>
+<div class="panel completion">
+<div class="completion-row"><strong>« Garde le même public et raccourcis à 5 questions. »</strong><span class="arrow">→</span><select data-completion="update"><option value="">Choisir…</option><option value="update">Mettre à jour le nombre, conserver le public</option><option value="erase">Effacer tout le contrat</option><option value="ask">Redemander le public</option></select></div>
+<div class="completion-row"><strong>« Fais comme le document que je t’ai envoyé hier. » Aucun document n’est disponible ici.</strong><span class="arrow">→</span><select data-completion="ask"><option value="">Choisir…</option><option value="ask">Demander le document ou les caractéristiques nécessaires</option><option value="guess">Deviner son contenu</option><option value="ignore">Prétendre l’avoir lu</option></select></div>
+<div class="completion-row"><strong>Après 20 tours, les contraintes actives sont dispersées.</strong><span class="arrow">→</span><select data-completion="checkpoint"><option value="">Choisir…</option><option value="checkpoint">Produire un checkpoint compact du contrat et des questions ouvertes</option><option value="copy">Recopier mot pour mot les 20 tours</option><option value="latest">Ne garder que le dernier message</option></select></div>
+<div class="completion-row"><strong>Une ancienne contrainte a été explicitement remplacée.</strong><span class="arrow">→</span><select data-completion="replace"><option value="">Choisir…</option><option value="replace">Conserver la nouvelle version et supprimer l’ancienne du contrat actif</option><option value="both">Garder les deux comme simultanément vraies</option><option value="old">Ignorer la modification récente</option></select></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div>
+<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
+</div>
+</section>
+<section class="section" data-pedagogy="misconception" id="pieges">
+<div class="section-head"><div class="num">06</div><div><h2>Six pièges qui font dériver une conversation</h2><p>Un dialogue long échoue souvent moins par manque d’informations que par mauvaise gestion de leur statut.</p></div></div>
+<div class="misgrid">
+<article class="mis"><div class="wrong">« Tout l’historique est une mémoire fiable »</div><p>L’historique peut être incomplet, résumé, limité ou contenir des informations devenues obsolètes.</p><div class="right">Correction : raisonner sur l’état actif, pas sur une mémoire supposée parfaite.</div></article>
+<article class="mis"><div class="wrong">« Plus je recopie de contexte, mieux c’est »</div><p>Le contexte est fini ; du bruit ancien peut masquer les contraintes qui comptent réellement.</p><div class="right">Correction : conserver ce qui influence encore la prochaine réponse.</div></article>
+<article class="mis"><div class="wrong">« Le dernier message annule tout ce qui précède »</div><p>Une demande locale peut simplement compléter le contrat existant.</p><div class="right">Correction : ne remplacer une contrainte que lorsqu’un changement est explicite ou nécessairement impliqué.</div></article>
+<article class="mis"><div class="wrong">« Si une information manque, le modèle peut l’inférer »</div><p>Une référence absente — fichier, choix antérieur, valeur — ne devient pas vraie parce qu’elle serait plausible.</p><div class="right">Correction : redemander l’information bloquante au lieu de fabriquer une continuité.</div></article>
+<article class="mis"><div class="wrong">« Un résumé de conversation suffit toujours »</div><p>Un résumé peut perdre une exception, une contrainte négative ou une question encore ouverte.</p><div class="right">Correction : structurer le checkpoint en décisions actives, remplacements et inconnues.</div></article>
+<article class="mis"><div class="wrong">« Poser davantage de questions est toujours plus sûr »</div><p>Redemander des informations déjà connues surcharge inutilement l’utilisateur et casse la fluidité.</p><div class="right">Correction : clarifier seulement ce qui bloque ou change matériellement la décision.</div></article>
+</div>
+</section>
+<section class="section" data-pedagogy="self-explanation" id="expliquer">
+<div class="section-head"><div class="num">07</div><div><h2>Expliquez avec vos mots</h2><p>Votre réponse doit montrer que vous savez transformer une conversation en état de travail compact.</p></div></div>
+<div class="panel selfbox">
+<label for="explainText"><strong>Consigne.</strong> Un collègue dit : « Pour être sûr de ne rien oublier, je recopie toute la conversation dans chaque nouveau prompt. » Expliquez en 5 à 7 phrases pourquoi ce n’est pas toujours la meilleure stratégie et proposez un checkpoint plus robuste.</label>
+<textarea id="explainText" placeholder="Écrivez votre explication ici…"></textarea>
+<div class="criteria">
+<label><input type="checkbox"> J’ai distingué historique brut et contrat actif.</label>
+<label><input type="checkbox"> J’ai mentionné que le contexte est une ressource finie.</label>
+<label><input type="checkbox"> J’ai prévu une place explicite pour les questions ouvertes ou informations absentes.</label>
+<label><input type="checkbox"> J’ai expliqué quand une nouvelle instruction remplace réellement une ancienne contrainte.</label>
+</div>
+</div>
+</section>
+<section class="section" data-pedagogy="retrieval" id="quiz">
+<div class="section-head"><div class="num">08</div><div><h2>Récupération active — garder le fil sans tout garder</h2><p>Chaque question vérifie une décision de gestion de contexte.</p></div></div>
+<form class="quiz" id="quizForm">
+<fieldset class="q" data-answer="b"><legend>1. Dans une conversation longue, le « contrat actif » désigne surtout…</legend><label><input type="radio" name="q1" value="a"> tous les mots de tous les tours.</label><label><input type="radio" name="q1" value="b"> les objectifs, contraintes et décisions encore applicables.</label><label><input type="radio" name="q1" value="c"> uniquement le dernier message.</label><div class="feedback"><b>Pourquoi ?</b> Le contrat actif résume l’état utile à la tâche, pas l’historique brut.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. « Finalement, mets la correction après chaque question » signifie…</legend><label><input type="radio" name="q2" value="a"> garder aussi « correction séparée ».</label><label><input type="radio" name="q2" value="b"> ignorer le nouveau message.</label><label><input type="radio" name="q2" value="c"> remplacer l’ancienne contrainte par la nouvelle.</label><div class="feedback"><b>Pourquoi ?</b> « Finalement » marque ici une mise à jour explicite du contrat.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>3. Une demande fait référence à un document absent du contexte. Le meilleur réflexe est…</legend><label><input type="radio" name="q3" value="a"> demander le document ou l’information nécessaire.</label><label><input type="radio" name="q3" value="b"> inventer ce qu’il contenait probablement.</label><label><input type="radio" name="q3" value="c"> répondre comme si le document avait été lu.</label><div class="feedback"><b>Pourquoi ?</b> Une référence absente est une inconnue, pas une invitation à fabriquer une continuité.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>4. Pourquoi un checkpoint structuré est-il utile ?</legend><label><input type="radio" name="q4" value="a"> il agrandit la fenêtre de contexte.</label><label><input type="radio" name="q4" value="b"> il réancre objectifs, contraintes, décisions et questions ouvertes sans recopier tous les tours.</label><label><input type="radio" name="q4" value="c"> il rend inutiles les clarifications.</label><div class="feedback"><b>Pourquoi ?</b> Le checkpoint compacte l’état pertinent ; il ne crée ni mémoire infinie ni informations manquantes.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Quel signal révèle le mieux une dérive de consigne ?</legend><label><input type="radio" name="q5" value="a"> la conversation dépasse trois tours.</label><label><input type="radio" name="q5" value="b"> l’utilisateur ajoute une précision.</label><label><input type="radio" name="q5" value="c"> une réponse viole une contrainte toujours active sans décision explicite de la changer.</label><div class="feedback"><b>Pourquoi ?</b> La dérive correspond à une perte du contrat, pas à la longueur du dialogue.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>6. Quelle stratégie de contexte est la plus robuste ?</legend><label><input type="radio" name="q6" value="a"> conserver l’information encore décisionnelle et écarter le bruit obsolète.</label><label><input type="radio" name="q6" value="b"> toujours ajouter davantage d’historique.</label><label><input type="radio" name="q6" value="c"> supprimer tous les anciens tours.</label><div class="feedback"><b>Pourquoi ?</b> Le bon contexte maximise l’utilité des informations disponibles pour la prochaine réponse.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger le test</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
+</form>
+</section>
+<section class="section" data-pedagogy="transfer" id="transfert">
+<div class="section-head"><div class="num">09</div><div><h2>Transfert — quatre conversations qui changent de cap</h2><p>Choisissez l’action qui conserve le bon état sans inventer ni répéter inutilement.</p></div></div>
+<div class="transfer">
+<article class="transfer-card" data-answer="update"><h3>Préparation d’un voyage</h3><p>Le contrat indique « trois nuits à Rome ». Plus tard : « finalement, faisons quatre nuits ».</p><label>Que faire ?</label><select><option value="">Choisir…</option><option value="update">Remplacer trois nuits par quatre dans le contrat actif</option><option value="both">Conserver les deux durées</option><option value="ask">Redemander la ville</option></select><div class="transfer-feedback">La nouvelle instruction modifie explicitement une contrainte et ne remet pas en cause le reste du contrat.</div></article>
+<article class="transfer-card" data-answer="ask"><h3>Analyse d’un fichier</h3><p>« Compare avec le tableur que je t’avais envoyé dans une autre conversation. » Aucun fichier correspondant n’est disponible.</p><label>Que faire ?</label><select><option value="">Choisir…</option><option value="guess">Inventer les valeurs probables</option><option value="ask">Demander le fichier ou les données nécessaires</option><option value="drop">Ignorer la comparaison et prétendre l’avoir faite</option></select><div class="transfer-feedback">La référence externe au contexte courant doit être résolue avant d’effectuer la comparaison.</div></article>
+<article class="transfer-card" data-answer="checkpoint"><h3>Projet logiciel</h3><p>Après de nombreux tours, architecture, contraintes et décisions sont dispersées dans l’historique.</p><label>Quel geste est le plus utile ?</label><select><option value="">Choisir…</option><option value="checkpoint">Créer un checkpoint : décisions actives, changements, questions ouvertes</option><option value="copy">Recopier l’intégralité de la conversation sans tri</option><option value="latest">Ne regarder que le dernier message</option></select><div class="transfer-feedback">Le checkpoint rend l’état explicite et contrôlable tout en réduisant le bruit conversationnel.</div></article>
+<article class="transfer-card" data-answer="drift"><h3>Rédaction d’un rapport</h3><p>Le ton demandé reste « neutre et factuel », mais plusieurs tours plus tard la réponse devient promotionnelle sans demande de changement.</p><label>Quel diagnostic ?</label><select><option value="">Choisir…</option><option value="normal">Évolution normale du style</option><option value="drift">Dérive : une contrainte toujours active a été perdue</option><option value="replace">Le dernier tour annule automatiquement le ton initial</option></select><div class="transfer-feedback">Aucun changement explicite n’a remplacé la contrainte de ton : le contrat a dérivé.</div></article>
+</div>
+<div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
+</section>
+<section class="section" data-pedagogy="recap" id="synthese">
+<div class="section-head"><div class="num">10</div><div><h2>À retenir : une conversation robuste maintient un état, pas une pile de messages</h2><p>Le contexte utile doit rester suffisamment complet pour respecter le contrat, mais suffisamment compact pour ne pas noyer la prochaine décision.</p></div></div>
+<div class="recap">
+<article><b>1. Séparez contrat et demande courante.</b><p>Les invariants persistent ; la demande du tour dit seulement ce qu’il faut faire maintenant.</p></article>
+<article><b>2. Remplacez explicitement les anciennes versions.</b><p>Une contrainte modifiée ne doit pas coexister avec sa version obsolète.</p></article>
+<article><b>3. Redemandez ce qui manque réellement.</b><p>Un fichier absent, un choix inconnu ou un conflit bloquant ne doivent pas être inventés.</p></article>
+<article><b>4. Utilisez des checkpoints.</b><p>Objectif, contraintes, décisions et questions ouvertes forment un état compact et vérifiable.</p></article>
+<article><b>5. Surveillez la dérive.</b><p>Une contrainte toujours active qui disparaît des réponses est un signal de perte de cap.</p></article>
+<article><b>6. Curez le contexte.</b><p>Plus d’historique n’est pas automatiquement meilleur ; gardez ce qui influence encore la tâche.</p></article>
+</div>
+<div class="notice" style="margin-top:14px"><strong>Pont vers la suite.</strong> P2S4 ferme la première boucle complète du dialogue : spécifier, exemplifier, tester puis maintenir le contrat dans le temps. Le prochain module pourra traiter une dimension plus opérationnelle : décomposer une tâche complexe en sous-tâches, planifier les étapes et décider quand demander validation ou utiliser un outil.</div>
+<div class="refs" style="margin-top:14px">
+<div class="ref"><b>OpenAI — Prompt engineering.</b> Les conversations multi-tours reposent sur des messages de rôles différents, et certaines instructions de requête doivent être réappliquées selon la manière dont l’état conversationnel est géré.</div>
+<div class="ref"><b>OpenAI — Prompt generation.</b> Les exemples multi-tours doivent refléter une conversation organique et préserver les informations, règles et contraintes fournies par l’utilisateur.</div>
+<div class="ref"><b>Anthropic — Effective context engineering.</b> Le contexte est une ressource finie ; l’enjeu est de sélectionner et maintenir les tokens les plus utiles au comportement souhaité.</div>
+<div class="ref"><b>Google Gemini — Interactions & prompting strategies.</b> L’historique conversationnel peut être géré côté serveur ou côté client, tandis que certains paramètres et instructions restent propres à l’interaction courante ; les informations absentes peuvent nécessiter de redemander à l’utilisateur.</div>
+</div>
+</section>
+<nav class="next-step" aria-label="Navigation du parcours"><a href="dialoguer-iterer.html">← Étape 3 · Tester & itérer</a><div class="center">Vous êtes prêt si vous pouvez reconstruire le contrat actif d’une conversation sans inventer les informations absentes ni conserver les règles remplacées.<br><a class="cockpit-return" href="../index.html#dashboard">⌂ Retour au cockpit</a></div><a href="../index.html#progression">Progression →</a></nav>
+<footer class="footer">Formation LLM · Parcours 2 · P2S4 · NOVICE-FIRST 1.0 · Aucun appel réseau.</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var root=document.documentElement,body=document.body;
+function applyTheme(t){root.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}
+var saved=window.LATENT_STORAGE.get("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
+document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
+function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}
+setTrainerMode(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");
+document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
+function setProjectorMode(on){root.classList.toggle("projector",on);var btn=document.getElementById("projectorBtn");btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection"}
+document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!root.classList.contains("projector"))});
+document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
+
+var ledger={
+ stable:["8 questions","Première NSI · strictement dans le programme","sans POO"],
+ updates:["dictionnaires + 2 exercices de listes","correction après chaque question"],
+ open:["Confirmer si le périmètre Première peut être élargi pour les arbres binaires","Demander le barème auquel « la dernière fois » fait référence"],
+ dropped:["panne d’imprimante"]
+};
+function renderLedger(score,total){
+ const out=document.getElementById("builderOutput"),notice=document.getElementById("builderNotice");
+ out.innerHTML="<p><b>Contrat actif</b></p><p><b>Stable.</b> "+ledger.stable.join(" · ")+"</p><p><b>Mises à jour.</b> "+ledger.updates.join(" · ")+"</p><p><b>Questions ouvertes.</b> "+ledger.open.join(" · ")+"</p><p><b>Écarté.</b> "+ledger.dropped.join(" · ")+"</p>";
+ notice.innerHTML="<strong>"+(score===undefined?"Principe.":"Décisions : "+score+" / "+total+".")+"</strong> "+(score===undefined?"Le checkpoint conserve ce qui influence encore la tâche et rend visibles les inconnues.":score===total?"Vous maintenez un état cohérent sans inventer de continuité.":"Repérez si le nouveau tour modifie le contrat, manque d’information ou n’aide plus la tâche.");
+}
+document.getElementById("runLedger").addEventListener("click",function(){
+ let score=0,total=0;
+ document.querySelectorAll(".turn-case").forEach(function(c){
+  total++;const s=c.querySelector("select"),ok=s.value===c.dataset.answer;
+  c.classList.toggle("good",ok);c.classList.toggle("bad",!ok);
+  if(ok)score++;
+ });
+ renderLedger(score,total);
+});
+document.getElementById("resetLedger").addEventListener("click",function(){
+ document.querySelectorAll(".turn-case select").forEach(s=>s.value="");
+ document.querySelectorAll(".turn-case").forEach(c=>c.classList.remove("good","bad"));
+ renderLedger();
+});
+renderLedger();
+
+document.getElementById("checkCompletion").addEventListener("click",function(){var total=0,ok=0;document.querySelectorAll("#completer [data-completion]").forEach(function(s){total++;if(s.value===s.dataset.completion)ok++});var box=document.getElementById("completionFeedback");box.classList.add("show");box.innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Vous distinguez maintien, mise à jour, checkpoint et clarification.":"Demandez-vous si l’information est connue, remplacée, absente ou devenue inutile.")});
+document.getElementById("resetCompletion").addEventListener("click",function(){document.querySelectorAll("#completer [data-completion]").forEach(s=>s.value="");document.getElementById("completionFeedback").classList.remove("show")});
+
+document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var ok=0,total=0;document.querySelectorAll("#quizForm .q").forEach(function(q){total++;var chosen=q.querySelector("input:checked"),good=chosen&&chosen.value===q.dataset.answer;q.classList.toggle("ok",!!good);q.classList.toggle("bad",!good);if(good)ok++});document.getElementById("quizScore").textContent=ok+" / "+total+(ok===total?" · maîtrise solide":" · relisez les feedbacks")});
+document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll("#quizForm .q").forEach(q=>q.classList.remove("ok","bad"));document.getElementById("quizScore").textContent=""});
+document.getElementById("checkTransfer").addEventListener("click",function(){var score=0,total=0;document.querySelectorAll(".transfer-card").forEach(function(c){total++;var good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});document.getElementById("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":" · identifiez ce qui appartient au contrat, à une mise à jour ou à une inconnue")});
+})();
+</script><script data-learning-system="v2" data-step-registry="v1">
+(function(){"use strict";
+const KEY="formation-llm-learning-v2",MODULE="P2S4",QUIZ_MIS=["P2S4.HISTORY_MEMORY","P2S4.STABLE_TRANSIENT","P2S4.CLARIFY","P2S4.RECAP","P2S4.DRIFT","P2S4.CONTEXT_BUDGET"],TRANSFER_MIS=["P2S4.STABLE_TRANSIENT","P2S4.CLARIFY","P2S4.RECAP","P2S4.DRIFT"],META={"A.MODEL_APP":["Modèle ≠ application","exemple"],"A.PARAMETERS":["Paramètres ≠ base documentaire","pieges"],"A.OPENNESS":["Open weights ≠ open source","pieges"],"A.GPAI":["GPAI : catégorie juridique européenne","definitions"],"A.LM_LLM":["Modèle de langage ≠ LLM moderne","definitions"],"B.TOKEN_WORD":["Token ≠ mot","pieges"],"B.ID_SEMANTICS":["ID ≠ sens","pieges"],"B.EMBEDDING_CONTEXT":["Embedding initial ≠ représentation contextualisée","synthese"],"B.COSINE_TRUTH":["Cosinus ≠ vérité","pieges"],"B.CONTEXT_MEMORY":["Contexte ≠ mémoire","contexte"],"B.SUBWORD":["Pourquoi les sous-mots","definitions"],"C.QKV_OBJECTS":["Q/K/V sont des vecteurs","qkv"],"C.DOT_PROB":["Q·K ≠ probabilité","pieges"],"C.SCALING":["Rôle de √dₖ","exemple"],"C.SOFTMAX":["Softmax d’attention = poids locaux","exemple"],"C.CAUSAL":["Masque causal et futur interdit","masque"],"C.ATTENTION_TRUTH":["Poids d’attention ≠ vérité","pieges"],"P1S3.ATTENTION_ONLY":["Transformer ≠ attention seule","intuition"],"P1S3.MLP":["Attention communique, MLP transforme","mlp"],"P1S3.RESIDUAL":["Connexion résiduelle x + F(x)","exemple"],"P1S3.POSITION":["Rôle de la position / RoPE","position"],"P1S3.KV_MEMORY":["KV cache ≠ mémoire applicative","pieges"],"P1S3.STACK":["Les représentations évoluent bloc après bloc","stack"],"P1S4.LOGIT_PROB":["Logit ≠ probabilité","pieges"],"P1S4.GREEDY_GLOBAL":["Greedy = argmax local","pieges"],"P1S4.TEMP":["Température et distribution","exemple"],"P1S4.TOPP":["Top-p = masse cumulée","filters"],"P1S4.TEMP_TRUTH":["Température basse ≠ factualité","truth"],"P1S4.AUTOREGRESSIVE":["Chaque token devient du contexte","loop"],"HALL.FLUENCY_TRUTH":["Fluidité ≠ factualité","pieges"],"HALL.CALIBRATION":["Confiance verbale ≠ calibration","calibration"],"HALL.VERIFICATION":["Auto-révision ≠ preuve indépendante","scenarios"],"HALL.ABSTENTION":["Clarification ou abstention","abstention"],"HALL.CITATION":["Citation ≠ preuve pertinente","pieges"],"HALL.NO_EVIDENCE":["Absence de preuve ≠ contradiction","pieges"],"RAG.CHUNKING":["Chunking : taille, frontières, overlap","definitions"],"RAG.ANN":["ANN = compromis vitesse / recall","pieges"],"RAG.RERANK":["Reranker : candidats déjà récupérés","pieges"],"RAG.RECALL":["Recall = couverture, pas vérité","metrics-intro"],"RAG.HYBRID":["Lexical + vectoriel","exemple"],"RAG.RETRIEVAL_GENERATION":["Retrieval ≠ génération","synthese"],"P2S1.VAGUE":["Objectif vague ≠ liberté utile","intuition"],"P2S1.LONGER":["Prompt long ≠ prompt meilleur","pieges"],"P2S1.ROLE_MAGIC":["Rôle ≠ garantie de compétence","pieges"],"P2S1.FORMAT":["Format demandé ≠ validité garantie","pieges"],"P2S1.CONTEXT":["Plus de contexte ≠ meilleur contexte","pieges"],"P2S1.CRITERIA":["Critère de réussite observable","definitions"],"P2S2.EXAMPLE_RULE":["Few-shot = démonstrations, pas règle complète","definitions"],"P2S2.DIVERSITY":["Diversité utile > répétition","pieges"],"P2S2.BOUNDARY":["Cas frontière = arbitrage près d’une limite","intuition"],"P2S2.FORMAT":["Format demandé ≠ garantie de schéma","pieges"],"P2S2.FORMAT_TRUTH":["Structure valide ≠ contenu vrai","pieges"],"P2S2.FEW_SHOT_TRAINING":["Few-shot ≠ réentraînement des poids","pieges"],"P2S3.FEEL":["« Ça semble mieux » ≠ preuve","intuition"],"P2S3.MULTI_CHANGE":["Plusieurs changements ≠ cause identifiable","pieges"],"P2S3.TEST_SET":["Jeu de tests : représentativité > volume","definitions"],"P2S3.REGRESSION":["Amélioration locale peut créer une régression","exemple"],"P2S3.OVERFIT":["Optimiser les tests visibles ≠ généraliser","pieges"],"P2S3.SCORE_ONLY":["Score agrégé ≠ analyse des erreurs","pieges"],"P2S4.HISTORY_MEMORY":["Historique ≠ mémoire parfaite","pieges"],"P2S4.STABLE_TRANSIENT":["Contrat stable ≠ demande transitoire","definitions"],"P2S4.CLARIFY":["Information absente → clarification, pas invention","pieges"],"P2S4.RECAP":["Checkpoint structuré ≠ résumé vague","definitions"],"P2S4.DRIFT":["Dérive = contrainte active perdue","pieges"],"P2S4.CONTEXT_BUDGET":["Plus de contexte ≠ meilleur contexte","pieges"]};
+function load(){try{return JSON.parse(window.LATENT_STORAGE.get(KEY)||"{}")}catch(e){return{}}}
+function save(s){try{window.LATENT_STORAGE.set(KEY,JSON.stringify(s))}catch(e){}}
+function ensure(s){s.version=2;s.modules=s.modules||{};s.modules[MODULE]=s.modules[MODULE]||{};s.misconceptions=s.misconceptions||{};s.preferences=s.preferences||{progressive:true};return s}
+function addMis(s,id,source){if(!id)return;const old=s.misconceptions[id]||{},meta=META[id]||[id,""];s.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),resolvedAt:null,module:MODULE,label:meta[0],anchor:meta[1],source:source}}function resolveMis(s,id,source){if(!id||!s.misconceptions[id])return;s.misconceptions[id].resolvedAt=new Date().toISOString();s.misconceptions[id].resolvedSource=source}
+function mastery(s){const m=s.modules[MODULE]||{},qr=m.quiz?m.quiz.score/m.quiz.total:0,tr=m.transfer?m.transfer.score/m.transfer.total:0,had=m.mastery?.status==="mastered",ok=qr>=.8&&tr>=.8;m.mastery=m.mastery||{};if(ok){m.mastery.status="mastered";if(!m.mastery.masteredAt)m.mastery.masteredAt=new Date().toISOString();if(!m.review?.nextDue){const next=new Date(Date.now()+86400000).toISOString();m.review={level:0,nextDue:next,lastAt:null,lastScore:null}}}else if(m.quiz||m.transfer)m.mastery.status="evidence";else m.mastery.status="learning";s.modules[MODULE]=m;return ok}
+function saveQuiz(){const form=document.getElementById("quizForm");if(!form)return;const qs=[...form.querySelectorAll(".q")];let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();qs.forEach((q,i)=>{const id=QUIZ_MIS[i];seen.add(id);const c=q.querySelector("input:checked"),ok=!!c&&c.value===q.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-quiz"):resolveMis(s,id,"module-quiz"));s.modules[MODULE].quiz={score,total:qs.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
+function saveTransfer(){const cards=[...document.querySelectorAll(".transfer-card")];if(!cards.length)return;let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();cards.forEach((c,i)=>{const id=TRANSFER_MIS[i];seen.add(id);const sel=c.querySelector("select"),ok=!!sel&&sel.value===c.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-transfer"):resolveMis(s,id,"module-transfer"));s.modules[MODULE].transfer={score,total:cards.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
+function saveSelf(){const boxes=[...document.querySelectorAll(".criteria input[type=checkbox]")];if(!boxes.length)return;const s=ensure(load());s.modules[MODULE].selfExplanation={checked:boxes.filter(x=>x.checked).length,total:boxes.length,at:new Date().toISOString()};save(s)}
+const form=document.getElementById("quizForm");if(form)form.addEventListener("submit",saveQuiz);
+const transferBtn=document.getElementById("checkTransfer");if(transferBtn)transferBtn.addEventListener("click",saveTransfer);
+document.querySelectorAll(".criteria input[type=checkbox]").forEach(x=>x.addEventListener("change",saveSelf));
+let currentStep=0;
+const segments=[...document.querySelectorAll("main > section.section")].filter(x=>!x.classList.contains("trainer-only"));
+window.LATENT_STEP_REGISTRY=segments;
+segments.forEach((seg,i)=>{seg.dataset.step=String(i+1);const badge=seg.querySelector(".section-head .num,.section-head .section-num");if(badge){badge.textContent=String(i+1).padStart(2,"0");badge.dataset.stepNumber=String(i+1)}});
+let allVisible=false,unlocked=0;
+function roleTrainer(){return window.LATENT_STORAGE.get("formation-llm-role")==="trainer"}
+function initialUnlock(){const s=ensure(load()),mod=s.modules[MODULE]||{},saved=mod.progressiveStepIndex,legacy=mod.progressiveIndex,route=s.diagnostic?.routes?.[MODULE],fastIndex=Math.max(0,segments.findIndex(x=>x.dataset.pedagogy==="worked-example"));unlocked=Number.isInteger(saved)?saved:Number.isInteger(legacy)?Math.max(0,legacy-1):(route==="fast"?fastIndex:route==="normal"?1:0);if(location.hash){const target=document.querySelector(location.hash);if(target){const seg=target.closest("section.section");const idx=segments.indexOf(seg);if(idx>=0){unlocked=Math.max(unlocked,idx);currentStep=idx}}}unlocked=Math.min(Math.max(unlocked,0),Math.max(0,segments.length-1));currentStep=Math.min(Math.max(currentStep,0),unlocked);}
+function applySegments(){const s=ensure(load()),guided=s.preferences.progressive!==false&&!roleTrainer()&&!allVisible;segments.forEach((seg,i)=>{seg.hidden=guided&&i>unlocked});document.querySelectorAll(".next-step,.footer").forEach(x=>x.hidden=guided&&unlocked<segments.length-1);s.modules[MODULE].progressiveStepIndex=unlocked;s.modules[MODULE].progressiveIndex=unlocked+1;s.lastActivity={module:MODULE,anchor:location.hash||"",at:new Date().toISOString()};save(s);updateGuide()}
+function next(){if(unlocked<segments.length-1){unlocked++;currentStep=unlocked;applySegments();segments[unlocked]?.scrollIntoView({behavior:"smooth",block:"start"})}}
+function toggleAll(){allVisible=!allVisible;applySegments()}
+const guide=document.createElement("div");guide.className="learning-guide";guide.innerHTML='<div><strong id="learningGuideTitle">Guidage adaptatif</strong><small id="learningGuideMeta"></small></div><div class="learning-guide-actions"><button type="button" id="learningAll">Tout afficher</button><button type="button" class="primary-learning" id="learningNext">Continuer →</button></div>';
+const anchor=document.querySelector(".journey")||document.querySelector(".hero");if(anchor)anchor.insertAdjacentElement("afterend",guide);
+document.getElementById("learningNext")?.addEventListener("click",next);document.getElementById("learningAll")?.addEventListener("click",toggleAll);
+function updateGuide(){const s=ensure(load()),m=s.modules[MODULE]||{},status=m.mastery?.status,route=s.diagnostic?.routes?.[MODULE],meta=document.getElementById("learningGuideMeta"),title=document.getElementById("learningGuideTitle");if(!meta||!title)return;title.innerHTML=status==="mastered"?'<span class="learning-mastered">✓ Maîtrise démontrée</span>':"Guidage adaptatif";const prefix=route==="fast"?"Voie rapide issue du diagnostic · ":route==="full"?"Guidage complet recommandé · ":"",stepText="étape "+String(Math.min(currentStep+1,segments.length)).padStart(2,"0")+" / "+String(segments.length).padStart(2,"0");meta.textContent=prefix+stepText+(allVisible||roleTrainer()?" · page complète":"");const n=document.getElementById("learningNext");if(n)n.hidden=allVisible||roleTrainer()||unlocked>=segments.length-1;const a=document.getElementById("learningAll");if(a)a.textContent=allVisible?"Revenir au guidage":"Tout afficher"}
+window.addEventListener("latent:stepchange",e=>{const i=e.detail?.index;if(Number.isInteger(i)&&i>=0&&i<segments.length){currentStep=i;updateGuide()}});
+const trainerToggle=document.getElementById("trainerBtn");if(trainerToggle)trainerToggle.addEventListener("click",function(){setTimeout(function(){applySegments();updateGuide()},0)});initialUnlock();applySegments();
+})();
+</script><script data-latent-nav="v2">
+(function(){"use strict";
+const sections=window.LATENT_STEP_REGISTRY||[...document.querySelectorAll("main > section.section")].filter(s=>!s.classList.contains("trainer-only"));
+if(!sections.length)return;
+const nav=document.createElement("nav");nav.className="layer-nav";nav.setAttribute("aria-label","Sections du module");
+const buttons=sections.map((section,i)=>{const b=document.createElement("button");b.type="button";const number=String(i+1).padStart(2,"0");b.textContent=number;const title=section.querySelector("h2,h3")?.textContent?.trim()||("Section "+number);b.title=title;b.setAttribute("aria-label",number+". "+title);b.addEventListener("click",()=>{if(!section.hidden){window.dispatchEvent(new CustomEvent("latent:stepchange",{detail:{index:i,total:sections.length}}));section.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}});nav.appendChild(b);return b});
+document.body.appendChild(nav);
+function syncLocks(){sections.forEach((s,i)=>buttons[i].disabled=!!s.hidden)}
+syncLocks();
+new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
+function setCurrent(idx){if(idx<0||idx>=sections.length)return;buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"));window.dispatchEvent(new CustomEvent("latent:stepchange",{detail:{index:idx,total:sections.length}}))}
+if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;setCurrent(sections.indexOf(visible.target))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
+const hashTarget=location.hash?document.querySelector(location.hash):null,hashIndex=hashTarget?sections.indexOf(hashTarget.closest("section.section")):-1;setCurrent(hashIndex>=0?hashIndex:0);
+})();
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+<script data-completion-guard="v1">
+(function(){
+ "use strict";
+ const section=document.getElementById("completer");
+ const button=document.getElementById("checkCompletion");
+ const feedback=document.getElementById("completionFeedback");
+ if(!section||!button)return;
+ const fields=[...section.querySelectorAll("select")];
+ fields.forEach(field=>field.setAttribute("required",""));
+ button.addEventListener("click",function(e){
+   const missing=fields.filter(field=>!field.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(feedback){
+     feedback.classList.add("show");
+     feedback.textContent=missing.length+" choix restant"+(missing.length>1?"s":"")+" avant vérification.";
+   }
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
+</html>
