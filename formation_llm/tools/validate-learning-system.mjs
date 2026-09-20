@@ -35,6 +35,11 @@ for(const [name,html] of [['diagnostic.html',diag],['review.html',review]]){
   if(name==='review.html' && !html.includes('resolvedAt')) errors.push('review.html: résolution des remédiations absente');
  }
 }
+if(!diag.includes('data-diagnostic-ux="v1"')) errors.push('diagnostic.html: passe ergonomique mobile absente');
+if(!diag.includes("href='index.html#dashboard'")) errors.push('diagnostic.html: retour explicite au cockpit absent');
+if(!diag.includes('.hero h1{font-size:clamp(2.45rem,11vw,3.7rem)!important')) errors.push('diagnostic.html: héros mobile encore surdimensionné');
+if(!diag.includes('.nav{display:grid!important;grid-template-columns:1fr 1fr!important')) errors.push('diagnostic.html: navigation mobile Précédent/Suivant non stabilisée');
+if(!diag.includes('--ink:#173a42')) errors.push('diagnostic.html: surfaces classiques non adoucies');
 if(index.includes('Marquer acquis')) errors.push('index: auto-déclaration « Marquer acquis » encore présente');
 if(!index.includes('Évaluer ma maîtrise')) errors.push('index: action de maîtrise fondée sur preuves absente');
 if(!index.includes('diagnostic.html')) errors.push('index: diagnostic non intégré');

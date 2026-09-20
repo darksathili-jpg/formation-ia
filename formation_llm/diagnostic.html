@@ -34,7 +34,33 @@ button,.primary,.secondary,.tool,.back,.recommend a{min-height:44px}
 .skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
 .skip-link:focus{transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
-</style></head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent">
+</style><style data-diagnostic-ux="v1">
+/* Cohérence avec les surfaces classiques LATENT validées après audit visuel. */
+:root{--ink:#173a42}
+[data-theme="dark"]{
+ --bg:#0d1a20;--panel:#14282f;--panel2:#1c343c;--text:#edf7f5;--muted:#a7bdc1;
+ --line:rgba(226,247,243,.14);--accent:#5cf0d2;--accent2:#998bff;--soft:#16413a;
+ --oksoft:#1d4435;--warnsoft:#46331c;--badsoft:#53292e;--ink:#183f47;
+ --shadow:0 20px 60px rgba(4,15,19,.27)
+}
+.choice{cursor:pointer}
+.primary,.recommend .primary-route{background:#173a42!important;color:#dffaf4!important;border-color:rgba(92,240,210,.25)!important}
+[data-theme="dark"] .primary,[data-theme="dark"] .recommend .primary-route{background:#204851!important;color:#edfffb!important}
+.recommend-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.recommend-actions a{margin-top:0!important;min-height:44px;display:inline-flex!important;align-items:center;justify-content:center}
+.recommend .cockpit-link{background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--line)!important}
+@media(max-width:650px){
+ .hero{padding:26px 0 22px!important}
+ .hero h1{font-size:clamp(2.45rem,11vw,3.7rem)!important;line-height:.92!important}
+ .hero .lead{line-height:1.62!important}
+ .card{padding:16px!important}
+ .nav{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ .nav .primary,.nav .secondary{width:100%!important;min-width:0!important;padding-inline:8px!important}
+ .recommend-actions{display:grid;grid-template-columns:1fr}
+ .recommend-actions a{width:100%}
+}
+</style>
+</head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent">
 <div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
 <section class="hero"><div class="eyebrow">LATENT / PLACEMENT VECTOR · Diagnostic non noté</div><h1>Où commencer ?</h1><p class="lead">15 questions courtes servent uniquement à doser le guidage. Elles ne donnent aucun badge de maîtrise et ne vous empêchent jamais d’ouvrir un module.</p></section>
 <div class="notice"><strong>Règle importante :</strong> ne cherchez pas les réponses dans les cours pendant le diagnostic. Une erreur est utile : elle permet au système de proposer une remédiation ciblée.</div>
@@ -54,7 +80,7 @@ function render(){const x=questions[i];document.getElementById("bar").style.widt
 function record(){const c=document.querySelector('input[name="answer"]:checked');if(c)answers[questions[i][0]]=Number(c.value);return !!c}
 document.getElementById("prev").onclick=()=>{record();if(i>0){i--;render()}};
 document.getElementById("next").onclick=()=>{if(!record()){alert("Choisissez une réponse avant de continuer.");return}if(i<questions.length-1){i++;render()}else finish()};
-function finish(){const modules=["A","B","C","P1S3","P1S4"],scores={},mis=[];modules.forEach(m=>scores[m]={score:0,total:0});questions.forEach(x=>{scores[x[1]].total++;if(answers[x[0]]===x[5])scores[x[1]].score++;else mis.push(x[2])});const routes={};modules.forEach(m=>{const s=scores[m].score;routes[m]=s<=1?"full":s===2?"normal":"fast"});const first=modules.find(m=>routes[m]!=="fast")||"P1S4";const state=load();state.version=2;state.diagnostic={completedAt:new Date().toISOString(),answers,moduleScores:scores,routes,recommended:first,misconceptions:mis};state.misconceptions=state.misconceptions||{};mis.forEach(id=>{const parts=id.split("."),mod=parts[0];const old=state.misconceptions[id]||{};state.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),module:mod,source:"diagnostic"}});state.preferences=state.preferences||{progressive:true};save(state);document.getElementById("test").hidden=true;const out=document.getElementById("results");out.innerHTML="";modules.forEach(m=>{const r=routes[m],el=document.createElement("article");el.className="result";el.innerHTML="<strong>"+labels[m]+"</strong><span>"+scores[m].score+" / "+scores[m].total+"</span><br><span class='tag "+r+"'>"+(r==="full"?"Guidage complet recommandé":r==="normal"?"Guidage normal":"Voie rapide possible")+"</span>";out.appendChild(el)});document.getElementById("recommend").innerHTML="<strong>Prochaine étape recommandée : "+labels[first]+"</strong><p>"+(routes[first]==="fast"?"Vos prérequis guidés sont solides. Vérifiez directement votre maîtrise par le quiz et le transfert.":"Le système conservera le guidage progressif et fera remonter les confusions détectées.")+"</p><a href='"+hrefs[first]+"'>Continuer →</a>";document.getElementById("summary").classList.add("show");window.scrollTo(0,0)}
+function finish(){const modules=["A","B","C","P1S3","P1S4"],scores={},mis=[];modules.forEach(m=>scores[m]={score:0,total:0});questions.forEach(x=>{scores[x[1]].total++;if(answers[x[0]]===x[5])scores[x[1]].score++;else mis.push(x[2])});const routes={};modules.forEach(m=>{const s=scores[m].score;routes[m]=s<=1?"full":s===2?"normal":"fast"});const first=modules.find(m=>routes[m]!=="fast")||"P1S4";const state=load();state.version=2;state.diagnostic={completedAt:new Date().toISOString(),answers,moduleScores:scores,routes,recommended:first,misconceptions:mis};state.misconceptions=state.misconceptions||{};mis.forEach(id=>{const parts=id.split("."),mod=parts[0];const old=state.misconceptions[id]||{};state.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),module:mod,source:"diagnostic"}});state.preferences=state.preferences||{progressive:true};save(state);document.getElementById("test").hidden=true;const out=document.getElementById("results");out.innerHTML="";modules.forEach(m=>{const r=routes[m],el=document.createElement("article");el.className="result";el.innerHTML="<strong>"+labels[m]+"</strong><span>"+scores[m].score+" / "+scores[m].total+"</span><br><span class='tag "+r+"'>"+(r==="full"?"Guidage complet recommandé":r==="normal"?"Guidage normal":"Voie rapide possible")+"</span>";out.appendChild(el)});document.getElementById("recommend").innerHTML="<strong>Prochaine étape recommandée : "+labels[first]+"</strong><p>"+(routes[first]==="fast"?"Vos prérequis guidés sont solides. Vérifiez directement votre maîtrise par le quiz et le transfert.":"Le système conservera le guidage progressif et fera remonter les confusions détectées.")+"</p><div class='recommend-actions'><a class='primary-route' href='"+hrefs[first]+"'>Continuer →</a><a class='cockpit-link' href='index.html#dashboard'>⌂ Retour au cockpit</a></div>";document.getElementById("summary").classList.add("show");window.scrollTo(0,0)}
 render();
 })();
 </script></body></html>
