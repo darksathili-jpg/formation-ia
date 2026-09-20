@@ -56,6 +56,8 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
  if(!html.includes('data-mobile-module-ux="v1"')) errors.push(page+': barre d’outils mobile non stabilisée');
  if(!html.includes('grid-template-columns:repeat(3,minmax(0,1fr))')) errors.push(page+': commandes mobiles non réparties sur trois cibles');
+ if(!html.includes('#trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}')) errors.push(page+': libellé mobile du mode formateur non synchronisé');
+ if(!html.includes('#projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}')) errors.push(page+': libellé mobile de projection non synchronisé');
  if(!html.includes('href="../index.html#dashboard"')) errors.push(page+': retour cockpit absent en fin de module');
 }
 
