@@ -87,6 +87,15 @@
       "priority": 9,
       "reviewed_on": "2026-09-20",
       "notes": "Deuxième module natif post-gel V1 : few-shot, diversité, contrastes, cas frontières, hors domaine, contrat de sortie, pratique guidée, récupération et transfert."
+    },
+    {
+      "path": "modules/dialoguer-iterer.html",
+      "label": "Parcours 2 — Tester et itérer un prompt",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 10,
+      "reviewed_on": "2026-09-20",
+      "notes": "Troisième module natif post-gel V1 : baseline, échec observé, hypothèse, jeu de tests représentatif, modification contrôlée, régression, sur-ajustement, Iteration Lab, récupération et transfert."
     }
   ]
 }
