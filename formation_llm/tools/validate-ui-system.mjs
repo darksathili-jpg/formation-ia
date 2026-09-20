@@ -45,6 +45,8 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(!html.includes('.q label{min-height:44px')) errors.push(page+': cibles tactiles du quiz non harmonisées');
 }
 if(!index.includes('data-ux-audit="v1"')||!index.includes('.mobile-nav{height:57px')||!index.includes('.topbar{top:57px}')) errors.push('index.html: empilement sticky mobile non verrouillé');
+if(!index.includes('html.projector .path-n{')||!index.includes('html.projector #learningSequence .module:after{')) errors.push('index.html: éléments sombres résiduels du cockpit en projection');
+if(!index.includes('html.projector .state{font-size:.82rem')) errors.push('index.html: badges d’état trop petits en projection');
 
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');
