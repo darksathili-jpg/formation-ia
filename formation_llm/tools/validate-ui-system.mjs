@@ -20,8 +20,33 @@ for(const page of pages){
 }
 for(const page of pages.filter(p=>p.startsWith('modules/'))){
  const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
- if(!html.includes('data-latent-nav="v1"')||!html.includes('layer-nav')) errors.push(page+': Layer Navigator absent');
+ if(!html.includes('data-latent-nav="v2"')||!html.includes('layer-nav')) errors.push(page+': Layer Navigator V2 absent');
  if(!html.includes('aria-current","step"')) errors.push(page+': état de section courante absent');
+}
+function learnerStepSections(html){
+ const main=(html.match(/<main\b[\s\S]*?<\/main>/)||[''])[0];
+ return [...main.matchAll(/<section\b([^>]*)>([\s\S]*?)(?=<section\b|<\/main>)/g)]
+  .filter(m=>/\bclass="[^"]*\bsection\b[^"]*"/.test(m[1])&&!/\btrainer-only\b/.test(m[1]))
+  .map(m=>({attrs:m[1],body:m[2]}));
+}
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ const steps=learnerStepSections(html);
+ if(!html.includes('data-step-registry="v1"')) errors.push(page+': registre canonique des étapes absent');
+ if(!html.includes('window.LATENT_STEP_REGISTRY=segments')) errors.push(page+': registre d’étapes non partagé');
+ if(!html.includes('main > section.section')||!html.includes('!x.classList.contains("trainer-only")')) errors.push(page+': sélecteur canonique des étapes absent');
+ if(html.includes('querySelectorAll("main > section")].filter(x=>!x.classList.contains("hero"))')) errors.push(page+': ancien comptage incluant les prérequis encore présent');
+ if(!html.includes('progressiveStepIndex')) errors.push(page+': index de progression canonique absent');
+ if(!html.includes('Number.isInteger(legacy)?Math.max(0,legacy-1)')) errors.push(page+': migration de l’ancien index non verrouillée');
+ if(!html.includes('latent:stepchange')) errors.push(page+': synchronisation Runtime/Layer Navigator absente');
+ if(!html.includes('currentStep+1')||!html.includes('segments.length')) errors.push(page+': Runtime non branchée sur l’étape courante canonique');
+ if(!html.includes('const sections=window.LATENT_STEP_REGISTRY')) errors.push(page+': Layer Navigator ne consomme pas le registre canonique');
+ steps.forEach((step,i)=>{
+   const badge=(step.body.match(/class="(?:num|section-num)"[^>]*>\s*([^<]+)</)||[])[1]?.trim();
+   const expected=String(i+1).padStart(2,'0');
+   if(badge!==expected) errors.push(page+': numérotation statique invalide à l’étape '+expected+' (trouvé '+String(badge)+')');
+ });
+ if(!steps.length) errors.push(page+': aucune étape pédagogique canonique détectée');
 }
 const index=await readFile(new URL('../index.html',import.meta.url),'utf8');
 for(const marker of ['LATENT','latent-map','signal-rail','Neural learning workspace']){
