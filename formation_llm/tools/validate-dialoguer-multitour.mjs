@@ -78,8 +78,11 @@ for(const answer of ['data-answer="update"','data-answer="ask"','data-answer="dr
 if(!html.includes('ledger.stable.join')||!html.includes('ledger.updates.join')||!html.includes('ledger.open.join')||!html.includes('ledger.dropped.join')) errors.push('checkpoint du Context Ledger incomplet');
 if(!html.includes('<b>Stable.</b>')||!html.includes('<b>Mises à jour.</b>')||!html.includes('<b>Questions ouvertes.</b>')||!html.includes('<b>Écarté.</b>')) errors.push('état conversationnel non rendu visible dans le Ledger');
 if(!html.includes('Décisions incomplètes.')) errors.push('Context Ledger incomplet non protégé');
-if(!html.includes('.turn-case select{width:100%;min-height:44px}')) errors.push('cibles du Context Ledger insuffisantes');
+if(!html.includes('.turn-case select{width:100%;min-height:44px;border:1px solid var(--line);background:var(--panel2);color:var(--text)')) errors.push('sélecteurs du Context Ledger sans surface/contraste explicites');
+if(!html.includes('#builder .grid2{align-items:start}')) errors.push('colonnes du Context Ledger encore étirées verticalement');
+if(!html.includes('html:not(.projector) #builder .grid2>.panel:last-child{position:sticky;top:132px}')) errors.push('checkpoint desktop non maintenu visible pendant le Ledger');
 if(!html.includes('html.projector .context-ledger-mini')) errors.push('Context Ledger non sécurisé en projection');
+if(!html.includes('html.projector .turn-case select{background:#ffffff!important;color:#000000!important')) errors.push('sélecteurs Ledger non sécurisés en projection');
 if(!html.includes('#pieges .mis{')||!html.includes('grid-template-rows:auto 1fr auto')) errors.push('pièges sans hiérarchie visuelle stabilisée');
 if(!html.includes('#transfert .transfer-card{display:flex;flex-direction:column;gap:8px}')) errors.push('cartes de transfert non normalisées');
 
