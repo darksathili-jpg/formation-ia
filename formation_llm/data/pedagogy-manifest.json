@@ -78,6 +78,15 @@
       "priority": 8,
       "reviewed_on": "2026-09-20",
       "notes": "Premier module natif post-gel V1 : spécification de tâche, Prompt Builder, misconceptions sur rôle/longueur/contexte/format, récupération et transfert."
+    },
+    {
+      "path": "modules/dialoguer-exemples.html",
+      "label": "Parcours 2 — Exemples, cas frontières et format de sortie",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 9,
+      "reviewed_on": "2026-09-20",
+      "notes": "Deuxième module natif post-gel V1 : few-shot, diversité, contrastes, cas frontières, hors domaine, contrat de sortie, pratique guidée, récupération et transfert."
     }
   ]
 }
