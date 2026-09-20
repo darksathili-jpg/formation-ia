@@ -297,6 +297,40 @@ html.projector .projector-exit{
  font-size:clamp(.78rem,.9vw,.95rem)!important;line-height:1.15!important
 }
 </style>
+<style data-classic-surface-tuning="v1">
+/* Mode classique : surfaces techniques pétrole, moins proches du noir pur. */
+html:not(.projector){
+ --ink:#173a42;
+ --code:#16353d;
+}
+html[data-theme="dark"]:not(.projector){
+ --bg:#0d1a20;--panel:#14282f;--panel2:#1c343c;
+ --text:#edf7f5;--muted:#a7bdc1;
+ --line:rgba(226,247,243,.14);--strong:rgba(226,247,243,.28);
+ --soft:#16413a;--cyan:#16413a;--violet:#302c59;
+ --oksoft:#1d4435;--goldsoft:#46331c;--warnsoft:#46331c;--dangersoft:#53292e;
+ --ink:#183f47;--code:#14313a;
+ --shadow:0 20px 60px rgba(4,15,19,.27);
+}
+</style>
+<style data-classic-index-surfaces="v1">
+html:not(.projector) .sidebar{
+ background:
+ linear-gradient(180deg,rgba(92,240,210,.07),transparent 25%),
+ linear-gradient(180deg,#123039 0%,#173a42 56%,#102a31 100%)!important;
+}
+html:not(.projector) .mobile-nav{background:#173a42!important}
+html:not(.projector) .hero-panel{
+ background:
+ radial-gradient(circle at 76% 22%,rgba(153,139,255,.22),transparent 31%),
+ radial-gradient(circle at 20% 82%,rgba(92,240,210,.16),transparent 34%),
+ #173a42!important;
+ border-color:rgba(92,240,210,.28)!important;
+ box-shadow:0 24px 58px rgba(11,37,43,.20),inset 0 0 55px rgba(92,240,210,.05)!important;
+}
+html:not(.projector) #learningSequence .module:after{background:#173a42!important}
+html:not(.projector) .module-actions .open{background:#173a42!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>

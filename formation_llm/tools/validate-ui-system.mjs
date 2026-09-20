@@ -57,6 +57,12 @@ if(!index.includes('.metrics{grid-template-columns:repeat(2,minmax(0,1fr))!impor
 if(!index.includes('.section-head{flex-direction:column!important;align-items:flex-start!important')) errors.push('index.html: en-tête de progression mobile encore comprimé');
 if(!index.includes('html.projector .path-n{')||!index.includes('html.projector #learningSequence .module:after{')) errors.push('index.html: éléments sombres résiduels du cockpit en projection');
 if(!index.includes('html.projector .state{font-size:.82rem')) errors.push('index.html: badges d’état trop petits en projection');
+if(!index.includes('data-classic-surface-tuning="v1"')||!index.includes('data-classic-index-surfaces="v1"')) errors.push('index.html: adoucissement des surfaces sombres classiques absent');
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-classic-surface-tuning="v1"')||!html.includes('data-classic-module-surfaces="v1"')) errors.push(page+': surfaces techniques classiques encore trop noires');
+ if(!html.includes('background:rgba(23,58,66,.96)!important')) errors.push(page+': Runtime Bar classique non adoucie');
+}
 for(const page of pages.filter(p=>p.startsWith('modules/'))){
  const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
  if(!html.includes('data-mobile-module-ux="v1"')) errors.push(page+': barre d’outils mobile non stabilisée');

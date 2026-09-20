@@ -300,6 +300,61 @@ html.projector .hero-card b{color:#000000!important}
  html.projector .projector-exit{top:8px!important;right:8px!important}
 }
 </style>
+<style data-classic-surface-tuning="v1">
+/* Mode classique : surfaces techniques pétrole, moins proches du noir pur. */
+html:not(.projector){
+ --ink:#173a42;
+ --code:#16353d;
+}
+html[data-theme="dark"]:not(.projector){
+ --bg:#0d1a20;--panel:#14282f;--panel2:#1c343c;
+ --text:#edf7f5;--muted:#a7bdc1;
+ --line:rgba(226,247,243,.14);--strong:rgba(226,247,243,.28);
+ --soft:#16413a;--cyan:#16413a;--violet:#302c59;
+ --oksoft:#1d4435;--goldsoft:#46331c;--warnsoft:#46331c;--dangersoft:#53292e;
+ --ink:#183f47;--code:#14313a;
+ --shadow:0 20px 60px rgba(4,15,19,.27);
+}
+</style>
+<style data-classic-module-surfaces="v1">
+html:not(.projector) .hero-card{
+ background:
+ linear-gradient(rgba(92,240,210,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.045) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(153,139,255,.20),transparent 34%),
+ #173a42!important;
+ background-size:28px 28px,28px 28px,auto,auto!important;
+ border-color:rgba(92,240,210,.28)!important;
+ box-shadow:0 24px 58px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .learning-guide{
+ background:rgba(23,58,66,.96)!important;
+ border-color:rgba(92,240,210,.25)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.18)!important;
+}
+html:not(.projector) .learning-guide button{
+ background:#204851!important;color:#d9ebe7!important;
+ border-color:rgba(255,255,255,.12)!important;
+}
+html:not(.projector) .learning-guide button.primary-learning{
+ background:#5cf0d2!important;color:#0d252b!important;
+}
+html:not(.projector) .layer-nav{
+ background:rgba(20,49,57,.96)!important;
+ border-color:rgba(92,240,210,.22)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .layer-nav button{
+ background:#1b4149!important;color:#9abbb6!important;
+ border-color:rgba(255,255,255,.10)!important;
+}
+html:not(.projector) .section-head .num,
+html:not(.projector) .step .n,
+html:not(.projector) .worked-step .n,
+html:not(.projector) .stage .n{
+ background:#173a42!important;
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
