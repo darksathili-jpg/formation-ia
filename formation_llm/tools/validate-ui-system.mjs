@@ -47,6 +47,12 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
 if(!index.includes('data-ux-audit="v1"')||!index.includes('.mobile-nav{height:57px')||!index.includes('.topbar{top:57px}')) errors.push('index.html: empilement sticky mobile non verrouillé');
 if(!index.includes('html.projector .path-n{')||!index.includes('html.projector #learningSequence .module:after{')) errors.push('index.html: éléments sombres résiduels du cockpit en projection');
 if(!index.includes('html.projector .state{font-size:.82rem')) errors.push('index.html: badges d’état trop petits en projection');
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-mobile-module-ux="v1"')) errors.push(page+': barre d’outils mobile non stabilisée');
+ if(!html.includes('grid-template-columns:repeat(3,minmax(0,1fr))')) errors.push(page+': commandes mobiles non réparties sur trois cibles');
+ if(!html.includes('href="../index.html#dashboard"')) errors.push(page+': retour cockpit absent en fin de module');
+}
 
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');

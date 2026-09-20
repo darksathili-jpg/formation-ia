@@ -238,6 +238,19 @@ html.projector .latent-map text{fill:#263b40!important}
 .q label{min-height:44px;display:flex;align-items:center;gap:10px;padding:9px 8px}
 .q label input{flex:0 0 auto}
 </style>
+<style data-mobile-module-ux="v1">
+.cockpit-return{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:7px 10px;border:1px solid var(--strong,var(--line));border-radius:8px;background:var(--panel);color:var(--text);font-weight:900;text-decoration:none}
+.next-step .center .cockpit-return,.next-step .muted .cockpit-return{margin-top:8px}
+@media(max-width:650px){
+ .topbar-inner,.top{flex-wrap:wrap!important;gap:8px!important;align-items:center!important}
+ .topbar-inner>.brand,.top>.back,.top>div:first-child{flex:1 1 100%!important;max-width:none!important}
+ .tools{width:100%!important;margin-left:0!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+ .tool{min-height:44px!important;padding:7px 5px!important;font-size:0!important;display:flex!important;align-items:center!important;justify-content:center!important;white-space:nowrap}
+ #themeBtn::after{content:"◐ Thème";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn::after{content:"▣ Projection";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #trainerBtn::after{content:"◆ Formateur";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
@@ -362,7 +375,7 @@ html.projector .latent-map text{fill:#263b40!important}
 
 <section class="section" id="sources"><div class="section-head"><div class="num">15</div><div><h2>Références</h2></div></div><div class="refs"><div class="ref"><b>Brown et al., 2020 · Language Models are Few-Shot Learners</b>.</div><div class="ref"><b>Holtzman et al., 2020 · The Curious Case of Neural Text Degeneration</b> — décodage et nucleus sampling.</div><div class="ref"><b>Vaswani et al., 2017 · Attention Is All You Need</b>.</div></div></section>
 
-<nav class="next-step"><a href="transformer-block-lab.html">← Étape 3 · Bloc Transformer</a><div class="center">Vous êtes prêt si vous pouvez expliquer : logits → softmax → filtre éventuel → sélection → nouveau contexte.</div><a href="hallucination-lab.html">Parcours 3 · Fiabilité →</a></nav>
+<nav class="next-step"><a href="transformer-block-lab.html">← Étape 3 · Bloc Transformer</a><div class="center">Vous êtes prêt si vous pouvez expliquer : logits → softmax → filtre éventuel → sélection → nouveau contexte.<br><a class="cockpit-return" href="../index.html#dashboard">⌂ Retour au cockpit</a></div><a href="hallucination-lab.html">Parcours 3 · Fiabilité →</a></nav>
 <footer class="footer">Formation LLM · Parcours 1 · Étape 4 · Version NOVICE-FIRST 1.0.</footer>
 </main>
 <script>
