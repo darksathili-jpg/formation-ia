@@ -28,5 +28,23 @@ for(const marker of ['LATENT','latent-map','signal-rail','Neural learning worksp
  if(!index.includes(marker)) errors.push('index.html: signature manquante: '+marker);
 }
 if(index.includes('font-family:var(--display);') && !index.includes('--display:"Segoe UI Variable Display"')) errors.push('index.html: ancienne esthétique serif non neutralisée');
+
+// Verrous de régression issus de l’audit ergonomique écran/projection.
+const projectionPages=['index.html',...pages.filter(p=>p.startsWith('modules/'))];
+for(const page of projectionPages){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-projection-ux="v2"')) errors.push(page+': palette projection haute luminance absente');
+ if(page.startsWith('modules/')&&!html.includes('html.projector .layer-nav{display:none!important}')) errors.push(page+': Layer Navigator non neutralisé en projection');
+ if(!html.includes('--bg:#ffffff')||!html.includes('--text:#000000')) errors.push(page+': contraste structurel projection non verrouillé');
+}
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-ux-audit="v1"')) errors.push(page+': correctifs responsive UX absents');
+ if(!html.includes('@media(max-width:900px){.learning-guide{position:relative!important;top:auto!important}}')) errors.push(page+': Runtime Bar tablette non sécurisé');
+ if(!html.includes('@media(max-width:1380px){.layer-nav{display:none!important}}')) errors.push(page+': seuil anti-chevauchement Layer Navigator absent');
+ if(!html.includes('.q label{min-height:44px')) errors.push(page+': cibles tactiles du quiz non harmonisées');
+}
+if(!index.includes('data-ux-audit="v1"')||!index.includes('.mobile-nav{height:57px')||!index.includes('.topbar{top:57px}')) errors.push('index.html: empilement sticky mobile non verrouillé');
+
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');
