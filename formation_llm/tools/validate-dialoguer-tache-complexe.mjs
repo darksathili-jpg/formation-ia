@@ -75,12 +75,15 @@ for(const answer of ['data-answer="clarify"','data-answer="parallel"','data-answ
 
 if(!html.includes('workflowSummary')||!html.includes('Analyser les trois documents en parallèle')||!html.includes('Valider le plan pédagogique avant production complète')) errors.push('workflow résultant incomplet');
 if(!html.includes('Workflow incomplet.')) errors.push('Workflow Lab incomplet non protégé');
-if(!html.includes('.workflow-case select{width:100%;min-height:44px')) errors.push('sélecteurs du Workflow Lab sans cible tactile explicite');
+if(!html.includes('.workflow-case select{width:100%;min-width:0;max-width:100%;min-height:44px')) errors.push('sélecteurs du Workflow Lab non contraints au viewport');
+if(!html.includes('#builder .grid2>*{min-width:0}')) errors.push('colonnes du Workflow Lab peuvent encore déborder par min-content');
 if(!html.includes('#builder .grid2{align-items:start}')) errors.push('colonnes du Workflow Lab encore étirées verticalement');
 if(!html.includes('html:not(.projector) #builder .grid2>.panel:last-child{position:sticky;top:132px}')) errors.push('workflow résultant desktop non maintenu visible');
 if(!html.includes('html.projector .workflow-case select{background:#ffffff!important;color:#000000!important')) errors.push('sélecteurs Workflow Lab non sécurisés en projection');
 if(!html.includes('#pieges .mis{')||!html.includes('grid-template-rows:auto 1fr auto')) errors.push('pièges sans hiérarchie visuelle stabilisée');
-if(!html.includes('#transfert .transfer-card{display:flex;flex-direction:column;gap:8px}')) errors.push('cartes de transfert non normalisées');
+if(!html.includes('#transfert .transfer-card{display:flex;flex-direction:column;gap:8px;min-width:0}')) errors.push('cartes de transfert non normalisées ou susceptibles de déborder');
+if(!html.includes('#transfert .transfer-card select{margin-top:auto;min-width:0;max-width:100%;width:100%')) errors.push('sélecteurs de transfert non contraints au viewport');
+if(!html.includes('overflow-wrap:anywhere')) errors.push('textes longs P2S5 sans garde-fou de reflow');
 
 if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push('appel réseau runtime détecté');
 const noStorageHelper=html.replace(/<script data-latent-safe-storage="v1">[\s\S]*?<\/script>/,'');
