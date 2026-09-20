@@ -438,10 +438,11 @@ html.projector .journey-card .k{color:#245c62!important}
 .turn-case{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel)}
 .turn-case>b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent2)}
 .turn-case p{margin:4px 0 9px;line-height:1.5}
-.turn-case select{width:100%;min-height:44px}
+.turn-case select{width:100%;min-height:44px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:8px;padding:9px 10px}
 .turn-case .turn-feedback{display:none;margin-top:8px;padding:9px;border-radius:8px;background:var(--panel2);font-size:.82rem;line-height:1.45}
 .turn-case.good{border-color:var(--green)}.turn-case.bad{border-color:var(--red)}
 .turn-case.good .turn-feedback,.turn-case.bad .turn-feedback{display:block}
+#builder .grid2{align-items:start}
 #builderOutput{min-height:250px}
 #builderOutput p{margin:.48rem 0;padding:.58rem .68rem;border-left:2px solid var(--accent);border-radius:6px;background:rgba(255,255,255,.055);line-height:1.5}
 #builderOutput p:first-child{margin-top:0}#builderOutput p:last-child{margin-bottom:0}
@@ -456,6 +457,9 @@ html.projector .journey-card .k{color:#245c62!important}
 #transfert .transfer-card label{font-weight:850;margin-top:2px}
 #transfert .transfer-card select{margin-top:auto}
 #transfert .transfer-feedback{line-height:1.5}
+@media(min-width:1001px){
+ html:not(.projector) #builder .grid2>.panel:last-child{position:sticky;top:132px}
+}
 @media(max-width:650px){
  .hero h1{font-size:clamp(2.25rem,12vw,3.35rem)!important;line-height:.96!important;letter-spacing:-.035em!important}
  #builder .panel{padding:16px!important}#builderOutput{min-height:0}
@@ -464,6 +468,7 @@ html.projector .journey-card .k{color:#245c62!important}
  #pieges .mis p,#pieges .mis .right,#transfert .transfer-card p{font-size:.88rem!important}
 }
 html.projector .context-ledger-mini,html.projector .turn-case,html.projector .turn-case .turn-feedback{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .turn-case select{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
 html.projector #builderOutput p{background:#ffffff!important;color:#000000!important;border-left-color:#005a62!important}
 html.projector #builderOutput p b{color:#000000!important}
 html.projector #pieges .mis{border-top-color:#8b1f2b!important}
