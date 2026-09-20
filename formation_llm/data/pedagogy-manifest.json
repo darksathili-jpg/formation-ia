@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "updated_on": "2026-09-19",
+  "version": "1.1.0",
+  "updated_on": "2026-09-20",
   "policy": {
     "new_modules_must_be_novice_ready": true,
     "legacy_debt_allowed_only_for_listed_modules": true,
@@ -13,7 +13,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 1,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "Module pilote reconstruit selon le standard NOVICE-FIRST : exemple travaillé, guidage progressif, auto-explication, récupération active, transfert et synthèse."
     },
     {
@@ -22,7 +22,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 2,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "Pipeline d'entrée reconstruit : définitions, exemple travaillé, Tokenizer Lab guidé, cosinus expliqué, contexte, auto-explication, récupération et transfert."
     },
     {
@@ -31,7 +31,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 3,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "Attention reconstruite autour d’un problème unique, avec Q/K/V introduits progressivement, exemple numérique travaillé, lab guidé, auto-explication, quiz et transfert."
     },
     {
@@ -40,7 +40,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 4,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "Bloc Transformer reconstruit : rôles des briques, exemple travaillé, Position/Block/Stack/KV labs guidés, pièges, récupération et transfert."
     },
     {
@@ -49,7 +49,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 5,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "Décodage reconstruit : logits/softmax calculés pas à pas, stratégies de sélection, température, top-k/top-p, autorégression, vérité, transfert et synthèse."
     },
     {
@@ -58,7 +58,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 6,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "Fiabilité reconstruite : méthode claim-preuve-verdict, exemple travaillé, calibration, abstention, pratique guidée, auto-explication, quiz et transfert."
     },
     {
@@ -67,7 +67,7 @@
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 7,
-      "reviewed_on": "2026-09-19",
+      "reviewed_on": "2026-09-20",
       "notes": "RAG reconstruit : chunking, retrieval, ANN, hybride, reranking et métriques introduits avant le lab, exemple manuel, transfert et synthèse."
     }
   ]

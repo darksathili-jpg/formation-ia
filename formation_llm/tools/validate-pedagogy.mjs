@@ -31,6 +31,10 @@ for(const m of manifest.modules){
    if(!html.includes('data-learning-system="v2"')) errors.push(m.path+': moteur Learning System V2 absent');
    if(!html.includes('learning-guide')) errors.push(m.path+': progressive disclosure absent');
    if(!html.includes('formation-llm-learning-v2')) errors.push(m.path+': stockage de maîtrise V2 absent');
+   if(!html.includes('data-success-criterion="v1"')) errors.push(m.path+': critère de réussite observable absent');
+   const selfMatch=html.match(/<section\b[^>]*data-pedagogy="self-explanation"[^>]*>([\s\S]*?)<\/section>/);
+   if(!selfMatch||!/<textarea\b/i.test(selfMatch[1])) errors.push(m.path+': auto-explication sans champ de rédaction');
+   if(selfMatch&&(selfMatch[1].match(/type="checkbox"/g)||[]).length<3) errors.push(m.path+': auto-explication sans critères d’auto-contrôle suffisants');
    const quizCount=(html.match(/<fieldset class="q"/g)||[]).length;
    const feedbackCount=(html.match(/class="feedback"(?:\s|>)/g)||[]).length;
    const transferCount=(html.match(/class="transfer-card"(?:\s|>)/g)||[]).length;
