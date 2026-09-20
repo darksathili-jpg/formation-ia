@@ -105,6 +105,15 @@
       "priority": 11,
       "reviewed_on": "2026-09-20",
       "notes": "Quatrième module natif post-gel V1 : contrat actif, contexte transitoire, mise à jour explicite, clarification, checkpoint, dérive de consigne, Context Ledger Lab, récupération et transfert."
+    },
+    {
+      "path": "modules/dialoguer-tache-complexe.html",
+      "label": "Parcours 2 — Décomposer et piloter une tâche complexe",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 12,
+      "reviewed_on": "2026-09-20",
+      "notes": "Cinquième module natif post-gel V1 : objectif final, sous-tâches, dépendances, informations bloquantes, séquentiel/parallèle, checkpoints, critères d’arrêt, revalidation, Workflow Lab, récupération et transfert."
     }
   ]
 }
