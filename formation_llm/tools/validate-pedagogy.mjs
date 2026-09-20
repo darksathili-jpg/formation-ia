@@ -24,14 +24,21 @@ for(const m of manifest.modules){
  const html=await readFile(new URL('../'+m.path,import.meta.url),'utf8');
  const words=visible(html).split(/\s+/).filter(Boolean).length;
  const present=Object.fromEntries(required.map(k=>[k,html.includes('data-pedagogy="'+k+'"')]));
- const pedagogicOrder=['prerequisites','intuition','definition','worked-example','guided-practice','completion','misconception','self-explanation','retrieval','transfer','recap'];
- const positions=pedagogicOrder.map(k=>html.indexOf('data-pedagogy="'+k+'"'));
+ const pOf=k=>html.indexOf('data-pedagogy="'+k+'"');
+ const fixedOrder=['prerequisites','intuition','definition','worked-example','misconception','self-explanation','retrieval','transfer','recap'];
  let previous=-1;
- for(let i=0;i<pedagogicOrder.length;i++){
-   if(positions[i]>=0){
-     if(previous>positions[i]) errors.push(m.path+': ordre novice-first rompu autour de '+pedagogicOrder[i]);
-     previous=positions[i];
+ for(const k of fixedOrder){
+   const pos=pOf(k);
+   if(pos>=0){
+     if(previous>pos) errors.push(m.path+': ordre novice-first rompu autour de '+k);
+     previous=pos;
    }
+ }
+ const workedPos=pOf('worked-example'),misPos=pOf('misconception');
+ for(const k of ['guided-practice','completion']){
+   const pos=pOf(k);
+   if(pos>=0&&workedPos>=0&&pos<workedPos) errors.push(m.path+': '+k+' placé avant l’exemple travaillé');
+   if(pos>=0&&misPos>=0&&pos>misPos) errors.push(m.path+': '+k+' placé après les misconceptions');
  }
  rows.push({module:m.label,status:m.status,words,present:required.filter(k=>present[k]).length,total:required.length});
  if(m.status==='novice-ready'){
