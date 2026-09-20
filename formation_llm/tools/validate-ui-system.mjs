@@ -12,10 +12,16 @@ for(const page of pages){
  const p=page+': ';
  if(!html.includes('data-ui-system="latent-v1"')) errors.push(p+'marqueur LATENT UI absent');
  if(!html.includes('data-latent-ui="v1"')) errors.push(p+'feuille de style LATENT UI absente');
+ if(!html.includes('class="skip-link"')||!html.includes('id="mainContent"')) errors.push(p+'navigation d’évitement clavier absente');
  if(!html.includes('prefers-reduced-motion')) errors.push(p+'reduced motion absent');
  if(!html.includes(':focus-visible')) errors.push(p+'focus visible absent');
  if(!/min-height:\s*44px/.test(html)) errors.push(p+'cible d’action 44px non verrouillée');
  if(/https?:\/\//.test((html.match(/<style data-latent-ui="v1">[\s\S]*?<\/style>/)||[''])[0])) errors.push(p+'URL distante dans le design system');
+}
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-latent-nav="v1"')||!html.includes('layer-nav')) errors.push(page+': Layer Navigator absent');
+ if(!html.includes('aria-current","step"')) errors.push(page+': état de section courante absent');
 }
 const index=await readFile(new URL('../index.html',import.meta.url),'utf8');
 for(const marker of ['LATENT','latent-map','signal-rail','Neural learning workspace']){
