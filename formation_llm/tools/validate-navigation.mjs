@@ -12,7 +12,7 @@ const pages=[
   'modules/rag-lab.html'
 ];
 const errors=[];
-const appRoutes=new Set(['dashboard','parcours','labs','progression','referentiel','architecture']);
+const appRoutes=new Set(['dashboard','apprentissage','parcours','labs','progression','referentiel','architecture']);
 const cache=new Map();
 
 async function load(path){
