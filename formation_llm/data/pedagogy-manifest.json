@@ -96,6 +96,15 @@
       "priority": 10,
       "reviewed_on": "2026-09-20",
       "notes": "Troisième module natif post-gel V1 : baseline, échec observé, hypothèse, jeu de tests représentatif, modification contrôlée, régression, sur-ajustement, Iteration Lab, récupération et transfert."
+    },
+    {
+      "path": "modules/dialoguer-multitour.html",
+      "label": "Parcours 2 — Dialogue multi-tour et maintien du contexte",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 11,
+      "reviewed_on": "2026-09-20",
+      "notes": "Quatrième module natif post-gel V1 : contrat actif, contexte transitoire, mise à jour explicite, clarification, checkpoint, dérive de consigne, Context Ledger Lab, récupération et transfert."
     }
   ]
 }
