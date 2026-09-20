@@ -39,6 +39,8 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(!html.includes('progressiveStepIndex')) errors.push(page+': index de progression canonique absent');
  if(!html.includes('Number.isInteger(legacy)?Math.max(0,legacy-1)')) errors.push(page+': migration de l’ancien index non verrouillée');
  if(!html.includes('latent:stepchange')) errors.push(page+': synchronisation Runtime/Layer Navigator absente');
+ if(!html.includes('data-step-badge-layout="v1"')) errors.push(page+': centrage canonique des badges d’étape absent');
+ if(!html.includes('display:grid!important')||!html.includes('place-items:center!important')||!html.includes('flex:0 0 42px!important')) errors.push(page+': badge d’étape non centré/verrouillé');
  if(!html.includes('currentStep+1')||!html.includes('segments.length')) errors.push(page+': Runtime non branchée sur l’étape courante canonique');
  if(!html.includes('const sections=window.LATENT_STEP_REGISTRY')) errors.push(page+': Layer Navigator ne consomme pas le registre canonique');
  steps.forEach((step,i)=>{
