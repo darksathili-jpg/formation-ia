@@ -69,6 +69,10 @@ for(const id of ['P2S3.FEEL','P2S3.MULTI_CHANGE','P2S3.TEST_SET','P2S3.REGRESSIO
 }
 
 if(!html.includes('targeted:{score:6')||!html.includes('oneExample:{score:5')||!html.includes('expertRole:{score:4')||!html.includes('multi:{score:6')) errors.push('scénarios de comparaison de l’Iteration Lab incomplets');
+if(!html.includes("<b>Hypothèse.</b>")||!html.includes("<b>Variable testée.</b>")||!html.includes("<b>Régressions.</b>")||!html.includes("<b>Mesure.</b>")) errors.push('Iteration Lab ne rend pas visible la chaîne hypothèse → variable → régression → mesure');
+if(!html.includes('Décision expérimentale.')) errors.push('Iteration Lab sans décision expérimentale explicite');
+if(!html.includes('Aucune hypothèse isolable')) errors.push('cas multi-variable sans signal pédagogique d’hypothèse non isolable');
+
 if(!html.includes('baseline : 4 / 6')) errors.push('baseline non rendue visible dans l’Iteration Lab');
 if(!html.includes('impossible d’attribuer le gain')) errors.push('cas multi-variable sans avertissement causal');
 if(!html.includes('généralisation incomplète')) errors.push('cas de sur-ajustement local non explicité');
