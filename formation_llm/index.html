@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-ui-system="latent-v1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -34,12 +34,156 @@
 @media(max-width:900px){.learning-grid{grid-template-columns:1fr}.evidence-row{grid-template-columns:1fr 1fr}.evidence-row strong{grid-column:1/-1}}@media(max-width:650px){.evidence-row{grid-template-columns:1fr}}
 
 </style>
+
+<style data-latent-ui="v1">
+:root{
+ --bg:#eef3f1;--panel:#f9fbfa;--panel2:#e7eeeb;--text:#09171c;--muted:#617177;
+ --line:rgba(9,23,28,.12);--strong:rgba(9,23,28,.26);--accent:#087f87;--accent2:#6c5ce7;
+ --soft:#d8f2ee;--violet:#e8e3ff;--ok:#2a7954;--oksoft:#dff2e7;--warn:#9a651d;--warnsoft:#f6e8ce;
+ --code:#071419;--codetext:#e9fbf7;--shadow:0 18px 55px rgba(13,37,40,.10);
+ --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ --display:"Segoe UI Variable Display","Segoe UI",ui-sans-serif,system-ui,sans-serif;
+ --latent-cyan:#5cf0d2;--latent-violet:#8b7cf6;--latent-coral:#ff7584;--latent-lime:#b8f36b;--ink:#071419;
+}
+[data-theme="dark"]{
+ --bg:#061015;--panel:#0c1a20;--panel2:#12252c;--text:#edf7f5;--muted:#91a8ae;
+ --line:rgba(226,247,243,.11);--strong:rgba(226,247,243,.24);--accent:#5cf0d2;--accent2:#998bff;
+ --soft:#10352f;--violet:#272450;--ok:#8be3b3;--oksoft:#17382c;--warn:#f3bc62;--warnsoft:#3b2b17;
+ --code:#03090c;--codetext:#edfffb;--shadow:0 22px 70px rgba(0,0,0,.34);
+}
+html{background:var(--bg)}
+body{
+ background:
+ radial-gradient(circle at 72% 10%,color-mix(in srgb,var(--accent2) 11%,transparent),transparent 30%),
+ radial-gradient(circle at 38% 82%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 28%),
+ var(--bg);
+ font-feature-settings:"ss01" 1,"cv11" 1;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.28;
+ background-image:
+ radial-gradient(circle,color-mix(in srgb,var(--accent) 38%,transparent) 1px,transparent 1.4px),
+ linear-gradient(90deg,color-mix(in srgb,var(--line) 35%,transparent) 1px,transparent 1px),
+ linear-gradient(color-mix(in srgb,var(--line) 35%,transparent) 1px,transparent 1px);
+ background-size:36px 36px,144px 144px,144px 144px;
+ mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+button,.open,.complete,.resume-btn,.mode-btn,.pill{min-height:44px}
+.app{grid-template-columns:250px 1fr}
+.sidebar{
+ background:
+ linear-gradient(180deg,rgba(92,240,210,.06),transparent 24%),
+ linear-gradient(180deg,#071419 0%,#081a20 55%,#061116 100%);
+ border-right:1px solid rgba(92,240,210,.16);padding:18px 14px 16px;color:#dff7f2;
+ box-shadow:20px 0 60px rgba(2,10,13,.13);
+}
+.brand{padding:8px 8px 18px;border-bottom:1px solid rgba(255,255,255,.08);align-items:center}
+.logo{
+ width:46px;height:46px;border-radius:14px;background:transparent!important;border:1px solid rgba(92,240,210,.32);
+ position:relative;overflow:hidden;color:transparent!important;box-shadow:inset 0 0 25px rgba(92,240,210,.08)
+}
+.logo:before,.logo:after{content:"";position:absolute;border-radius:50%;background:var(--latent-cyan);box-shadow:20px 12px 0 var(--latent-violet),8px 27px 0 var(--latent-lime)}
+.logo:before{width:6px;height:6px;left:8px;top:8px}
+.logo:after{width:3px;height:3px;left:12px;top:12px;background:transparent;box-shadow:none;border-left:1px solid rgba(92,240,210,.55);border-bottom:1px solid rgba(153,139,255,.5);width:23px;height:20px;border-radius:0;transform:skewY(28deg)}
+.brand b{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:#f3fffc}
+.brand small{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#77a49e;font-size:.66rem;letter-spacing:.08em}
+.nav{gap:3px}.nav-section{color:#567a76;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.61rem;letter-spacing:.17em}
+.nav button{
+ color:#8eaaa6;border:1px solid transparent;border-radius:9px;padding:10px 11px;
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.73rem;font-weight:750;transition:background .18s,border-color .18s,color .18s,transform .18s
+}
+.nav button:hover{background:rgba(92,240,210,.06);color:#dcfff8;border-color:rgba(92,240,210,.10);transform:translateX(2px)}
+.nav button.active{background:linear-gradient(90deg,rgba(92,240,210,.13),rgba(139,124,246,.06));color:#edfffb;border-color:rgba(92,240,210,.22);box-shadow:inset 3px 0 0 var(--latent-cyan)}
+.sidebar-foot{border-top-color:rgba(255,255,255,.08);color:#6d8f8b}.mode-btn{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.1);color:#a9c4c0}
+.mode-btn:hover{border-color:rgba(92,240,210,.28);color:#edfffb}
+.topbar{background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1380px}.crumb{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase;letter-spacing:.09em;font-size:.67rem}
+.status-pill:before{color:var(--latent-cyan);filter:drop-shadow(0 0 5px var(--latent-cyan))}
+.content{max-width:1380px;padding-top:30px}
+.eyebrow,.module .code,.learning-card .code{
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;letter-spacing:.14em!important;
+}
+.hero{min-height:420px;align-items:center;position:relative;padding:26px 0 14px}
+.hero h1,.page-title,.module h3,.section-head h2{
+ font-family:var(--display)!important;font-weight:820;letter-spacing:-.055em
+}
+.hero h1{font-size:clamp(3.15rem,6.4vw,6.7rem);line-height:.87;max-width:820px}
+.hero h1 em{font-style:normal!important;color:var(--accent)!important}
+.hero .lead{max-width:720px;font-size:1rem;line-height:1.75}
+.hero-panel{
+ position:relative;min-height:360px;border:1px solid rgba(92,240,210,.22);border-radius:24px;
+ background:
+ radial-gradient(circle at 76% 22%,rgba(139,124,246,.19),transparent 30%),
+ radial-gradient(circle at 20% 82%,rgba(92,240,210,.13),transparent 32%),
+ #071419;
+ overflow:hidden;padding:22px;box-shadow:0 30px 80px rgba(2,12,15,.28),inset 0 0 60px rgba(92,240,210,.035)
+}
+.hero-panel:after{content:"LATENT FIELD / LIVE";position:absolute;right:16px;top:14px;font:600 .58rem ui-monospace,monospace;letter-spacing:.16em;color:#537b76}
+.latent-map{width:100%;height:190px;display:block;margin:-3px 0 8px}
+.latent-map .gridline{stroke:rgba(151,194,187,.12);stroke-width:1}
+.latent-map .path{fill:none;stroke:url(#latentGradient);stroke-width:1.5;stroke-dasharray:5 7;animation:latentFlow 9s linear infinite}
+.latent-map .node{fill:#071419;stroke:#5cf0d2;stroke-width:1.4}
+.latent-map .node.v{stroke:#998bff}.latent-map .pulse{fill:#b8f36b;filter:drop-shadow(0 0 8px #b8f36b);animation:nodePulse 2.8s ease-in-out infinite}
+.latent-map text{fill:#73958f;font:600 9px ui-monospace,monospace;letter-spacing:.08em}
+@keyframes latentFlow{to{stroke-dashoffset:-120}}@keyframes nodePulse{50%{opacity:.3;transform:scale(.72);transform-origin:center}}
+.hero-panel small{color:#65d8c4}.resume-title{font-family:var(--display);font-weight:760;letter-spacing:-.025em}
+.resume-btn{background:var(--latent-cyan);color:#061116;border-radius:9px;box-shadow:0 0 0 1px rgba(92,240,210,.18),0 10px 30px rgba(92,240,210,.10)}
+.signal-rail{
+ display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:2px 0 28px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:color-mix(in srgb,var(--panel) 78%,transparent)
+}
+.signal-rail span{position:relative;padding:11px 9px;text-align:center;font:700 .64rem ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-right:1px solid var(--line)}
+.signal-rail span:last-child{border-right:0}.signal-rail span:before{content:"";display:block;width:5px;height:5px;margin:0 auto 6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px color-mix(in srgb,var(--accent) 55%,transparent)}
+.metrics{gap:8px}.metric{border-radius:12px;background:color-mix(in srgb,var(--panel) 88%,transparent);box-shadow:none;position:relative;overflow:hidden}
+.metric:before{content:"";position:absolute;inset:0 auto 0 0;width:2px;background:linear-gradient(var(--accent),var(--accent2))}
+.metric .value{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:1.35rem}.metric .label{font-size:.64rem;letter-spacing:.1em}
+.section{margin-top:54px}.section-head{align-items:center}.section-head h2{font-size:1.7rem}.section-head:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent);margin-left:8px}
+.section-head>span{position:relative;z-index:1}
+#learningSequence{grid-template-columns:1fr;gap:9px;position:relative}
+#learningSequence:before{content:"";position:absolute;left:28px;top:24px;bottom:24px;width:1px;background:linear-gradient(var(--accent),var(--accent2),var(--line))}
+#learningSequence .module{
+ min-height:0;padding:17px 18px 17px 72px;border-radius:12px;background:color-mix(in srgb,var(--panel) 90%,transparent);box-shadow:none;
+ display:grid;grid-template-columns:minmax(280px,1.4fr) minmax(220px,.9fr);column-gap:24px;align-items:center
+}
+#learningSequence .module:before{width:1px;background:transparent}
+#learningSequence .module:after{
+ content:attr(data-sequence-index);position:absolute;left:10px;top:50%;transform:translateY(-50%);
+ width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--latent-cyan);
+ border:1px solid rgba(92,240,210,.35);font:800 .72rem ui-monospace,monospace;z-index:2
+}
+#learningSequence .module .badges,#learningSequence .module .module-actions{grid-column:2}
+#learningSequence .module h3,#learningSequence .module p,#learningSequence .module .code{grid-column:1}
+#learningSequence .module h3{font-size:1.25rem;margin-top:2px}
+.module{border-radius:13px;box-shadow:none;transition:border-color .18s,transform .18s,background .18s}
+.module:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.module.ready:before{background:linear-gradient(var(--accent),var(--accent2))}
+.module-actions .open{border-radius:8px;background:var(--ink);color:var(--latent-cyan);border:1px solid rgba(92,240,210,.22)}
+.complete{border-radius:8px}.mastery-state{border-radius:7px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.transversal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.module.transversal{background:linear-gradient(135deg,color-mix(in srgb,var(--panel) 92%,transparent),color-mix(in srgb,var(--violet) 28%,var(--panel)));min-height:200px}
+.lab-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.lab-card{min-height:190px;border-radius:12px;background:color-mix(in srgb,var(--panel) 90%,transparent);position:relative;overflow:hidden;box-shadow:none}
+.lab-card:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent)}
+.lab-icon{font-family:ui-monospace,monospace;color:var(--accent);font-size:1.1rem}.lab-card h3{font-family:var(--display);font-weight:760;letter-spacing:-.03em}
+.path-grid{grid-template-columns:1fr;gap:7px}.path-card{border-radius:11px;background:color-mix(in srgb,var(--panel) 90%,transparent);padding:13px}
+.path-n{border-radius:9px;font-family:ui-monospace,monospace;background:var(--ink);color:var(--latent-cyan);font-size:1rem}
+.learning-grid{gap:9px}.learning-card{border-radius:12px;background:color-mix(in srgb,var(--panel) 90%,transparent);position:relative;overflow:hidden}
+.learning-card:before{content:"";position:absolute;inset:0 auto 0 0;width:2px;background:linear-gradient(var(--accent),var(--accent2))}
+.evidence-list{gap:6px}.evidence-row{border-radius:10px;background:color-mix(in srgb,var(--panel) 90%,transparent)}
+.callout{border-left-width:2px;border-radius:10px;background:color-mix(in srgb,var(--violet) 55%,var(--panel))}
+.trainer-banner{border-radius:10px;box-shadow:none}
+.mobile-nav{background:#071419!important;border-bottom-color:rgba(92,240,210,.16)!important}.mobile-nav button{color:#8eaaa6!important;border-color:rgba(255,255,255,.08)!important;background:transparent!important}.mobile-nav button.active{color:#edfffb!important;background:rgba(92,240,210,.10)!important;border-color:rgba(92,240,210,.22)!important}
+.projector .content{background:var(--bg)}
+:focus-visible{outline:3px solid var(--latent-cyan)!important;outline-offset:3px}
+@media(max-width:1100px){.lab-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#learningSequence .module{grid-template-columns:1fr;padding-left:72px}#learningSequence .module .badges,#learningSequence .module .module-actions{grid-column:1}}
+@media(max-width:980px){.signal-rail{grid-template-columns:repeat(3,1fr)}.transversal-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.hero{min-height:0}.hero h1{font-size:clamp(2.8rem,16vw,4.3rem)}.hero-panel{min-height:330px}.signal-rail{grid-template-columns:repeat(2,1fr)}.lab-grid{grid-template-columns:1fr}#learningSequence:before{left:21px}#learningSequence .module{padding-left:58px}#learningSequence .module:after{left:4px}.sidebar{display:none}}
+@media(prefers-reduced-motion:reduce){.latent-map .path,.latent-map .pulse{animation:none!important}.module,.nav button{transition:none!important;transform:none!important}}
+</style>
 </head>
 <body>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter la projection · Échap</button>
 <div class="app">
 <aside class="sidebar">
-<div class="brand"><div class="logo">LLM</div><div><b>Formation LLM</b><small>Plateforme pédagogique</small></div></div>
+<div class="brand"><div class="logo" aria-hidden="true">LLM</div><div><b>LATENT / LLM</b><small>Neural learning workspace</small></div></div>
 <nav class="nav" aria-label="Navigation principale">
 <div class="nav-section">Application</div>
 <button class="active" data-view="dashboard" aria-current="page">⌂ Tableau de bord</button><button data-view="apprentissage">◎ Apprentissage</button><button data-view="parcours">◫ Parcours 0 → 7</button><button data-view="labs">⌘ Laboratoires</button><button data-view="progression">✓ Progression</button>
@@ -54,8 +198,8 @@
 <div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les repères pédagogiques supplémentaires sont affichés : questions à poser, erreurs attendues, réponses attendues et consignes de débrief.</div>
 <main class="content">
 <section class="view active" id="view-dashboard">
-<div class="hero"><div><div class="eyebrow">Refonte de la formation initiale</div><h1>Comprendre les LLM.<br>Les expérimenter.<br><em style="color:var(--accent)">Savoir les expliquer.</em></h1><p class="lead">Une formation professionnelle construite autour de mécanismes vérifiables, de laboratoires interactifs et de situations de formation. La version historique reste conservée pendant toute la migration.</p></div><aside class="hero-panel"><small>Prochaine action adaptative</small><div class="resume-title" id="resumeTitle">Diagnostic initial</div><div class="resume-meta" id="resumeMeta">15 questions non notées pour doser le guidage sans attribuer de maîtrise.</div><a class="resume-btn" id="resumeBtn" href="diagnostic.html">Commencer →</a></aside></div>
-<div class="metrics"><div class="metric"><div class="value">8</div><div class="label">Parcours cible</div></div><div class="metric"><div class="value">7</div><div class="label">Modules novice-ready</div></div><div class="metric"><div class="value" id="doneMetric">0/5</div><div class="label">Maîtrises démontrées · parcours guidé</div><div class="progress-track"><i id="progressBar"></i></div></div><div class="metric"><div class="value" id="dueMetric">0</div><div class="label">Réactivations dues</div></div></div>
+<div class="hero"><div><div class="eyebrow">LATENT / NEURAL LEARNING WORKSPACE</div><h1>Voir ce que le modèle <em>ne montre jamais.</em></h1><p class="lead">Tokens, vecteurs, attention, couches, logits, retrieval : la formation rend visibles les mécanismes internes d’un LLM et adapte le parcours aux preuves réelles de maîtrise.</p></div><aside class="hero-panel"><svg class="latent-map" viewBox="0 0 420 190" role="img" aria-label="Flux abstrait représentant des tokens traversant plusieurs couches"><defs><linearGradient id="latentGradient" x1="0" x2="1"><stop offset="0" stop-color="#5cf0d2"/><stop offset="1" stop-color="#998bff"/></linearGradient></defs><g opacity=".55"><path class="gridline" d="M20 30H400M20 70H400M20 110H400M20 150H400"/><path class="gridline" d="M60 15V175M140 15V175M220 15V175M300 15V175M380 15V175"/></g><path class="path" d="M28 145C88 145 90 45 145 45S205 135 255 115 320 45 392 55"/><path class="path" d="M28 95C80 95 110 125 155 115S205 35 260 48 318 130 392 120"/><circle class="node" cx="28" cy="145" r="7"/><circle class="node" cx="28" cy="95" r="7"/><circle class="node v" cx="145" cy="45" r="8"/><circle class="node" cx="155" cy="115" r="8"/><circle class="node v" cx="255" cy="115" r="9"/><circle class="node" cx="260" cy="48" r="9"/><circle class="node v" cx="392" cy="55" r="8"/><circle class="node" cx="392" cy="120" r="8"/><circle class="pulse" cx="255" cy="115" r="4"/><text x="18" y="175">TOKENS</text><text x="120" y="175">EMBED</text><text x="238" y="175">LAYERS</text><text x="350" y="175">LOGITS</text></svg><small>Prochaine action adaptative</small><div class="resume-title" id="resumeTitle">Diagnostic initial</div><div class="resume-meta" id="resumeMeta">15 questions non notées pour doser le guidage sans attribuer de maîtrise.</div><a class="resume-btn" id="resumeBtn" href="diagnostic.html">Commencer →</a></aside></div>
+<div class="signal-rail" aria-label="Pipeline conceptuel"><span>Tokens</span><span>Contexte</span><span>Attention</span><span>Blocs</span><span>Logits</span><span>Sampling</span></div><div class="metrics"><div class="metric"><div class="value">8</div><div class="label">Parcours cible</div></div><div class="metric"><div class="value">7</div><div class="label">Modules novice-ready</div></div><div class="metric"><div class="value" id="doneMetric">0/5</div><div class="label">Maîtrises démontrées · parcours guidé</div><div class="progress-track"><i id="progressBar"></i></div></div><div class="metric"><div class="value" id="dueMetric">0</div><div class="label">Réactivations dues</div></div></div>
 <div class="section" id="progression-guidee"><div class="section-head"><div><h2>Progression guidée actuelle</h2><p>Suivre ces cinq modules dans l’ordre : fondations, puis les quatre étapes du parcours 1.</p></div><span class="sequence-note">5 modules · progression suivie</span></div>
 <div class="now-grid" id="learningSequence" data-sequence="A,B,C,P1S3,P1S4">
 <article class="module ready" data-progress-card="A" data-sequence-index="1"><div class="code">PARCOURS 0 · FONDAMENTAUX</div><h3>Situer les LLM</h3><p>IA, machine learning, deep learning, TAL, IA générative, modèle de langage, LLM, application et ouverture.</p><div class="badges"><span class="badge ready">Guidage complet</span><span class="badge">12 notions</span><span class="badge">NOVICE-FIRST</span></div><div class="module-actions"><a class="open track-open" data-module="A" href="modules/domaine-a.html">Commencer ici →</a><a class="complete mastery-link" data-evaluate="A" href="modules/domaine-a.html#quiz">Évaluer ma maîtrise →</a><span class="mastery-state" data-mastery-status="A">À démontrer</span></div></article>
