@@ -414,6 +414,11 @@ html.projector .journey-card .k{color:#245c62!important}
  #completionFeedback.show{min-height:44px;display:flex;align-items:center}
 }
 </style>
+<style data-novice-priority-style="v1">
+.novice-priority{margin:0 0 14px;padding:12px 14px;border-left:3px solid var(--accent);border-radius:9px;background:color-mix(in srgb,var(--soft) 58%,var(--panel));font-size:.86rem;line-height:1.55}
+.novice-priority strong{margin-right:.35rem}
+html.projector .novice-priority{background:#eef5f3!important;color:#000!important;border-color:#005a62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -449,6 +454,7 @@ html.projector .journey-card .k{color:#245c62!important}
 
 <section class="section" data-pedagogy="definition" id="definitions">
 <div class="section-head"><div class="section-num">02</div><div><h2>Les 12 notions, définies avant manipulation</h2><p>Chaque notion contient aussi sa limite d’interprétation.</p></div></div>
+<div class="novice-priority" data-novice-priority="v1"><strong>Première lecture.</strong> Retenez d’abord la chaîne <b>texte → token → ID → embedding → contexte</b>. Corpus, vocabulaire, BPE, token spécial, espace vectoriel et cosinus sont des repères à reconnaître ; vous n’avez pas besoin de les mémoriser tous avant l’exemple travaillé.</div>
 <div class="gloss">
 <article class="term"><span class="id">Notion 01</span><span hidden data-ref="B01"></span><h3>Corpus</h3><p>Ensemble de textes ou données utilisés pour entraîner, adapter ou évaluer un système.</p><div class="limit"><b>Limite :</b> le corpus n’est pas la conversation courante.</div></article>
 <article class="term"><span class="id">Notion 02</span><span hidden data-ref="B02"></span><h3>Token</h3><p>Unité discrète produite par un tokenizer. Elle peut être un mot, un morceau de mot, un signe ou autre unité définie par le tokenizer.</p><div class="limit"><b>Piège :</b> token ≠ mot.</div></article>

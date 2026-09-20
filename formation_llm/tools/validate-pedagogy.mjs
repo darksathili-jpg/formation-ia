@@ -31,6 +31,15 @@ for(const m of manifest.modules){
    if(!html.includes('data-learning-system="v2"')) errors.push(m.path+': moteur Learning System V2 absent');
    if(!html.includes('learning-guide')) errors.push(m.path+': progressive disclosure absent');
    if(!html.includes('formation-llm-learning-v2')) errors.push(m.path+': stockage de maîtrise V2 absent');
+   const quizCount=(html.match(/<fieldset class="q"/g)||[]).length;
+   const feedbackCount=(html.match(/class="feedback"(?:\s|>)/g)||[]).length;
+   const transferCount=(html.match(/class="transfer-card"(?:\s|>)/g)||[]).length;
+   const transferFeedbackCount=(html.match(/class="transfer-feedback"(?:\s|>)/g)||[]).length;
+   if(quizCount && feedbackCount!==quizCount) errors.push(m.path+': chaque question de quiz doit avoir un feedback ('+feedbackCount+'/'+quizCount+')');
+   if(transferCount && transferFeedbackCount!==transferCount) errors.push(m.path+': chaque transfert doit avoir un feedback ('+transferFeedbackCount+'/'+transferCount+')');
+   const defMatch=html.match(/<section\b[^>]*data-pedagogy="definition"[^>]*>([\s\S]*?)<\/section>/);
+   const definitionItems=defMatch?(defMatch[1].match(/<h3\b/g)||[]).length:0;
+   if(definitionItems>=9 && !defMatch[1].includes('data-novice-priority="v1"')) errors.push(m.path+': glossaire chargé ('+definitionItems+' notions) sans priorité de première lecture');
  }
  if(m.status==='remediation-required' && !m.legacy_debt){
    errors.push(m.path+': remediation-required interdit sans legacy_debt explicite');

@@ -420,6 +420,11 @@ html.projector .journey-card .k{color:#245c62!important}
  #completionFeedback.show{min-height:44px;display:flex;align-items:center}
 }
 </style>
+<style data-novice-priority-style="v1">
+.novice-priority{margin:0 0 14px;padding:12px 14px;border-left:3px solid var(--accent);border-radius:9px;background:color-mix(in srgb,var(--soft) 58%,var(--panel));font-size:.86rem;line-height:1.55}
+.novice-priority strong{margin-right:.35rem}
+html.projector .novice-priority{background:#eef5f3!important;color:#000!important;border-color:#005a62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -449,6 +454,7 @@ html.projector .journey-card .k{color:#245c62!important}
 
 <section class="section" data-pedagogy="definition" id="definitions">
 <div class="section-head"><div class="num">02</div><div><h2>Les briques, avant les scores</h2></div></div>
+<div class="novice-priority" data-novice-priority="v1"><strong>Première lecture.</strong> Retenez d’abord <b>documents → chunks → recherche → meilleurs candidats → contexte augmenté → génération</b>. ANN, hybride, reranking et métriques sont des raffinements de ce pipeline ; l’exemple travaillé montrera ensuite où ils interviennent.</div>
 <div class="gloss">
 <article class="term"><h3>Chunk</h3><p>Passage découpé dans un document et récupérable indépendamment.</p><div class="limit"><b>Trop petit :</b> sens perdu. <b>Trop grand :</b> bruit et budget gaspillé.</div></article>
 <article class="term"><h3>Overlap</h3><p>Chevauchement entre chunks voisins pour limiter les pertes aux frontières.</p><div class="limit"><b>Piège :</b> plus d’overlap n’est pas toujours meilleur.</div></article>

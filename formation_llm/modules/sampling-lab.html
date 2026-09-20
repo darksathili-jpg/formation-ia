@@ -396,6 +396,11 @@ html.projector .journey-card .k{color:#245c62!important}
  #completionFeedback.show{min-height:44px;display:flex;align-items:center}
 }
 </style>
+<style data-novice-priority-style="v1">
+.novice-priority{margin:0 0 14px;padding:12px 14px;border-left:3px solid var(--accent);border-radius:9px;background:color-mix(in srgb,var(--soft) 58%,var(--panel));font-size:.86rem;line-height:1.55}
+.novice-priority strong{margin-right:.35rem}
+html.projector .novice-priority{background:#eef5f3!important;color:#000!important;border-color:#005a62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -415,6 +420,7 @@ html.projector .journey-card .k{color:#245c62!important}
 <div class="panel"><div class="definition"><strong>Probabilité locale de continuation</strong><p>Une probabilité de 0,70 pour un token signifie qu’il reçoit 70 % de la masse dans cette distribution du prochain token. Cela ne signifie pas « la phrase sera vraie à 70 % ».</p></div><div class="notice" style="margin-top:12px"><strong>Deux softmax différents.</strong> Le softmax d’attention normalise des scores entre positions internes. Le softmax de sortie normalise des logits sur le vocabulaire.</div></div></div></section>
 
 <section class="section" data-pedagogy="definition" id="definitions"><div class="section-head"><div class="num">02</div><div><h2>Logits → distribution : les 9 notions avant les curseurs</h2></div></div>
+<div class="novice-priority" data-novice-priority="v1"><strong>Première lecture.</strong> Gardez surtout la chaîne <b>logits → distribution → stratégie de décodage → token choisi → nouveau contexte</b>. Greedy, sampling, température, top-k et top-p sont différentes façons d’agir sur cette même étape ; leurs détails seront manipulés ensuite.</div>
 <div class="gloss">
 <article class="term"><h3>Inférence</h3><p>Utilisation d’un modèle entraîné pour calculer des sorties sans modifier normalement ses poids par simple génération.</p><div class="limit"><b>Piège :</b> discuter avec le modèle ne signifie pas le réentraîner.</div></article>
 <article class="term"><h3>Logit</h3><p>Score brut non normalisé attribué à un candidat du vocabulaire.</p><div class="limit"><b>Piège :</b> un logit n’est pas une probabilité.</div></article>
