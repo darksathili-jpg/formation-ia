@@ -39,7 +39,7 @@ if(words<1800) errors.push('contenu novice-ready trop court: '+words+' mots');
 for(const marker of [
  'P2S2 novice-ready','MODULE="P2S2"','data-success-criterion="v1"',
  'data-learning-system="v2"','data-step-registry="v1"','data-latent-nav="v2"',
- 'data-mobile-module-ux="v1"','data-assessment-guard="v1"','data-completion-guard="v1"',
+ 'data-mobile-module-ux="v1"','data-p2s2-visual-audit="v2"','data-assessment-guard="v1"','data-completion-guard="v1"',
  'data-latent-safe-storage="v1"','id="builderOutput" role="status" aria-live="polite" aria-atomic="true"',
  'id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"',
  'href="dialoguer-specifier.html"','href="../index.html#dashboard"'
@@ -60,6 +60,11 @@ for(const source of ['OpenAI — Prompt engineering','Google AI — Prompt desig
 
 if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push('appel réseau runtime détecté');
 if(/\blocalStorage\./.test(html.replace(/<script data-latent-safe-storage="v1">[\s\S]*?<\/script>/,''))) errors.push('accès direct localStorage hors helper');
+if(!html.includes('#builder .criteria label{')||!html.includes('min-height:44px')) errors.push('Example Lab sans cibles tactiles renforcées');
+if(!html.includes('#pieges .mis{')||!html.includes('grid-template-rows:auto 1fr auto')) errors.push('six pièges sans hiérarchie visuelle stabilisée');
+if(!html.includes('#transfert .transfer-card{display:flex;flex-direction:column;gap:8px}')) errors.push('cartes de transfert non normalisées');
+if(!html.includes('html.projector #builder .criteria label{background:#ffffff!important')) errors.push('Example Lab non sécurisé en projection');
+if(!html.includes('html.projector #pieges .mis{border-top-color:#8b1f2b!important}')) errors.push('pièges non sécurisés en projection');
 if(!html.includes('grid-template-columns:repeat(3,minmax(0,1fr))')) errors.push('commandes mobiles non stabilisées');
 if(!html.includes('#trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}')) errors.push('libellé mobile profil non synchronisé');
 if(!html.includes('#projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}')) errors.push('libellé mobile projection non synchronisé');
