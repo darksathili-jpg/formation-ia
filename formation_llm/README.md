@@ -104,6 +104,20 @@ Le manifeste [`data/pedagogy-manifest.json`](data/pedagogy-manifest.json) distin
 
 Le plan de reconstruction est détaillé dans [`docs/PLAN_REMEDIATION_PEDAGOGIQUE.md`](docs/PLAN_REMEDIATION_PEDAGOGIQUE.md).
 
+## Learning System V2
+
+La plateforme ne repose plus sur une auto-déclaration « acquis ». Le moteur d'apprentissage local, documenté dans [`docs/LEARNING_SYSTEM_V2.md`](docs/LEARNING_SYSTEM_V2.md), ajoute :
+
+- un **diagnostic initial non noté** de 15 questions qui dose le guidage sans certifier la maîtrise ;
+- une **maîtrise démontrée** exigeant quiz de récupération ≥ 80 % et transfert ≥ 80 % ;
+- un **progressive disclosure** par segments en mode stagiaire, avec voie rapide possible quand le diagnostic est solide ;
+- une **remédiation par misconception** : les erreurs de diagnostic, quiz, transfert et réactivation pointent vers la section utile ;
+- une **réactivation cumulative espacée** avec paliers de produit 1/3/7/14/30 jours, révisables ;
+- un cockpit « Apprentissage » et une vue « Progression » fondés sur les preuves locales ;
+- aucun compte, aucune API et aucun envoi de score vers un serveur.
+
+Les pages [`diagnostic.html`](diagnostic.html) et [`review.html`](review.html) sont autonomes. Les traces sont conservées dans `localStorage` sous la clé `formation-llm-learning-v2`.
+
 ## Validation
 
 Depuis `formation_llm/` :
@@ -113,10 +127,12 @@ npm ci
 npm run validate
 ```
 
-La commande exécute deux contrôles :
+La commande exécute quatre familles de contrôles :
 
 - `validate:data` : schémas JSON et intégrité référentielle du corpus pédagogique ;
-- `validate:web` : contrôle structurel de l'application, des modules A/B/C et du RAG Lab, unicité des identifiants HTML, syntaxe JavaScript, absence de dépendances réseau et présence des éléments pédagogiques obligatoires.
+- `validate:pedagogy` : contrat NOVICE-FIRST et branchement du moteur adaptatif sur chaque module ;
+- `validate:learning` : diagnostic, maîtrise mesurée, misconceptions, espacement et pages de réactivation ;
+- `validate:web` : structure applicative, navigation, syntaxe JavaScript, autonomie réseau et garde-fous propres aux labs.
 
 Le workflow GitHub Actions `Validate Formation LLM` exécute cette validation à chaque modification pertinente.
 
