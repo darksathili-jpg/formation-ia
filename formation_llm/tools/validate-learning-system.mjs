@@ -15,8 +15,9 @@ function extractEmbeddedArray(html,decl){
  return null;
 }
 function extractIdArray(html,name){
- const m=html.match(new RegExp(name+'=\\\\[([^\\\\]]*)\\\\]'));if(!m)return[];
- return [...m[1].matchAll(/"([^"]+)"/g)].map(x=>x[1]);
+ const marker=name+'=[';const p=html.indexOf(marker);if(p<0)return[];
+ const start=p+marker.length,end=html.indexOf(']',start);if(end<0)return[];
+ return [...html.slice(start,end).matchAll(/"([^"]+)"/g)].map(x=>x[1]);
 }
 
 if(cfg.version!=='2.0.0') errors.push('version Learning System attendue: 2.0.0');
