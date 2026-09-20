@@ -260,9 +260,13 @@ html.projector .latent-map text{fill:#263b40!important}
 </style>
 <style data-ux-audit="v1">
 @media(max-width:980px){
- .mobile-nav{height:57px;min-height:57px;padding:6px 14px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+ /* Cette règle est volontairement tardive : LATENT réintroduit une grille 250px plus haut dans la cascade. */
+ .app{grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important}
+ .main{grid-column:1/-1!important;width:100%!important;min-width:0!important;max-width:100%!important}
+ .mobile-nav{height:57px;min-height:57px;width:100%;max-width:100%;padding:6px 14px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
  .mobile-nav::-webkit-scrollbar{display:none}
- .topbar{top:57px}
+ .topbar{top:57px;width:100%;max-width:100%}
+ .topbar-inner,.content{width:100%;max-width:100%;min-width:0}
 }
 </style>
 </head>
