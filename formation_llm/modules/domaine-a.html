@@ -383,6 +383,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -406,7 +425,7 @@ html:not(.projector) .stage .n{
 <div class="section-head"><div class="num">01</div><div><h2>Pourquoi tant de mots différents ?</h2><p>Parce qu’ils ne parlent pas du même niveau d’un système.</p></div></div>
 <div class="grid2">
 <div class="panel lesson">
-<div class="intuition"><strong>Intuition</strong>Imaginez un service de restauration. « Cuisine » désigne un domaine. « Cuisson sous vide » est une technique. « Four » est un composant. « Restaurant » est le système complet avec salle, menu, personnel et réservation. En IA, mélanger <em>LLM</em>, <em>chatbot</em> et <em>application</em> revient au même type de confusion.</div>
+<div class="intuition"><strong>Intuition</strong> Imaginez un service de restauration. « Cuisine » désigne un domaine. « Cuisson sous vide » est une technique. « Four » est un composant. « Restaurant » est le système complet avec salle, menu, personnel et réservation. En IA, mélanger <em>LLM</em>, <em>chatbot</em> et <em>application</em> revient au même type de confusion.</div>
 <p>Le mot <strong>IA</strong> est très large. Il englobe de nombreuses façons de construire des systèmes capables de produire des décisions, classifications, recommandations, textes, images ou actions. Un LLM n’est donc pas « toute l’IA ».</p>
 <p>Le mot <strong>application</strong> est à l’autre extrémité : c’est souvent ce que voit l’utilisateur. Elle peut contenir un modèle, mais aussi une interface, des règles, une mémoire externe, une base documentaire ou des outils.</p>
 </div>

@@ -368,6 +368,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -383,7 +402,7 @@ html:not(.projector) .stage .n{
 <div class="notice"><strong>Simulation didactique, pas un modèle commercial.</strong> Les logits et le petit vocabulaire sont fictifs. En revanche, softmax, température, top-k/top-p, renormalisation et tirage pondéré sont réellement calculés dans le navigateur.</div>
 
 <section class="section" data-pedagogy="intuition" id="intuition"><div class="section-head"><div class="num">01</div><div><h2>Pourquoi faut-il une stratégie de décodage ?</h2><p>Le modèle ne produit pas directement « le bon mot » : il attribue d’abord des scores à de nombreux candidats.</p></div></div>
-<div class="gridEqual"><div class="panel"><div class="intuition"><strong>Intuition</strong>À un carrefour, plusieurs routes sont possibles. Le modèle fournit une préférence relative pour chaque route. Une stratégie de décodage décide ensuite si l’on prend toujours la route la mieux classée ou si l’on tire parmi plusieurs routes plausibles.</div><p>Le point essentiel est que le modèle calcule une <strong>distribution conditionnelle du prochain token</strong>. Cette distribution répond à : « quel token est plausible ensuite, compte tenu du contexte et des poids du modèle ? »</p></div>
+<div class="gridEqual"><div class="panel"><div class="intuition"><strong>Intuition</strong> À un carrefour, plusieurs routes sont possibles. Le modèle fournit une préférence relative pour chaque route. Une stratégie de décodage décide ensuite si l’on prend toujours la route la mieux classée ou si l’on tire parmi plusieurs routes plausibles.</div><p>Le point essentiel est que le modèle calcule une <strong>distribution conditionnelle du prochain token</strong>. Cette distribution répond à : « quel token est plausible ensuite, compte tenu du contexte et des poids du modèle ? »</p></div>
 <div class="panel"><div class="definition"><strong>Probabilité locale de continuation</strong><p>Une probabilité de 0,70 pour un token signifie qu’il reçoit 70 % de la masse dans cette distribution du prochain token. Cela ne signifie pas « la phrase sera vraie à 70 % ».</p></div><div class="notice" style="margin-top:12px"><strong>Deux softmax différents.</strong> Le softmax d’attention normalise des scores entre positions internes. Le softmax de sortie normalise des logits sur le vocabulaire.</div></div></div></section>
 
 <section class="section" data-pedagogy="definition" id="definitions"><div class="section-head"><div class="num">02</div><div><h2>Logits → distribution : les 9 notions avant les curseurs</h2></div></div>

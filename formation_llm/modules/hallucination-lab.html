@@ -359,6 +359,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -374,7 +393,7 @@ html:not(.projector) .stage .n{
 <div class="notice"><strong>Corpus contrôlé.</strong> Tous les exemples portent sur un univers fictif. Nous connaissons donc exactement la vérité terrain. <strong>Aucun appel réseau</strong> n’est effectué.</div>
 
 <section class="section" data-pedagogy="intuition" id="intuition"><div class="section-head"><div class="num">01</div><div><h2>Pourquoi une réponse convaincante peut être fausse</h2></div></div>
-<div class="gridEqual"><div class="panel"><div class="intuition"><strong>Intuition</strong>Un LLM est très bon pour produire une continuation cohérente avec son contexte. Or « cohérent avec le contexte » et « soutenu par une preuve fiable » sont deux critères différents.</div><p>Si la question contient déjà une prémisse fausse, le modèle peut la poursuivre. S’il manque une information, il peut compléter avec une association plausible. Et si une erreur devient partie du contexte généré, la suite peut rester parfaitement cohérente avec cette erreur.</p></div>
+<div class="gridEqual"><div class="panel"><div class="intuition"><strong>Intuition</strong> Un LLM est très bon pour produire une continuation cohérente avec son contexte. Or « cohérent avec le contexte » et « soutenu par une preuve fiable » sont deux critères différents.</div><p>Si la question contient déjà une prémisse fausse, le modèle peut la poursuivre. S’il manque une information, il peut compléter avec une association plausible. Et si une erreur devient partie du contexte généré, la suite peut rester parfaitement cohérente avec cette erreur.</p></div>
 <div class="panel"><div class="definition"><strong>Hallucination</strong><p>Terme utilisé pour différentes sorties fausses, inventées ou non étayées. Pour travailler rigoureusement, on ne se contente pas de l’étiquette : on identifie les <strong>claims</strong> et on demande quelle preuve soutient chacun.</p></div><div class="notice" style="margin-top:12px"><strong>Important :</strong> on décrit une propriété de la sortie. On ne suppose pas une intention de mentir.</div></div></div></section>
 
 <section class="section" data-pedagogy="definition" id="definitions"><div class="section-head"><div class="num">02</div><div><h2>Les notions avant l’évaluation</h2></div></div>

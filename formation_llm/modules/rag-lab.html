@@ -392,6 +392,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -404,7 +423,7 @@ html:not(.projector) .stage .n{
     <aside class="hero-card"><b>Pipeline observable</b><div class="pipeline"><span class="pipe">question</span><span class="arrow">→</span><span class="pipe">retrieval</span><span class="arrow">→</span><span class="pipe">top-k</span><span class="arrow">→</span><span class="pipe">rerank</span><span class="arrow">→</span><span class="pipe">contexte</span></div><p style="font-size:.82rem;color:#b9cbd3;margin-bottom:0">Ici, aucun LLM distant : nous isolons le retrieval pour pouvoir l’évaluer sans confondre ses erreurs avec celles de la génération.</p></aside>
   </section>
 
-  <div class="notice"><strong>Simulation didactique, calculs réels.</strong>BM25, cosinus, RRF et métriques sont calculés dans le navigateur. Le « modèle d’embedding », l’ANN et le reranker sont volontairement simplifiés et déterministes : ils enseignent les mécanismes sans prétendre reproduire les scores d’un moteur commercial.</div>
+  <div class="notice"><strong>Simulation didactique, calculs réels.</strong> BM25, cosinus, RRF et métriques sont calculés dans le navigateur. Le « modèle d’embedding », l’ANN et le reranker sont volontairement simplifiés et déterministes : ils enseignent les mécanismes sans prétendre reproduire les scores d’un moteur commercial.</div>
 
   
 <section class="journey" data-pedagogy="prerequisites">
@@ -415,7 +434,7 @@ html:not(.projector) .stage .n{
 
 <section class="section" data-pedagogy="intuition" id="intuition">
 <div class="section-head"><div class="num">01</div><div><h2>Pourquoi ne pas donner les 10 000 documents au LLM ?</h2><p>Parce qu’il faut sélectionner avant de générer.</p></div></div>
-<div class="grid2eq"><div class="panel"><div class="intuition"><strong>Intuition</strong>Imaginez une bibliothèque. Pour répondre à une question, on ne dépose pas tous les livres sur la table. On cherche d’abord quelques passages prometteurs, puis on les donne au lecteur.</div><p>Un RAG — <em>Retrieval-Augmented Generation</em> — ajoute donc une étape de <strong>recherche</strong> avant la génération. Le modèle reçoit la question, mais aussi des passages récupérés depuis une source externe.</p><p>Cette mécanique modifie surtout le <strong>contexte fourni au modèle</strong>, pas ses poids. Mettre à jour un index documentaire est donc différent d’un réentraînement du LLM.</p></div>
+<div class="grid2eq"><div class="panel"><div class="intuition"><strong>Intuition</strong> Imaginez une bibliothèque. Pour répondre à une question, on ne dépose pas tous les livres sur la table. On cherche d’abord quelques passages prometteurs, puis on les donne au lecteur.</div><p>Un RAG — <em>Retrieval-Augmented Generation</em> — ajoute donc une étape de <strong>recherche</strong> avant la génération. Le modèle reçoit la question, mais aussi des passages récupérés depuis une source externe.</p><p>Cette mécanique modifie surtout le <strong>contexte fourni au modèle</strong>, pas ses poids. Mettre à jour un index documentaire est donc différent d’un réentraînement du LLM.</p></div>
 <div class="panel"><div class="definition"><strong>Pipeline RAG minimal</strong><p>Documents → découpage en chunks → représentation/indexation → question → retrieval → top-k → contexte augmenté → LLM → réponse.</p></div><div class="notice" style="margin-top:12px"><strong>Deux familles d’erreurs.</strong> Si la bonne preuve n’est jamais récupérée : erreur de retrieval. Si la bonne preuve est présente mais mal utilisée : erreur de génération.</div></div></div>
 </section>
 

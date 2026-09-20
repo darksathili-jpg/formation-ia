@@ -386,6 +386,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -411,7 +430,7 @@ html:not(.projector) .stage .n{
 <section class="section" data-pedagogy="intuition" id="intuition">
 <div class="section-head"><div class="section-num">01</div><div><h2>Pourquoi découper le texte ?</h2><p>Parce qu’un réseau neuronal calcule sur des nombres, pas directement sur des mots imprimés à l’écran.</p></div></div>
 <div class="grid2">
-<div class="panel"><div class="intuition"><strong>Intuition</strong>Imaginez un piano numérique. La phrase « joue un do » doit être convertie en événements numériques avant que la machine puisse traiter la consigne. Pour un LLM, le texte suit lui aussi plusieurs transformations avant d’entrer dans le réseau.</div><p>Le premier problème est donc : <strong>quelles unités donner au modèle ?</strong> Utiliser un mot entier semble naturel, mais le vocabulaire deviendrait énorme et échouerait sur les mots nouveaux. Utiliser un caractère résout ce problème, mais produit des séquences beaucoup plus longues.</p><p>Les tokenizers modernes utilisent souvent un compromis : des <strong>sous-mots</strong>. Des morceaux fréquents peuvent devenir des unités, tandis qu’un mot rare peut être décomposé en plusieurs unités connues.</p></div>
+<div class="panel"><div class="intuition"><strong>Intuition</strong> Imaginez un piano numérique. La phrase « joue un do » doit être convertie en événements numériques avant que la machine puisse traiter la consigne. Pour un LLM, le texte suit lui aussi plusieurs transformations avant d’entrer dans le réseau.</div><p>Le premier problème est donc : <strong>quelles unités donner au modèle ?</strong> Utiliser un mot entier semble naturel, mais le vocabulaire deviendrait énorme et échouerait sur les mots nouveaux. Utiliser un caractère résout ce problème, mais produit des séquences beaucoup plus longues.</p><p>Les tokenizers modernes utilisent souvent un compromis : des <strong>sous-mots</strong>. Des morceaux fréquents peuvent devenir des unités, tandis qu’un mot rare peut être décomposé en plusieurs unités connues.</p></div>
 <div class="panel">
 <div class="pipeline"><div class="pipe"><span class="n">1</span><b>Texte</b><small>« tokenisation »</small></div><div class="pipe"><span class="n">2</span><b>Tokens</b><small>ex. « token », « isation »</small></div><div class="pipe"><span class="n">3</span><b>IDs</b><small>ex. 821, 3914</small></div><div class="pipe"><span class="n">4</span><b>Vecteurs</b><small>listes de nombres</small></div><div class="pipe"><span class="n">5</span><b>Contexte</b><small>séquence disponible au modèle</small></div></div>
 <div class="notice" style="margin-top:12px"><strong>Attention.</strong> Les exemples numériques de cette page sont fictifs. Un tokenizer réel peut découper le même texte autrement.</div>
@@ -485,8 +504,8 @@ html:not(.projector) .stage .n{
 <div class="section-head"><div class="section-num">06</div><div><h2>Embedding & cosinus — de l’intuition au calcul</h2><p>Pourquoi représenter une unité par un vecteur et que signifie réellement une similarité élevée ?</p></div></div>
 <div class="grid2">
 <div class="panel">
-<div class="intuition"><strong>Intuition</strong>Un ID est seulement une étiquette. Si « chat » a l’ID 4317 et « chien » 201, la différence numérique entre 4317 et 201 ne dit rien de leur relation. Il faut une représentation sur laquelle le réseau peut calculer : un vecteur.</div>
-<div class="definition" style="margin-top:10px"><strong>Similarité cosinus</strong>Elle compare l’orientation de deux vecteurs. Pour des vecteurs A et B : <code>cos(A,B) = (A·B) / (||A|| × ||B||)</code>.</div>
+<div class="intuition"><strong>Intuition</strong> Un ID est seulement une étiquette. Si « chat » a l’ID 4317 et « chien » 201, la différence numérique entre 4317 et 201 ne dit rien de leur relation. Il faut une représentation sur laquelle le réseau peut calculer : un vecteur.</div>
+<div class="definition" style="margin-top:10px"><strong>Similarité cosinus</strong> Elle compare l’orientation de deux vecteurs. Pour des vecteurs A et B : <code>cos(A,B) = (A·B) / (||A|| × ||B||)</code>.</div>
 <div class="steps" style="margin-top:12px">
 <div class="step"><div class="n">1</div><div><h3>Produit scalaire</h3><p>Multiplier les composantes correspondantes puis additionner.</p><div class="calc">A=[1,0,1], B=[1,1,0] → A·B = 1</div></div></div>
 <div class="step"><div class="n">2</div><div><h3>Normes</h3><p>Calculer la longueur de chaque vecteur.</p><div class="calc">||A||=√2 · ||B||=√2</div></div></div>
@@ -508,7 +527,7 @@ html:not(.projector) .stage .n{
 <div class="section-head"><div class="section-num">07</div><div><h2>Context Lab — la place est limitée</h2><p>La fenêtre de contexte est un budget de tokens pour le traitement courant.</p></div></div>
 <div class="grid2">
 <div class="panel">
-<div class="intuition"><strong>Intuition</strong>Imaginez une table de travail : vous pouvez poser des documents dessus, mais sa surface est limitée. Un système peut posséder d’autres documents dans une armoire — mémoire ou base externe — sans qu’ils soient actuellement sur la table.</div>
+<div class="intuition"><strong>Intuition</strong> Imaginez une table de travail : vous pouvez poser des documents dessus, mais sa surface est limitée. Un système peut posséder d’autres documents dans une armoire — mémoire ou base externe — sans qu’ils soient actuellement sur la table.</div>
 <p><strong>Fenêtre de contexte :</strong> ce qui est accessible au calcul courant. <strong>Mémoire applicative :</strong> données stockées ailleurs que l’application peut choisir de réinjecter. <strong>Paramètres :</strong> poids appris du modèle.</p>
 <div class="notice"><strong>Trois objets différents.</strong> Une information absente du contexte courant peut éventuellement être récupérée depuis une mémoire externe ; cela ne signifie pas qu’elle a été ajoutée aux paramètres.</div>
 </div>

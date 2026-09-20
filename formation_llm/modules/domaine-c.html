@@ -368,6 +368,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -387,8 +406,8 @@ html:not(.projector) .stage .n{
 <section class="section" data-pedagogy="intuition" id="intuition">
 <div class="section-head"><div class="num">01</div><div><h2>Le problème : le même token, deux contextes</h2><p>Une représentation utile doit distinguer « avocat au tribunal » de « avocat avec du citron ».</p></div></div>
 <div class="grid2">
-<div class="panel"><div class="intuition"><strong>Intuition</strong>Le token « avocat » commence avec une représentation initiale similaire dans les deux phrases. Pourtant, pour comprendre la phrase, le modèle doit faire émerger deux représentations contextuelles différentes.</div><div class="steps" style="margin-top:12px"><div class="step"><div class="n">A</div><div><h3>L’avocat plaide au tribunal.</h3><p>Les positions « plaide » et « tribunal » sont très utiles pour interpréter « avocat » comme profession juridique.</p></div></div><div class="step"><div class="n">B</div><div><h3>Je mange un avocat avec du citron.</h3><p>Les positions « mange » et « citron » sont utiles pour interpréter « avocat » comme aliment.</p></div></div></div></div>
-<div class="panel"><div class="definition"><strong>Auto-attention</strong>Pour chaque position, le modèle calcule des coefficients permettant de combiner des informations provenant d’autres positions accessibles de la même séquence.</div><p><b>Important :</b> « regarder » ou « écouter » sont des métaphores. Le mécanisme réel est une suite de projections vectorielles, produits scalaires, masquage, normalisation et somme pondérée.</p><div class="notice"><strong>Question novice.</strong> « Pourquoi ne pas simplement prendre les mots voisins ? » Parce qu’une information utile peut se trouver loin dans la séquence ; l’attention permet des liens à distance parmi les positions autorisées.</div></div>
+<div class="panel"><div class="intuition"><strong>Intuition</strong> Le token « avocat » commence avec une représentation initiale similaire dans les deux phrases. Pourtant, pour comprendre la phrase, le modèle doit faire émerger deux représentations contextuelles différentes.</div><div class="steps" style="margin-top:12px"><div class="step"><div class="n">A</div><div><h3>L’avocat plaide au tribunal.</h3><p>Les positions « plaide » et « tribunal » sont très utiles pour interpréter « avocat » comme profession juridique.</p></div></div><div class="step"><div class="n">B</div><div><h3>Je mange un avocat avec du citron.</h3><p>Les positions « mange » et « citron » sont utiles pour interpréter « avocat » comme aliment.</p></div></div></div></div>
+<div class="panel"><div class="definition"><strong>Auto-attention</strong> Pour chaque position, le modèle calcule des coefficients permettant de combiner des informations provenant d’autres positions accessibles de la même séquence.</div><p><b>Important :</b> « regarder » ou « écouter » sont des métaphores. Le mécanisme réel est une suite de projections vectorielles, produits scalaires, masquage, normalisation et somme pondérée.</p><div class="notice"><strong>Question novice.</strong> « Pourquoi ne pas simplement prendre les mots voisins ? » Parce qu’une information utile peut se trouver loin dans la séquence ; l’attention permet des liens à distance parmi les positions autorisées.</div></div>
 </div>
 </section>
 
@@ -450,8 +469,8 @@ html:not(.projector) .stage .n{
 <section class="section" id="masque">
 <div class="section-head"><div class="num">06</div><div><h2>Masque causal — pourquoi un triangle ?</h2><p>Une position autoregressive ne doit pas utiliser les tokens futurs pour prédire la suite.</p></div></div>
 <div class="grid2">
-<div class="panel"><div class="definition"><strong>Règle</strong>Pour la position i, seules les positions autorisées par le masque peuvent recevoir un poids non nul. Les positions futures sont neutralisées avant softmax.</div><p>Lors de l’entraînement, toute la séquence peut être présente dans le tenseur. Cela ne signifie pas que chaque position peut utiliser les représentations futures : le masque interdit ces connexions.</p></div>
-<div class="panel"><div class="matrix-wrap"><table class="matrix" id="matrix"></table></div><div class="notice danger" style="margin-top:12px"><strong>Attention ≠ explication complète</strong>Une matrice d’attention montre des coefficients internes pour une tête et une couche. Elle ne suffit pas à expliquer la décision globale du modèle.</div></div>
+<div class="panel"><div class="definition"><strong>Règle</strong> Pour la position i, seules les positions autorisées par le masque peuvent recevoir un poids non nul. Les positions futures sont neutralisées avant softmax.</div><p>Lors de l’entraînement, toute la séquence peut être présente dans le tenseur. Cela ne signifie pas que chaque position peut utiliser les représentations futures : le masque interdit ces connexions.</p></div>
+<div class="panel"><div class="matrix-wrap"><table class="matrix" id="matrix"></table></div><div class="notice danger" style="margin-top:12px"><strong>Attention ≠ explication complète</strong> Une matrice d’attention montre des coefficients internes pour une tête et une couche. Elle ne suffit pas à expliquer la décision globale du modèle.</div></div>
 </div>
 </section>
 

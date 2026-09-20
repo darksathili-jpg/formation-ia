@@ -367,6 +367,25 @@ html:not(.projector) .stage .n{
  .transfer-card select{min-height:48px}
 }
 </style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -380,7 +399,7 @@ html:not(.projector) .stage .n{
 <section class="journey" data-pedagogy="prerequisites"><div class="journey-card"><div class="k">Prérequis</div><b>Étape 2 · Attention</b><p>Q/K/V, softmax, masque causal et somme pondérée doivent être compris.</p></div><div class="journey-card"><div class="k">Objectif</div><b>Voir un bloc complet</b><p>Comprendre le rôle propre de position, Normalisation, attention, Connexion résiduelle et MLP / feed-forward.</p></div><div class="journey-card"><div class="k">Ensuite</div><b>Sampling</b><p>La représentation finale sera projetée vers le vocabulaire pour choisir le prochain token.</p></div></section>
 
 <section class="section" data-pedagogy="intuition" id="intuition"><div class="section-head"><div class="num">01</div><div><h2>Pourquoi l’attention ne suffit pas</h2><p>Communiquer n’est pas la même chose que transformer.</p></div></div>
-<div class="grid2"><div class="panel"><div class="intuition"><strong>Intuition</strong>Imaginez une équipe. Une réunion permet aux membres d’échanger de l’information : c’est l’attention. Mais ensuite chaque membre doit traiter ce qu’il a reçu et mettre à jour son propre travail : c’est le rôle du MLP et des autres opérations du bloc.</div><p><strong>Attention = communiquer. MLP = transformer.</strong> Cette phrase est un repère pédagogique, pas une définition exhaustive.</p><p>Les connexions résiduelles permettent d’ajouter une mise à jour au signal entrant au lieu de le remplacer brutalement. La normalisation maintient les activations dans une échelle plus stable pour l’entraînement et le calcul profond.</p></div>
+<div class="grid2"><div class="panel"><div class="intuition"><strong>Intuition</strong> Imaginez une équipe. Une réunion permet aux membres d’échanger de l’information : c’est l’attention. Mais ensuite chaque membre doit traiter ce qu’il a reçu et mettre à jour son propre travail : c’est le rôle du MLP et des autres opérations du bloc.</div><p><strong>Attention = communiquer. MLP = transformer.</strong> Cette phrase est un repère pédagogique, pas une définition exhaustive.</p><p>Les connexions résiduelles permettent d’ajouter une mise à jour au signal entrant au lieu de le remplacer brutalement. La normalisation maintient les activations dans une échelle plus stable pour l’entraînement et le calcul profond.</p></div>
 <div class="panel"><div class="roles"><article class="role"><b>Position</b><p>Rendre l’ordre exploitable.</p></article><article class="role"><b>Norm</b><p>Stabiliser l’échelle.</p></article><article class="role"><b>Attention</b><p>Échanger entre positions.</p></article><article class="role"><b>Résiduel</b><p>Ajouter une mise à jour.</p></article><article class="role"><b>MLP</b><p>Transformer chaque position.</p></article></div><div class="notice" style="margin-top:12px"><strong>À ne pas retenir comme une recette universelle.</strong> Les architectures réelles varient : LayerNorm ou RMSNorm, pré-norm ou post-norm, ReLU/GELU/SwiGLU, différentes méthodes positionnelles, etc.</div></div></div></section>
 
 <section class="section" data-pedagogy="definition" id="definitions"><div class="section-head"><div class="num">02</div><div><h2>Définir les briques avant de les manipuler</h2></div></div>

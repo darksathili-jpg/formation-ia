@@ -79,6 +79,13 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
  if(!html.includes('réponse"+(missing.length>1?"s":"")+" restante')) errors.push(page+': quiz incomplet peut encore être corrigé');
  if(!html.includes('choix restant"+(missing.length>1?"s":"")+" avant correction.')) errors.push(page+': transfert incomplet peut encore être corrigé');
 }
+for(const page of pages.filter(p=>p.startsWith('modules/'))){
+ const html=await readFile(new URL('../'+page,import.meta.url),'utf8');
+ if(!html.includes('data-microtype-contrast="v1"')) errors.push(page+': garde-fou microtypographie/contraste absent');
+ if(/<\/strong>[\p{L}\d]/u.test(html)) errors.push(page+': texte collé après un libellé strong');
+ if(!html.includes('.journey-card .k{')||!html.includes('color:#356d73!important')) errors.push(page+': micro-titres de parcours insuffisamment contrastés');
+ if(!html.includes('.intuition>strong:first-child')) errors.push(page+': séparation structurelle des libellés inline absente');
+}
 
 if(errors.length){console.error('\n❌ LATENT UI INVALIDE\n- '+errors.join('\n- '));process.exit(1)}
 console.log('✅ LATENT UI valide — identité, navigation, accessibilité et motion guard vérifiés.');
