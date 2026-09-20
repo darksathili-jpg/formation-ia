@@ -2,6 +2,23 @@ import { readFile } from 'node:fs/promises';
 const root=new URL('../',import.meta.url);
 const cfg=JSON.parse(await readFile(new URL('../data/learning-system.json',import.meta.url),'utf8'));
 const errors=[];
+function extractEmbeddedArray(html,decl){
+ const p=html.indexOf(decl);if(p<0)return null;
+ const start=p+decl.length;let depth=0,inString=false,escape=false;
+ for(let i=start;i<html.length;i++){
+  const ch=html[i];
+  if(inString){if(escape)escape=false;else if(ch==='\\')escape=true;else if(ch==='"')inString=false;continue}
+  if(ch==='"'){inString=true;continue}
+  if(ch==='[')depth++;
+  else if(ch===']'){depth--;if(depth===0){try{return JSON.parse(html.slice(start,i+1))}catch{return null}}}
+ }
+ return null;
+}
+function extractIdArray(html,name){
+ const m=html.match(new RegExp(name+'=\\\\[([^\\\\]]*)\\\\]'));if(!m)return[];
+ return [...m[1].matchAll(/"([^"]+)"/g)].map(x=>x[1]);
+}
+
 if(cfg.version!=='2.0.0') errors.push('version Learning System attendue: 2.0.0');
 if(cfg.storage_key!=='formation-llm-learning-v2') errors.push('storage_key inattendue');
 if(cfg.mastery_policy?.diagnostic_grants_mastery!==false) errors.push('le diagnostic ne doit jamais attribuer la maîtrise');
@@ -20,6 +37,27 @@ if((cfg.review_bank||[]).length<14) errors.push('banque de réactivation trop co
 const diag=await readFile(new URL('../diagnostic.html',import.meta.url),'utf8').catch(()=> '');
 const review=await readFile(new URL('../review.html',import.meta.url),'utf8').catch(()=> '');
 const index=await readFile(new URL('../index.html',import.meta.url),'utf8');
+const expectedDiagnostic=(cfg.diagnostic?.questions||[]).map(q=>[q.id,q.module,q.misconception,q.q,q.choices,q.answer]);
+const embeddedDiagnostic=extractEmbeddedArray(diag,'const questions=');
+if(!embeddedDiagnostic||JSON.stringify(embeddedDiagnostic)!==JSON.stringify(expectedDiagnostic)) errors.push('diagnostic.html: banque embarquée désynchronisée de learning-system.json');
+const expectedReview=(cfg.review_bank||[]).map(q=>[q.id,q.module,q.misconception,q.q,q.choices,q.answer]);
+const embeddedReview=extractEmbeddedArray(review,'bank=');
+if(!embeddedReview||JSON.stringify(embeddedReview)!==JSON.stringify(expectedReview)) errors.push('review.html: banque embarquée désynchronisée de learning-system.json');
+for(const m of cfg.modules||[]){
+ const html=await readFile(new URL('../'+m.href,import.meta.url),'utf8');
+ const quizCount=(html.match(/<fieldset class="q"/g)||[]).length;
+ const transferCount=(html.match(/class="transfer-card"/g)||[]).length;
+ const quizMis=extractIdArray(html,'QUIZ_MIS');
+ const transferMis=extractIdArray(html,'TRANSFER_MIS');
+ if(quizCount!==m.quiz_total) errors.push(m.href+': quiz_total config='+m.quiz_total+' mais DOM='+quizCount);
+ if(transferCount!==m.transfer_total) errors.push(m.href+': transfer_total config='+m.transfer_total+' mais DOM='+transferCount);
+ if(quizMis.length!==quizCount) errors.push(m.href+': mapping QUIZ_MIS incomplet ('+quizMis.length+'/'+quizCount+')');
+ if(transferMis.length!==transferCount) errors.push(m.href+': mapping TRANSFER_MIS incomplet ('+transferMis.length+'/'+transferCount+')');
+ for(const id of [...quizMis,...transferMis]){if(!mis.has(id))errors.push(m.href+': mapping vers misconception inconnue '+id);if(!id.startsWith(m.id+'.'))errors.push(m.href+': mapping de misconception hors module '+id)}
+ for(const x of m.misconceptions||[]){if(!html.includes('id="'+x.anchor+'"'))errors.push(m.href+': ancre de remédiation absente #'+x.anchor+' pour '+x.id)}
+}
+for(const m of cfg.modules||[]){if((cfg.review_bank||[]).filter(q=>q.module===m.id).length<2)errors.push('review_bank insuffisante pour '+m.id)}
+
 for(const m of cfg.modules||[]){
  const html=await readFile(new URL('../'+m.href,import.meta.url),'utf8');
  if(!html.includes('function resolveMis')) errors.push(m.href+': résolution des misconceptions absente');
@@ -35,6 +73,8 @@ for(const [name,html] of [['diagnostic.html',diag],['review.html',review]]){
   if(name==='review.html' && !html.includes('resolvedAt')) errors.push('review.html: résolution des remédiations absente');
  }
 }
+if(!diag.includes('resolvedAt:null,resolvedSource:null')) errors.push('diagnostic.html: une misconception résolue ne peut pas être rouverte lors d’un nouveau diagnostic');
+if(!diag.includes('resolvedSource="diagnostic-retake"')) errors.push('diagnostic.html: une ancienne erreur diagnostique corrigée reste active');
 if(!diag.includes('data-diagnostic-ux="v1"')) errors.push('diagnostic.html: passe ergonomique mobile absente');
 if(!diag.includes("href='index.html#dashboard'")) errors.push('diagnostic.html: retour explicite au cockpit absent');
 if(!diag.includes('.hero h1{font-size:clamp(2.45rem,11vw,3.7rem)!important')) errors.push('diagnostic.html: héros mobile encore surdimensionné');
