@@ -20,7 +20,8 @@ else{
  if(!transversal.includes('data-transversal-card="RAG"')) errors.push('RAG absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="HALL"')) errors.push('Hallucination Lab absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S1"')) errors.push('Parcours 2 · Spécifier une tâche absent du bloc transversal');
- if(!transversal.includes('data-mastery-status="RAG"')||!transversal.includes('data-mastery-status="HALL"')||!transversal.includes('data-mastery-status="P2S1"')) errors.push('statut de maîtrise transversal absent');
+ if(!transversal.includes('data-transversal-card="P2S2"')) errors.push('Parcours 2 · Exemples, frontières & format absent du bloc transversal');
+ if(!transversal.includes('data-mastery-status="RAG"')||!transversal.includes('data-mastery-status="HALL"')||!transversal.includes('data-mastery-status="P2S1"')||!transversal.includes('data-mastery-status="P2S2"')) errors.push('statut de maîtrise transversal absent');
  if(!transversal.includes('Hors progression guidée')) errors.push('statut transversal non expliqué');
 }
 if(html.includes('Marquer acquis')||html.includes('data-complete=')) errors.push('ancienne auto-déclaration de maîtrise interdite');
@@ -30,7 +31,7 @@ if(!html.includes('diagnostic.html')) errors.push('diagnostic initial absent');
 if(!html.includes('review.html')) errors.push('réactivation cumulative absente');
 if(!html.includes('id="progressiveBtn"')) errors.push('contrôle progressive disclosure absent');
 if(!html.includes('formation-llm-learning-v2')) errors.push('storage Learning System V2 absent');
-if(!html.includes('<div class="value">8</div><div class="label">Modules novice-ready</div>')) errors.push('compteur novice-ready incohérent');
+if(!html.includes('<div class="value">9</div><div class="label">Modules novice-ready</div>')) errors.push('compteur novice-ready incohérent');
 if(!html.includes('id="doneMetric">0/5</div>')) errors.push('compteur initial de maîtrise incohérent');
 if(!html.includes('id="dueMetric">0</div>')) errors.push('compteur réactivation due absent');
 if(!/const GUIDED=\["A","B","C","P1S3","P1S4"\]/.test(html)) errors.push('liste guidée JS incohérente');
