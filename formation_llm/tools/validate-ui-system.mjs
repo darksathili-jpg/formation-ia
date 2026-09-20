@@ -46,6 +46,10 @@ for(const page of pages.filter(p=>p.startsWith('modules/'))){
 }
 if(!index.includes('data-ux-audit="v1"')||!index.includes('.mobile-nav{height:57px')||!index.includes('.topbar{top:57px')) errors.push('index.html: empilement sticky mobile non verrouillé');
 if(!index.includes('.app{grid-template-columns:minmax(0,1fr)!important')||!index.includes('.main{grid-column:1/-1!important;width:100%!important')) errors.push('index.html: grille mobile peut retomber dans la colonne LATENT de 250px');
+if(!index.includes('.topbar{position:relative!important;top:auto!important}')) errors.push('index.html: double barre sticky mobile encore possible');
+if(!index.includes('.hero h1{font-size:clamp(2.45rem,10.5vw,3.6rem)!important')) errors.push('index.html: héros mobile non compacté');
+if(!index.includes('.metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important')) errors.push('index.html: métriques mobile non regroupées en 2x2');
+if(!index.includes('.section-head{flex-direction:column!important;align-items:flex-start!important')) errors.push('index.html: en-tête de progression mobile encore comprimé');
 if(!index.includes('html.projector .path-n{')||!index.includes('html.projector #learningSequence .module:after{')) errors.push('index.html: éléments sombres résiduels du cockpit en projection');
 if(!index.includes('html.projector .state{font-size:.82rem')) errors.push('index.html: badges d’état trop petits en projection');
 for(const page of pages.filter(p=>p.startsWith('modules/'))){
