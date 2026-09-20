@@ -335,6 +335,45 @@
       ]
     },
     {
+      "id": "P2S4",
+      "label": "Parcours 2 · Dialogue multi-tour & contexte",
+      "href": "modules/dialoguer-multitour.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P2S4.HISTORY_MEMORY",
+          "label": "Historique ≠ mémoire parfaite",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S4.STABLE_TRANSIENT",
+          "label": "Contrat stable ≠ demande transitoire",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P2S4.CLARIFY",
+          "label": "Information absente → clarification, pas invention",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S4.RECAP",
+          "label": "Checkpoint structuré ≠ résumé vague",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P2S4.DRIFT",
+          "label": "Dérive = contrainte active perdue",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P2S4.CONTEXT_BUDGET",
+          "label": "Plus de contexte ≠ meilleur contexte",
+          "anchor": "pieges"
+        }
+      ]
+    },
+    {
       "id": "HALL",
       "label": "Parcours 3 · Hallucination",
       "href": "modules/hallucination-lab.html",
@@ -802,6 +841,28 @@
       "module": "P2S3",
       "misconception": "P2S3.OVERFIT",
       "q": "Copier tous les cas d’évaluation dans le prompt comme exemples conserve-t-il une mesure indépendante de généralisation ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P2S4-1",
+      "module": "P2S4",
+      "misconception": "P2S4.DRIFT",
+      "q": "Une réponse viole une contrainte toujours active sans demande de changement. Est-ce un signal de dérive ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-P2S4-2",
+      "module": "P2S4",
+      "misconception": "P2S4.CLARIFY",
+      "q": "Une conversation fait référence à un fichier absent. Faut-il inventer son contenu probable pour garder la fluidité ?",
       "choices": [
         "Oui",
         "Non"
