@@ -30,7 +30,11 @@ button,.primary,.secondary,.tool,.back,.recommend a{min-height:44px}
 @media(max-width:650px){.top:before{display:none}.hero{min-height:0;padding-top:42px}.hero h1{font-size:clamp(2.8rem,16vw,4.5rem)!important}.card{padding:18px!important}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;transform:none!important;scroll-behavior:auto!important}}
 </style>
-</head><body><main class="wrap">
+<style data-latent-access="v1">
+.skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.skip-link:focus{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
+</style></head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent">
 <div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
 <section class="hero"><div class="eyebrow">LATENT / PLACEMENT VECTOR · Diagnostic non noté</div><h1>Où commencer ?</h1><p class="lead">15 questions courtes servent uniquement à doser le guidage. Elles ne donnent aucun badge de maîtrise et ne vous empêchent jamais d’ouvrir un module.</p></section>
 <div class="notice"><strong>Règle importante :</strong> ne cherchez pas les réponses dans les cours pendant le diagnostic. Une erreur est utile : elle permet au système de proposer une remédiation ciblée.</div>
