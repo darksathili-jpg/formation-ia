@@ -73,8 +73,8 @@ if(!html.includes("<b>Hypothèse.</b>")||!html.includes("<b>Variable testée.</b
 if(!html.includes('Décision expérimentale.')) errors.push('Iteration Lab sans décision expérimentale explicite');
 if(!html.includes('Aucune hypothèse isolable')) errors.push('cas multi-variable sans signal pédagogique d’hypothèse non isolable');
 
-if(!html.includes('baseline : 4 / 6')) errors.push('baseline non rendue visible dans l’Iteration Lab');
-if(!html.includes('impossible d’attribuer le gain')) errors.push('cas multi-variable sans avertissement causal');
+if(!html.includes('Baseline : 4 / 6')||!html.includes('baseline 4 / 6')) errors.push('baseline non rendue visible dans l’Iteration Lab et sa comparaison');
+if(!html.includes('cause du gain est indéterminée')||!html.includes('Aucune hypothèse isolable')) errors.push('cas multi-variable sans avertissement causal');
 if(!html.includes('généralisation incomplète')) errors.push('cas de sur-ajustement local non explicité');
 if(!html.includes('#builder .criteria label{')||!html.includes('min-height:44px')) errors.push('Iteration Lab sans cibles tactiles renforcées');
 if(!html.includes('#pieges .mis{')||!html.includes('grid-template-rows:auto 1fr auto')) errors.push('pièges sans hiérarchie visuelle stabilisée');
