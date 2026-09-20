@@ -77,6 +77,8 @@ if(!html.includes('workflowSummary')||!html.includes('Analyser les trois documen
 if(!html.includes('Workflow incomplet.')) errors.push('Workflow Lab incomplet non protégé');
 if(!html.includes('.workflow-case select{width:100%;min-width:0;max-width:100%;min-height:44px')) errors.push('sélecteurs du Workflow Lab non contraints au viewport');
 if(!html.includes('#builder .grid2>*{min-width:0}')) errors.push('colonnes du Workflow Lab peuvent encore déborder par min-content');
+if(!html.includes('.workflow-decisions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;min-width:0;width:100%}')) errors.push('grille interne du Workflow Lab non contrainte au reflow');
+if(!html.includes('.workflow-case{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel);width:100%;max-width:100%}')) errors.push('cartes du Workflow Lab non bornées par leur panneau');
 if(!html.includes('#builder .grid2{align-items:start}')) errors.push('colonnes du Workflow Lab encore étirées verticalement');
 if(!html.includes('html:not(.projector) #builder .grid2>.panel:last-child{position:sticky;top:132px}')) errors.push('workflow résultant desktop non maintenu visible');
 if(!html.includes('html.projector .workflow-case select{background:#ffffff!important;color:#000000!important')) errors.push('sélecteurs Workflow Lab non sécurisés en projection');
