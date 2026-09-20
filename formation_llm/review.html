@@ -30,7 +30,11 @@ button,.primary,.secondary,.tool,.back,.recommend a{min-height:44px}
 @media(max-width:650px){.top:before{display:none}.hero{min-height:0;padding-top:42px}.hero h1{font-size:clamp(2.8rem,16vw,4.5rem)!important}.card{padding:18px!important}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;transform:none!important;scroll-behavior:auto!important}}
 </style>
-</head><body><main class="wrap"><div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
+<style data-latent-access="v1">
+.skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.skip-link:focus{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
+</style></head><body><a class="skip-link" href="#mainContent">Passer au contenu</a><main class="wrap" id="mainContent"><div class="top"><a class="back" href="index.html#apprentissage">← Formation LLM</a><button class="tool" id="themeBtn" type="button">◐ Thème</button></div>
 <section class="hero"><div class="eyebrow">LATENT / MEMORY TRACE · Réactivation cumulative</div><h1>Ce qui doit revenir aujourd’hui</h1><p class="lead">Les questions mélangent les modules arrivés à échéance. Une réussite espace la prochaine réactivation ; une difficulté rapproche la notion et crée une remédiation ciblée.</p></section>
 <div class="notice"><strong>Ce n’est pas un examen.</strong> L’objectif est de récupérer l’information de mémoire. Une erreur maintenant est utile si elle déclenche une correction et une nouvelle tentative plus tard.</div>
 <div id="empty" class="empty" hidden></div><div id="test" hidden><section class="card"><div class="qmeta" id="qmeta"></div><div class="question" id="question"></div><div class="choices" id="choices"></div><div class="nav"><button class="secondary" id="prev" type="button">← Précédent</button><button class="primary" id="next" type="button">Suivant →</button></div></section></div>
