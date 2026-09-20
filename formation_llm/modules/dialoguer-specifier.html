@@ -430,6 +430,18 @@ html.projector .journey-card .k{color:#245c62!important}
  vertical-align:middle!important;
 }
 </style>
+<style data-p2s1-visual-audit="v1">
+/* P2S1 : confort mobile + lisibilité du Prompt Builder. */
+#builder .criteria label{color:var(--text)!important;line-height:1.4}
+#builder .criteria input{margin-top:.16rem}
+#builderOutput{min-height:180px}
+@media(max-width:650px){
+ .hero h1{font-size:clamp(2.25rem,12vw,3.35rem)!important;line-height:.96!important;letter-spacing:-.035em!important}
+ #builder .panel{padding:16px!important}
+ #builderOutput{min-height:0}
+}
+html.projector #builder .criteria label{color:#000000!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
@@ -497,7 +509,7 @@ html.projector .journey-card .k{color:#245c62!important}
 <div class="grid2">
 <div class="panel">
 <h3>Tâche : transformer une note de cours en fiche de révision</h3>
-<div class="criteria" id="builderOptions">
+<div class="criteria" id="builderOptions" role="group" aria-label="Éléments de la spécification">
 <label><input type="checkbox" data-builder="objective" checked> Objectif : produire une fiche de révision.</label>
 <label><input type="checkbox" data-builder="audience"> Destinataire : élève de Première.</label>
 <label><input type="checkbox" data-builder="context"> Contexte : utiliser uniquement la note fournie.</label>
@@ -506,7 +518,7 @@ html.projector .journey-card .k{color:#245c62!important}
 <label><input type="checkbox" data-builder="criteria"> Réussite : toutes les notions indispensables de la note sont couvertes.</label>
 </div>
 </div>
-<div class="panel"><h3>Spécification obtenue</h3><div class="system-view" id="builderOutput"></div><div class="notice" id="builderNotice"><strong>Observation.</strong> Activez plusieurs éléments puis demandez-vous : lequel change réellement la sortie ?</div></div>
+<div class="panel"><h3>Spécification obtenue</h3><div class="system-view" id="builderOutput" role="status" aria-live="polite" aria-atomic="true"></div><div class="notice" id="builderNotice"><strong>Observation.</strong> Activez plusieurs éléments puis demandez-vous : lequel change réellement la sortie ?</div></div>
 </div>
 <div class="trainer-only trainer-box"><b>Débrief formateur.</b> Faire remarquer que « destinataire » peut être inutile dans certaines tâches purement mécaniques, tandis que le contexte source devient crucial dès qu’on interdit les ajouts.</div>
 </section>
