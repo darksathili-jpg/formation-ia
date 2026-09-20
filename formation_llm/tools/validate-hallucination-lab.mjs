@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 const html=await readFile(new URL('../modules/hallucination-lab.html',import.meta.url),'utf8');
 const errors=[];
-const must=['Hallucination Lab','Corpus contrôlé','Calibration Lab','Abstention Lab','Prémisse fausse','Vérification externe','TruthfulQA','On Calibration of Modern Neural Networks','formation-llm-role','setProjectorMode','Quitter la projection','Test de maîtrise'];
+const must=['Hallucination Lab','Corpus contrôlé','Calibration Lab','Abstention Lab','Prémisse fausse','Vérification externe','TruthfulQA','On Calibration of Modern Neural Networks','formation-llm-role','setProjectorMode','Quitter · Échap','Test de maîtrise'];
 for(const m of must) if(!html.includes(m)) errors.push('marqueur manquant: '+m);
 if(/<script\s+[^>]*src=/i.test(html)||/<link\s+[^>]*href=/i.test(html)) errors.push('dépendance externe détectée');
 if(/\bfetch\s*\(|XMLHttpRequest|WebSocket\s*\(/.test(html)) errors.push('appel réseau détecté');

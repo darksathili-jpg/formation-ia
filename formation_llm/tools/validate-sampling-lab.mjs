@@ -5,7 +5,7 @@ const errors=[];
 const must=[
  'Sampling Lab','Logits → distribution','Greedy ≠ sampling','Top-k ou top-p',
  'Autoregressive Loop Lab','température basse ≠ exactitude','softmax(logits / T)',
- 'nucleus','formation-llm-role','Mode formateur actif','Quitter la projection',
+ 'nucleus','formation-llm-role','Mode formateur actif','Quitter · Échap',
  'setProjectorMode','Test de maîtrise','The Curious Case of Neural Text Degeneration'
 ];
 for(const m of must) if(!html.includes(m)) errors.push('marqueur manquant: '+m);
