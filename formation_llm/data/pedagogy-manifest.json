@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "updated_on": "2026-09-22",
   "policy": {
     "new_modules_must_be_novice_ready": true,
@@ -69,6 +69,15 @@
       "priority": 13,
       "reviewed_on": "2026-09-22",
       "notes": "Module natif P3S2 : claim, provenance, version, passage pertinent, soutien réel, indépendance des sources, Evidence Lab, trace de preuve, récupération et transfert. Les métriques d’évaluation restent hors périmètre jusqu’à P3S3."
+    },
+    {
+      "path": "modules/evaluation-systematique.html",
+      "label": "Parcours 3 — Étape 3 · Évaluation systématique",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 14,
+      "reviewed_on": "2026-09-22",
+      "notes": "P3S3 natif : objectif observable, cas de test, rubric/grader, baseline, score simple, catégories d’échec, Eval Lab, Regression Lab et transferts. Calibration, ECE et politique de risque restent hors périmètre jusqu’à P3S4."
     },
     {
       "path": "modules/rag-lab.html",
