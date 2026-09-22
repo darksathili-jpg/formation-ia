@@ -41,9 +41,9 @@ for(const m of manifest.modules){
    if(pos>=0&&misPos>=0&&pos>misPos) errors.push(m.path+': '+k+' placé après les misconceptions');
  }
  rows.push({module:m.label,status:m.status,words,present:required.filter(k=>present[k]).length,total:required.length});
- if(m.status==='novice-ready'){
+ if(m.status==='novice-ready'||m.status==='pilot-ready'){
    for(const k of required) if(!present[k]) errors.push(m.path+': bloc pédagogique obligatoire absent: '+k);
-   if(words<1200) errors.push(m.path+': contenu visible très court pour un module novice-ready ('+words+' mots) — revue humaine obligatoire');
+   if(words<1200) errors.push(m.path+': contenu visible très court pour un module '+m.status+' ('+words+' mots) — revue humaine obligatoire');
    if(!html.includes('data-learning-system="v2"')) errors.push(m.path+': moteur Learning System V2 absent');
    if(!html.includes('learning-guide')) errors.push(m.path+': progressive disclosure absent');
    if(!html.includes('formation-llm-learning-v2')) errors.push(m.path+': stockage de maîtrise V2 absent');
@@ -60,6 +60,18 @@ for(const m of manifest.modules){
    const defMatch=html.match(/<section\b[^>]*data-pedagogy="definition"[^>]*>([\s\S]*?)<\/section>/);
    const definitionItems=defMatch?(defMatch[1].match(/<h3\b/g)||[]).length:0;
    if(definitionItems>=9 && !defMatch[1].includes('data-novice-priority="v1"')) errors.push(m.path+': glossaire chargé ('+definitionItems+' notions) sans priorité de première lecture');
+   if(m.status==='pilot-ready'){
+     if(m.pedagogy_version!=='2.0') errors.push(m.path+': pilot-ready sans pedagogy_version 2.0');
+     if(!m.learner_validation||!String(m.learner_validation.status||'').startsWith('pending')) errors.push(m.path+': pilot-ready sans validation terrain explicitement en attente');
+     const meaningful=(html.match(/data-manipulation="meaningful"/g)||[]).length;
+     if(meaningful<3) errors.push(m.path+': V2 exige au moins 3 manipulations significatives, trouvé '+meaningful);
+     const first=html.indexOf('data-manipulation="meaningful"');
+     if(first>=0){
+       const before=visible(html.slice(0,first)).split(/\s+/).filter(Boolean).length;
+       if(before>350) errors.push(m.path+': première manipulation V2 trop tardive ('+before+' mots avant action)');
+     }
+     if(definitionItems>6) errors.push(m.path+': V2 interdit un glossaire central massif avant microcycles ('+definitionItems+' notions)');
+   }
  }
  if(m.status==='remediation-required' && !m.legacy_debt){
    errors.push(m.path+': remediation-required interdit sans legacy_debt explicite');
@@ -71,4 +83,4 @@ if(errors.length){
  console.error('\n❌ GARDE-FOU PÉDAGOGIQUE ÉCHOUÉ\n- '+errors.join('\n- '));
  process.exit(1);
 }
-console.log('\n✅ Manifeste pédagogique valide. Les modules novice-ready respectent le contrat structurel ; les dettes historiques restent explicitement suivies.');
+console.log('\n✅ Manifeste pédagogique valide. Les modules novice-ready respectent le contrat structurel ; les pilotes V2 respectent les garde-fous manipulation-first sans prétendre être validés terrain.');
