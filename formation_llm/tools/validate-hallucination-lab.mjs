@@ -20,7 +20,8 @@ const must=[
   'formation-llm-role',
   'setProjectorMode',
   'Quitter · Échap',
-  'Test de maîtrise'
+  'Test de maîtrise',
+  'verification-sources.html'
 ];
 for(const m of must) if(!html.includes(m)) errors.push('marqueur P3S1 manquant: '+m);
 
