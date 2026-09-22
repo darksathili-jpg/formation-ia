@@ -20,7 +20,7 @@ const must=[
  'overflow-wrap:anywhere',
  'html.projector .provenance-flow button',
  'hallucination-lab.html',
- 'Étape suivante · P3S3 Évaluation systématique'
+ 'evaluation-systematique.html'
 ];
 for(const m of must) if(!p3s2.includes(m)) errors.push('P3S2 gel: marqueur absent '+m);
 
