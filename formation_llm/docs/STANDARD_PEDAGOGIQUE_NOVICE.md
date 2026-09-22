@@ -1,116 +1,202 @@
 # Standard pédagogique NOVICE-FIRST — Formation LLM
 
-Version : 1.0  
-Date : 2026-09-19
+Version : 2.0 — MANIPULATION-FIRST  
+Date : 2026-09-22  
+Statut : pilote à valider sur élèves réels
 
-## Pourquoi ce standard
+## Pourquoi une version 2
 
-La plateforme actuelle est techniquement riche mais plusieurs modules supposent que l'apprenant possède déjà un modèle mental des notions présentées. Un laboratoire interactif ne remplace pas une séquence d'enseignement.
+Le test terrain mené auprès d'élèves de Terminale a révélé une faiblesse que le standard V1 ne détectait pas : un module pouvait contenir toutes les briques attendues — intuition, définition, exemple travaillé, laboratoire, quiz et transfert — tout en restant trop difficile pour un novice.
 
-Le standard NOVICE-FIRST devient le contrat de conception de tout nouveau module et le cadre de remédiation des modules existants.
+Le problème observé est structurel : trop de vocabulaire et d'explications peuvent précéder la première action significative. La présence d'un laboratoire ne garantit pas que l'apprenant construit activement son modèle mental.
 
-## Principes de référence
+La V2 remplace donc une logique essentiellement **séquentielle** par une logique de **microcycles**.
+
+## Principe central : faire naître le besoin de la notion
+
+Une notion nouvelle ne doit plus être présentée principalement sous la forme :
+
+`définition → définition → définition → exemple → laboratoire`
+
+La forme cible devient :
+
+`prédire → manipuler → observer → nommer → expliquer → refaire autrement`
+
+Chaque microcycle introduit un petit nombre d'éléments nouveaux puis les fait utiliser immédiatement.
+
+## Références structurantes
 
 Le standard s'appuie notamment sur :
-- IES / What Works Clearinghouse — *Organizing Instruction and Study to Improve Student Learning* : exemples travaillés, combinaison verbal/graphique, concret/abstrait, quizzing, questions explicatives et réactivation différée.
-- Cognitive Load Theory : limiter la charge extrinsèque et fournir davantage de guidage aux novices ; les exemples travaillés et les problèmes partiellement complétés sont particulièrement utiles au début.
-- EEF — *Metacognition and Self-Regulated Learning* : enseigner explicitement les stratégies, modéliser, guider puis retirer progressivement l'étayage.
-- CAST UDL Guidelines 3.0 : relier les acquis antérieurs, proposer plusieurs représentations, soutenir la navigation et varier les modalités d'action/expression.
-- Dunlosky et al. : pratique de récupération et pratique distribuée parmi les techniques d'apprentissage les plus robustes.
+- IES / What Works Clearinghouse — *Organizing Instruction and Study to Improve Student Learning* : alterner exemples travaillés et résolution, combiner verbal et graphique, relier concret et abstrait ;
+- EEF — *Metacognition and Self-Regulated Learning* : enseignement explicite, modélisation, étayage puis retrait progressif ;
+- CAST UDL Guidelines 3.0 : engagement, action, expression, variété des modalités et feedback orienté vers l'action ;
+- Cognitive Load Theory / worked-example effect : guider davantage les novices, éviter la recherche inutile et segmenter les chaînes complexes ;
+- recherche sur la pratique de récupération : rappeler activement après construction initiale du modèle mental.
 
-## Un lab ne peut plus être la première explication
+Les seuils chiffrés ci-dessous sont des **garde-fous d'ingénierie pédagogique internes**, pas des lois universelles issues d'une publication.
 
-Ordre attendu pour une notion nouvelle :
+## Le microcycle NOVICE-FIRST V2
 
-1. **Situation-problème concrète** — pourquoi cette notion existe-t-elle ?
-2. **Activation des acquis** — 1 à 3 rappels nécessaires.
-3. **Intuition en langage ordinaire** — sans jargon non défini.
-4. **Définition rigoureuse** — vocabulaire scientifique/technique exact.
-5. **Représentation visuelle ou concrète** — reliée explicitement à l'abstraction.
-6. **Exemple travaillé pas à pas** — chaque étape explique ce qui change et pourquoi.
-7. **Manipulation guidée** — l'apprenant modifie un paramètre avec consigne d'observation.
-8. **Problème partiellement complété** — l'étayage commence à diminuer.
-9. **Pratique autonome** — sans solution visible immédiatement.
-10. **Erreur fréquente / contre-exemple** — montrer pourquoi une intuition séduisante est fausse.
-11. **Auto-explication** — « Expliquez avec vos mots pourquoi… ».
-12. **Récupération active** — questions sans réponse affichée par défaut.
-13. **Feedback explicatif** — pourquoi la bonne réponse est bonne et les distracteurs sont faux.
-14. **Transfert** — nouvelle situation avec surface différente mais même principe.
-15. **Synthèse** — 3 à 7 idées maximum à retenir.
-16. **Pont vers la suite** — ce que cette notion rend maintenant possible.
+Pour une idée nouvelle, suivre autant que possible ce cycle :
+
+1. **Situation concrète** — un problème compréhensible sans jargon.
+2. **Prédiction** — l'apprenant doit choisir, anticiper ou formuler une hypothèse.
+3. **Manipulation** — il change une donnée, un composant, un ordre ou une décision.
+4. **Observation** — le système rend visible une conséquence.
+5. **Nom de la notion** — le vocabulaire technique apparaît parce qu'il devient utile.
+6. **Explication courte** — pourquoi le résultat s'est produit.
+7. **Nouvel essai proche** — variation permettant de vérifier que l'idée n'était pas liée à un seul exemple.
+8. **Feedback orienté action** — quoi corriger et quoi essayer ensuite.
+
+Un gros laboratoire final peut exister, mais il ne doit plus porter seul la charge de manipulation.
+
+## Garde-fous de conception internes
+
+Pour un module destiné à de vrais novices :
+
+- la première **action cognitive significative** doit apparaître très tôt ; cible interne : avant environ **350 mots visibles** ;
+- ne pas imposer un glossaire massif avant l'action ; cible interne : **4 termes nouveaux maximum** avant la première manipulation ;
+- entre deux manipulations significatives, éviter d'introduire plus de **3 à 4 nouveaux termes** sans réutilisation ;
+- viser au moins **3 manipulations significatives avant le quiz final** ;
+- une manipulation significative doit comporter au minimum **action + conséquence observable** ; un bouton qui ne fait qu'afficher une définition ne suffit pas ;
+- au moins une manipulation doit demander une **prédiction avant feedback** ;
+- au moins une manipulation doit conduire à une **explication causale** : « qu'est-ce qui a changé et pourquoi ? » ;
+- une activité de classement doit demander une justification ou produire un contre-exemple, pas seulement révéler une étiquette ;
+- la production autonome longue arrive après plusieurs essais courts et guidés.
+
+## Vocabulaire : juste à temps
+
+Le vocabulaire expert est nécessaire, mais son ordre change.
+
+### Couche essentielle
+Les mots indispensables à la tâche en cours. Ils sont introduits au moment où l'apprenant vient d'observer le phénomène.
+
+### Couche de consolidation
+Les termes nécessaires pour relier plusieurs microcycles et construire une carte mentale.
+
+### Couche d'approfondissement
+Les distinctions utiles mais non indispensables à la première compréhension — variantes d'architecture, catégories juridiques, vocabulaire de recherche, nuances historiques. Cette couche doit être repliable ou clairement optionnelle.
+
+Un module de début de parcours ne doit pas faire dépendre sa compréhension centrale de la mémorisation de la couche d'approfondissement.
+
+## Exemple travaillé : nouveau rôle
+
+L'exemple travaillé reste important, mais il ne constitue plus nécessairement la première rencontre avec la notion.
+
+Dans V2 :
+- une micro-manipulation simple peut précéder l'exemple ;
+- l'exemple travaillé formalise ensuite ce que l'apprenant vient d'observer ;
+- chaque étape doit dire **ce qui change**, **pourquoi**, et **ce qui aurait pu être confondu** ;
+- l'exemple est suivi rapidement d'un cas très proche où l'apprenant complète une partie de la démarche.
+
+## Explication et représentation
+
+- préférer les objets concrets, cartes, flux, curseurs, composants activables et simulations simples avant les diagrammes complets ;
+- rapprocher visuellement explication, donnée manipulée et résultat ;
+- une formule doit être précédée d'une intuition et d'une manipulation ou d'un exemple numérique ;
+- une métaphore doit être accompagnée de sa limite ;
+- les détails avancés ne doivent pas interrompre le parcours principal.
+
+## Feedback
+
+Le feedback ne doit pas seulement dire « correct / incorrect ».
+
+Il doit, selon le cas :
+- nommer l'erreur de raisonnement ;
+- montrer la conséquence observable ;
+- rappeler le critère qui permet de décider ;
+- proposer l'action suivante ;
+- distinguer une erreur de vocabulaire d'une erreur de modèle mental.
+
+## Récupération et transfert
+
+Le quiz final reste une preuve de récupération, mais il ne doit plus être le premier endroit où l'apprenant doit réellement raisonner.
+
+Avant le quiz :
+- plusieurs décisions courtes ;
+- au moins un essai avec aide partielle ;
+- au moins un contre-exemple ;
+- au moins une explication produite par l'apprenant.
+
+Le transfert doit changer la surface du problème sans changer le principe appris.
+
+## Diagnostic initial
+
+Un QCM de reconnaissance ne suffit pas à autoriser le saut d'une séquence de construction conceptuelle.
+
+Pour les modules V2 pilotes :
+- le diagnostic peut adapter la quantité d'aide ;
+- il ne doit pas supprimer les micro-manipulations fondatrices ;
+- une future « voie rapide » devra inclure au moins une petite tâche de raisonnement ou d'explication, pas uniquement des réponses de reconnaissance.
 
 ## Trois couches de lecture
 
-Chaque module doit être utilisable par un novice sans noyer un apprenant plus avancé.
+### 1. Comprendre
+Microcycles indispensables, langage ordinaire, exemples concrets et feedback.
 
-### Couche 1 — Comprendre
-Explications indispensables, exemples, schémas, pratique guidée.
+### 2. Approfondir
+Nuances, formalismes, taxonomies secondaires, limites et détails techniques.
 
-### Couche 2 — Approfondir
-Formalisme, limites, variantes d'architecture, détails techniques.
+### 3. Formateur
+Erreurs attendues, questions de relance, critères de réussite, variantes de débrief.
 
-### Couche 3 — Formateur
-Questions à poser, erreurs attendues, critères de réussite, pistes de débrief.
+Les couches 2 et 3 ne doivent pas augmenter la charge cognitive du parcours novice par défaut.
 
-Le contenu expert ne doit pas interrompre la progression novice : il est repliable ou réservé au mode formateur.
+## États pédagogiques
 
-## Règles de langage
+La présence des marqueurs structurels ne suffit plus à attribuer « novice-ready ».
 
-- Tout terme technique doit être défini avant son premier usage substantiel.
-- Une métaphore doit être suivie de ses limites.
-- Une formule doit être précédée d'une intuition et suivie d'un exemple numérique.
-- Ne jamais utiliser une phrase-mémo comme substitut de définition.
-- Éviter les catégories binaires simplistes (« comprend / ne comprend pas », « température basse = fiable »).
-- Une simulation doit être explicitement distinguée des valeurs d'un modèle réel.
+### `design-ready`
+Le contenu est scientifiquement et techniquement cohérent, mais n'a pas encore passé le protocole novice.
 
-## Charge cognitive
+### `pilot-ready`
+Le module respecte les garde-fous V2 et peut être testé auprès d'apprenants réels.
 
-Pour une nouvelle micro-séquence :
-- introduire peu de nouveaux éléments à la fois ;
-- segmenter les chaînes complexes ;
-- éviter les animations décoratives concurrentes ;
-- rapprocher visuellement explication, schéma et donnée correspondante ;
-- ne pas demander une production autonome avant d'avoir montré au moins un exemple complet ;
-- retirer progressivement l'aide lorsque la maîtrise augmente.
+### `novice-ready`
+Le module a passé un test utilisateur novice avec résultats documentés, corrections éventuelles et nouvelle vérification.
 
-## Pratique et évaluation
+Un validateur automatique peut certifier `design-ready` ou `pilot-ready`. Il **ne peut pas à lui seul** certifier `novice-ready`.
 
-Chaque module NOVICE-FIRST doit contenir :
-- un diagnostic d'entrée ou rappel de prérequis ;
-- au moins un exemple travaillé ;
-- au moins une pratique guidée ;
-- au moins un problème partiellement complété ou étape à compléter ;
-- au moins une tâche de transfert ;
-- au moins une activité d'auto-explication ;
-- un quiz de récupération avec feedback explicatif ;
-- une synthèse de sortie ;
-- une vérification de maîtrise qui ne repose pas uniquement sur « Marquer acquis ».
+## Protocole de validation terrain
 
-## Critère de réussite
+Pour un module pilote, relever au minimum :
 
-Un stagiaire novice doit pouvoir, sans ressource externe :
-1. expliquer la notion en langage courant ;
-2. employer correctement son vocabulaire ;
-3. interpréter un exemple ;
-4. éviter les principales confusions ;
-5. résoudre une situation proche ;
-6. transférer la notion à une situation nouvelle ;
-7. dire ce que la notion ne permet PAS de conclure.
+1. temps avant la première action ;
+2. temps avant le premier blocage nécessitant une aide humaine ;
+3. nombre et nature des demandes d'aide ;
+4. erreurs récurrentes et vocabulaire incompris ;
+5. sections relues plusieurs fois ;
+6. réussite des micro-défis ;
+7. capacité à expliquer la notion sans regarder l'écran ;
+8. réussite d'un transfert légèrement différent ;
+9. perception qualitative : trop abstrait, trop dense, trop lent, trop facile, utile ou non.
 
-## Validation humaine obligatoire
+Le retour qualitatif d'un groupe réel est une donnée pédagogique de premier rang ; il doit pouvoir invalider un statut obtenu uniquement par validation automatique.
 
-Le validateur automatique ne prouve jamais qu'un contenu est pédagogiquement excellent. Il empêche seulement les omissions structurelles évidentes. Un module ne peut passer à `novice-ready` qu'après :
-- lecture complète comme novice ;
-- test de navigation clavier/mobile/projection ;
-- test des activités ;
-- relecture scientifique ;
-- test utilisateur avec au moins un novice réel ou un protocole simulant explicitement les connaissances initiales.
+## Critère de réussite V2
+
+À la fin d'un module, un novice doit pouvoir :
+
+1. montrer le phénomène sur une manipulation simple ;
+2. expliquer avec ses mots ce qui change ;
+3. nommer correctement les notions centrales ;
+4. justifier une décision et pas seulement reconnaître une bonne réponse ;
+5. éviter les confusions principales ;
+6. résoudre un cas proche ;
+7. transférer à une situation différente ;
+8. dire ce que la notion ne permet pas de conclure.
 
 ## Sources structurantes
 
-- https://ies.ed.gov/ncee/wwc/PracticeGuide/1
-- https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/metacognition
-- https://udlguidelines.cast.org/
-- https://link.springer.com/article/10.1007/s10648-010-9145-4
-- https://link.springer.com/article/10.1007/s10648-019-09465-5
-- https://journals.sagepub.com/doi/10.1177/1529100612453266
+- IES / WWC — *Organizing Instruction and Study to Improve Student Learning*
+- EEF — *Metacognition and Self-Regulated Learning*
+- CAST — *UDL Guidelines 3.0*
+- Sweller et travaux sur la Cognitive Load Theory / worked examples
+- Dunlosky et al. — techniques d'apprentissage et pratique de récupération
+
+## Décision de projet — 22 septembre 2026
+
+Le développement horizontal de nouveaux parcours est suspendu le temps de valider le nouveau grain pédagogique sur **Parcours 0**.
+
+Parcours 0 devient le pilote V2.  
+Les modules suivants ne seront pas reconstruits en série avant un nouveau test d'élèves sur ce pilote.
