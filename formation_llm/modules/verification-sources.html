@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr" data-ui-system="latent-v1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Formation LLM — Parcours 3 · Étape 2 · Vérification & sources</title>
+<style>
+:root{--bg:#f4f1ea;--panel:#fffdf8;--panel2:#ece8df;--text:#10202d;--muted:#627481;--line:rgba(16,32,45,.14);--strong:rgba(16,32,45,.28);--accent:#a54467;--accent2:#6558ca;--cyan:#0b7894;--soft:#f4dfe7;--violet:#e9e4fb;--ok:#24704e;--oksoft:#dcefe6;--warn:#99681f;--warnsoft:#f4e5c8;--danger:#a53b42;--dangersoft:#f7dfe1;--code:#101923;--shadow:0 14px 38px rgba(20,34,45,.08);--font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif}
+[data-theme="dark"]{--bg:#0e161e;--panel:#16232d;--panel2:#202f3a;--text:#eef4f6;--muted:#a9bac4;--line:rgba(238,244,246,.14);--strong:rgba(238,244,246,.28);--accent:#ef87a7;--accent2:#aaa2ff;--cyan:#55c3dc;--soft:#472632;--violet:#2e2957;--ok:#71d0a3;--oksoft:#17392b;--warn:#efb967;--warnsoft:#3d2e18;--danger:#ef8086;--dangersoft:#472226;--code:#080e14;--shadow:0 18px 44px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}button,select,input,textarea{font:inherit}button{cursor:pointer}a{color:var(--cyan)}.wrap{max-width:1240px;margin:auto;padding:26px 22px 80px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:22px}.back{text-decoration:none;font-weight:900}.tools{display:flex;gap:7px;flex-wrap:wrap}.tool{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;padding:8px 11px;font-size:.8rem;font-weight:850}#trainerBtn[aria-pressed="true"]{border-color:var(--warn);background:var(--warnsoft);color:var(--warn)}
+.trainer-banner{display:none;margin:8px 0 18px;padding:12px 16px;border-left:5px solid var(--warn);border-radius:13px;background:var(--warnsoft);font-size:.84rem}.trainer-on .trainer-banner{display:block}.trainer-only{display:none}.trainer-on .trainer-only{display:block}.projector-exit{display:none;position:fixed;top:14px;right:14px;z-index:10000;border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px;font-weight:950;box-shadow:var(--shadow)}.projector .projector-exit{display:inline-flex}.projector .tools{display:none}.projector{font-size:19px}.projector .wrap{max-width:1500px}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:26px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:var(--accent);font-weight:950}h1{font-family:var(--display);font-size:clamp(2.8rem,6vw,5.2rem);line-height:.98;letter-spacing:-.045em;margin:.16em 0 .22em}.lead{font-size:1.08rem;color:var(--muted)}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.badge{padding:6px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:.76rem;font-weight:850}.badge.good{background:var(--oksoft);color:var(--ok)}.hero-card{background:var(--code);color:#eef7fa;border-radius:22px;padding:21px;box-shadow:var(--shadow)}.hero-card p{color:#bccbd4;font-size:.84rem}.journey{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.journey-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.journey-card .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--cyan);font-weight:950}.journey-card b{display:block;margin:4px 0}.journey-card p{margin:0;color:var(--muted);font-size:.82rem}
+.section{margin-top:42px}.section-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:15px}.num{width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950;flex:none}.section-head h2{font-family:var(--display);font-size:1.8rem;margin:0}.section-head p{color:var(--muted);margin:2px 0 0}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.grid2{display:grid;grid-template-columns:350px 1fr;gap:14px}.gridEqual{display:grid;grid-template-columns:1fr 1fr;gap:14px}.intuition{padding:14px 16px;border-left:4px solid var(--cyan);background:color-mix(in srgb,var(--cyan) 16%,var(--panel));border-radius:12px}.definition{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px}.notice{padding:14px 16px;border-left:4px solid var(--accent);background:var(--soft);border-radius:12px}.muted{color:var(--muted)}
+.gloss{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.term{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.term h3{margin:0 0 6px;font-size:1rem}.term p{margin:0;color:var(--muted);font-size:.83rem}.term .limit{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:.78rem}.term .limit b{color:var(--danger)}
+.steps{display:grid;gap:10px}.step{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.step .n{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-weight:950}.step h3{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted);font-size:.86rem}.step .claim{margin-top:7px;padding:8px;border-radius:9px;background:var(--panel2);font-size:.82rem}
+.completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(180px,.9fr) 30px minmax(220px,1.1fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent);font-weight:950}.feedback-box{display:none;margin-top:10px;padding:11px;border-radius:10px;background:var(--panel2)}.feedback-box.show{display:block}
+.field{margin-bottom:14px}.field label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;margin-bottom:5px}.field select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.mode-grid{display:grid;gap:7px}.mode{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px;text-align:left;font-weight:850}.mode.active{border-color:var(--accent);background:var(--soft);color:var(--accent)}.mode small{display:block;color:var(--muted);font-weight:600}.question{font-family:var(--display);font-size:1.25rem;margin:0 0 8px}.answer{background:var(--code);color:#edf7fa;border-radius:14px;padding:16px}.answer strong{color:#f5a6bd}.evidence{display:grid;gap:8px;margin-top:12px}.evidence article{border-left:3px solid var(--cyan);background:var(--panel2);padding:10px 12px;border-radius:0 10px 10px 0;font-size:.82rem}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0}.metric{background:var(--panel2);border-radius:13px;padding:12px}.metric .v{font-size:1.35rem;font-weight:950}.metric .l{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:900}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--panel2);font-size:.7rem;text-transform:uppercase;color:var(--muted)}.status{display:inline-flex;border-radius:999px;padding:3px 7px;font-size:.68rem;font-weight:900}.ok{background:var(--oksoft);color:var(--ok)}.bad{background:var(--dangersoft);color:var(--danger)}.unknown{background:var(--warnsoft);color:var(--warn)}.callout{margin-top:12px;padding:11px;border-radius:11px;background:var(--violet);font-size:.82rem}.trainer-box{margin-top:12px;padding:13px;border-radius:12px;background:var(--warnsoft);font-size:.82rem}
+.cal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cal-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.cal-bars{display:grid;gap:8px;margin-top:10px}.barrow{display:grid;grid-template-columns:100px 1fr 55px;gap:8px;align-items:center;font-size:.78rem}.bar{height:10px;background:var(--panel2);border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent2)}.decision{display:flex;gap:8px;flex-wrap:wrap}.decision button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px 11px;font-weight:850}.decision button.active{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+.misgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mis{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.mis .wrong{color:var(--danger);font-weight:900}.mis .right{color:var(--ok);font-weight:850;margin-top:8px}.mis p{color:var(--muted);font-size:.83rem;margin:5px 0}.selfbox textarea{width:100%;min-height:125px;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px}.criteria{display:grid;gap:6px;margin-top:9px}.criteria label{font-size:.82rem;color:var(--muted)}
+.quiz{display:grid;gap:10px}.q{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.q legend{font-weight:900}.q label{display:block;padding:6px 0;color:var(--muted)}.feedback{display:none;margin-top:8px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.q.okq{border-color:var(--ok)}.q.badq{border-color:var(--danger)}.q.okq .feedback,.q.badq .feedback{display:block}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.primary{border:0;background:var(--accent);color:white;border-radius:10px;padding:9px 12px;font-weight:900}.secondary{border:1px solid var(--strong);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 11px;font-weight:850}.scorebox{font-weight:950;color:var(--accent)}
+.transfer{display:grid;grid-template-columns:1fr 1fr;gap:11px}.transfer-card{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.transfer-card select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.transfer-feedback{display:none;margin-top:9px;padding:9px;border-radius:9px;background:var(--panel2);font-size:.8rem}.transfer-card.good .transfer-feedback,.transfer-card.bad .transfer-feedback{display:block}.transfer-card.good{border-color:var(--ok)}.transfer-card.bad{border-color:var(--danger)}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.recap article{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px}.recap b{display:block;margin-bottom:5px}.recap p{margin:0;color:var(--muted);font-size:.84rem}.refs{display:grid;gap:8px}.ref{border-left:3px solid var(--cyan);padding:9px 12px;background:var(--panel);border-radius:0 11px 11px 0;font-size:.82rem}.next-step{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:34px;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}.next-step a{text-decoration:none;font-weight:900}.footer{margin-top:42px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.77rem}:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+@media(max-width:940px){.hero,.grid2,.journey,.cal-grid,.gridEqual{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.gloss{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.wrap{padding:17px 13px 60px}.top{align-items:flex-start}.metrics,.gloss,.misgrid,.transfer,.recap{grid-template-columns:1fr}.completion-row{grid-template-columns:1fr}.completion-row .arrow{transform:rotate(90deg)}.next-step{flex-direction:column;align-items:flex-start}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.learning-guide{position:sticky;top:10px;z-index:35;margin:16px 0;padding:11px 13px;border:1px solid var(--line);border-left:4px solid var(--accent2,var(--accent));border-radius:13px;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(10px);box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.learning-guide strong{display:block}.learning-guide small{color:var(--muted)}.learning-guide-actions{display:flex;gap:7px;flex-wrap:wrap}.learning-guide button{border:1px solid var(--strong,var(--line));background:var(--panel);color:var(--text);border-radius:999px;padding:7px 10px;font-weight:850}.learning-guide button.primary-learning{background:var(--accent2,var(--accent));color:white;border-color:transparent}.learning-mastered{color:var(--ok);font-weight:900}
+</style>
+
+<style data-latent-ui="v1">
+:root{
+ --bg:#eef3f1;--panel:#f9fbfa;--panel2:#e7eeeb;--text:#09171c;--muted:#617177;
+ --line:rgba(9,23,28,.12);--strong:rgba(9,23,28,.26);--accent:#087f87;--accent2:#6c5ce7;
+ --soft:#d8f2ee;--cyan:#d8f2ee;--violet:#e8e3ff;--ok:#2a7954;--oksoft:#dff2e7;
+ --gold:#9a651d;--goldsoft:#f6e8ce;--warn:#9a651d;--warnsoft:#f6e8ce;
+ --danger:#a53b42;--dangersoft:#f7dfe1;--red:#a53b42;--green:#2a7954;
+ --code:#071419;--shadow:0 18px 55px rgba(13,37,40,.10);
+ --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ --display:"Segoe UI Variable Display","Segoe UI",ui-sans-serif,system-ui,sans-serif;
+ --latent-cyan:#5cf0d2;--latent-violet:#8b7cf6;--latent-coral:#ff7584;--latent-lime:#b8f36b;--ink:#071419;
+}
+[data-theme="dark"]{
+ --bg:#061015;--panel:#0c1a20;--panel2:#12252c;--text:#edf7f5;--muted:#91a8ae;
+ --line:rgba(226,247,243,.11);--strong:rgba(226,247,243,.24);--accent:#5cf0d2;--accent2:#998bff;
+ --soft:#10352f;--cyan:#10352f;--violet:#272450;--ok:#8be3b3;--oksoft:#17382c;
+ --gold:#f3bc62;--goldsoft:#3b2b17;--warn:#f3bc62;--warnsoft:#3b2b17;
+ --danger:#ef8086;--dangersoft:#472226;--red:#ef8086;--green:#8be3b3;--code:#03090c;
+ --shadow:0 22px 70px rgba(0,0,0,.34);
+}
+html{background:var(--bg)}
+body{
+ background:
+ radial-gradient(circle at 88% 8%,color-mix(in srgb,var(--accent2) 10%,transparent),transparent 25%),
+ radial-gradient(circle at 12% 72%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 25%),
+ var(--bg);
+ font-feature-settings:"ss01" 1,"cv11" 1;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.22;
+ background-image:radial-gradient(circle,color-mix(in srgb,var(--accent) 35%,transparent) 1px,transparent 1.4px);
+ background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+button,.primary,.secondary,.tool,.back{min-height:44px}
+.wrap{max-width:1180px;padding-top:18px}
+.top{
+ position:sticky;top:10px;z-index:80;margin:0 0 26px;padding:8px 9px 8px 14px;border:1px solid var(--line);
+ border-radius:12px;background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(16px);
+ box-shadow:0 10px 40px rgba(5,20,24,.08);
+}
+.top:before{
+ content:"LATENT / LEARNING NODE";font:700 .58rem ui-monospace,SFMono-Regular,Consolas,monospace;
+ letter-spacing:.16em;color:var(--muted);margin-right:auto
+}
+.top>div:first-child{display:flex;align-items:center;gap:7px}.back{display:inline-flex;align-items:center;padding:0 8px;border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.71rem;text-transform:uppercase;letter-spacing:.06em}
+.tools{margin-left:auto}.tool{border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.68rem}
+#trainerBtn[aria-pressed="true"]{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 55%,transparent)}
+.hero{min-height:390px;align-items:center;padding:32px 0 22px;position:relative}
+.eyebrow{
+ font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.66rem!important;
+ letter-spacing:.15em!important;color:var(--accent)!important
+}
+h1,.section-head h2{font-family:var(--display)!important;font-weight:820;letter-spacing:-.055em}
+h1{font-size:clamp(3.1rem,7vw,6.3rem)!important;line-height:.88!important;max-width:760px;margin-top:.17em!important}
+.lead{font-size:1rem!important;line-height:1.75!important;max-width:730px}
+.hero-card{
+ position:relative;min-height:300px;border:1px solid rgba(92,240,210,.20)!important;border-radius:20px!important;
+ background:
+ linear-gradient(rgba(92,240,210,.035) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.035) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(139,124,246,.18),transparent 33%),
+ #071419!important;background-size:28px 28px,28px 28px,auto,auto!important;
+ box-shadow:0 28px 80px rgba(3,14,17,.25)!important;padding:26px!important;overflow:hidden
+}
+.hero-card:before{content:"MODEL INSPECTOR";position:absolute;right:17px;top:14px;color:#507a75;font:700 .56rem ui-monospace,monospace;letter-spacing:.15em}
+.hero-card b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.03em}
+.hero-card .flow>div,.hero-card .pipeline .pipe{border:1px solid rgba(92,240,210,.10);background:rgba(255,255,255,.04)!important;border-radius:7px!important}
+.meta{gap:6px}.badge{border-radius:7px!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.65rem!important}
+.journey{gap:8px!important;margin-top:4px!important}
+.journey-card{
+ border-radius:11px!important;background:color-mix(in srgb,var(--panel) 90%,transparent)!important;box-shadow:none!important;
+ position:relative;overflow:hidden
+}
+.journey-card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent)}
+.journey-card .k{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.61rem!important}
+.learning-guide{
+ top:68px!important;border:1px solid rgba(92,240,210,.18)!important;border-left:0!important;border-radius:11px!important;
+ background:rgba(7,20,25,.94)!important;color:#eafffa!important;box-shadow:0 15px 45px rgba(0,0,0,.20)!important;padding:10px 12px!important
+}
+.learning-guide:before{content:"RUNTIME";font:800 .55rem ui-monospace,monospace;letter-spacing:.16em;color:#5cf0d2;margin-right:3px}
+.learning-guide strong{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.74rem}.learning-guide small{color:#7fa09b!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.65rem}
+.learning-guide button{min-height:40px!important;border-radius:7px!important;background:#0d252b!important;color:#b8d6d0!important;border-color:rgba(255,255,255,.08)!important}
+.learning-guide button.primary-learning{background:var(--latent-cyan)!important;color:#061116!important}
+.section{margin-top:58px!important;position:relative;scroll-margin-top:130px}
+.section-head{align-items:center!important;margin-bottom:18px!important}
+.section-head .num{
+ width:42px!important;height:42px!important;border-radius:9px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;
+ border:1px solid rgba(92,240,210,.24)!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.7rem!important;
+ box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 5%,transparent)
+}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.2rem)!important}
+.section-head:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent);margin-left:10px}
+.panel,.step,.worked-step,.role,.compare-card,.mis,.transfer-card,.q,.term,.metric,.truthbox,.cal-card{
+ border-radius:11px!important;box-shadow:none!important;background:color-mix(in srgb,var(--panel) 92%,transparent)!important;
+}
+.panel{border-color:var(--line)!important}
+.intuition,.definition,.notice,.callout,.trainer-box{border-radius:9px!important;border-left-width:2px!important}
+.steps{gap:7px!important}.step,.worked-step{border-color:var(--line)!important}
+.step .n,.worked-step .n,.stage .n{border-radius:7px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.stage{border-radius:9px!important}
+.vec,.calc,.value,.token,.qmeta{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important}
+.primary{border-radius:8px!important;background:var(--ink)!important;color:var(--latent-cyan)!important;border:1px solid rgba(92,240,210,.22)!important}
+.secondary{border-radius:8px!important}
+input,select,textarea{border-radius:8px!important}
+.table-wrap{border-radius:10px!important}
+th{font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:.62rem!important;letter-spacing:.08em}
+.next-step{
+ border-radius:11px!important;background:color-mix(in srgb,var(--panel) 92%,transparent)!important;border-color:var(--line)!important;
+ position:relative;overflow:hidden
+}
+.next-step:before{content:"NEXT SIGNAL";position:absolute;right:12px;top:8px;font:700 .54rem ui-monospace,monospace;letter-spacing:.14em;color:var(--muted)}
+.footer{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.62rem!important;letter-spacing:.04em}
+.trainer-banner{border-radius:9px!important;box-shadow:none!important}
+.projector-exit{min-height:44px;border-radius:8px!important}
+:focus-visible{outline:3px solid var(--latent-cyan)!important;outline-offset:3px}
+@media(max-width:900px){.top:before{display:none}.hero{min-height:0}.learning-guide{top:8px!important}}
+@media(max-width:650px){.wrap{padding-top:9px!important}.top{top:5px;border-radius:9px}.top>div:first-child{max-width:100%}.tools{width:100%;margin-left:0}.hero{padding-top:18px}.hero h1{font-size:clamp(2.7rem,15vw,4.2rem)!important}.hero-card{min-height:250px}.section{margin-top:44px!important}.learning-guide{position:relative!important;top:auto!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+<style data-latent-access="v1">
+.skip-link{position:fixed;left:14px;top:10px;z-index:20000;transform:translateY(-150%);background:#071419;color:#5cf0d2;border:1px solid rgba(92,240,210,.35);border-radius:8px;padding:10px 13px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace;text-decoration:none;min-height:44px;display:flex;align-items:center}
+.skip-link:focus{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.skip-link{transition:none!important}}
+</style><style data-latent-nav="v1">
+.layer-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:70;width:48px;max-height:72vh;overflow:auto;padding:8px 5px;border:1px solid rgba(92,240,210,.15);border-radius:12px;background:rgba(7,20,25,.90);backdrop-filter:blur(13px);box-shadow:0 15px 45px rgba(0,0,0,.18);scrollbar-width:none}
+.layer-nav::-webkit-scrollbar{display:none}.layer-nav:before{content:"LAYERS";display:block;writing-mode:vertical-rl;transform:rotate(180deg);height:50px;margin:0 auto 7px;color:#557c76;font:750 .49rem ui-monospace,monospace;letter-spacing:.14em}
+.layer-nav button{display:grid;place-items:center;width:36px;min-height:44px;margin:3px 0;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:#0b2026;color:#6e9690;font:750 .61rem ui-monospace,monospace;cursor:pointer}
+.layer-nav button[aria-current="step"]{color:#071419;background:#5cf0d2;border-color:#5cf0d2;box-shadow:0 0 16px rgba(92,240,210,.24)}
+.layer-nav button:disabled{opacity:.22;cursor:not-allowed}.layer-nav button:not(:disabled):hover{color:#edfffb;border-color:rgba(92,240,210,.32)}
+.layer-nav button:focus-visible{outline:3px solid #5cf0d2;outline-offset:2px}
+@media(max-width:1260px){.layer-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.layer-nav{scroll-behavior:auto}.layer-nav button{transition:none!important}}
+</style><style data-projection-ux="v2">
+/* Projection haute luminance : indépendante du thème clair/sombre de travail. */
+html.projector{
+ color-scheme:light;
+ --bg:#ffffff;--panel:#ffffff;--panel2:#f1f3f2;--text:#000000;--muted:#37474c;
+ --line:rgba(0,0,0,.24);--strong:rgba(0,0,0,.52);--accent:#005a62;--accent2:#3f318e;
+ --soft:#e4f3f1;--cyan:#e4f3f1;--violet:#ece9ff;--ok:#145b3b;--oksoft:#e4f2e9;
+ --warn:#744700;--warnsoft:#fff0cf;--gold:#744700;--goldsoft:#fff0cf;--goldSoft:#fff0cf;
+ --danger:#8b1f2b;--dangersoft:#fde7e9;--red:#8b1f2b;--green:#145b3b;
+ --code:#f3f5f4;--codetext:#000000;--codeText:#000000;--shadow:none;
+ --latent-cyan:#005a62;--latent-violet:#3f318e;--latent-coral:#8b1f2b;--latent-lime:#356600;
+ --ink:#000000;--accentSoft:#e4f3f1;
+ background:#ffffff!important;
+}
+html.projector body{background:#ffffff!important;color:#000000!important}
+html.projector body:before{display:none!important}
+html.projector .content{background:#ffffff!important}
+html.projector .topbar{background:#ffffff!important;border-bottom:2px solid #68777a!important;box-shadow:none!important;backdrop-filter:none!important}
+html.projector .projector-exit{background:#ffffff!important;color:#000000!important;border:2px solid #000000!important;box-shadow:none!important}
+html.projector .hero-panel,
+html.projector .hero-card{background:#f3f5f4!important;color:#000000!important;border:2px solid #68777a!important;box-shadow:none!important}
+html.projector .hero-panel:after,
+html.projector .hero-panel small,
+html.projector .hero-panel .resume-meta,
+html.projector .hero-card h2,
+html.projector .hero-card p,
+html.projector .flow-mini span{color:#263b40!important}
+html.projector .flow-mini div{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .learning-guide{background:#ffffff!important;color:#000000!important;border:2px solid #005a62!important;box-shadow:none!important;backdrop-filter:none!important}
+html.projector .learning-guide:before{color:#005a62!important}
+html.projector .learning-guide small{color:#37474c!important}
+html.projector .learning-guide button{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
+html.projector .learning-guide button.primary-learning,
+html.projector .primary,
+html.projector .open,
+html.projector .resume-btn{background:#005a62!important;color:#ffffff!important;border-color:#005a62!important}
+html.projector .secondary,
+html.projector .complete,
+html.projector .tool,
+html.projector .mode-btn,
+html.projector .pill{background:#ffffff!important;color:#000000!important;border-color:#59676b!important}
+html.projector .layer-nav{display:none!important}
+html.projector .card,
+html.projector .module,
+html.projector .metric,
+html.projector .path-card,
+html.projector .lab-card,
+html.projector .learning-card,
+html.projector .term,
+html.projector .q,
+html.projector .transfer-card,
+html.projector .result,
+html.projector .recommend,
+html.projector .callout{box-shadow:none!important}
+html.projector pre,
+html.projector .codebox{background:#f3f5f4!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .latent-map .gridline{stroke:rgba(0,0,0,.22)!important}
+html.projector .latent-map .path{stroke:#005a62!important;filter:none!important}
+html.projector .latent-map .node{fill:#ffffff!important;stroke:#005a62!important}
+html.projector .latent-map .node.v{stroke:#3f318e!important}
+html.projector .latent-map .pulse{fill:#356600!important;filter:none!important}
+html.projector .latent-map text{fill:#263b40!important}
+@media(max-width:980px){html.projector .topbar{top:0!important}}
+</style>
+<style data-ux-audit="v1">
+@media(max-width:900px){.learning-guide{position:relative!important;top:auto!important}}
+@media(max-width:1380px){.layer-nav{display:none!important}}
+.q label{min-height:44px;display:flex;align-items:center;gap:10px;padding:9px 8px}
+.q label input{flex:0 0 auto}
+</style>
+<style data-mobile-module-ux="v1">
+.cockpit-return{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:7px 10px;border:1px solid var(--strong,var(--line));border-radius:8px;background:var(--panel);color:var(--text);font-weight:900;text-decoration:none}
+.next-step .center .cockpit-return,.next-step .muted .cockpit-return{margin-top:8px}
+@media(max-width:650px){
+ .topbar-inner,.top{flex-wrap:wrap!important;gap:8px!important;align-items:center!important}
+ .topbar-inner>.brand,.top>.back,.top>div:first-child{flex:1 1 100%!important;max-width:none!important}
+ .tools{width:100%!important;margin-left:0!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+ .tool{min-height:44px!important;padding:7px 5px!important;font-size:0!important;display:flex!important;align-items:center!important;justify-content:center!important;white-space:nowrap}
+ #themeBtn::after{content:"◐ Thème";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn::after{content:"▣ Projection";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}
+ #trainerBtn::after{content:"◆ Formateur";font:800 .70rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}
+}
+</style>
+<style data-projection-audit="v3">
+html.projector,html.projector body{overflow-x:clip!important}
+html.projector .projector-exit{
+ position:fixed!important;top:10px!important;right:10px!important;left:auto!important;
+ max-width:calc(100vw - 20px)!important;min-width:0!important;box-sizing:border-box!important;
+ padding:8px 12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ font-size:clamp(.78rem,.9vw,.95rem)!important;line-height:1.15!important
+}
+</style>
+<style data-projection-module-audit="v3">
+html.projector .wrap,
+html.projector main{width:auto!important;max-width:min(1500px,calc(100vw - 24px))!important}
+html.projector .top{padding-right:160px!important}
+html.projector .top:before{margin-right:10px!important}
+html.projector .top>.back,
+html.projector .top>div:first-child{margin-right:auto!important}
+html.projector .section-head .num,
+html.projector .step .n,
+html.projector .worked-step .n,
+html.projector .stage .n{
+ background:#e4f3f1!important;color:#005a62!important;border:2px solid #6f7e81!important;
+ box-shadow:none!important
+}
+html.projector .system-view,
+html.projector .formula,
+html.projector .vec,
+html.projector .choice,
+html.projector .context,
+html.projector .answer{
+ background:#f3f5f4!important;color:#000000!important;border:1px solid #7a878a!important;
+ box-shadow:none!important
+}
+html.projector .system-view p,
+html.projector .formula p,
+html.projector .vec p,
+html.projector .choice p,
+html.projector .context p,
+html.projector .answer p{color:#263b40!important}
+html.projector .arch-box,
+html.projector .verdict{background:#ffffff!important;color:#000000!important;border-color:#7a878a!important}
+html.projector .hero-card:before{color:#37474c!important}
+html.projector .hero-card b{color:#000000!important}
+@media(max-width:900px){
+ html.projector .top{padding-right:12px!important}
+ html.projector .projector-exit{top:8px!important;right:8px!important}
+}
+</style>
+<style data-classic-surface-tuning="v1">
+/* Mode classique : surfaces techniques pétrole, moins proches du noir pur. */
+html:not(.projector){
+ --ink:#173a42;
+ --code:#16353d;
+}
+html[data-theme="dark"]:not(.projector){
+ --bg:#0d1a20;--panel:#14282f;--panel2:#1c343c;
+ --text:#edf7f5;--muted:#a7bdc1;
+ --line:rgba(226,247,243,.14);--strong:rgba(226,247,243,.28);
+ --soft:#16413a;--cyan:#16413a;--violet:#302c59;
+ --oksoft:#1d4435;--goldsoft:#46331c;--warnsoft:#46331c;--dangersoft:#53292e;
+ --ink:#183f47;--code:#14313a;
+ --shadow:0 20px 60px rgba(4,15,19,.27);
+}
+</style>
+<style data-classic-module-surfaces="v1">
+html:not(.projector) .hero-card{
+ background:
+ linear-gradient(rgba(92,240,210,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,240,210,.045) 1px,transparent 1px),
+ radial-gradient(circle at 70% 20%,rgba(153,139,255,.20),transparent 34%),
+ #173a42!important;
+ background-size:28px 28px,28px 28px,auto,auto!important;
+ border-color:rgba(92,240,210,.28)!important;
+ box-shadow:0 24px 58px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .learning-guide{
+ background:rgba(23,58,66,.96)!important;
+ border-color:rgba(92,240,210,.25)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.18)!important;
+}
+html:not(.projector) .learning-guide button{
+ background:#204851!important;color:#d9ebe7!important;
+ border-color:rgba(255,255,255,.12)!important;
+}
+html:not(.projector) .learning-guide button.primary-learning{
+ background:#5cf0d2!important;color:#0d252b!important;
+}
+html:not(.projector) .layer-nav{
+ background:rgba(20,49,57,.96)!important;
+ border-color:rgba(92,240,210,.22)!important;
+ box-shadow:0 12px 34px rgba(11,37,43,.20)!important;
+}
+html:not(.projector) .layer-nav button{
+ background:#1b4149!important;color:#9abbb6!important;
+ border-color:rgba(255,255,255,.10)!important;
+}
+html:not(.projector) .section-head .num,
+html:not(.projector) .step .n,
+html:not(.projector) .worked-step .n,
+html:not(.projector) .stage .n{
+ background:#173a42!important;
+}
+</style>
+<style data-assessment-ux="v1">
+/* Fin de parcours : cibles, résultats et actions stables sur écran étroit. */
+.transfer-card select{min-height:44px}
+.scorebox[role="status"]{line-height:1.35}
+@media(max-width:650px){
+ .actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:stretch!important}
+ .actions button{width:100%!important;min-width:0!important}
+ .actions #checkTransfer{grid-column:1/-1}
+ .actions .scorebox{grid-column:1/-1}
+ .scorebox:not(:empty){display:flex;align-items:center;min-height:44px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}
+ .transfer-card select{min-height:48px}
+}
+</style>
+<style data-microtype-contrast="v1">
+/* Audit lisibilité : éviter les libellés collés et renforcer les micro-titres. */
+.intuition>strong:first-child,
+.definition>strong:first-child,
+.notice>strong:first-child,
+.callout>strong:first-child,
+.trainer-box>strong:first-child{
+ display:inline-block;
+ margin-right:.38rem;
+}
+.journey-card .k{
+ color:#356d73!important;
+ font-size:.64rem!important;
+ font-weight:950!important;
+ letter-spacing:.10em!important;
+}
+[data-theme="dark"] .journey-card .k{color:#89d9cf!important}
+html.projector .journey-card .k{color:#245c62!important}
+</style>
+<style data-completion-ux="v1">
+#completer select{min-height:44px}
+#completionFeedback[role="status"]{line-height:1.4}
+@media(max-width:650px){
+ #completer .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #completer .actions button{width:100%!important;min-width:0!important}
+ #completionFeedback.show{min-height:44px;display:flex;align-items:center}
+}
+</style>
+<style data-step-badge-layout="v1">
+/* Numérotation canonique : centrage indépendant des styles historiques du module. */
+.section-head .num,
+.section-head .section-num{
+ display:grid!important;
+ place-items:center!important;
+ flex:0 0 42px!important;
+ width:42px!important;
+ min-width:42px!important;
+ height:42px!important;
+ padding:0!important;
+ margin:0!important;
+ box-sizing:border-box!important;
+ line-height:1!important;
+ text-align:center!important;
+ font-style:normal!important;
+ vertical-align:middle!important;
+}
+</style>
+
+<style data-p3s2-visual-audit="v1">
+/* P3S2 — Evidence Lab : lisibilité des preuves, provenance et décisions. */
+.evidence-lab-grid{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);gap:16px;align-items:start}
+.source-preview{display:grid;gap:12px}
+.source-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.source-meta .metric{min-height:86px}
+.passage{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);line-height:1.55}
+.passage mark{background:rgba(239,135,167,.22);color:inherit;border-radius:4px;padding:0 .15em}
+.trace-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+.trace-cell{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);min-width:0}
+.trace-cell b{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.source-choice small{display:block;margin-top:4px;color:var(--muted);font-weight:700}
+.provenance-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.provenance-flow button{text-align:left;min-height:112px}
+@media(max-width:850px){
+ .evidence-lab-grid{grid-template-columns:1fr}
+ .source-meta{grid-template-columns:1fr 1fr}
+ .trace-grid{grid-template-columns:1fr 1fr}
+ .provenance-flow{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ .source-meta,.trace-grid{grid-template-columns:1fr}
+ #evidenceLab .mode-grid{grid-template-columns:1fr!important}
+}
+html.projector .passage,html.projector .trace-cell{background:#ffffff!important;color:#000000!important;border-color:#a8a8a8!important}
+</style>
+<script data-latent-safe-storage="v1">
+(function(){
+ "use strict";
+ const memory=new Map();
+ function usable(name){
+  try{
+   const store=window[name],key="__latent_storage_probe__";
+   store.setItem(key,"1");store.removeItem(key);return store;
+  }catch(e){return null}
+ }
+ const local=usable("localStorage"),session=usable("sessionStorage"),primary=local||session;
+ window.LATENT_STORAGE={
+  mode:local?"local":session?"session":"memory",
+  get(key){
+   let value=null;
+   try{if(primary)value=primary.getItem(key)}catch(e){}
+   if(value!==null)return value;
+   return memory.has(key)?memory.get(key):null;
+  },
+  set(key,value){
+   const v=String(value);memory.set(key,v);
+   try{if(primary){primary.setItem(key,v);return true}}catch(e){}
+   return false;
+  },
+  remove(key){
+   memory.delete(key);
+   try{if(primary)primary.removeItem(key)}catch(e){}
+  }
+ };
+ document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
+})();
+</script>
+</head>
+<body><a class="skip-link" href="#mainContent">Passer au contenu</a>
+<button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
+<main class="wrap" id="mainContent">
+<div class="top"><a class="back" href="../index.html#dashboard">← Formation LLM · Parcours 3</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
+<div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Questions de débrief, pièges de vérification et critères de réussite sont visibles.</div>
+
+<section class="hero"><div><div class="eyebrow">Parcours 3 · Fiabilité & évaluation · Étape 2 · NOVICE-FIRST</div><h1>Vérification & sources</h1><p class="lead">Une citation visible ne prouve rien à elle seule. Pour vérifier une affirmation, il faut retrouver <strong>la bonne source</strong>, identifier <strong>le passage qui porte réellement l’information</strong>, contrôler sa <strong>provenance et sa version</strong>, puis décider si ce passage <strong>soutient, contredit ou ne permet pas de conclure</strong>.</p><div class="meta"><span class="badge good">P3S2 novice-ready</span><span class="badge">Evidence Lab</span><span class="badge">≈ 55–70 min</span></div></div>
+<aside class="hero-card"><b>Chaîne de preuve</b><p>claim → source → provenance/version → passage pertinent → soutien réel → verdict traçable</p></aside></section>
+
+<section class="journey" data-pedagogy="prerequisites"><div class="journey-card"><div class="k">Prérequis</div><b>P3S1 · Diagnostiquer</b><p>Savoir isoler un claim et distinguer confirmé, contredit et insuffisamment étayé.</p></div><div class="journey-card"><div class="k">Objectif</div><b>Construire un dossier de preuve minimal</b><p>Relier chaque claim important à une source identifiable et à un passage qui le soutient réellement.</p></div><div class="journey-card" data-success-criterion="v1"><div class="k">Critère de réussite</div><b>Pouvoir auditer votre verdict</b><p>Une autre personne doit pouvoir retrouver la source, relire le passage et comprendre pourquoi vous avez conclu.</p></div></section>
+
+<div class="notice"><strong>Corpus contrôlé.</strong> Les documents Vega sont fictifs et volontairement conçus pour contenir des sources exactes, partielles, périmées ou trompeusement pertinentes. <strong>Aucun appel réseau</strong> n’est effectué.</div>
+
+<section class="section" data-pedagogy="intuition" id="intuition"><div class="section-head"><div class="num">01</div><div><h2>Une citation peut être vraie… sans prouver le claim</h2><p>Le premier réflexe est de lire le passage, pas de compter les liens.</p></div></div>
+<div class="gridEqual"><div class="panel"><div class="claim"><strong>Claim</strong><br>« Vega consomme 40 % d’énergie en moins qu’Atlas. »</div><div class="passage" style="margin-top:12px"><strong>Source citée :</strong> « Vega inaugure une nouvelle architecture d’alimentation conçue pour réduire la consommation. »</div><p>La source parle bien de Vega et d’énergie. Elle est <strong>pertinente au sujet</strong>, mais elle ne donne ni 40 %, ni comparaison avec Atlas.</p></div>
+<div class="panel"><div class="intuition"><strong>Intuition</strong> Une preuve doit être assez précise pour porter le claim. Un passage thématiquement proche peut être utile pour comprendre le contexte sans pour autant <strong>soutenir l’affirmation exacte</strong>.</div><div class="notice" style="margin-top:12px"><strong>Réflexe :</strong> demander « Quel morceau exact de cette source autorise cette phrase ? »</div></div></div></section>
+
+<section class="section" data-pedagogy="definition" id="definitions"><div class="section-head"><div class="num">02</div><div><h2>Six notions pour vérifier sans se raconter d’histoire</h2></div></div>
+<div class="gloss">
+<article class="term"><h3>Source</h3><p>Document, donnée ou enregistrement utilisé pour examiner un claim.</p><div class="limit"><b>Limite :</b> le nom prestigieux d’une source ne prouve pas qu’elle traite le claim.</div></article>
+<article class="term"><h3>Provenance</h3><p>Informations permettant d’identifier d’où vient le document : auteur ou organisme, date, version, emplacement ou identifiant.</p><div class="limit"><b>But :</b> rendre la preuve retrouvable et auditable.</div></article>
+<article class="term"><h3>Passage pertinent</h3><p>Extrait qui porte directement sur l’affirmation examinée.</p><div class="limit"><b>Piège :</b> « même thème » ≠ « passage qui répond au claim ».</div></article>
+<article class="term"><h3>Soutien / entailment</h3><p>Le passage autorise réellement le contenu du claim, sans ajouter une précision absente ni supprimer une condition essentielle.</p><div class="limit"><b>Exemple :</b> « jusqu’à 40 % » ne soutient pas automatiquement « 40 % dans tous les cas ».</div></article>
+<article class="term"><h3>Indépendance</h3><p>Deux sources sont indépendantes si l’une ne se contente pas de recopier l’autre pour l’information examinée.</p><div class="limit"><b>Piège :</b> trois reprises du même communiqué ne font pas trois preuves indépendantes.</div></article>
+<article class="term"><h3>Source primaire / secondaire</h3><p>La distinction dépend de la question : une décision officielle peut être primaire pour une date de nomination ; un article peut être secondaire tout en apportant une analyse utile.</p><div class="limit"><b>Piège :</b> « primaire = toujours meilleure » est une règle trop simple.</div></article>
+</div></section>
+
+<section class="section" data-pedagogy="worked-example" id="exemple"><div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé — du claim à une preuve traçable</h2><p>On ne cherche pas « une source qui parle de Vega » ; on construit une chaîne vérifiable.</p></div></div>
+<div class="panel steps">
+<div class="step"><div class="n">1</div><div><h3>Claim atomique</h3><p>« Vega a été lancé le 14 mars 2025. »</p><div class="claim">Une date précise : la preuve doit porter cette date.</div></div></div>
+<div class="step"><div class="n">2</div><div><h3>Candidat A</h3><p>Article TechNord, 15 mars 2025 : « Vega a été présenté cette semaine. »</p><div class="claim">Pertinent, mais la date exacte n’est pas donnée.</div></div></div>
+<div class="step"><div class="n">3</div><div><h3>Candidat B</h3><p>Communiqué officiel Vega, version finale, 14 mars 2025 : « Le projet Vega est lancé ce 14 mars 2025. »</p><div class="claim">Provenance identifiable + date/version + passage direct.</div></div></div>
+<div class="step"><div class="n">4</div><div><h3>Contrôle du soutien</h3><p>Le passage B exprime la même information que le claim, sans condition supplémentaire ni extrapolation.</p><div class="claim">Soutien = explicite.</div></div></div>
+<div class="step"><div class="n">5</div><div><h3>Verdict</h3><p>Le claim est <strong>confirmé par la source B</strong>. L’article A peut servir de contexte, mais il n’est pas la preuve de la date exacte.</p><div class="claim">Une source pertinente n’est pas forcément la source probante.</div></div></div>
+<div class="step"><div class="n">6</div><div><h3>Trace minimale</h3><p>Claim + identifiant de source + version/date + passage + verdict.</p><div class="claim">Cette trace permet à un tiers de refaire le raisonnement.</div></div></div>
+</div></section>
+
+<section class="section" data-pedagogy="completion" id="completer"><div class="section-head"><div class="num">04</div><div><h2>Je complète la chaîne de preuve</h2><p>Choisissez ce qui manque pour rendre le verdict défendable.</p></div></div>
+<div class="panel completion">
+<div class="completion-row"><strong>La source parle du bon sujet mais pas du chiffre annoncé</strong><span class="arrow">→</span><select data-answer="insufficient"><option value="">Choisir…</option><option value="support">soutien explicite</option><option value="insufficient">pertinente mais insuffisante</option><option value="independent">preuve indépendante</option></select></div>
+<div class="completion-row"><strong>Le passage dit « jusqu’à 40 % », le claim dit « 40 % dans tous les cas »</strong><span class="arrow">→</span><select data-answer="scope"><option value="">Choisir…</option><option value="scope">le claim dépasse la portée de la source</option><option value="support">le claim est exactement soutenu</option><option value="version">problème de version uniquement</option></select></div>
+<div class="completion-row"><strong>Une capture contient l’extrait mais aucun auteur, date ni document identifiable</strong><span class="arrow">→</span><select data-answer="provenance"><option value="">Choisir…</option><option value="support">preuve complète</option><option value="provenance">provenance insuffisante</option><option value="contradiction">contradiction</option></select></div>
+<div class="completion-row"><strong>Deux articles reprennent mot pour mot le même communiqué</strong><span class="arrow">→</span><select data-answer="dependent"><option value="">Choisir…</option><option value="independent">deux confirmations indépendantes</option><option value="dependent">une même origine informationnelle</option><option value="primary">deux sources primaires</option></select></div>
+<div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div><div class="feedback-box" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
+</div></section>
+
+<section class="section" data-pedagogy="guided-practice" id="evidenceLab"><div class="section-head"><div class="num">05</div><div><h2>Evidence Lab — quelle source porte réellement le claim ?</h2><p>Changez de claim puis inspectez les sources candidates. Le verdict dépend du <strong>passage</strong> et de sa <strong>provenance</strong>, pas de l’apparence de la citation.</p></div></div>
+<div class="evidence-lab-grid"><aside class="panel"><div class="field"><label for="scenario">Claim à vérifier</label><select id="scenario"></select></div><div class="field"><label>Source candidate</label><div class="mode-grid" id="modes"></div></div><div class="trainer-only trainer-box"><b>Débrief.</b> Demandez d’abord « est-ce pertinent ? », puis seulement « est-ce suffisant pour ce claim exact ? ».</div></aside>
+<div class="source-preview"><div class="panel"><div class="claim" id="question"></div><div class="source-meta"><div class="metric"><div class="v" id="sourceType">—</div><div class="l">provenance</div></div><div class="metric"><div class="v" id="sourceDate">—</div><div class="l">date / version</div></div><div class="metric"><div class="v" id="supportState">—</div><div class="l">soutien</div></div></div><div class="passage" id="passageText"></div></div>
+<div class="table-wrap"><table><thead><tr><th>Contrôle</th><th>Observation</th></tr></thead><tbody id="claimsBody"></tbody></table></div><div class="callout" id="diagnostic"></div></div></div></section>
+
+<section class="section" id="provenance"><div class="section-head"><div class="num">06</div><div><h2>Provenance Lab — même phrase, qualité de preuve différente</h2><p>Le texte seul ne suffit pas : il faut pouvoir rattacher l’extrait à un document identifiable.</p></div></div>
+<div class="panel"><p class="question">Vous devez documenter : « Lina Morel a été nommée responsable de Vega le 6 janvier 2025. » Trois objets affichent exactement cette phrase.</p><div class="provenance-flow" id="provenanceButtons">
+<button data-d="screenshot"><strong>Capture isolée</strong><small>Phrase visible, mais auteur, URL, date et contexte absents.</small></button>
+<button data-d="repost"><strong>Republication</strong><small>Billet daté du 8 janvier qui cite « une note interne » sans la joindre.</small></button>
+<button data-d="original"><strong>Décision originale</strong><small>Document DRH-2025-014, version signée du 6 janvier, passage localisable.</small></button>
+</div><div class="callout" id="provenanceFeedback"><b>Choisissez la trace la plus auditable.</b></div>
+<div class="trace-grid"><div class="trace-cell"><b>Claim</b>Lina Morel nommée le 6 janvier 2025</div><div class="trace-cell"><b>Source</b><span id="traceSource">—</span></div><div class="trace-cell"><b>Version / date</b><span id="traceVersion">—</span></div><div class="trace-cell"><b>Passage</b><span id="tracePassage">—</span></div><div class="trace-cell"><b>Verdict</b><span id="traceVerdict">—</span></div></div></div></section>
+
+<section class="section" data-pedagogy="misconception" id="pieges"><div class="section-head"><div class="num">07</div><div><h2>Les six pièges de la vérification</h2></div></div>
+<div class="misgrid">
+<article class="mis"><div class="wrong">« Il y a un lien, donc c’est sourcé »</div><p>Le lien peut mener à une page qui ne contient pas l’information.</p><div class="right">Correction : lire le passage qui soutient le claim.</div></article>
+<article class="mis"><div class="wrong">« Source prestigieuse = claim confirmé »</div><p>Une source fiable peut être hors sujet pour cette affirmation précise.</p><div class="right">Correction : séparer qualité de source et soutien du claim.</div></article>
+<article class="mis"><div class="wrong">« Même thème = preuve »</div><p>Un passage sur l’énergie de Vega ne prouve pas un chiffre de 40 %.</p><div class="right">Correction : exiger la même portée que le claim.</div></article>
+<article class="mis"><div class="wrong">« Primaire = toujours meilleure »</div><p>La bonne source dépend de la question et du type d’information recherché.</p><div class="right">Correction : choisir la source adaptée au claim.</div></article>
+<article class="mis"><div class="wrong">« Trois reprises = trois confirmations »</div><p>Plusieurs pages peuvent recopier une même origine.</p><div class="right">Correction : vérifier l’indépendance informationnelle.</div></article>
+<article class="mis"><div class="wrong">« La page actuelle vaut pour l’ancienne version »</div><p>Un document mis à jour peut avoir changé depuis la date du claim.</p><div class="right">Correction : noter date et version pertinentes.</div></article>
+</div></section>
+
+<section class="section" data-pedagogy="self-explanation" id="expliquer"><div class="section-head"><div class="num">08</div><div><h2>Expliquez votre protocole de vérification</h2></div></div>
+<div class="panel selfbox"><label for="explain"><strong>Consigne.</strong> Expliquez à un collègue pourquoi « j’ai trouvé trois liens » ne suffit pas. Décrivez en 5 à 7 phrases votre chaîne de preuve.</label><textarea id="explain" placeholder="Claim → source → …"></textarea><div class="criteria"><label><input type="checkbox"> J’identifie précisément le claim à vérifier.</label><label><input type="checkbox"> Je contrôle auteur/organisme, date et version de la source.</label><label><input type="checkbox"> Je localise le passage pertinent et vérifie sa portée exacte.</label><label><input type="checkbox"> Je distingue plusieurs reprises d’une même origine de sources indépendantes.</label><label><input type="checkbox"> Je conserve une trace permettant à quelqu’un d’autre de refaire le contrôle.</label></div></div></section>
+
+<section class="section" data-pedagogy="retrieval" id="quiz"><div class="section-head"><div class="num">09</div><div><h2>Test de maîtrise</h2></div></div>
+<form class="quiz" id="quizForm">
+<fieldset class="q" data-answer="b"><legend>1. Une source très fiable parle bien du sujet, mais ne contient pas le chiffre du claim.</legend><label><input type="radio" name="q1" value="a"> Le claim est confirmé car la source est fiable.</label><label><input type="radio" name="q1" value="b"> Le claim n’est pas soutenu par ce passage.</label><div class="feedback" data-pedagogy="feedback">La qualité générale de la source ne remplace pas le lien précis entre passage et claim.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. Une page dit « jusqu’à 40 % d’économie ». Que soutient-elle ?</legend><label><input type="radio" name="q2" value="a"> « Toujours 40 % ».</label><label><input type="radio" name="q2" value="b"> « Exactement 40 % en moyenne ».</label><label><input type="radio" name="q2" value="c"> Au maximum 40 % dans les conditions concernées.</label><div class="feedback">Les quantificateurs et conditions font partie de l’information à préserver.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>3. Deux articles copient le même communiqué pour la donnée examinée.</legend><label><input type="radio" name="q3" value="a"> Ce sont automatiquement deux confirmations indépendantes.</label><label><input type="radio" name="q3" value="b"> Ils peuvent représenter une seule origine informationnelle.</label><div class="feedback">L’indépendance porte sur l’origine de l’information, pas seulement sur le nombre de pages.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>4. Pourquoi conserver date et version ?</legend><label><input type="radio" name="q4" value="a"> Pour vérifier que le document correspond bien à l’état pertinent au moment du claim.</label><label><input type="radio" name="q4" value="b"> Seulement pour rendre la bibliographie plus longue.</label><div class="feedback">Une source peut changer ; la version fait partie de la provenance.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>5. Une capture montre le bon passage mais son origine est introuvable.</legend><label><input type="radio" name="q5" value="a"> Elle vaut une source originale.</label><label><input type="radio" name="q5" value="b"> Elle confirme automatiquement le claim.</label><label><input type="radio" name="q5" value="c"> Sa provenance est insuffisante pour une preuve auditable.</label><div class="feedback">Sans origine retrouvable, un tiers ne peut pas contrôler le document ni son contexte.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>6. Quelle trace est minimale pour un claim important ?</legend><label><input type="radio" name="q6" value="a"> Le titre de la page uniquement.</label><label><input type="radio" name="q6" value="b"> Claim + source identifiable + date/version + passage + verdict.</label><div class="feedback">Cette trace relie explicitement l’affirmation à ce qui la soutient.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" id="resetQuiz" type="button">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div></form></section>
+
+<section class="section" data-pedagogy="transfer" id="transfert"><div class="section-head"><div class="num">10</div><div><h2>Transfert — quatre domaines, même chaîne de preuve</h2></div></div>
+<div class="transfer">
+<article class="transfer-card" data-answer="version"><h3>Documentation logicielle</h3><p>Une réponse décrit une option Python présente en version 3.14. Vous consultez une documentation 3.12.</p><select><option value="">Choisir…</option><option value="support">La documentation 3.12 confirme la 3.14.</option><option value="version">Il faut vérifier la documentation de la version concernée.</option></select><div class="transfer-feedback">Une documentation correcte mais d’une autre version peut ne pas soutenir le claim.</div></article>
+<article class="transfer-card" data-answer="primary"><h3>Règlement</h3><p>Un article de blog résume une règle interne, mais vous devez confirmer la formulation applicable aujourd’hui.</p><select><option value="">Choisir…</option><option value="blog">Le blog suffit car il est lisible.</option><option value="primary">Retrouver le texte officiel/version applicable puis citer le passage pertinent.</option></select><div class="transfer-feedback">Pour la règle applicable, le document institutionnel pertinent est la trace la plus directe.</div></article>
+<article class="transfer-card" data-answer="scope"><h3>Résultat scientifique</h3><p>Le papier rapporte un effet uniquement sur l’échantillon étudié ; la réponse l’étend à toute la population.</p><select><option value="">Choisir…</option><option value="scope">Le claim dépasse la portée de la source.</option><option value="support">La généralisation est automatiquement soutenue.</option></select><div class="transfer-feedback">Une preuve ne soutient pas une généralisation que le document n’établit pas.</div></article>
+<article class="transfer-card" data-answer="independence"><h3>Actualité technique</h3><p>Trois sites annoncent la même date en citant tous le même communiqué constructeur.</p><select><option value="">Choisir…</option><option value="three">Trois sources indépendantes.</option><option value="independence">Une origine principale reprise par trois sites ; l’indépendance reste à examiner.</option></select><div class="transfer-feedback">Le nombre d’URLs ne mesure pas le nombre d’origines indépendantes.</div></article>
+</div><div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div></section>
+
+<section class="section" data-pedagogy="recap" id="synthese"><div class="section-head"><div class="num">11</div><div><h2>À retenir avant l’évaluation systématique</h2></div></div>
+<div class="recap">
+<article><b>1. Vérifiez un claim précis.</b><p>Une réponse entière est souvent trop grosse pour être jugée d’un bloc.</p></article>
+<article><b>2. Provenance avant confiance.</b><p>Identifiez auteur/organisme, date, version et document exact.</p></article>
+<article><b>3. Pertinence ≠ soutien.</b><p>Le bon sujet ne suffit pas : le passage doit porter l’information exacte.</p></article>
+<article><b>4. Respectez la portée.</b><p>Conditions, quantificateurs, dates et populations ne doivent pas disparaître.</p></article>
+<article><b>5. Comptez les origines, pas les liens.</b><p>Plusieurs reprises peuvent dépendre d’une seule source.</p></article>
+<article><b>6. Gardez une trace.</b><p>Claim + source + version/date + passage + verdict rendent la vérification reproductible.</p></article>
+</div><div class="intuition" style="margin-top:14px"><strong>Pont vers P3S3.</strong> Vous savez vérifier un claim. L’étape suivante changera d’échelle : <em>comment évaluer systématiquement un système sur un ensemble de cas, sans confondre quelques exemples réussis avec une performance mesurée ?</em></div></section>
+
+<section class="section" id="sources"><div class="section-head"><div class="num">12</div><div><h2>Références structurantes</h2></div></div><div class="refs"><div class="ref"><b>NIST AI 600-1 — Generative AI Profile</b> · risques de confabulation, citations fabriquées et importance de la provenance.</div><div class="ref"><b>Mayfield et al., SIGIR 2024 — Evaluation of Machine-Generated Reports</b> · vérifiabilité par mise en relation des claims et documents sources.</div><div class="ref"><b>Gao et al. — ALCE</b> · qualité de citation évaluée séparément de la fluidité de la réponse.</div><div class="ref"><b>Min et al. — FActScore</b> · décomposition en faits atomiques et contrôle du soutien par des sources de connaissance.</div></div></section>
+
+<nav class="next-step"><a href="hallucination-lab.html">← Étape 1 · Hallucinations</a><span class="muted">P3S2 est maîtrisé si vous savez relier un claim à une source identifiable, un passage réellement probant et un verdict traçable.<br><a class="cockpit-return" href="../index.html#dashboard">⌂ Retour au cockpit</a></span><span class="muted">Étape suivante · P3S3 Évaluation systématique</span></nav>
+<footer class="footer">Formation LLM · Parcours 3 · Étape 2 · Vérification & sources · Evidence Lab · Aucun appel réseau.</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const scenarios=[
+ {title:"Date de lancement",q:"Claim : « Vega a été lancé le 14 mars 2025. »",sources:{
+  official:{label:"Communiqué final",type:"originale",date:"14/03/2025 · v1.0",support:"explicite",passage:"« Le projet Vega est lancé ce 14 mars 2025. »",checks:[["Pertinence","Directe : le passage porte sur la date de lancement."],["Provenance","Organisme Vega, communiqué final identifiable."],["Portée","Même événement et même date que le claim."],["Verdict","Le passage soutient le claim."]],diagnostic:"C’est la meilleure trace : provenance claire, version pertinente et passage explicite."},
+  press:{label:"Article TechNord",type:"secondaire",date:"15/03/2025",support:"partiel",passage:"« Vega a été présenté cette semaine lors d’un événement public. »",checks:[["Pertinence","Oui : l’article parle du lancement."],["Provenance","Article daté et signé."],["Portée","La date exacte du 14 mars n’apparaît pas."],["Verdict","Insuffisant pour confirmer la date exacte."]],diagnostic:"Source pertinente, mais elle ne porte pas toute la précision du claim."},
+  copy:{label:"Capture partagée",type:"inconnue",date:"non vérifiable",support:"texte exact",passage:"« Le projet Vega est lancé ce 14 mars 2025. »",checks:[["Pertinence","Le texte correspond au claim."],["Provenance","Origine, auteur et document source absents."],["Portée","Le passage serait suffisant si son origine était vérifiable."],["Verdict","Preuve non auditable en l’état."]],diagnostic:"Un texte exact sans provenance retrouvable ne permet pas un contrôle indépendant."},
+  draft:{label:"Brouillon interne",type:"primaire brouillon",date:"02/03/2025 · v0.7",support:"contradictoire",passage:"« Lancement prévu le 12 mars, sous réserve de validation finale. »",checks:[["Pertinence","Oui : même événement."],["Provenance","Document interne identifiable mais non final."],["Version","Brouillon antérieur à la décision finale."],["Verdict","Ne doit pas remplacer la version finale pour la date effective."]],diagnostic:"La version d’un document fait partie de la preuve ; un brouillon peut être authentique mais périmé."]}
+ }},
+ {title:"Nomination de Lina Morel",q:"Claim : « Lina Morel dirige Vega depuis le 6 janvier 2025. »",sources:{
+  decision:{label:"Décision DRH",type:"originale",date:"06/01/2025 · signée",support:"explicite",passage:"« Mme Lina Morel est nommée responsable du projet Vega à compter du 6 janvier 2025. »",checks:[["Pertinence","Directe."],["Provenance","Décision DRH-2025-014 identifiable."],["Portée","Nom, fonction et date sont explicitement présents."],["Verdict","Le claim est soutenu."]],diagnostic:"Le passage porte toutes les composantes du claim et sa provenance est vérifiable."},
+  directory:{label:"Annuaire actuel",type:"institutionnelle",date:"consulté 22/09/2026",support:"incomplet",passage:"« Lina Morel — responsable du projet Vega. »",checks:[["Pertinence","Directe pour la fonction actuelle."],["Provenance","Annuaire institutionnel identifiable."],["Portée","Aucune date de prise de fonction."],["Verdict","Soutient le rôle, pas « depuis le 6 janvier 2025 »."]],diagnostic:"Une source peut soutenir une partie d’un claim composé sans soutenir sa totalité."},
+  blog:{label:"Billet d’équipe",type:"secondaire interne",date:"10/01/2025",support:"partiel",passage:"« Notre responsable Lina ouvre ce nouveau cycle de travail. »",checks:[["Pertinence","Oui pour le rôle."],["Provenance","Billet d’équipe daté."],["Portée","Pas de nom complet ni date de nomination."],["Verdict","Contexte utile, preuve insuffisante pour le claim exact."]],diagnostic:"Le passage est cohérent avec le claim mais n’en établit pas toutes les composantes."},
+  repost:{label:"Reprise média",type:"secondaire dépendante",date:"07/01/2025",support:"dépendant",passage:"« Selon la décision DRH-2025-014, Lina Morel prend la tête de Vega le 6 janvier. »",checks:[["Pertinence","Directe."],["Provenance","Article identifiable."],["Indépendance","L’information est explicitement reprise de la décision DRH."],["Verdict","Bonne piste, mais pas une confirmation indépendante de la décision originale."]],diagnostic:"Une reprise peut faciliter l’accès à l’information sans créer une nouvelle origine indépendante."]}
+ }},
+ {title:"Gain énergétique",q:"Claim : « Vega réduit de 40 % la consommation par rapport à Atlas. »",sources:{
+  marketing:{label:"Page marketing",type:"éditeur",date:"20/03/2025",support:"portée différente",passage:"« Jusqu’à 40 % d’économie d’énergie dans le scénario P7. »",checks:[["Pertinence","Oui."],["Provenance","Page éditeur identifiable."],["Portée","Maximum conditionnel dans P7, pas réduction générale de 40 %."],["Verdict","Ne soutient pas le claim généralisé."]],diagnostic:"Le claim a supprimé « jusqu’à » et la condition P7 : il est plus fort que la source."},
+  report:{label:"Rapport technique",type:"primaire mesure",date:"18/03/2025 · v2.1",support:"38 % moyen",passage:"« Sur P7, Vega consomme en moyenne 38 % de moins qu’Atlas sur 30 essais. »",checks:[["Pertinence","Directe."],["Provenance","Rapport technique versionné."],["Portée","38 % en moyenne, protocole P7."],["Verdict","Contredit le chiffre exact de 40 % moyen et limite la portée à P7."]],diagnostic:"Une valeur voisine n’autorise pas à remplacer 38 % par 40 % ni à supprimer le protocole."},
+  news:{label:"Article de presse",type:"secondaire",date:"21/03/2025",support:"ambigü",passage:"« Le nouveau système promet environ 40 % d’économie selon Vega. »",checks:[["Pertinence","Oui."],["Provenance","Article signé."],["Origine","Le chiffre est attribué à Vega, pas mesuré par le média."],["Verdict","Corrobore l’existence de l’allégation, pas sa validation indépendante."]],diagnostic:"Il faut distinguer « une source rapporte que X affirme Y » de « une source établit Y »."},
+  unrelated:{label:"Fiche architecture",type:"primaire technique",date:"17/03/2025",support:"aucun",passage:"« Vega adopte deux convertisseurs haute efficacité en parallèle. »",checks:[["Pertinence","Thématique : énergie/architecture."],["Provenance","Document technique identifiable."],["Portée","Aucune comparaison chiffrée avec Atlas."],["Verdict","Ne soutient pas le claim."]],diagnostic:"Même une excellente source primaire peut être non probante pour le claim examiné."]}
+ }}
+];
+let si=0,mode="";
+function sourceKeys(){return Object.keys(scenarios[si].sources)}
+function initScenarios(){
+ scenarios.forEach((x,i)=>{const o=document.createElement("option");o.value=i;o.textContent=x.title;$("scenario").appendChild(o)});
+ buildModes();
+}
+function buildModes(){
+ $("modes").innerHTML="";
+ const keys=sourceKeys();mode=keys[0];
+ keys.forEach((k,i)=>{const src=scenarios[si].sources[k],b=document.createElement("button");b.type="button";b.className="mode source-choice"+(i===0?" active":"");b.dataset.mode=k;b.innerHTML=src.label+"<small>"+src.type+"</small>";b.addEventListener("click",()=>{mode=k;document.querySelectorAll("#modes .mode").forEach(x=>x.classList.toggle("active",x===b));render()});$("modes").appendChild(b)});
+ render();
+}
+function render(){
+ const s=scenarios[si],m=s.sources[mode];$("question").textContent=s.q;$("sourceType").textContent=m.type;$("sourceDate").textContent=m.date;$("supportState").textContent=m.support;$("passageText").textContent=m.passage;$("claimsBody").innerHTML="";
+ m.checks.forEach(c=>{const tr=document.createElement("tr");const a=document.createElement("td"),b=document.createElement("td");a.textContent=c[0];b.textContent=c[1];tr.append(a,b);$("claimsBody").appendChild(tr)});
+ $("diagnostic").innerHTML="<b>Diagnostic :</b> "+m.diagnostic;
+}
+$("scenario").addEventListener("change",function(){si=Number(this.value);buildModes()});
+
+document.querySelectorAll("#provenanceButtons button").forEach(b=>b.addEventListener("click",function(){
+ document.querySelectorAll("#provenanceButtons button").forEach(x=>x.classList.toggle("active",x===b));
+ const d=b.dataset.d,feedback=$("provenanceFeedback");
+ if(d==="original"){
+  feedback.innerHTML="<b>Trace la plus auditable :</b> le document original est identifiable, daté, versionné et le passage peut être retrouvé.";
+  $("traceSource").textContent="DRH-2025-014";$("traceVersion").textContent="06/01/2025 · signée";$("tracePassage").textContent="§2, phrase de nomination";$("traceVerdict").textContent="soutient";
+ }else if(d==="repost"){
+  feedback.innerHTML="<b>Piste utile, mais dérivée :</b> la republication renvoie vers une origine qu’il faut retrouver.";
+  $("traceSource").textContent="billet du 08/01";$("traceVersion").textContent="republication";$("tracePassage").textContent="citation attribuée";$("traceVerdict").textContent="à remonter à l’original";
+ }else{
+  feedback.innerHTML="<b>Provenance insuffisante :</b> la phrase est visible mais impossible à rattacher de façon sûre à un document contrôlable.";
+  $("traceSource").textContent="capture sans origine";$("traceVersion").textContent="inconnue";$("tracePassage").textContent="non localisable";$("traceVerdict").textContent="non auditable";
+ }
+}));
+
+$("checkCompletion").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll("#completer [data-answer]").forEach(s=>{total++;if(s.value===s.dataset.answer)score++});$("completionFeedback").classList.add("show");$("completionFeedback").innerHTML="<b>"+score+" / "+total+"</b> — "+(score===total?"Chaîne de preuve correctement analysée.":"Reprenez l’exemple travaillé : provenance, portée et indépendance sont des contrôles différents.")});
+$("resetCompletion").addEventListener("click",()=>{document.querySelectorAll("#completer [data-answer]").forEach(s=>s.value="");$("completionFeedback").classList.remove("show")});
+$("quizForm").addEventListener("submit",e=>{e.preventDefault();let score=0,total=0;document.querySelectorAll(".q").forEach(q=>{total++;const c=q.querySelector("input:checked"),ok=c&&c.value===q.dataset.answer;q.classList.toggle("okq",!!ok);q.classList.toggle("badq",!ok);if(ok)score++});$("quizScore").textContent=score+" / "+total+(score===total?" · maîtrise solide":" · utilisez les feedbacks")});
+$("resetQuiz").addEventListener("click",()=>{$("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("okq","badq"));$("quizScore").textContent=""});
+$("checkTransfer").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll(".transfer-card").forEach(c=>{total++;const good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});$("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":" · vérifiez version, portée et indépendance")});
+
+function setTrainer(on){document.body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}setTrainer(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");$("trainerBtn").addEventListener("click",()=>setTrainer(!document.body.classList.contains("trainer-on")));
+function setProjectorMode(on){document.documentElement.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"▣ Quitter projection":"▣ Activer projection"}$("projectorBtn").addEventListener("click",()=>setProjectorMode(!document.documentElement.classList.contains("projector")));$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.documentElement.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
+function theme(t){document.documentElement.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}const st=window.LATENT_STORAGE.get("formation-llm-theme");if(st)theme(st);else if(matchMedia("(prefers-color-scheme:dark)").matches)theme("dark");$("themeBtn").addEventListener("click",()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+initScenarios();
+})();
+</script>
+<script data-learning-system="v2" data-step-registry="v1">
+(function(){"use strict";
+const KEY="formation-llm-learning-v2",MODULE="P3S2",QUIZ_MIS=["P3S2.SOURCE_SUPPORT","P3S2.SCOPE","P3S2.INDEPENDENCE","P3S2.VERSION","P3S2.PROVENANCE","P3S2.TRACE"],TRANSFER_MIS=["P3S2.VERSION","P3S2.PROVENANCE","P3S2.SCOPE","P3S2.INDEPENDENCE"],META={"P3S2.SOURCE_SUPPORT":["Source fiable ≠ soutien du claim","pieges"],"P3S2.SCOPE":["Respecter portée et conditions","pieges"],"P3S2.INDEPENDENCE":["URLs multiples ≠ sources indépendantes","pieges"],"P3S2.VERSION":["Date et version font partie de la preuve","pieges"],"P3S2.PROVENANCE":["Passage sans provenance ≠ preuve auditable","provenance"],"P3S2.TRACE":["Claim + source + passage + verdict","synthese"]};
+function load(){try{return JSON.parse(window.LATENT_STORAGE.get(KEY)||"{}")}catch(e){return{}}}
+function save(s){try{window.LATENT_STORAGE.set(KEY,JSON.stringify(s))}catch(e){}}
+function ensure(s){s.version=2;s.modules=s.modules||{};s.modules[MODULE]=s.modules[MODULE]||{};s.misconceptions=s.misconceptions||{};s.preferences=s.preferences||{progressive:true};return s}
+function addMis(s,id,source){if(!id)return;const old=s.misconceptions[id]||{},meta=META[id]||[id,""];s.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),resolvedAt:null,module:MODULE,label:meta[0],anchor:meta[1],source:source}}function resolveMis(s,id,source){if(!id||!s.misconceptions[id])return;s.misconceptions[id].resolvedAt=new Date().toISOString();s.misconceptions[id].resolvedSource=source}
+function mastery(s){const m=s.modules[MODULE]||{},qr=m.quiz?m.quiz.score/m.quiz.total:0,tr=m.transfer?m.transfer.score/m.transfer.total:0,had=m.mastery?.status==="mastered",ok=qr>=.8&&tr>=.8;m.mastery=m.mastery||{};if(ok){m.mastery.status="mastered";if(!m.mastery.masteredAt)m.mastery.masteredAt=new Date().toISOString();if(!m.review?.nextDue){const next=new Date(Date.now()+86400000).toISOString();m.review={level:0,nextDue:next,lastAt:null,lastScore:null}}}else if(m.quiz||m.transfer)m.mastery.status="evidence";else m.mastery.status="learning";s.modules[MODULE]=m;return ok}
+function saveQuiz(){const form=document.getElementById("quizForm");if(!form)return;const qs=[...form.querySelectorAll(".q")];let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();qs.forEach((q,i)=>{const id=QUIZ_MIS[i];seen.add(id);const c=q.querySelector("input:checked"),ok=!!c&&c.value===q.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-quiz"):resolveMis(s,id,"module-quiz"));s.modules[MODULE].quiz={score,total:qs.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
+function saveTransfer(){const cards=[...document.querySelectorAll(".transfer-card")];if(!cards.length)return;let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();cards.forEach((c,i)=>{const id=TRANSFER_MIS[i];seen.add(id);const sel=c.querySelector("select"),ok=!!sel&&sel.value===c.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-transfer"):resolveMis(s,id,"module-transfer"));s.modules[MODULE].transfer={score,total:cards.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
+function saveSelf(){const boxes=[...document.querySelectorAll(".criteria input[type=checkbox]")];if(!boxes.length)return;const s=ensure(load());s.modules[MODULE].selfExplanation={checked:boxes.filter(x=>x.checked).length,total:boxes.length,at:new Date().toISOString()};save(s)}
+const form=document.getElementById("quizForm");if(form)form.addEventListener("submit",saveQuiz);
+const transferBtn=document.getElementById("checkTransfer");if(transferBtn)transferBtn.addEventListener("click",saveTransfer);
+document.querySelectorAll(".criteria input[type=checkbox]").forEach(x=>x.addEventListener("change",saveSelf));
+let currentStep=0;
+const segments=[...document.querySelectorAll("main > section.section")].filter(x=>!x.classList.contains("trainer-only"));
+window.LATENT_STEP_REGISTRY=segments;
+segments.forEach((seg,i)=>{seg.dataset.step=String(i+1);const badge=seg.querySelector(".section-head .num,.section-head .section-num");if(badge){badge.textContent=String(i+1).padStart(2,"0");badge.dataset.stepNumber=String(i+1)}});
+let allVisible=false,unlocked=0;
+function roleTrainer(){return window.LATENT_STORAGE.get("formation-llm-role")==="trainer"}
+function initialUnlock(){const s=ensure(load()),mod=s.modules[MODULE]||{},saved=mod.progressiveStepIndex,legacy=mod.progressiveIndex,route=s.diagnostic?.routes?.[MODULE],fastIndex=Math.max(0,segments.findIndex(x=>x.dataset.pedagogy==="worked-example"));unlocked=Number.isInteger(saved)?saved:Number.isInteger(legacy)?Math.max(0,legacy-1):(route==="fast"?fastIndex:route==="normal"?1:0);if(location.hash){const target=document.querySelector(location.hash);if(target){const seg=target.closest("section.section");const idx=segments.indexOf(seg);if(idx>=0){unlocked=Math.max(unlocked,idx);currentStep=idx}}}unlocked=Math.min(Math.max(unlocked,0),Math.max(0,segments.length-1));currentStep=Math.min(Math.max(currentStep,0),unlocked);}
+function applySegments(){const s=ensure(load()),guided=s.preferences.progressive!==false&&!roleTrainer()&&!allVisible;segments.forEach((seg,i)=>{seg.hidden=guided&&i>unlocked});document.querySelectorAll(".next-step,.footer").forEach(x=>x.hidden=guided&&unlocked<segments.length-1);s.modules[MODULE].progressiveStepIndex=unlocked;s.modules[MODULE].progressiveIndex=unlocked+1;s.lastActivity={module:MODULE,anchor:location.hash||"",at:new Date().toISOString()};save(s);updateGuide()}
+function next(){if(unlocked<segments.length-1){unlocked++;currentStep=unlocked;applySegments();segments[unlocked]?.scrollIntoView({behavior:"smooth",block:"start"})}}
+function toggleAll(){allVisible=!allVisible;applySegments()}
+const guide=document.createElement("div");guide.className="learning-guide";guide.innerHTML='<div><strong id="learningGuideTitle">Guidage adaptatif</strong><small id="learningGuideMeta"></small></div><div class="learning-guide-actions"><button type="button" id="learningAll">Tout afficher</button><button type="button" class="primary-learning" id="learningNext">Continuer →</button></div>';
+const anchor=document.querySelector(".journey")||document.querySelector(".hero");if(anchor)anchor.insertAdjacentElement("afterend",guide);
+document.getElementById("learningNext")?.addEventListener("click",next);document.getElementById("learningAll")?.addEventListener("click",toggleAll);
+function updateGuide(){const s=ensure(load()),m=s.modules[MODULE]||{},status=m.mastery?.status,route=s.diagnostic?.routes?.[MODULE],meta=document.getElementById("learningGuideMeta"),title=document.getElementById("learningGuideTitle");if(!meta||!title)return;title.innerHTML=status==="mastered"?'<span class="learning-mastered">✓ Maîtrise démontrée</span>':"Guidage adaptatif";const prefix=route==="fast"?"Voie rapide issue du diagnostic · ":route==="full"?"Guidage complet recommandé · ":"",stepText="étape "+String(Math.min(currentStep+1,segments.length)).padStart(2,"0")+" / "+String(segments.length).padStart(2,"0");meta.textContent=prefix+stepText+(allVisible||roleTrainer()?" · page complète":"");const n=document.getElementById("learningNext");if(n)n.hidden=allVisible||roleTrainer()||unlocked>=segments.length-1;const a=document.getElementById("learningAll");if(a)a.textContent=allVisible?"Revenir au guidage":"Tout afficher"}
+window.addEventListener("latent:stepchange",e=>{const i=e.detail?.index;if(Number.isInteger(i)&&i>=0&&i<segments.length){currentStep=i;updateGuide()}});
+const trainerToggle=document.getElementById("trainerBtn");if(trainerToggle)trainerToggle.addEventListener("click",function(){setTimeout(function(){applySegments();updateGuide()},0)});initialUnlock();applySegments();
+})();
+</script><script data-latent-nav="v2">
+(function(){"use strict";
+const sections=window.LATENT_STEP_REGISTRY||[...document.querySelectorAll("main > section.section")].filter(s=>!s.classList.contains("trainer-only"));
+if(!sections.length)return;
+const nav=document.createElement("nav");nav.className="layer-nav";nav.setAttribute("aria-label","Sections du module");
+const buttons=sections.map((section,i)=>{const b=document.createElement("button");b.type="button";const number=String(i+1).padStart(2,"0");b.textContent=number;const title=section.querySelector("h2,h3")?.textContent?.trim()||("Section "+number);b.title=title;b.setAttribute("aria-label",number+". "+title);b.addEventListener("click",()=>{if(!section.hidden){window.dispatchEvent(new CustomEvent("latent:stepchange",{detail:{index:i,total:sections.length}}));section.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}});nav.appendChild(b);return b});
+document.body.appendChild(nav);
+function syncLocks(){sections.forEach((s,i)=>buttons[i].disabled=!!s.hidden)}
+syncLocks();
+new MutationObserver(syncLocks).observe(document.querySelector("main"),{subtree:true,attributes:true,attributeFilter:["hidden"]});
+function setCurrent(idx){if(idx<0||idx>=sections.length)return;buttons.forEach((b,i)=>i===idx?b.setAttribute("aria-current","step"):b.removeAttribute("aria-current"));window.dispatchEvent(new CustomEvent("latent:stepchange",{detail:{index:idx,total:sections.length}}))}
+if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting&&!e.target.hidden).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;setCurrent(sections.indexOf(visible.target))},{rootMargin:"-18% 0px -58% 0px",threshold:[0,.15,.4,.7]});sections.forEach(s=>io.observe(s))}
+const hashTarget=location.hash?document.querySelector(location.hash):null,hashIndex=hashTarget?sections.indexOf(hashTarget.closest("section.section")):-1;setCurrent(hashIndex>=0?hashIndex:0);
+})();
+</script><script data-assessment-guard="v1">
+(function(){
+ "use strict";
+ const quiz=document.getElementById("quizForm");
+ const quizScore=document.getElementById("quizScore");
+ const transferScore=document.getElementById("transferScore");
+ if(quiz){quiz.querySelectorAll(".q").forEach(q=>q.querySelector('input[type="radio"]')?.setAttribute("required",""))}
+ document.querySelectorAll(".transfer-card select").forEach(s=>s.setAttribute("required",""));
+ function say(box,message){if(box)box.textContent=message}
+ document.addEventListener("submit",function(e){
+   if(!quiz||e.target!==quiz)return;
+   const missing=[...quiz.querySelectorAll(".q")].filter(q=>!q.querySelector('input[type="radio"]:checked'));
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(quizScore,missing.length+" réponse"+(missing.length>1?"s":"")+" restante"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].querySelector('input[type="radio"]')?.focus();
+ },true);
+ document.addEventListener("click",function(e){
+   const btn=e.target.closest?.("#checkTransfer");
+   if(!btn)return;
+   const missing=[...document.querySelectorAll(".transfer-card select")].filter(s=>!s.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   say(transferScore,missing.length+" choix restant"+(missing.length>1?"s":"")+" avant correction.");
+   missing[0].focus();
+ },true);
+})();
+</script>
+<script data-completion-guard="v1">
+(function(){
+ "use strict";
+ const section=document.getElementById("completer");
+ const button=document.getElementById("checkCompletion");
+ const feedback=document.getElementById("completionFeedback");
+ if(!section||!button)return;
+ const fields=[...section.querySelectorAll("select")];
+ fields.forEach(field=>field.setAttribute("required",""));
+ button.addEventListener("click",function(e){
+   const missing=fields.filter(field=>!field.value);
+   if(!missing.length)return;
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(feedback){
+     feedback.classList.add("show");
+     feedback.textContent=missing.length+" choix restant"+(missing.length>1?"s":"")+" avant vérification.";
+   }
+   missing[0].focus();
+ },true);
+})();
+</script>
+</body>
+</html>
