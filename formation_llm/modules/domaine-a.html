@@ -470,6 +470,9 @@ html.projector .journey-card .k{color:#245c62!important}
 .prediction-card strong{display:block;margin-bottom:5px}.prediction-card p{margin:0 0 10px;color:var(--muted);font-size:.84rem}
 .prediction-card select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}
 .prediction-card.correct{border-color:var(--green)}.prediction-card.wrong{border-color:var(--red)}
+.card-rationale{display:none;margin-top:9px;padding:9px 10px;border-radius:9px;background:var(--panel2);font-size:.8rem;line-height:1.45}
+.prediction-card.checked .card-rationale{display:block}
+.prediction-card.correct .card-rationale{color:var(--green)}.prediction-card.wrong .card-rationale{color:var(--red)}
 .micro-feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:11px;background:var(--panel2);line-height:1.5}
 .micro-feedback.show{display:block}.micro-feedback b{color:var(--accent2)}
 .core-terms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -522,10 +525,10 @@ html.projector .micro-lab,html.projector .prediction-card,html.projector .core-t
 <div class="micro-lab">
 <h3>Assistant scolaire fictif</h3><p>Imaginez un chat qui utilise un modèle de langage. Pour chaque capacité, choisissez l'explication la plus plausible. Vous pourrez vous tromper : le feedback sert précisément à construire la distinction.</p>
 <div class="prediction-grid" id="originGrid">
-<article class="prediction-card" data-answer="model"><strong>Rédiger une reformulation</strong><p>L'assistant reformule un paragraphe déjà présent dans la conversation.</p><select aria-label="Origine de la reformulation"><option value="">Je prédis…</option><option value="model">Le modèle de langage peut produire le texte</option><option value="external">Il faut forcément un composant externe</option><option value="unknown">Impossible à savoir</option></select></article>
-<article class="prediction-card" data-answer="external"><strong>Retrouver le règlement actuel</strong><p>Le règlement a été modifié hier et n'apparaît pas dans la conversation.</p><select aria-label="Origine de la recherche documentaire"><option value="">Je prédis…</option><option value="model">Le modèle seul suffit forcément</option><option value="external">Un accès au document / une recherche est nécessaire</option><option value="unknown">Le nombre de paramètres suffit à répondre</option></select></article>
-<article class="prediction-card" data-answer="external"><strong>Se souvenir demain du prénom</strong><p>La conversation est fermée puis rouverte le lendemain.</p><select aria-label="Origine de la mémoire persistante"><option value="">Je prédis…</option><option value="model">Les poids changent automatiquement</option><option value="external">Il faut un stockage ou une mémoire applicative</option><option value="unknown">La taille du contexte rend la mémoire permanente</option></select></article>
-<article class="prediction-card" data-answer="external"><strong>Créer un événement calendrier</strong><p>L'assistant ajoute réellement un rendez-vous dans un agenda.</p><select aria-label="Origine de l'action calendrier"><option value="">Je prédis…</option><option value="model">Générer du texte suffit à modifier l'agenda</option><option value="external">Il faut un outil ou une fonction autorisée</option><option value="unknown">Le modèle contient le calendrier</option></select></article>
+<article class="prediction-card" data-answer="model"><strong>Rédiger une reformulation</strong><p>L'assistant reformule un paragraphe déjà présent dans la conversation.</p><select aria-label="Origine de la reformulation"><option value="">Je prédis…</option><option value="model">Le modèle de langage peut produire le texte</option><option value="external">Il faut forcément un composant externe</option><option value="unknown">Impossible à savoir</option></select><div class="card-rationale"><b>Pourquoi :</b> le texte à transformer est déjà fourni ; la génération linguistique peut être réalisée par le modèle. L'application reste l'enveloppe qui lui transmet la demande.</div></article>
+<article class="prediction-card" data-answer="external"><strong>Retrouver le règlement actuel</strong><p>Le règlement a été modifié hier et n'apparaît pas dans la conversation.</p><select aria-label="Origine de la recherche documentaire"><option value="">Je prédis…</option><option value="model">Le modèle seul suffit forcément</option><option value="external">Un accès au document / une recherche est nécessaire</option><option value="unknown">Le nombre de paramètres suffit à répondre</option></select><div class="card-rationale"><b>Pourquoi :</b> pour garantir l'usage de la version d'hier, il faut retrouver cette version et la fournir au modèle. La taille du modèle ne crée pas une connexion automatique au document.</div></article>
+<article class="prediction-card" data-answer="external"><strong>Se souvenir demain du prénom</strong><p>La conversation est fermée puis rouverte le lendemain.</p><select aria-label="Origine de la mémoire persistante"><option value="">Je prédis…</option><option value="model">Les poids changent automatiquement</option><option value="external">Il faut un stockage ou une mémoire applicative</option><option value="unknown">La taille du contexte rend la mémoire permanente</option></select><div class="card-rationale"><b>Pourquoi :</b> fermer la session supprime le contexte courant. Une donnée retrouvée plus tard peut avoir été stockée ailleurs puis réinjectée, sans réentraînement du LLM.</div></article>
+<article class="prediction-card" data-answer="external"><strong>Créer un événement calendrier</strong><p>L'assistant ajoute réellement un rendez-vous dans un agenda.</p><select aria-label="Origine de l'action calendrier"><option value="">Je prédis…</option><option value="model">Générer du texte suffit à modifier l'agenda</option><option value="external">Il faut un outil ou une fonction autorisée</option><option value="unknown">Le modèle contient le calendrier</option></select><div class="card-rationale"><b>Pourquoi :</b> produire la phrase « rendez-vous créé » et modifier réellement un agenda sont deux choses différentes. L'action exige une fonction autorisée reliée au service.</div></article>
 </div>
 <div class="actions"><button class="primary" id="checkOrigins" type="button">Vérifier mes prédictions</button><button class="secondary" id="resetOrigins" type="button">Recommencer</button></div>
 <div class="micro-feedback" id="originFeedback" role="status" aria-live="polite"></div>
@@ -602,7 +605,7 @@ html.projector .micro-lab,html.projector .prediction-card,html.projector .core-t
 </div>
 <div class="panel">
 <div class="path-builder" id="familyPath"><div class="path-slot">1 · le champ le plus large</div><div class="path-slot">2 · une famille de méthodes</div><div class="path-slot">3 · une sous-famille neuronale</div><div class="path-slot">4 · un type de modèle de langage</div></div>
-<div class="depth-note"><strong>Après vérification :</strong> IA → machine learning → deep learning → LLM. Cette chaîne situe les LLM modernes ; elle ne signifie pas que toute l'IA utilise du machine learning.</div>
+<div class="micro-feedback" id="familyExplanation"><b>Pourquoi :</b> IA est le champ le plus large. Le machine learning est une famille de méthodes d'IA ; le deep learning en est une sous-famille neuronale ; les LLM modernes utilisent ce type d'architecture. Cette chaîne ne signifie pas que toute l'IA utilise du machine learning.</div>
 </div>
 </div>
 <details class="optional-depth"><summary>Approfondir seulement si vous êtes à l'aise : 8 repères supplémentaires</summary><div><div class="advanced-grid">
@@ -710,14 +713,14 @@ $("checkOrigins").addEventListener("click",()=>{
  let ok=0,total=0;
  document.querySelectorAll("#originGrid .prediction-card").forEach(card=>{
    total++;const select=card.querySelector("select"),good=select.value===card.dataset.answer;
-   card.classList.toggle("correct",good);card.classList.toggle("wrong",!good);if(good)ok++;
+   card.classList.toggle("correct",good);card.classList.toggle("wrong",!good);card.classList.add("checked");if(good)ok++;
  });
  const box=$("originFeedback");box.classList.add("show");
  box.innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Vous avez déjà séparé capacité du modèle et capacités ajoutées par l'application.":"Regardez surtout les trois situations qui exigent une donnée persistante, un document actuel ou une action extérieure : elles ont besoin d'un composant autour du modèle.");
 });
 $("resetOrigins").addEventListener("click",()=>{
  document.querySelectorAll("#originGrid select").forEach(s=>s.value="");
- document.querySelectorAll("#originGrid .prediction-card").forEach(c=>c.classList.remove("correct","wrong"));
+ document.querySelectorAll("#originGrid .prediction-card").forEach(c=>c.classList.remove("correct","wrong","checked"));
  $("originFeedback").classList.remove("show");
 });
 
@@ -763,11 +766,11 @@ function renderFamily(){
  document.querySelectorAll("#familyButtons .family-btn").forEach(b=>b.disabled=familyChosen.includes(b.dataset.family));
 }
 document.querySelectorAll("#familyButtons .family-btn").forEach(b=>b.addEventListener("click",()=>{if(familyChosen.length<4){familyChosen.push(b.dataset.family);renderFamily()}}));
-$("resetFamily").addEventListener("click",()=>{familyChosen=[];renderFamily();$("familyFeedback").classList.remove("show")});
+$("resetFamily").addEventListener("click",()=>{familyChosen=[];renderFamily();$("familyFeedback").classList.remove("show");$("familyExplanation").classList.remove("show")});
 $("checkFamily").addEventListener("click",()=>{
  const box=$("familyFeedback");box.classList.add("show");
  const good=familyChosen.length===4&&familyChosen.every((x,i)=>x===familyOrder[i]);
- box.innerHTML=good?"<b>Chaîne correcte.</b> IA est le champ large ; ML puis deep learning sont des familles de méthodes ; un LLM moderne appartient à cette lignée.":"<b>À reconstruire.</b> Partez du champ le plus large, puis resserrez : IA → machine learning → deep learning → LLM.";
+ box.innerHTML=good?"<b>Chaîne correcte.</b> Vous avez construit la hiérarchie sans la voir auparavant.":"<b>À reconstruire.</b> Repérez d'abord le champ général, puis les familles de plus en plus spécifiques.";if(good)$("familyExplanation").classList.add("show");
 });
 
 // Quiz + transfer.
