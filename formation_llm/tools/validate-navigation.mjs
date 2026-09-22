@@ -10,6 +10,7 @@ const pages=[
   'modules/sampling-lab.html',
   'modules/hallucination-lab.html',
   'modules/verification-sources.html',
+  'modules/evaluation-systematique.html',
   'modules/rag-lab.html',
   'modules/dialoguer-specifier.html',
   'modules/dialoguer-exemples.html',
@@ -109,6 +110,7 @@ const P2S4=await load('modules/dialoguer-multitour.html');
 const P2S5=await load('modules/dialoguer-tache-complexe.html');
 const P3S1=await load('modules/hallucination-lab.html');
 const P3S2=await load('modules/verification-sources.html');
+const P3S3=await load('modules/evaluation-systematique.html');
 if(!A.includes('href="domaine-b.html"')) errors.push('Parcours 0: lien vers étape 1 absent');
 if(!B.includes('href="domaine-c.html"')) errors.push('Parcours 1 étape 1: lien vers étape 2 absent');
 if(!C.includes('href="transformer-block-lab.html"')) errors.push('Parcours 1 étape 2: lien vers étape 3 absent');
@@ -125,6 +127,8 @@ if(!P2S4.includes('href="dialoguer-tache-complexe.html"')) errors.push('Parcours
 if(!P2S5.includes('href="dialoguer-multitour.html"')) errors.push('Parcours 2 étape 5: retour vers étape 4 absent');
 if(!P3S1.includes('href="verification-sources.html"')) errors.push('Parcours 3 étape 1: lien vers étape 2 absent');
 if(!P3S2.includes('href="hallucination-lab.html"')) errors.push('Parcours 3 étape 2: retour vers étape 1 absent');
+if(!P3S2.includes('href="evaluation-systematique.html"')) errors.push('Parcours 3 étape 2: lien vers étape 3 absent');
+if(!P3S3.includes('href="verification-sources.html"')) errors.push('Parcours 3 étape 3: retour vers étape 2 absent');
 
 if(errors.length){
   console.error('\n❌ AUDIT NAVIGATION ÉCHOUÉ\n- '+errors.join('\n- '));
