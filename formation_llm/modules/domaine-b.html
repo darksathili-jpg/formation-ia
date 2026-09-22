@@ -273,6 +273,45 @@ html.projector .latent-map text{fill:#263b40!important}
  #trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}
 }
 </style>
+<style data-topbar-viewport-guard="v1">
+:root{--module-topbar-h:64px}
+html{scroll-padding-top:calc(var(--module-topbar-h) + 14px)}
+.topbar{position:sticky!important;top:0!important;z-index:120!important}
+.topbar-inner{
+ display:grid!important;
+ grid-template-columns:max-content minmax(0,1fr) max-content!important;
+ align-items:center!important;gap:12px!important;min-height:var(--module-topbar-h)
+}
+.topbar-inner>.brand{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-inner>.nav{
+ display:flex!important;flex-wrap:nowrap!important;min-width:0;overflow-x:auto;overflow-y:hidden;
+ scrollbar-width:none;overscroll-behavior-inline:contain;white-space:nowrap;justify-content:center
+}
+.topbar-inner>.nav::-webkit-scrollbar{display:none}
+.topbar-inner>.nav a{flex:0 0 auto;white-space:nowrap;padding:8px 8px}
+.topbar-inner>.tools{
+ width:auto!important;margin-left:0!important;display:flex!important;flex-wrap:nowrap!important;
+ gap:6px!important;min-width:max-content
+}
+.topbar-inner>.tools .tool{white-space:nowrap!important;flex:0 0 auto}
+.hero,.journey,.section{scroll-margin-top:calc(var(--module-topbar-h) + 16px)!important}
+@media(max-width:1180px) and (min-width:901px){
+ .topbar-inner{gap:8px!important;padding-left:14px!important;padding-right:14px!important}
+ .topbar-inner>.brand{max-width:210px}
+ .topbar-inner>.nav a{padding-left:6px;padding-right:6px;font-size:.71rem}
+ .topbar-inner>.tools .tool{padding-left:8px!important;padding-right:8px!important;font-size:.64rem!important}
+}
+@media(max-width:1040px) and (min-width:901px){
+ .topbar-inner>.brand{max-width:170px}
+ .topbar-inner>.nav a{font-size:.68rem}
+}
+@media(max-width:900px){
+ html{scroll-padding-top:12px}
+ .topbar{position:relative!important}
+ .topbar-inner{display:flex!important;min-height:0}
+ .hero,.journey,.section{scroll-margin-top:16px!important}
+}
+</style>
 <style data-projection-audit="v3">
 html.projector,html.projector body{overflow-x:clip!important}
 html.projector .projector-exit{
@@ -478,7 +517,7 @@ html.projector .novice-priority{background:#eef5f3!important;color:#000!importan
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="../index.html#parcours">← Formation LLM · Parcours 1</a>
 <nav class="nav" aria-label="Navigation"><a href="#intuition">Intuition</a><a href="#exemple">Exemple</a><a href="#tokenizer">Tokenizer Lab</a><a href="#embeddings">Embeddings</a><a href="#contexte">Contexte</a><a href="#quiz">Quiz</a></nav>
-<div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button></div>
+<div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Projection</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Formateur</button></div>
 </div></header>
 <div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues et critères de réussite sont visibles.</div>
 <main id="mainContent">
@@ -678,12 +717,22 @@ html.projector .novice-priority{background:#eef5f3!important;color:#000!importan
 (function(){
 "use strict";
 const root=document.documentElement,body=document.body,$=id=>document.getElementById(id);
+const topbar=document.querySelector(".topbar");
+function syncTopbarOffset(){
+ const height=Math.ceil(topbar?.getBoundingClientRect().height||64);
+ root.style.setProperty("--module-topbar-h",height+"px");
+}
+if(topbar){
+ syncTopbarOffset();
+ if("ResizeObserver" in window)new ResizeObserver(syncTopbarOffset).observe(topbar);
+ window.addEventListener("resize",syncTopbarOffset,{passive:true});
+}
 function setTheme(t){root.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}
 const saved=window.LATENT_STORAGE.get("formation-llm-theme");if(saved)setTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)setTheme("dark");
 $("themeBtn").addEventListener("click",()=>setTheme(root.dataset.theme==="dark"?"light":"dark"));
-function setTrainer(on){body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}
+function setTrainer(on){body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Stagiaire":"◆ Formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student");requestAnimationFrame(()=>{syncTopbarOffset();if(on&&window.scrollY<Math.max(160,(topbar?.offsetHeight||64)*2)){document.querySelector(".hero")?.scrollIntoView({behavior:"auto",block:"start"})}})}
 setTrainer(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");$("trainerBtn").addEventListener("click",()=>setTrainer(!body.classList.contains("trainer-on")));
-function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"▣ Quitter projection":"▣ Activer projection"}
+function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"✕ Quitter":"▣ Projection";requestAnimationFrame(syncTopbarOffset)}
 $("projectorBtn").addEventListener("click",()=>setProjectorMode(!root.classList.contains("projector")));$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
 
 const BPE_MERGES=[
@@ -772,7 +821,7 @@ $("resetQuiz").addEventListener("click",()=>{$("quizForm").reset();document.quer
 
 $("checkTransfer").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll(".transfer-card").forEach(c=>{total++;const good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});$("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":"")});
 
-updateTokenizer();updateCos();
+syncTopbarOffset();updateTokenizer();updateCos();
 })();
 </script>
 <script data-learning-system="v2" data-step-registry="v1">
