@@ -294,6 +294,13 @@ html{scroll-padding-top:calc(var(--module-topbar-h) + 14px)}
  gap:6px!important;min-width:max-content
 }
 .topbar-inner>.tools .tool{white-space:nowrap!important;flex:0 0 auto}
+@media(min-width:901px){
+ #projectorBtn,#trainerBtn{font-size:0!important}
+ #projectorBtn::after{content:"▣ Projection";font:800 .68rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #projectorBtn[aria-pressed="true"]::after{content:"✕ Quitter"}
+ #trainerBtn::after{content:"◆ Formateur";font:800 .68rem ui-monospace,SFMono-Regular,Consolas,monospace}
+ #trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}
+}
 .hero,.journey,.section{scroll-margin-top:calc(var(--module-topbar-h) + 16px)!important}
 @media(max-width:1180px) and (min-width:901px){
  .topbar-inner{gap:8px!important;padding-left:14px!important;padding-right:14px!important}
@@ -517,7 +524,7 @@ html.projector .novice-priority{background:#eef5f3!important;color:#000!importan
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="../index.html#parcours">← Formation LLM · Parcours 1</a>
 <nav class="nav" aria-label="Navigation"><a href="#intuition">Intuition</a><a href="#exemple">Exemple</a><a href="#tokenizer">Tokenizer Lab</a><a href="#embeddings">Embeddings</a><a href="#contexte">Contexte</a><a href="#quiz">Quiz</a></nav>
-<div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Projection</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Formateur</button></div>
+<div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button></div>
 </div></header>
 <div class="trainer-banner"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues et critères de réussite sont visibles.</div>
 <main id="mainContent">
@@ -730,9 +737,9 @@ if(topbar){
 function setTheme(t){root.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}
 const saved=window.LATENT_STORAGE.get("formation-llm-theme");if(saved)setTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)setTheme("dark");
 $("themeBtn").addEventListener("click",()=>setTheme(root.dataset.theme==="dark"?"light":"dark"));
-function setTrainer(on){body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Stagiaire":"◆ Formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student");requestAnimationFrame(()=>{syncTopbarOffset();if(on&&window.scrollY<Math.max(160,(topbar?.offsetHeight||64)*2)){document.querySelector(".hero")?.scrollIntoView({behavior:"auto",block:"start"})}})}
+function setTrainer(on){body.classList.toggle("trainer-on",on);$("trainerBtn").setAttribute("aria-pressed",String(on));$("trainerBtn").textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student");requestAnimationFrame(()=>{syncTopbarOffset();if(on&&window.scrollY<Math.max(160,(topbar?.offsetHeight||64)*2)){document.querySelector(".hero")?.scrollIntoView({behavior:"auto",block:"start"})}})}
 setTrainer(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");$("trainerBtn").addEventListener("click",()=>setTrainer(!body.classList.contains("trainer-on")));
-function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"✕ Quitter":"▣ Projection";requestAnimationFrame(syncTopbarOffset)}
+function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"▣ Quitter projection":"▣ Activer projection";requestAnimationFrame(syncTopbarOffset)}
 $("projectorBtn").addEventListener("click",()=>setProjectorMode(!root.classList.contains("projector")));$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
 
 const BPE_MERGES=[
