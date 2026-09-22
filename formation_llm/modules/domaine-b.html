@@ -36,6 +36,8 @@ h1{font-family:var(--display);font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.0
 .lab{overflow:hidden;padding:0}.lab-head{padding:18px 21px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.lab-head h3{margin:0;font-family:var(--display);font-size:1.45rem}.lab-grid{display:grid;grid-template-columns:minmax(300px,.85fr) minmax(0,1.15fr)}.lab-input{padding:21px;border-right:1px solid var(--line)}.lab-output{padding:21px;min-width:0}.field{display:grid;gap:6px;margin-bottom:14px}.field label{font-size:.76rem;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.field textarea,.field select,.field input[type=number]{width:100%;border:1px solid var(--strong);border-radius:11px;background:var(--bg);color:var(--text);padding:10px}.field textarea{min-height:120px;resize:vertical}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.range-row input{width:100%}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:13px}.kpi{background:var(--panel2);border-radius:12px;padding:11px}.kpi .v{font-size:1.25rem;font-weight:950}.kpi .l{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .tokens{display:flex;flex-wrap:wrap;gap:6px;padding:13px;background:var(--bg);border:1px dashed var(--strong);border-radius:13px;min-height:62px}.token{display:inline-flex;align-items:center;padding:6px 9px;border-radius:9px;background:var(--accentSoft);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.82rem}.token.space{background:var(--goldSoft)}.token.truncated{opacity:.35;text-decoration:line-through}
+.token-presets{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 14px}.token-preset{min-height:36px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:999px;padding:6px 9px;font:800 .72rem ui-monospace,SFMono-Regular,Consolas,monospace}.token-preset:hover,.token-preset:focus-visible{border-color:var(--accent);background:var(--accentSoft)}
+.bpe-trace{margin-top:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:12px}.bpe-trace[hidden]{display:none}.bpe-trace h4{margin:0 0 5px;font-size:.84rem}.bpe-trace p{margin:0;color:var(--muted);font-size:.78rem}.trace-flow{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:9px}.trace-step{display:inline-flex;align-items:center;min-height:30px;padding:4px 7px;border-radius:7px;background:var(--panel);border:1px solid var(--line);font:750 .7rem ui-monospace,SFMono-Regular,Consolas,monospace}.trace-arrow{color:var(--muted);font-size:.72rem}.segmentation-summary{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:.78rem}.segmentation-summary code{font-weight:900;color:var(--accent)}
 .meter{height:15px;border-radius:999px;background:var(--panel2);overflow:hidden;border:1px solid var(--line);display:flex}.used{background:var(--accent);height:100%}.over{background:var(--danger);height:100%}.meter-labels{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.76rem;margin-top:5px}
 .completion{display:grid;gap:9px}.completion-row{display:grid;grid-template-columns:minmax(170px,.8fr) 30px minmax(220px,1.2fr);gap:8px;align-items:center}.completion-row select{width:100%;border:1px solid var(--strong);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}.completion-row .arrow{text-align:center;color:var(--accent);font-weight:950}.feedback-box{display:none;margin-top:10px;padding:11px;border-radius:10px;background:var(--panel2)}.feedback-box.show{display:block}
 .vector-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.vector-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.vector-controls input{width:100%;border:1px solid var(--strong);background:var(--bg);color:var(--text);border-radius:9px;padding:8px}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.84rem;color:var(--muted);word-break:break-word}.score{font-size:2rem;font-weight:950;color:var(--accent)}.bar{height:11px;background:var(--panel2);border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);width:50%}
@@ -540,15 +542,17 @@ html.projector .novice-priority{background:#eef5f3!important;color:#000!importan
 <div class="lab-head"><h3>Tokenizer Lab</h3><span class="badge">Simulation pédagogique locale</span></div>
 <div class="lab-grid">
 <div class="lab-input">
-<div class="field"><label for="labText">Texte</label><textarea id="labText">Bonjour modèle ! Les tokenizers découpent le texte.</textarea></div>
-<div class="field"><label for="tokenMode">Mode didactique</label><select id="tokenMode"><option value="subword">Sous-mots simplifiés</option><option value="word">Mots / ponctuation</option><option value="byte">Octets UTF-8</option></select></div>
+<div class="field"><label for="labText">Texte</label><textarea id="labText">bonjour modèle extraordinaire !</textarea></div>
+<div class="token-presets" aria-label="Exemples à injecter dans le Tokenizer Lab"><button class="token-preset" type="button" data-token-example="bonjour">bonjour</button><button class="token-preset" type="button" data-token-example="modèle">modèle</button><button class="token-preset" type="button" data-token-example="extraordinaire">extraordinaire</button><button class="token-preset" type="button" data-token-example="anticonstitutionnellement">mot très long</button><button class="token-preset" type="button" data-token-example="🚀 IA !">emoji + ponctuation</button></div>
+<div class="field"><label for="tokenMode">Mode didactique</label><select id="tokenMode"><option value="subword">Sous-mots · BPE didactique</option><option value="word">Mots / ponctuation</option><option value="byte">Octets UTF-8</option></select></div>
 <div class="field"><label for="contextSize">Fenêtre simulée</label><div class="range-row"><input id="contextSize" type="range" min="8" max="80" value="32"><output id="contextSizeOut">32 tokens</output></div></div>
-<div class="notice"><strong>À observer.</strong> Changez « extraordinaire » en un mot rare ou ajoutez des emojis. Le nombre de caractères et le nombre de tokens n’évoluent pas forcément de la même manière.</div>
+<div class="notice"><strong>À observer.</strong> Comparez <code>bonjour</code>, <code>modèle</code> et <code>extraordinaire</code>. Un mot fréquent peut rester entier, un autre être séparé en quelques sous-mots, et certains fragments inconnus peuvent rester très courts. Le résultat dépend toujours du vocabulaire et des règles du tokenizer.</div>
 <div class="trainer-only" style="margin-top:10px"><b>Question.</b> Pourquoi ne peut-on pas estimer exactement les tokens d’un modèle commercial sans connaître son tokenizer ?</div>
 </div>
 <div class="lab-output">
 <div class="kpis"><div class="kpi"><div class="v" id="charCount">0</div><div class="l">caractères</div></div><div class="kpi"><div class="v" id="tokenCount">0</div><div class="l">tokens</div></div><div class="kpi"><div class="v" id="uniqueCount">0</div><div class="l">uniques</div></div><div class="kpi"><div class="v" id="byteCount">0</div><div class="l">octets UTF-8</div></div></div>
 <div class="tokens" id="tokenList"></div><p class="muted" id="tokenHint"></p>
+<div class="bpe-trace" id="bpeTrace" hidden><h4 id="bpeTraceTitle">Comment les sous-mots se construisent</h4><p id="bpeTraceIntro"></p><div class="trace-flow" id="bpeTraceFlow"></div><div class="segmentation-summary" id="bpeTraceResult"></div></div>
 <div class="meter"><span class="used" id="contextUsed"></span><span class="over" id="contextOver"></span></div><div class="meter-labels"><span id="contextLabel"></span><span id="contextStatus"></span></div>
 </div>
 </div>
@@ -682,12 +686,76 @@ setTrainer(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");$("train
 function setProjectorMode(on){root.classList.toggle("projector",on);$("projectorBtn").setAttribute("aria-pressed",String(on));$("projectorBtn").textContent=on?"▣ Quitter projection":"▣ Activer projection"}
 $("projectorBtn").addEventListener("click",()=>setProjectorMode(!root.classList.contains("projector")));$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
 
-const merges=[["t","i"],["ti","on"],["i","s"],["is","ation"],["m","od"],["è","l"],["èl","e"],["bon","jour"],["extra","ordinaire"],["token","izer"]];
+const BPE_MERGES=[
+["t","e"],["te","x"],["tex","t"],["text","e"],
+["e","x"],["ex","t"],["ext","r"],["extr","a"],
+["o","r"],["or","d"],
+["i","n"],["in","a"],["ina","i"],["inai","r"],["inair","e"],
+["m","o"],["mo","d"],["è","l"],["èl","e"],
+["b","o"],["bo","n"],["j","o"],["jo","u"],["jou","r"],["bon","jour"],
+["t","o"],["to","k"],["tok","e"],["toke","n"],
+["i","z"],["iz","e"],["ize","r"],["izer","s"],
+["d","é"],["dé","c"],["o","u"],["ou","p"],["e","n"],["en","t"],["oup","ent"],
+["l","e"],["le","s"],
+["a","n"],["an","t"],["ant","i"],
+["c","o"],["co","n"],
+["s","t"],["st","i"],["sti","t"],["stit","u"],
+["t","i"],["ti","o"],["tio","n"],
+["n","e"],["ne","l"],
+["e","m"],["em","e"],["eme","n"],["emen","t"],
+["m","ent"],["le","ment"],["nel","lement"]
+];
 function chunks(text){return text.match(/\s+|[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]/gu)||[]}
-function subword(w){let s=Array.from(w.toLowerCase());for(const [a,b] of merges){const n=[];for(let i=0;i<s.length;i++){if(i<s.length-1&&s[i]===a&&s[i+1]===b){n.push(a+b);i++}else n.push(s[i])}s=n}return s}
-function tokenize(text,mode){if(mode==="byte")return Array.from(new TextEncoder().encode(text),b=>"0x"+b.toString(16).padStart(2,"0").toUpperCase());const c=chunks(text);if(mode==="word")return c.flatMap(x=>/^\s+$/u.test(x)?Array.from(x).map(()=> "␠"):[x]);return c.flatMap(x=>/^\s+$/u.test(x)?Array.from(x).map(()=> "␠"):/^[\p{L}\p{M}\p{N}_]+$/u.test(x)?subword(x):[x])}
-function updateTokenizer(){const text=$("labText").value,mode=$("tokenMode").value,limit=Number($("contextSize").value),ts=tokenize(text,mode);$("charCount").textContent=Array.from(text).length;$("tokenCount").textContent=ts.length;$("uniqueCount").textContent=new Set(ts).size;$("byteCount").textContent=new TextEncoder().encode(text).length;$("contextSizeOut").textContent=limit+" tokens";const list=$("tokenList");list.innerHTML="";ts.forEach((t,i)=>{const s=document.createElement("span");s.className="token"+(t==="␠"?" space":"")+(i>=limit?" truncated":"");s.textContent=t;list.appendChild(s)});$("tokenHint").textContent="Simulation : ce découpage n’est pas celui d’un tokenizer commercial précis.";const used=Math.min(ts.length,limit),over=Math.max(0,ts.length-limit);$("contextUsed").style.width=Math.min(100,used/limit*100)+"%";$("contextOver").style.width=over?Math.min(100,over/Math.max(ts.length,1)*100)+"%":"0%";$("contextLabel").textContent=ts.length+" / "+limit+" tokens";$("contextStatus").textContent=over?over+" hors fenêtre":(limit-ts.length)+" disponibles";updateBudget(ts.length)}
+function subwordDetailed(w){
+ let symbols=Array.from(w.normalize("NFC").toLocaleLowerCase("fr")),trace=[];
+ for(const [a,b] of BPE_MERGES){
+  const next=[];let changed=false;
+  for(let i=0;i<symbols.length;i++){
+   if(i<symbols.length-1&&symbols[i]===a&&symbols[i+1]===b){next.push(a+b);i++;changed=true}
+   else next.push(symbols[i]);
+  }
+  if(changed){symbols=next;trace.push({a,b,merged:a+b,state:[...symbols]})}
+ }
+ return {tokens:symbols,trace};
+}
+function tokenizeDetailed(text,mode){
+ if(mode==="byte")return {tokens:Array.from(new TextEncoder().encode(text),b=>"0x"+b.toString(16).padStart(2,"0").toUpperCase()),words:[]};
+ const c=chunks(text),words=[];
+ if(mode==="word")return {tokens:c.flatMap(x=>/^\s+$/u.test(x)?Array.from(x).map(()=> "␠"):[x]),words};
+ const tokens=c.flatMap(x=>{
+  if(/^\s+$/u.test(x))return Array.from(x).map(()=> "␠");
+  if(/^[\p{L}\p{M}\p{N}_]+$/u.test(x)){const d=subwordDetailed(x);words.push({source:x,...d});return d.tokens}
+  return [x];
+ });
+ return {tokens,words};
+}
+function renderBpeTrace(words,mode){
+ const box=$("bpeTrace"),flow=$("bpeTraceFlow"),result=$("bpeTraceResult");
+ if(mode!=="subword"||!words.length){box.hidden=true;return}
+ const target=[...words].sort((a,b)=>b.source.length-a.source.length)[0];
+ box.hidden=false;$("bpeTraceTitle").textContent="Zoom BPE didactique · « "+target.source+" »";
+ $("bpeTraceIntro").textContent="Le moteur part de petites unités puis applique des fusions de paires classées. Ici, on montre les fusions effectivement atteintes ; un vrai tokenizer possède un vocabulaire et des milliers de règles apprises.";
+ flow.innerHTML="";
+ const shown=target.trace.slice(0,10);
+ if(!shown.length){
+  const s=document.createElement("span");s.className="trace-step";s.textContent="aucune paire connue fusionnée";flow.appendChild(s);
+ }else shown.forEach((step,i)=>{
+  if(i){const a=document.createElement("span");a.className="trace-arrow";a.textContent="→";flow.appendChild(a)}
+  const s=document.createElement("span");s.className="trace-step";s.textContent=step.a+" + "+step.b+" → "+step.merged;flow.appendChild(s);
+ });
+ if(target.trace.length>shown.length){const more=document.createElement("span");more.className="trace-step";more.textContent="+"+(target.trace.length-shown.length)+" fusion(s)";flow.appendChild(more)}
+ result.innerHTML="<b>Résultat :</b> <code>"+target.tokens.join(" | ")+"</code> · "+target.source.length+" caractère(s) → "+target.tokens.length+" sous-token(s) dans cette simulation.";
+}
+function updateTokenizer(){
+ const text=$("labText").value,mode=$("tokenMode").value,limit=Number($("contextSize").value),detail=tokenizeDetailed(text,mode),ts=detail.tokens;
+ $("charCount").textContent=Array.from(text).length;$("tokenCount").textContent=ts.length;$("uniqueCount").textContent=new Set(ts).size;$("byteCount").textContent=new TextEncoder().encode(text).length;$("contextSizeOut").textContent=limit+" tokens";
+ const list=$("tokenList");list.innerHTML="";ts.forEach((t,i)=>{const s=document.createElement("span");s.className="token"+(t==="␠"?" space":"")+(i>=limit?" truncated":"");s.textContent=t;list.appendChild(s)});
+ $("tokenHint").textContent=mode==="subword"?"BPE didactique : vraies fusions successives sur un minuscule jeu de règles local. Ce n’est pas le vocabulaire d’un tokenizer commercial ; les mots sont normalisés en minuscules et les espaces sont montrés séparément.":mode==="word"?"Découpage lexical didactique : les mots et la ponctuation sont séparés ; ce n’est pas une tokenisation LLM.":"Vue UTF-8 : chaque case représente ici un octet, pas un token de modèle.";
+ renderBpeTrace(detail.words,mode);
+ const used=Math.min(ts.length,limit),over=Math.max(0,ts.length-limit);$("contextUsed").style.width=Math.min(100,used/limit*100)+"%";$("contextOver").style.width=over?Math.min(100,over/Math.max(ts.length,1)*100)+"%":"0%";$("contextLabel").textContent=ts.length+" / "+limit+" tokens";$("contextStatus").textContent=over?over+" hors fenêtre":(limit-ts.length)+" disponibles";updateBudget(ts.length)
+}
 ["labText","tokenMode","contextSize"].forEach(id=>$(id).addEventListener(id==="labText"?"input":"change",updateTokenizer));
+document.querySelectorAll("[data-token-example]").forEach(btn=>btn.addEventListener("click",()=>{$("labText").value=btn.dataset.tokenExample;$("tokenMode").value="subword";updateTokenizer();$("labText").focus()}));
 
 $("checkCompletion").addEventListener("click",()=>{let ok=0,total=0;document.querySelectorAll("#completer [data-answer]").forEach(s=>{total++;if(s.value===s.dataset.answer)ok++});$("completionFeedback").classList.add("show");$("completionFeedback").innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Pipeline correctement distingué.":"Reprenez surtout la différence entre index discret, vecteur et contexte.")});
 $("resetCompletion").addEventListener("click",()=>{document.querySelectorAll("#completer [data-answer]").forEach(s=>s.value="");$("completionFeedback").classList.remove("show")});
