@@ -462,261 +462,327 @@ html.projector .journey-card .k{color:#245c62!important}
  document.documentElement.dataset.storageMode=window.LATENT_STORAGE.mode;
 })();
 </script>
+<style data-p0-manipulation-first="v2">
+.micro-lab{border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));background:linear-gradient(135deg,color-mix(in srgb,var(--soft) 45%,var(--panel)),var(--panel));border-radius:18px;padding:18px}
+.micro-lab h3{margin:0 0 6px}.micro-lab>p{margin-top:0;color:var(--muted)}
+.prediction-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.prediction-card{border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:13px;min-width:0}
+.prediction-card strong{display:block;margin-bottom:5px}.prediction-card p{margin:0 0 10px;color:var(--muted);font-size:.84rem}
+.prediction-card select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px}
+.prediction-card.correct{border-color:var(--green)}.prediction-card.wrong{border-color:var(--red)}
+.micro-feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:11px;background:var(--panel2);line-height:1.5}
+.micro-feedback.show{display:block}.micro-feedback b{color:var(--accent2)}
+.core-terms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.core-term{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px}
+.core-term .mini{display:inline-flex;margin-bottom:7px;padding:3px 7px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:.68rem;font-weight:950}
+.core-term h3{margin:0 0 6px}.core-term p{margin:0;color:var(--muted)}
+.mission-box{display:grid;gap:10px}.mission-box select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:10px}
+.capability-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.capability{padding:10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:.82rem}
+.capability.on{border-color:var(--green);background:var(--greenSoft);color:var(--green)}
+.family-lab{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:14px}
+.family-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.family-btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:11px;text-align:left;font-weight:850}
+.family-btn:disabled{opacity:.42}.family-btn:hover:not(:disabled),.family-btn:focus-visible{border-color:var(--accent)}
+.path-builder{display:grid;gap:7px}
+.path-slot{min-height:48px;border:1px dashed var(--strong);border-radius:10px;padding:10px 12px;display:flex;align-items:center;color:var(--muted)}
+.path-slot.filled{border-style:solid;border-color:var(--accent2);background:var(--cyan);color:var(--text);font-weight:850}
+.depth-note{margin-top:12px;border-left:4px solid var(--accent2);padding:11px 13px;background:var(--cyan);border-radius:10px}
+.optional-depth{margin-top:12px;border:1px solid var(--line);border-radius:13px;background:var(--panel)}
+.optional-depth summary{cursor:pointer;padding:13px 15px;font-weight:900}
+.optional-depth>div{padding:0 15px 15px}
+.advanced-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.advanced-card{padding:11px;border-radius:10px;background:var(--panel2)}
+.advanced-card b{display:block;margin-bottom:4px}.advanced-card p{margin:0;color:var(--muted);font-size:.82rem}
+.p0-pilot-note{padding:11px 13px;border-radius:11px;background:var(--amberSoft);color:var(--amber);font-weight:800}
+@media(max-width:760px){.prediction-grid,.core-terms,.capability-list,.family-lab,.advanced-grid{grid-template-columns:1fr}.family-buttons{grid-template-columns:1fr}}
+html.projector .micro-lab,html.projector .prediction-card,html.projector .core-term,html.projector .advanced-card,html.projector .path-slot{background:#fff!important;color:#000!important;border-color:#8c989b!important}
+</style>
 </head>
 <body><a class="skip-link" href="#mainContent">Passer au contenu</a>
 <button class="projector-exit" id="projectorExit" type="button" aria-label="Quitter le mode projection">✕ Quitter · Échap</button>
 <main class="wrap" id="mainContent">
 <div class="top"><a class="back" href="../index.html#parcours">← Formation LLM</a><div class="tools"><button class="tool" id="themeBtn" type="button">◐ Thème</button><button class="tool" id="trainerBtn" type="button" aria-pressed="false">◆ Activer mode formateur</button><button class="tool" id="projectorBtn" type="button" aria-pressed="false">▣ Activer projection</button></div></div>
-<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Questions à poser, erreurs attendues, critères de réussite et pistes de débrief sont affichés.</div>
+<div class="trainer-banner" role="status"><strong>◆ Mode formateur actif</strong> Les relances et critères d'observation du pilote V2 sont visibles.</div>
 
 <section class="hero">
-<div><div class="eyebrow">Parcours 0 · Fondamentaux · NOVICE-FIRST</div><h1>Situer les LLM sans jargon caché</h1><p class="lead">Avant de parler de tokens, d’attention ou de RAG, il faut construire une carte mentale simple : <strong>qu’est-ce qui est un domaine, une méthode, un modèle ou une application ?</strong> Ce module part de zéro et ne suppose aucune connaissance technique préalable.</p>
-<div class="statusline"><span class="badge good">Module pilote novice-ready</span><span class="badge">≈ 45–60 min</span><span class="badge">Aucun prérequis technique</span></div></div>
-<aside class="hero-card"><b>Mission</b><p>À la fin, si quelqu’un dit « ChatGPT est un LLM qui connaît Internet et apprend tout ce qu’on lui écrit », vous devez pouvoir séparer précisément ce qui relève du modèle, de l’application, du contexte et des outils — sans réciter une définition apprise par cœur.</p></aside>
+<div><div class="eyebrow">Parcours 0 · Fondamentaux · PILOTE NOVICE-FIRST V2</div><h1>Comprendre ce qui se cache derrière un assistant IA</h1><p class="lead">On ne commence plus par douze définitions. Vous allez d'abord <strong>faire des choix, modifier un système et observer ce qui change</strong>. Les mots techniques arriveront seulement lorsqu'ils deviennent utiles.</p>
+<div class="statusline"><span class="badge good">Manipulation-first</span><span class="badge">≈ 45–60 min</span><span class="badge">Aucun prérequis technique</span></div></div>
+<aside class="hero-card"><b>Question fil rouge</b><p>Quand un assistant répond, retrouve un document, se souvient d'un prénom ou ouvre un calendrier : <strong>est-ce vraiment le LLM qui fait tout cela ?</strong></p></aside>
 </section>
 
 <section class="journey" data-pedagogy="prerequisites" aria-label="Prérequis et objectifs">
-<div class="journey-card"><div class="k">Vous devez déjà savoir</div><b>Rien de technique</b><p>Il suffit de savoir distinguer un logiciel, des données et une action utilisateur.</p></div>
-<div class="journey-card"><div class="k">Vous allez apprendre</div><b>4 distinctions structurantes</b><p>IA ≠ chatbot · LLM ≠ application · paramètres ≠ documents · open weights ≠ open source.</p></div>
-<div class="journey-card" data-success-criterion="v1"><div class="k">Critère de réussite</div><b>Expliquer sans la page</b><p>Vous saurez classer un système inconnu et justifier votre choix avec le bon vocabulaire.</p></div>
+<div class="journey-card"><div class="k">Point de départ</div><b>Aucune connaissance IA requise</b><p>Vous connaissez déjà des applications, des fichiers et des services web : cela suffit.</p></div>
+<div class="journey-card"><div class="k">Méthode</div><b>Faire avant de nommer</b><p>Chaque notion centrale naît d'une prédiction, d'une action et d'un résultat observable.</p></div>
+<div class="journey-card" data-success-criterion="v1"><div class="k">Réussite</div><b>Expliquer d'où vient une capacité</b><p>Vous saurez distinguer modèle, application, mémoire, recherche et outil dans un système inconnu.</p></div>
 </section>
 
-<section class="section" data-pedagogy="intuition" id="intuition">
-<div class="section-head"><div class="num">01</div><div><h2>Pourquoi tant de mots différents ?</h2><p>Parce qu’ils ne parlent pas du même niveau d’un système.</p></div></div>
-<div class="grid2">
-<div class="panel lesson">
-<div class="intuition"><strong>Intuition</strong> Imaginez un service de restauration. « Cuisine » désigne un domaine. « Cuisson sous vide » est une technique. « Four » est un composant. « Restaurant » est le système complet avec salle, menu, personnel et réservation. En IA, mélanger <em>LLM</em>, <em>chatbot</em> et <em>application</em> revient au même type de confusion.</div>
-<p>Le mot <strong>IA</strong> est très large. Il englobe de nombreuses façons de construire des systèmes capables de produire des décisions, classifications, recommandations, textes, images ou actions. Un LLM n’est donc pas « toute l’IA ».</p>
-<p>Le mot <strong>application</strong> est à l’autre extrémité : c’est souvent ce que voit l’utilisateur. Elle peut contenir un modèle, mais aussi une interface, des règles, une mémoire externe, une base documentaire ou des outils.</p>
+<section class="section" data-pedagogy="intuition" id="premier-defi" data-manipulation="meaningful">
+<div class="section-head"><div class="num">01</div><div><h2>Premier défi — qui fait réellement quoi ?</h2><p>Répondez avant toute définition. Le but est de révéler votre intuition de départ.</p></div></div>
+<div class="micro-lab">
+<h3>Assistant scolaire fictif</h3><p>Imaginez un chat qui utilise un modèle de langage. Pour chaque capacité, choisissez l'explication la plus plausible. Vous pourrez vous tromper : le feedback sert précisément à construire la distinction.</p>
+<div class="prediction-grid" id="originGrid">
+<article class="prediction-card" data-answer="model"><strong>Rédiger une reformulation</strong><p>L'assistant reformule un paragraphe déjà présent dans la conversation.</p><select aria-label="Origine de la reformulation"><option value="">Je prédis…</option><option value="model">Le modèle de langage peut produire le texte</option><option value="external">Il faut forcément un composant externe</option><option value="unknown">Impossible à savoir</option></select></article>
+<article class="prediction-card" data-answer="external"><strong>Retrouver le règlement actuel</strong><p>Le règlement a été modifié hier et n'apparaît pas dans la conversation.</p><select aria-label="Origine de la recherche documentaire"><option value="">Je prédis…</option><option value="model">Le modèle seul suffit forcément</option><option value="external">Un accès au document / une recherche est nécessaire</option><option value="unknown">Le nombre de paramètres suffit à répondre</option></select></article>
+<article class="prediction-card" data-answer="external"><strong>Se souvenir demain du prénom</strong><p>La conversation est fermée puis rouverte le lendemain.</p><select aria-label="Origine de la mémoire persistante"><option value="">Je prédis…</option><option value="model">Les poids changent automatiquement</option><option value="external">Il faut un stockage ou une mémoire applicative</option><option value="unknown">La taille du contexte rend la mémoire permanente</option></select></article>
+<article class="prediction-card" data-answer="external"><strong>Créer un événement calendrier</strong><p>L'assistant ajoute réellement un rendez-vous dans un agenda.</p><select aria-label="Origine de l'action calendrier"><option value="">Je prédis…</option><option value="model">Générer du texte suffit à modifier l'agenda</option><option value="external">Il faut un outil ou une fonction autorisée</option><option value="unknown">Le modèle contient le calendrier</option></select></article>
 </div>
-<div class="panel checklist">
-<div class="check"><span>①</span><div><b>Domaine</b><small>Le champ général : par exemple IA ou traitement automatique du langage.</small></div></div>
-<div class="check"><span>②</span><div><b>Méthode / famille</b><small>Une façon de construire des systèmes : machine learning, deep learning.</small></div></div>
-<div class="check"><span>③</span><div><b>Modèle</b><small>Un objet numérique paramétré qui transforme des entrées en sorties.</small></div></div>
-<div class="check"><span>④</span><div><b>Application</b><small>Le produit complet utilisé par une personne, éventuellement enrichi de mémoire, RAG ou outils.</small></div></div>
+<div class="actions"><button class="primary" id="checkOrigins" type="button">Vérifier mes prédictions</button><button class="secondary" id="resetOrigins" type="button">Recommencer</button></div>
+<div class="micro-feedback" id="originFeedback" role="status" aria-live="polite"></div>
 </div>
-</div>
-<div class="trainer-only trainer-box"><b>Débrief formateur.</b> Vérifier que le stagiaire ne cherche pas encore une hiérarchie parfaite. L’objectif de cette première section est seulement de comprendre qu’on mélange souvent des niveaux différents.</div>
+<div class="trainer-only trainer-box"><b>À observer.</b> Ne corriger aucun vocabulaire avant le clic. Demander ensuite : « Quelles capacités semblent appartenir au générateur de texte, et lesquelles exigent quelque chose autour ? »</div>
 </section>
 
 <section class="section" data-pedagogy="definition" id="definitions">
-<div class="section-head"><div class="num">02</div><div><h2>Les définitions utiles — une par une</h2><p>Chaque terme est défini avant d’être utilisé dans les activités.</p></div></div>
-<div class="grid3">
-<article class="panel lesson"><span hidden data-ref="A01"></span><strong>Intelligence artificielle — IA</strong><p>Champ qui regroupe des systèmes capables de produire des sorties — prédictions, décisions, contenus ou actions — à partir d’entrées et d’objectifs.</p><p class="muted"><b>À ne pas conclure :</b> IA ne signifie pas forcément apprentissage automatique, génération de texte ou chatbot.</p></article>
-<article class="panel lesson"><span hidden data-ref="A02"></span><strong>Machine learning — ML</strong><p>Famille de méthodes où le comportement d’un modèle est ajusté à partir de données plutôt que décrit uniquement par des règles écrites à la main.</p><p class="muted"><b>À ne pas conclure :</b> tout système d’IA n’est pas nécessairement du ML.</p></article>
-<article class="panel lesson"><span hidden data-ref="A03"></span><strong>Deep learning</strong><p>Famille de machine learning fondée sur des réseaux neuronaux comportant plusieurs couches de transformations apprises.</p><p class="muted"><b>Attention :</b> « deep » décrit ici la profondeur du réseau, pas une « pensée plus profonde ».</p></article>
-<article class="panel lesson"><span hidden data-ref="A04"></span><strong>TAL / NLP</strong><p>Le traitement automatique du langage étudie et construit des systèmes qui analysent, transforment ou génèrent du langage humain.</p><p class="muted"><b>Repère historique :</b> le TAL existait bien avant les LLM modernes.</p></article>
-<article class="panel lesson"><span hidden data-ref="A05"></span><strong>IA générative</strong><p>Famille de systèmes conçus pour produire de nouveaux contenus : texte, image, audio, vidéo, code, etc.</p><p class="muted"><b>À ne pas conclure :</b> « génératif » ne veut pas dire « LLM » ; un générateur d’images n’est pas forcément un modèle de langage.</p></article>
-<article class="panel lesson"><span hidden data-ref="A06"></span><strong>Modèle de langage</strong><p>Modèle qui attribue des probabilités à des séquences de langage ou à des continuations possibles.</p><p class="muted"><b>Important :</b> les modèles de langage existaient avant les grands réseaux neuronaux actuels.</p></article>
-<article class="panel lesson"><span hidden data-ref="A07"></span><strong>LLM</strong><p><em>Large Language Model</em> : modèle de langage neuronal de grande échelle, entraîné sur de vastes corpus et capable de nombreuses tâches de langage.</p><p class="muted"><b>À ne pas conclure :</b> un LLM n’est pas automatiquement une application de chat complète.</p></article>
-<article class="panel lesson"><span hidden data-ref="A08"></span><strong>Foundation model</strong><p>Modèle entraîné à grande échelle et pouvant être adapté à un large éventail de tâches en aval.</p><p class="muted"><b>Nuance :</b> notion plus large qu’un LLM ; tous les foundation models ne sont pas nécessairement des modèles de texte.</p></article>
-<article class="panel lesson"><span hidden data-ref="A09"></span><strong>GPAI</strong><p>Dans le règlement européen sur l’IA, un <em>general-purpose AI model</em> est une <strong>Catégorie juridique européenne</strong> pour certains modèles à usage général.</p><p class="muted"><b>Nuance :</b> GPAI n’est pas une taxonomie scientifique universelle.</p></article>
-<article class="panel lesson"><span hidden data-ref="A10"></span><strong>Modèle ≠ chatbot ≠ application</strong><p>Le modèle est un composant appris. Le chatbot est une interface conversationnelle. L’application peut ajouter mémoire, RAG, outils, règles et données.</p><p class="muted"><span hidden>Model ≠ chatbot ≠ application</span><b>Question utile :</b> « Cette capacité vient-elle des poids du modèle ou d’un composant autour ? »</p></article>
-<article class="panel lesson"><span hidden data-ref="A11"></span><strong>Paramètres / poids</strong><p>Valeurs numériques apprises pendant l’entraînement. Elles déterminent les transformations internes du réseau.</p><p class="muted"><b>À ne pas conclure :</b> ce n’est pas une bibliothèque de documents que le modèle relit mot à mot.</p></article>
-<article class="panel lesson"><span hidden data-ref="A12"></span><strong>Open weights / open source</strong><p>« Open weights » signifie que les poids sont accessibles selon certaines conditions. « Open source » implique une analyse plus large des droits, du code et des éléments fournis.</p><p class="muted"><b>Repère :</b> Gratuit ≠ libre.</p></article>
+<div class="section-head"><div class="num">02</div><div><h2>Mettons quatre noms sur ce que vous venez d'observer</h2><p>Seulement les mots nécessaires pour comprendre le défi précédent.</p></div></div>
+<div class="core-terms">
+<article class="core-term"><span class="mini">NIVEAU 1</span><h3>Application</h3><p>Le produit complet utilisé par une personne. Il peut assembler interface, modèle, mémoire, documents, outils et règles.</p></article>
+<article class="core-term"><span class="mini">NIVEAU 2</span><h3>Modèle</h3><p>Un composant appris qui transforme des entrées en sorties. Ici, il produit notamment du langage.</p></article>
+<article class="core-term"><span class="mini">TYPE DE MODÈLE</span><h3>LLM</h3><p><em>Large Language Model</em> : grand modèle de langage neuronal. Un LLM peut être le moteur linguistique d'une application sans être toute l'application.</p></article>
+<article class="core-term"><span class="mini">AUTOUR DU MODÈLE</span><h3>Composant externe</h3><p>Mémoire, recherche documentaire ou outil appelé par l'application. Ces composants peuvent donner des capacités que les poids du modèle n'offrent pas seuls.</p></article>
 </div>
+<div class="depth-note"><strong>Phrase repère :</strong> « Le LLM produit et transforme du langage ; l'application décide aussi de ce qu'elle lui donne et de ce qu'elle l'autorise à utiliser. »</div>
 </section>
 
 <section class="section" data-pedagogy="worked-example" id="exemple">
-<div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé pas à pas</h2><p>Nous allons classer un assistant scolaire fictif sans sauter d’étape.</p></div></div>
-<div class="panel">
-<p><strong>Situation.</strong> Une application appelée <em>Watteau Copilot</em> propose un chat. Elle utilise un grand modèle de langage, cherche dans le règlement intérieur du lycée, conserve le nom de l’élève dans un profil local et peut ouvrir le calendrier scolaire.</p>
-<div class="steps">
-<div class="step"><div class="n">1</div><div><h3>Identifier le produit visible</h3><p>Ce que l’utilisateur ouvre est une <strong>application</strong>.</p><div class="why"><b>Pourquoi ?</b> Parce qu’il y a une interface, une logique produit et plusieurs composants assemblés.</div></div></div>
-<div class="step"><div class="n">2</div><div><h3>Repérer le modèle</h3><p>L’application appelle un <strong>LLM</strong> pour produire et interpréter du texte.</p><div class="why"><b>Pourquoi ?</b> Le modèle est le composant appris qui traite le langage ; il n’est pas l’ensemble de l’application.</div></div></div>
-<div class="step"><div class="n">3</div><div><h3>Classer le LLM</h3><p>Un LLM moderne relève du <strong>deep learning</strong>, qui est une famille du <strong>machine learning</strong>, lui-même situé dans le champ plus large de l’<strong>IA</strong>.</p><div class="why"><b>Attention :</b> cette chaîne ne signifie pas que toutes les notions du module s’emboîtent de la même manière.</div></div></div>
-<div class="step"><div class="n">4</div><div><h3>Localiser la recherche documentaire</h3><p>La recherche dans le règlement intérieur est une capacité de l’<strong>application</strong> — typiquement un mécanisme de retrieval/RAG — qui fournit ensuite du contexte au modèle.</p><div class="why"><b>Pourquoi ?</b> Les poids du LLM ne sont pas une connexion vivante au document du lycée.</div></div></div>
-<div class="step"><div class="n">5</div><div><h3>Localiser la mémoire</h3><p>Le profil local qui conserve le nom est une <strong>mémoire applicative</strong>.</p><div class="why"><b>Pourquoi ?</b> Stocker une donnée utilisateur hors du modèle ne signifie pas modifier les paramètres du réseau.</div></div></div>
-<div class="step"><div class="n">6</div><div><h3>Localiser l’outil calendrier</h3><p>Ouvrir un calendrier est une action exécutée par un <strong>outil</strong> relié à l’application.</p><div class="why"><b>Conclusion :</b> voir le chatbot utiliser un calendrier ne prouve pas que le LLM « contient » le calendrier.</div></div></div>
-</div>
-<div class="example-result">Résultat : application = interface + logique + LLM + recherche documentaire + mémoire externe + outil calendrier. Chacun de ces éléments joue un rôle différent.</div>
+<div class="section-head"><div class="num">03</div><div><h2>Exemple travaillé — expliquer une capacité sans magie</h2><p>On reprend une seule situation et on déroule le raisonnement.</p></div></div>
+<div class="panel steps">
+<div class="step"><div class="n">1</div><div><h3>Observation</h3><p>« L'assistant cite le règlement intérieur modifié hier. »</p><div class="why"><b>Question :</b> cette information était-elle déjà fournie dans la conversation ? Non.</div></div></div>
+<div class="step"><div class="n">2</div><div><h3>Ce que le LLM peut faire</h3><p>Le modèle peut lire un passage qu'on lui fournit et rédiger une réponse à partir de ce passage.</p><div class="why"><b>Mais :</b> cela ne prouve pas qu'il possède spontanément la version d'hier.</div></div></div>
+<div class="step"><div class="n">3</div><div><h3>Ce qu'il faut autour</h3><p>L'application doit retrouver le document actuel puis placer l'extrait utile dans le contexte envoyé au modèle.</p><div class="why"><b>Nom utile :</b> recherche documentaire / retrieval ; lorsqu'elle alimente une génération, on parle souvent de RAG.</div></div></div>
+<div class="step"><div class="n">4</div><div><h3>Conclusion</h3><p>La réponse finale est produite par le modèle, mais l'accès au document actuel vient d'un composant de l'application.</p><div class="why"><b>Erreur évitée :</b> « le LLM contient le règlement en temps réel ».</div></div></div>
 </div>
 </section>
 
-<section class="section" data-pedagogy="guided-practice" id="carte">
-<div class="section-head"><div class="num">04</div><div><h2>Concept Map Lab — explorer avec une consigne</h2><p>Avant de cliquer, faites une prédiction : « LLM » est-il plus proche d’un domaine, d’une méthode, d’un modèle ou d’une application ? Puis vérifiez.</p></div></div>
-<div class="panel">
-<div class="map" id="conceptMap">
-<button class="node active" data-key="ai"><span class="id">Champ</span><b>Intelligence artificielle</b><small>Le domaine le plus large ici</small></button>
-<button class="node" data-key="ml"><span class="id">Famille</span><b>Machine learning</b><small>Apprentissage à partir de données</small></button>
-<button class="node" data-key="dl"><span class="id">Famille</span><b>Deep learning</b><small>Réseaux neuronaux profonds</small></button>
-<button class="node" data-key="lm"><span class="id">Modèle</span><b>Modèle de langage</b><small>Probabilités sur le langage</small></button>
-<button class="node" data-key="llm"><span class="id">Modèle</span><b>LLM</b><small>Grand modèle de langage neuronal</small></button>
-<button class="node" data-key="nlp"><span class="id">Domaine</span><b>TAL / NLP</b><small>Traitement informatique du langage</small></button>
-<button class="node" data-key="gen"><span class="id">Famille d’usage</span><b>IA générative</b><small>Génération de nouveaux contenus</small></button>
-<button class="node" data-key="foundation"><span class="id">Catégorie de modèle</span><b>Foundation model</b><small>Adaptable à de nombreuses tâches</small></button>
-<button class="node" data-key="app"><span class="id">Système</span><b>Application</b><small>Assemblage utilisé par l’utilisateur</small></button>
-<button class="node" data-key="weights"><span class="id">Composant</span><b>Paramètres</b><small>Valeurs numériques apprises</small></button>
-</div>
-<div class="detail" id="conceptDetail" aria-live="polite"></div>
-</div>
-<div class="trainer-only trainer-box"><b>Attendu.</b> Le stagiaire doit être capable de dire « un LLM est un modèle ; une application peut l’utiliser » sans recourir aux noms de produits commerciaux.</div>
-</section>
-
-<section class="section" id="systeme">
-<div class="section-head"><div class="num">05</div><div><h2>System Builder — d’où vient réellement la capacité ?</h2><p>Activez les composants un par un. Après chaque activation, dites à voix haute quelle nouvelle capacité devient possible.</p></div></div>
+<section class="section" data-pedagogy="guided-practice" id="systeme" data-manipulation="meaningful">
+<div class="section-head"><div class="num">04</div><div><h2>System Builder — construisez l'assistant capable de la mission</h2><p>Activez uniquement les composants nécessaires puis testez votre configuration.</p></div></div>
 <div class="grid2">
 <div class="panel stack">
-<div class="layer on"><span><b>Modèle LLM</b><br><small>génération et traitement du langage</small></span><button class="switch on" data-layer="model" type="button">ON</button></div>
+<div class="layer on"><span><b>Modèle LLM</b><br><small>produire / transformer du langage</small></span><button class="switch on" data-layer="model" type="button">ON</button></div>
 <div class="layer on"><span><b>Interface de chat</b><br><small>saisie et affichage</small></span><button class="switch on" data-layer="ui" type="button">ON</button></div>
-<div class="layer"><span><b>Mémoire applicative</b><br><small>stockage puis réinjection</small></span><button class="switch" data-layer="memory" type="button">OFF</button></div>
-<div class="layer"><span><b>RAG / documents</b><br><small>recherche externe</small></span><button class="switch" data-layer="rag" type="button">OFF</button></div>
-<div class="layer"><span><b>Outils</b><br><small>calcul, calendrier, API</small></span><button class="switch" data-layer="tools" type="button">OFF</button></div>
-<div class="layer"><span><b>Instructions système</b><br><small>règles de comportement</small></span><button class="switch" data-layer="system" type="button">OFF</button></div>
+<div class="layer"><span><b>Mémoire applicative</b><br><small>retrouver une donnée lors d'une session future</small></span><button class="switch" data-layer="memory" type="button">OFF</button></div>
+<div class="layer"><span><b>Recherche documentaire</b><br><small>retrouver un document externe actuel</small></span><button class="switch" data-layer="rag" type="button">OFF</button></div>
+<div class="layer"><span><b>Outils / fonctions</b><br><small>agir sur calculatrice, calendrier ou service</small></span><button class="switch" data-layer="tools" type="button">OFF</button></div>
 </div>
-<div class="system-view"><h3 id="systemTitle">Chatbot minimal</h3><p id="systemText"></p><div class="architecture" id="architecture"></div><div class="verdict" id="systemVerdict"></div></div>
+<div class="panel mission-box">
+<label for="missionSelect"><strong>Mission à réussir</strong></label>
+<select id="missionSelect"><option value="chat">Reformuler un texte déjà fourni</option><option value="docs">Répondre avec le règlement modifié aujourd'hui</option><option value="remember">Retrouver demain le prénom enregistré</option><option value="calendar">Créer réellement un rendez-vous calendrier</option></select>
+<button class="primary" id="testMission" type="button">Tester ma configuration</button>
+<div class="micro-feedback show" id="missionFeedback"><b>Commencez.</b> Choisissez une mission, modifiez le système, puis testez.</div>
+<div class="capability-list" id="capabilityList"></div>
 </div>
+</div>
+<div class="trainer-only trainer-box"><b>Relance.</b> Après chaque mission, demander : « Quel composant as-tu ajouté ? Qu'est-ce qui devient possible ? Qu'est-ce qui reste impossible ? »</div>
 </section>
 
 <section class="section" data-pedagogy="completion" id="completer">
-<div class="section-head"><div class="num">06</div><div><h2>Je complète — l’aide commence à disparaître</h2><p>Associez chaque capacité à l’élément qui l’explique le mieux.</p></div></div>
+<div class="section-head"><div class="num">05</div><div><h2>À vous — l'aide diminue</h2><p>Reliez chaque comportement au composant qui l'explique le mieux.</p></div></div>
 <div class="panel completion">
-<div class="completion-row"><strong>Retrouver le règlement intérieur actuel</strong><span class="arrow">→</span><select data-completion="rag"><option value="">Choisir…</option><option value="model">Poids du LLM</option><option value="rag">Recherche documentaire / RAG</option><option value="ui">Interface seule</option></select></div>
-<div class="completion-row"><strong>Conserver le prénom entre deux sessions</strong><span class="arrow">→</span><select data-completion="memory"><option value="">Choisir…</option><option value="memory">Mémoire applicative</option><option value="weights">Paramètres automatiquement modifiés</option><option value="nlp">TAL</option></select></div>
-<div class="completion-row"><strong>Produire une continuation textuelle</strong><span class="arrow">→</span><select data-completion="model"><option value="">Choisir…</option><option value="tool">Outil calendrier</option><option value="model">Modèle de langage</option><option value="ui">Interface</option></select></div>
-<div class="completion-row"><strong>Afficher des bulles de conversation</strong><span class="arrow">→</span><select data-completion="ui"><option value="">Choisir…</option><option value="ui">Interface</option><option value="model">LLM</option><option value="weights">Poids</option></select></div>
+<div class="completion-row"><strong>Générer une reformulation à partir du texte présent</strong><span class="arrow">→</span><select data-completion="model"><option value="">Choisir…</option><option value="model">LLM</option><option value="memory">Mémoire persistante</option><option value="tool">Calendrier</option></select></div>
+<div class="completion-row"><strong>Retrouver un fichier externe mis à jour</strong><span class="arrow">→</span><select data-completion="rag"><option value="">Choisir…</option><option value="rag">Recherche documentaire</option><option value="weights">Poids automatiquement mis à jour</option><option value="ui">Interface seule</option></select></div>
+<div class="completion-row"><strong>Conserver une préférence après fermeture de la session</strong><span class="arrow">→</span><select data-completion="memory"><option value="">Choisir…</option><option value="memory">Mémoire applicative</option><option value="model">Taille du LLM</option><option value="ui">Couleur de l'interface</option></select></div>
+<div class="completion-row"><strong>Ajouter un rendez-vous dans un agenda</strong><span class="arrow">→</span><select data-completion="tools"><option value="">Choisir…</option><option value="tools">Outil / fonction autorisée</option><option value="weights">Paramètres du modèle</option><option value="rag">Recherche seule</option></select></div>
 <div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div>
-<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
+<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite"></div>
 </div>
 </section>
 
+<section class="section" id="familles" data-manipulation="meaningful">
+<div class="section-head"><div class="num">06</div><div><h2>Family Lab — où placer un LLM dans l'IA ?</h2><p>Construisez la chaîne du plus large au plus spécifique avant de lire l'explication.</p></div></div>
+<div class="family-lab">
+<div class="panel">
+<div class="family-buttons" id="familyButtons">
+<button class="family-btn" type="button" data-family="llm">LLM</button>
+<button class="family-btn" type="button" data-family="ai">Intelligence artificielle</button>
+<button class="family-btn" type="button" data-family="dl">Deep learning</button>
+<button class="family-btn" type="button" data-family="ml">Machine learning</button>
+</div>
+<div class="actions"><button class="secondary" id="resetFamily" type="button">Effacer la chaîne</button><button class="primary" id="checkFamily" type="button">Vérifier</button></div>
+<div class="micro-feedback" id="familyFeedback" role="status" aria-live="polite"></div>
+</div>
+<div class="panel">
+<div class="path-builder" id="familyPath"><div class="path-slot">1 · le champ le plus large</div><div class="path-slot">2 · une famille de méthodes</div><div class="path-slot">3 · une sous-famille neuronale</div><div class="path-slot">4 · un type de modèle de langage</div></div>
+<div class="depth-note"><strong>Après vérification :</strong> IA → machine learning → deep learning → LLM. Cette chaîne situe les LLM modernes ; elle ne signifie pas que toute l'IA utilise du machine learning.</div>
+</div>
+</div>
+<details class="optional-depth"><summary>Approfondir seulement si vous êtes à l'aise : 8 repères supplémentaires</summary><div><div class="advanced-grid">
+<article class="advanced-card"><span hidden data-ref="A01"></span><b>IA</b><p>Champ très large regroupant des systèmes capables de produire décisions, contenus ou actions.</p></article>
+<article class="advanced-card"><span hidden data-ref="A02"></span><b>Machine learning</b><p>Méthodes où le comportement d'un modèle est ajusté à partir de données.</p></article>
+<article class="advanced-card"><span hidden data-ref="A03"></span><b>Deep learning</b><p>Machine learning utilisant des réseaux neuronaux profonds.</p></article>
+<article class="advanced-card"><span hidden data-ref="A04"></span><b>TAL / NLP</b><p>Domaine du traitement informatique du langage.</p></article>
+<article class="advanced-card"><span hidden data-ref="A05"></span><b>IA générative</b><p>Systèmes conçus pour produire de nouveaux contenus, pas seulement du texte.</p></article>
+<article class="advanced-card"><span hidden data-ref="A06"></span><b>Modèle de langage</b><p>Modèle attribuant des scores ou probabilités à des séquences ou continuations.</p></article>
+<article class="advanced-card"><span hidden data-ref="A07"></span><b>LLM</b><p>Grand modèle de langage neuronal ; tous les modèles de langage ne sont pas des LLM modernes.</p></article>
+<article class="advanced-card"><span hidden data-ref="A08"></span><b>Foundation model</b><p>Modèle de grande échelle réutilisable pour de nombreuses tâches ; catégorie plus large que LLM.</p></article>
+<article class="advanced-card"><span hidden data-ref="A09"></span><b>GPAI</b><p>Catégorie juridique européenne concernant certains modèles d'IA à usage général.</p></article>
+<article class="advanced-card"><span hidden data-ref="A10"></span><b>Modèle ≠ chatbot ≠ application</b><p>Le modèle est un composant appris ; l'application assemble plusieurs briques.</p></article>
+<article class="advanced-card"><span hidden data-ref="A11"></span><b>Paramètres / poids</b><p>Valeurs numériques apprises ; pas une bibliothèque de documents adressables.</p></article>
+<article class="advanced-card"><span hidden data-ref="A12"></span><b>Open weights / open source</b><p>Poids accessibles et open source ne sont pas des synonymes ; la licence et les éléments fournis comptent.</p></article>
+</div></div></details>
+</section>
+
 <section class="section" data-pedagogy="misconception" id="pieges">
-<div class="section-head"><div class="num">07</div><div><h2>Quatre confusions séduisantes à démonter</h2><p>Une bonne formation ne donne pas seulement la bonne réponse : elle montre pourquoi les mauvaises intuitions paraissent plausibles.</p></div></div>
+<div class="section-head"><div class="num">07</div><div><h2>Quatre pièges à mettre en défaut</h2><p>Relisez-les en cherchant quel micro-lab apporte déjà un contre-exemple.</p></div></div>
 <div class="misgrid">
-<article class="mis"><div class="wrong">« ChatGPT = le LLM »</div><p>On voit le produit final et on donne son nom à tout le système.</p><div class="right">Correction : une application conversationnelle peut associer modèle, interface, outils, mémoire et recherche.</div></article>
-<article class="mis"><div class="wrong">« Le modèle connaît mes documents parce qu’il les cite »</div><p>La réponse semble venir “de l’intérieur” du modèle.</p><div class="right">Correction : une application peut récupérer les documents puis les injecter dans le contexte sans changer les poids.</div></article>
-<article class="mis"><div class="wrong">« Les paramètres sont une base de données compressée »</div><p>Comme le modèle restitue des informations, on imagine des fiches stockées.</p><div class="right">Correction : les poids sont des valeurs numériques apprises ; ils ne fonctionnent pas comme une collection de documents adressables.</div></article>
-<article class="mis"><div class="wrong">« Open weights = open source »</div><p>Si les poids sont téléchargeables, on suppose que tout est ouvert.</p><div class="right">Correction : l’ouverture dépend aussi des licences et des éléments fournis. Open weights n’est pas un synonyme d’open source.</div></article>
+<article class="mis"><div class="wrong">« Le chatbot = le LLM »</div><p>Le produit visible peut ajouter mémoire, recherche et outils.</p><div class="right">Test : désactivez ces composants dans le System Builder.</div></article>
+<article class="mis"><div class="wrong">« S'il cite un document actuel, il est dans ses poids »</div><p>Le document peut avoir été retrouvé puis injecté au moment de la requête.</p><div class="right">Test : mission « règlement modifié aujourd'hui ».</div></article>
+<article class="mis"><div class="wrong">« Se souvenir = apprendre de nouveaux poids »</div><p>Une application peut stocker une donnée puis la réinjecter plus tard.</p><div class="right">Test : mission « retrouver demain le prénom ».</div></article>
+<article class="mis"><div class="wrong">« Open weights = open source = gratuit »</div><p>Accès aux poids, licence, code et prix sont des dimensions différentes.</p><div class="right">Correction : préciser exactement ce qui est ouvert et sous quelles conditions.</div></article>
 </div>
 </section>
 
 <section class="section" data-pedagogy="self-explanation" id="expliquer">
-<div class="section-head"><div class="num">08</div><div><h2>Expliquez avec vos mots</h2><p>Écrire une explication oblige à reconstruire le modèle mental, au lieu de simplement reconnaître une bonne réponse.</p></div></div>
-<div class="panel selfbox">
-<label for="explainText"><strong>Consigne.</strong> En 4 à 6 phrases, expliquez à un collègue pourquoi « le chatbot peut chercher sur le web » ne signifie pas forcément « le LLM contient le web en temps réel ».</label>
-<textarea id="explainText" placeholder="Écrivez votre explication ici…"></textarea>
-<div class="criteria">
-<label><input type="checkbox"> J’ai distingué le modèle de l’application.</label>
-<label><input type="checkbox"> J’ai expliqué le rôle possible d’un outil ou d’un mécanisme de recherche.</label>
-<label><input type="checkbox"> J’ai évité de dire que les paramètres sont une base documentaire vivante.</label>
-<label><input type="checkbox"> Mon explication pourrait être comprise sans connaître le mot RAG.</label>
-</div>
-<div class="trainer-only trainer-box"><b>Critère de réussite.</b> L’explication est conceptuellement correcte même si le stagiaire n’utilise pas tous les termes techniques. On cherche d’abord un modèle mental juste.</div>
-</div>
+<div class="section-head"><div class="num">08</div><div><h2>Expliquez le système avec vos mots</h2><p>Reconstruisez le raisonnement, sans recopier une définition.</p></div></div>
+<div class="panel selfbox"><label for="explainText"><strong>Consigne.</strong> Un camarade affirme : « Puisque le chatbot peut consulter le règlement et créer un rendez-vous, tout cela est forcément dans le LLM. » Répondez-lui en 4 à 6 phrases.</label><textarea id="explainText" placeholder="Votre explication…"></textarea><div class="criteria"><label><input type="checkbox"> J'ai distingué l'application du modèle.</label><label><input type="checkbox"> J'ai expliqué le rôle d'une recherche documentaire.</label><label><input type="checkbox"> J'ai expliqué pourquoi agir sur un calendrier demande un outil.</label><label><input type="checkbox"> J'ai évité de dire que toute capacité visible vient des poids.</label></div></div>
 </section>
 
 <section class="section" data-pedagogy="retrieval" id="quiz">
-<div class="section-head"><div class="num">09</div><div><h2>Test de maîtrise — récupération active</h2><p>Répondez sans revenir aux définitions. Le feedback explique ensuite le raisonnement attendu.</p></div></div>
+<div class="section-head"><div class="num">09</div><div><h2>Test de maîtrise — sans remonter la page</h2><p>Le feedback explique le raisonnement, pas seulement la réponse.</p></div></div>
 <form class="quiz" id="quizForm">
-<fieldset class="q" data-answer="b"><legend>1. Un LLM est avant tout…</legend><label><input type="radio" name="q1" value="a"> une application de chat complète.</label><label><input type="radio" name="q1" value="b"> un modèle de langage neuronal de grande échelle.</label><label><input type="radio" name="q1" value="c"> une base documentaire.</label><div class="feedback" data-pedagogy="feedback"><b>Pourquoi ?</b> Le LLM est le modèle. Une application peut ensuite lui ajouter une interface, des outils, une mémoire ou des documents.</div></fieldset>
-<fieldset class="q" data-answer="c"><legend>2. Un assistant ouvre un calendrier. On peut en conclure que…</legend><label><input type="radio" name="q2" value="a"> tous les LLM contiennent un calendrier.</label><label><input type="radio" name="q2" value="b"> le calendrier est stocké dans les poids.</label><label><input type="radio" name="q2" value="c"> l’application peut avoir donné accès à un outil calendrier.</label><div class="feedback"><b>Pourquoi ?</b> Une capacité du produit peut venir d’un composant externe au modèle.</div></fieldset>
-<fieldset class="q" data-answer="a"><legend>3. Les paramètres d’un modèle sont…</legend><label><input type="radio" name="q3" value="a"> des valeurs numériques apprises pendant l’entraînement.</label><label><input type="radio" name="q3" value="b"> la liste exacte de tous les documents appris.</label><label><input type="radio" name="q3" value="c"> le contenu de la conversation actuelle.</label><div class="feedback"><b>Pourquoi ?</b> Paramètres et contexte sont distincts : la conversation courante peut changer sans modifier les poids du modèle.</div></fieldset>
-<fieldset class="q" data-answer="b"><legend>4. « Open weights » signifie au minimum que…</legend><label><input type="radio" name="q4" value="a"> tout le système est open source.</label><label><input type="radio" name="q4" value="b"> les poids sont accessibles selon les conditions annoncées.</label><label><input type="radio" name="q4" value="c"> le service est gratuit.</label><div class="feedback"><b>Pourquoi ?</b> L’ouverture est multidimensionnelle : poids, code, licence, données/documentation et droits doivent être distingués.</div></fieldset>
-<fieldset class="q" data-answer="c"><legend>5. GPAI est ici surtout…</legend><label><input type="radio" name="q5" value="a"> un algorithme de tokenisation.</label><label><input type="radio" name="q5" value="b"> un synonyme scientifique universel de foundation model.</label><label><input type="radio" name="q5" value="c"> une catégorie juridique du cadre européen de l’IA.</label><div class="feedback"><b>Pourquoi ?</b> Une catégorie juridique et une catégorie scientifique peuvent se recouvrir partiellement sans être synonymes.</div></fieldset>
-<fieldset class="q" data-answer="b"><legend>6. Un modèle de langage historique à n-grammes…</legend><label><input type="radio" name="q6" value="a"> est nécessairement un LLM moderne.</label><label><input type="radio" name="q6" value="b"> montre que la notion de modèle de langage est plus ancienne que les LLM.</label><label><input type="radio" name="q6" value="c"> est une application de chat.</label><div class="feedback"><b>Pourquoi ?</b> « Modèle de langage » est une catégorie plus large et plus ancienne ; LLM désigne un sous-ensemble moderne à grande échelle.</div></fieldset>
-<div class="actions"><button class="primary" type="submit">Corriger le test</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
+<fieldset class="q" data-answer="b"><legend>1. Dans un assistant complet, le LLM est généralement…</legend><label><input type="radio" name="q1" value="a"> toute l'application.</label><label><input type="radio" name="q1" value="b"> un composant appris utilisé par l'application.</label><label><input type="radio" name="q1" value="c"> la mémoire persistante.</label><div class="feedback" data-pedagogy="feedback">Le modèle produit ou transforme notamment du langage ; l'application orchestre aussi interface, données, mémoire et outils.</div></fieldset>
+<fieldset class="q" data-answer="c"><legend>2. Le règlement a changé ce matin. Quel mécanisme permet le plus directement d'utiliser la nouvelle version ?</legend><label><input type="radio" name="q2" value="a"> augmenter la taille de la police.</label><label><input type="radio" name="q2" value="b"> supposer que les poids se mettent à jour seuls.</label><label><input type="radio" name="q2" value="c"> retrouver le document actuel puis le fournir au modèle.</label><div class="feedback">Une recherche documentaire peut donner au modèle un contexte à jour sans réentraîner ses poids.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>3. Une application se souvient demain de votre préférence. Cela prouve que…</legend><label><input type="radio" name="q3" value="a"> le LLM a été réentraîné pendant la nuit.</label><label><input type="radio" name="q3" value="b"> l'application peut avoir stocké puis réinjecté cette donnée.</label><label><input type="radio" name="q3" value="c"> la fenêtre de contexte est infinie.</label><div class="feedback">La persistance peut être gérée hors du modèle par un stockage applicatif.</div></fieldset>
+<fieldset class="q" data-answer="a"><legend>4. Quelle chaîne situe correctement un LLM moderne ?</legend><label><input type="radio" name="q4" value="a"> IA → machine learning → deep learning → LLM.</label><label><input type="radio" name="q4" value="b"> LLM → IA → chatbot → deep learning.</label><label><input type="radio" name="q4" value="c"> application → IA → poids → Internet.</label><div class="feedback">Le LLM moderne est un type de modèle de deep learning ; le deep learning appartient au machine learning, dans le champ plus large de l'IA.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>5. Des poids téléchargeables permettent-ils à eux seuls d'affirmer « open source » ?</legend><label><input type="radio" name="q5" value="a"> Oui, automatiquement.</label><label><input type="radio" name="q5" value="b"> Non, il faut examiner licence et éléments réellement fournis.</label><div class="feedback">« Open weights » décrit l'accès aux poids ; le statut open source demande davantage d'informations.</div></fieldset>
+<fieldset class="q" data-answer="b"><legend>6. « Modèle de langage » et « LLM moderne » sont-ils strictement synonymes ?</legend><label><input type="radio" name="q6" value="a"> Oui.</label><label><input type="radio" name="q6" value="b"> Non, les modèles de langage existent sous des formes plus larges et plus anciennes.</label><div class="feedback">LLM désigne une famille moderne de grands modèles neuronaux de langage, pas toute l'histoire des modèles de langage.</div></fieldset>
+<div class="actions"><button class="primary" type="submit">Corriger</button><button class="secondary" type="button" id="resetQuiz">Réinitialiser</button><span class="scorebox" id="quizScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
 </form>
 </section>
 
 <section class="section" data-pedagogy="transfer" id="transfert">
-<div class="section-head"><div class="num">10</div><div><h2>Transfert — une nouvelle situation</h2><p>Cette fois, le vocabulaire change. Vous devez reconnaître la structure, pas mémoriser les exemples précédents.</p></div></div>
+<div class="section-head"><div class="num">10</div><div><h2>Transfert — quatre situations nouvelles</h2><p>Les exemples changent ; le raisonnement reste le même.</p></div></div>
 <div class="transfer">
-<article class="transfer-card" data-answer="app"><h3>Studio créatif</h3><p>Un site génère des images, conserve vos projets, exporte en PNG et permet d’appeler un éditeur externe.</p><label>Quel niveau décrit le mieux le site complet ?</label><select><option value="">Choisir…</option><option value="model">Un seul modèle</option><option value="app">Une application composée de plusieurs composants</option><option value="weights">Des poids</option></select><div class="transfer-feedback">Le site complet est une application. Il peut utiliser un ou plusieurs modèles, du stockage et des outils.</div></article>
-<article class="transfer-card" data-answer="gen"><h3>Générateur de musique</h3><p>Un système produit un morceau audio à partir d’une description textuelle.</p><label>Quelle catégorie est certaine à partir de cette seule information ?</label><select><option value="">Choisir…</option><option value="llm">C’est forcément un LLM</option><option value="gen">C’est un système d’IA générative</option><option value="nlp">C’est uniquement du TAL</option></select><div class="transfer-feedback">Produire un nouveau contenu audio relève de l’IA générative ; rien ne permet d’affirmer que le cœur est un LLM.</div></article>
-<article class="transfer-card" data-answer="ml"><h3>Détection de fraude</h3><p>Un modèle est entraîné sur des transactions passées pour classer de nouvelles opérations.</p><label>Quelle famille est directement décrite ?</label><select><option value="">Choisir…</option><option value="ml">Machine learning</option><option value="llm">LLM</option><option value="app">Chatbot</option></select><div class="transfer-feedback">Le système apprend à partir de données : c’est du machine learning. Aucun élément n’impose un LLM.</div></article>
-<article class="transfer-card" data-answer="openweights"><h3>Modèle téléchargeable</h3><p>Une entreprise publie ses poids sous une licence spécifique mais ne fournit pas tous les éléments de développement.</p><label>Quelle formulation est la plus prudente ?</label><select><option value="">Choisir…</option><option value="opensource">Forcément open source</option><option value="openweights">Open weights ; vérifier la licence et les autres éléments</option><option value="free">Forcément libre car téléchargeable</option></select><div class="transfer-feedback">L’accès aux poids est une information précise ; le statut open source demande une analyse plus large.</div></article>
+<article class="transfer-card" data-answer="app"><h3>Studio créatif</h3><p>Un site génère des images, garde vos projets et appelle un éditeur externe.</p><label>Le site complet est surtout…</label><select><option value="">Choisir…</option><option value="model">un seul modèle</option><option value="app">une application qui assemble plusieurs composants</option><option value="weights">des poids</option></select><div class="transfer-feedback">Le produit visible assemble génération, stockage et outil externe.</div></article>
+<article class="transfer-card" data-answer="gen"><h3>Musique</h3><p>Un système produit un morceau audio à partir d'une description.</p><label>Que peut-on affirmer avec certitude ?</label><select><option value="">Choisir…</option><option value="llm">c'est forcément un LLM</option><option value="gen">c'est un système génératif</option><option value="chat">c'est forcément un chatbot</option></select><div class="transfer-feedback">Produire un nouveau contenu relève du génératif ; rien n'impose un LLM textuel.</div></article>
+<article class="transfer-card" data-answer="ml"><h3>Fraude</h3><p>Un modèle est ajusté sur des transactions passées pour classer de nouvelles opérations.</p><label>Quelle famille est directement décrite ?</label><select><option value="">Choisir…</option><option value="ml">machine learning</option><option value="llm">LLM</option><option value="app">chatbot</option></select><div class="transfer-feedback">Le comportement est ajusté à partir de données : c'est du machine learning.</div></article>
+<article class="transfer-card" data-answer="openweights"><h3>Modèle téléchargeable</h3><p>Une entreprise publie les poids sous une licence précise mais pas tous les éléments de développement.</p><label>Quelle formulation est prudente ?</label><select><option value="">Choisir…</option><option value="opensource">forcément open source</option><option value="openweights">open weights ; examiner licence et éléments fournis</option><option value="free">forcément libre et gratuit</option></select><div class="transfer-feedback">L'accès aux poids ne suffit pas à conclure sur tout le statut d'ouverture.</div></article>
 </div>
 <div class="actions"><button class="primary" id="checkTransfer" type="button">Corriger le transfert</button><span class="scorebox" id="transferScore" role="status" aria-live="polite" aria-atomic="true"></span></div>
 </section>
 
 <section class="section" data-pedagogy="recap" id="synthese">
-<div class="section-head"><div class="num">11</div><div><h2>À retenir avant de passer aux tokens</h2><p>Si vous ne retenez que six idées, retenez celles-ci.</p></div></div>
+<div class="section-head"><div class="num">11</div><div><h2>Six idées à reconstruire sans réciter</h2><p>Essayez de retrouver pour chacune le micro-lab qui l'a rendue visible.</p></div></div>
 <div class="recap">
-<article><b>1. IA est un champ large.</b><p>LLM, chatbot et application ne sont pas des synonymes d’IA.</p></article>
-<article><b>2. ML et deep learning sont des familles de méthodes.</b><p>Les LLM modernes s’appuient sur le deep learning.</p></article>
-<article><b>3. Un LLM est un modèle, pas le produit complet.</b><p>Une application peut lui ajouter mémoire, documents, outils et règles.</p></article>
-<article><b>4. Les poids ne sont pas une bibliothèque de documents.</b><p>Ce sont des valeurs numériques apprises pendant l’entraînement.</p></article>
-<article><b>5. Une capacité visible peut venir de l’application.</b><p>Recherche web, calendrier et stockage persistant ne sont pas forcément des capacités intrinsèques du LLM.</p></article>
-<article><b>6. Les mots “open” doivent être précisés.</b><p>Poids accessibles, code ouvert, licence et gratuité sont des dimensions différentes.</p></article>
+<article><b>1. Le LLM n'est pas toute l'application.</b><p>Il est un composant appris au sein d'un système plus large.</p></article>
+<article><b>2. Une capacité visible a une origine.</b><p>Demandez si elle vient du modèle, du contexte, d'une mémoire, d'une recherche ou d'un outil.</p></article>
+<article><b>3. Une donnée actuelle peut être apportée au modèle.</b><p>Recherche documentaire et RAG ne nécessitent pas de modifier les poids à chaque document.</p></article>
+<article><b>4. Mémoire applicative ≠ apprentissage des poids.</b><p>Une donnée persistante peut être stockée puis réinjectée.</p></article>
+<article><b>5. IA → ML → deep learning → LLM.</b><p>Cette chaîne situe les LLM modernes sans réduire toute l'IA au machine learning.</p></article>
+<article><b>6. « Open » doit être précisé.</b><p>Poids, code, licence et gratuité sont des dimensions distinctes.</p></article>
 </div>
-<div class="notice" style="margin-top:14px"><strong>Pont vers la suite.</strong> Vous savez maintenant ce qu’est le modèle. L’étape suivante va répondre à une question plus fine : <em>comment un texte est-il transformé en unités numériques utilisables par ce modèle ?</em> C’est le rôle des tokens, IDs et embeddings.</div>
+<div class="notice" style="margin-top:14px"><strong>Pont vers P1.</strong> Vous savez maintenant identifier le modèle à l'intérieur du système. La prochaine question sera : <em>comment le texte entre-t-il réellement dans ce modèle ?</em></div>
 </section>
 
 <section class="section" id="sources">
-<div class="section-head"><div class="num">12</div><div><h2>Références du référentiel</h2><p>Sources de cadrage scientifique, institutionnel et juridique.</p></div></div>
+<div class="section-head"><div class="num">12</div><div><h2>Références et approfondissement</h2><p>Ces références soutiennent la rigueur scientifique ; elles ne sont pas à mémoriser.</p></div></div>
 <div class="refs">
-<div class="ref"><b>SRC-0001 · OECD</b> — cadrage de la notion de système d’IA.</div>
-<div class="ref"><b>SRC-0002 · LeCun, Bengio & Hinton</b> — <em>Deep learning</em>, Nature.</div>
-<div class="ref"><b>SRC-0003 · Jurafsky & Martin</b> — <em>Speech and Language Processing</em>.</div>
-<div class="ref"><b>SRC-0004 · Brown et al.</b> — <em>Language Models are Few-Shot Learners</em>.</div>
-<div class="ref"><b>SRC-0005 · Bommasani et al.</b> — <em>On the Opportunities and Risks of Foundation Models</em>.</div>
-<div class="ref"><b>SRC-0006 · Union européenne</b> — règlement (UE) 2024/1689 et définition des modèles d’IA à usage général.</div>
-<div class="ref"><b>SRC-0008 · Open Source Initiative</b> — <em>Open Source AI Definition 1.0</em>.</div>
+<div class="ref"><b>SRC-0001 · OECD</b> — cadrage de la notion de système d'IA.</div>
+<div class="ref"><b>SRC-0002 · LeCun, Bengio & Hinton</b> — <em>Deep learning</em>.</div>
+<div class="ref"><b>SRC-0003 · Jurafsky & Martin</b> — modèles de langage et TAL.</div>
+<div class="ref"><b>SRC-0004 · Brown et al.</b> — grands modèles de langage.</div>
+<div class="ref"><b>SRC-0005 · Bommasani et al.</b> — foundation models.</div>
+<div class="ref"><b>SRC-0006 · Union européenne</b> — modèles d'IA à usage général / GPAI.</div>
+<div class="ref"><b>SRC-0008 · Open Source Initiative</b> — Open Source AI Definition.</div>
 </div>
+<div class="p0-pilot-note" style="margin-top:14px">Pilote V2 : ce module doit encore être re-testé auprès d'élèves avant de retrouver le statut « novice-ready ».</div>
 </section>
 
-<nav class="next-step" aria-label="Navigation du parcours"><a class="cockpit-return" href="../index.html#dashboard">← Cockpit</a><div class="center">Vous êtes prêt si vous pouvez expliquer les six idées de synthèse sans consulter la page et réussir une situation de transfert.</div><a href="domaine-b.html">Parcours 1 · Tokens & contexte →</a></nav>
-<footer class="footer">Formation LLM · Parcours 0 · Version NOVICE-FIRST 1.0 · Aucun appel réseau.</footer>
+<nav class="next-step" aria-label="Navigation du parcours"><a class="cockpit-return" href="../index.html#dashboard">← Cockpit</a><div class="center">Pilote V2 : réussir le quiz et le transfert ne remplace pas la validation terrain auprès d'élèves.</div><a href="domaine-b.html">Parcours 1 · Tokens & contexte →</a></nav>
+<footer class="footer">Formation LLM · Parcours 0 · NOVICE-FIRST V2 · Manipulation-first · Aucun appel réseau.</footer>
 </main>
 <script>
 (function(){
 "use strict";
-var root=document.documentElement,body=document.body;
+var root=document.documentElement,body=document.body,$=id=>document.getElementById(id);
 function applyTheme(t){root.dataset.theme=t;window.LATENT_STORAGE.set("formation-llm-theme",t)}
 var saved=window.LATENT_STORAGE.get("formation-llm-theme");if(saved)applyTheme(saved);else if(matchMedia("(prefers-color-scheme:dark)").matches)applyTheme("dark");
-document.getElementById("themeBtn").addEventListener("click",function(){applyTheme(root.dataset.theme==="dark"?"light":"dark")});
-function setTrainerMode(on){var btn=document.getElementById("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}
+$("themeBtn").addEventListener("click",()=>applyTheme(root.dataset.theme==="dark"?"light":"dark"));
+function setTrainerMode(on){var btn=$("trainerBtn");body.classList.toggle("trainer-on",on);btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"○ Revenir au mode stagiaire":"◆ Activer mode formateur";window.LATENT_STORAGE.set("formation-llm-role",on?"trainer":"student")}
 setTrainerMode(window.LATENT_STORAGE.get("formation-llm-role")==="trainer");
-document.getElementById("trainerBtn").addEventListener("click",function(){setTrainerMode(!body.classList.contains("trainer-on"))});
-function setProjectorMode(on){root.classList.toggle("projector",on);var btn=document.getElementById("projectorBtn");btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection"}
-document.getElementById("projectorBtn").addEventListener("click",function(){setProjectorMode(!root.classList.contains("projector"))});
-document.getElementById("projectorExit").addEventListener("click",function(){setProjectorMode(false);document.getElementById("projectorBtn").focus()});
-document.addEventListener("keydown",function(e){if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);document.getElementById("projectorBtn").focus()}});
+$("trainerBtn").addEventListener("click",()=>setTrainerMode(!body.classList.contains("trainer-on")));
+function setProjectorMode(on){root.classList.toggle("projector",on);var btn=$("projectorBtn");btn.setAttribute("aria-pressed",String(on));btn.textContent=on?"▣ Quitter projection":"▣ Activer projection"}
+$("projectorBtn").addEventListener("click",()=>setProjectorMode(!root.classList.contains("projector")));
+$("projectorExit").addEventListener("click",()=>{setProjectorMode(false);$("projectorBtn").focus()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&root.classList.contains("projector")){setProjectorMode(false);$("projectorBtn").focus()}});
 
-var details={
-ai:{title:"Intelligence artificielle",text:"Champ général. Il contient des systèmes très différents : certains apprennent, d’autres utilisent des règles, certains génèrent du contenu, d’autres classent ou planifient."},
-ml:{title:"Machine learning",text:"Famille de méthodes où l’on ajuste un modèle à partir de données. Dire qu’un système utilise du ML ne dit pas encore quel modèle ni quelle application est construite."},
-dl:{title:"Deep learning",text:"Sous-famille du machine learning utilisant des réseaux neuronaux à plusieurs couches. Les LLM modernes s’inscrivent dans cette famille."},
-lm:{title:"Modèle de langage",text:"Modèle qui attribue des probabilités aux séquences ou continuations. Cette notion existait avant les LLM modernes."},
-llm:{title:"LLM",text:"Grand modèle de langage neuronal. C’est un composant appris ; ce n’est pas à lui seul l’interface, la mémoire applicative ou l’accès à des outils."},
-nlp:{title:"TAL / NLP",text:"Domaine du traitement informatique du langage. Il englobe de nombreuses tâches : analyse, traduction, extraction, reconnaissance et génération."},
-gen:{title:"IA générative",text:"Catégorie de systèmes produisant de nouveaux contenus. Elle inclut texte, image, audio, vidéo ou code ; elle ne se réduit donc pas aux LLM."},
-foundation:{title:"Foundation model",text:"Modèle entraîné à grande échelle et réutilisable pour de nombreuses tâches. La notion est plus large que celle de LLM."},
-app:{title:"Application",text:"Produit assemblant un ou plusieurs modèles avec une interface, des règles, des données, une mémoire, un RAG ou des outils."},
-weights:{title:"Paramètres / poids",text:"Valeurs numériques apprises pendant l’entraînement. Elles participent aux calculs internes mais ne constituent pas une bibliothèque de documents consultables par adresse."}
+// Microcycle 1: predictions before definitions.
+$("checkOrigins").addEventListener("click",()=>{
+ let ok=0,total=0;
+ document.querySelectorAll("#originGrid .prediction-card").forEach(card=>{
+   total++;const select=card.querySelector("select"),good=select.value===card.dataset.answer;
+   card.classList.toggle("correct",good);card.classList.toggle("wrong",!good);if(good)ok++;
+ });
+ const box=$("originFeedback");box.classList.add("show");
+ box.innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Vous avez déjà séparé capacité du modèle et capacités ajoutées par l'application.":"Regardez surtout les trois situations qui exigent une donnée persistante, un document actuel ou une action extérieure : elles ont besoin d'un composant autour du modèle.");
+});
+$("resetOrigins").addEventListener("click",()=>{
+ document.querySelectorAll("#originGrid select").forEach(s=>s.value="");
+ document.querySelectorAll("#originGrid .prediction-card").forEach(c=>c.classList.remove("correct","wrong"));
+ $("originFeedback").classList.remove("show");
+});
+
+// Microcycle 2: build a system for a concrete mission.
+var layers={model:true,ui:true,memory:false,rag:false,tools:false};
+const labels={model:"LLM",ui:"Interface",memory:"Mémoire",rag:"Recherche documentaire",tools:"Outil"};
+const missions={
+ chat:{need:["model","ui"],name:"reformuler le texte fourni"},
+ docs:{need:["model","ui","rag"],name:"utiliser le règlement actuel"},
+ remember:{need:["model","ui","memory"],name:"retrouver demain le prénom"},
+ calendar:{need:["model","ui","tools"],name:"créer un événement calendrier"}
 };
-function showDetail(k){var d=details[k];document.getElementById("conceptDetail").innerHTML="<h3>"+d.title+"</h3><p>"+d.text+"</p>";document.querySelectorAll(".node").forEach(function(n){n.classList.toggle("active",n.dataset.key===k)})}
-document.querySelectorAll(".node").forEach(function(n){n.addEventListener("click",function(){showDetail(n.dataset.key)})});showDetail("ai");
-
-var layers={model:true,ui:true,memory:false,rag:false,tools:false,system:false};
-function renderSystem(){
- var labels={model:"LLM · composant appris",ui:"Interface de chat",memory:"Mémoire externe",rag:"Recherche / RAG",tools:"Outils / fonctions",system:"Instructions système"};
- var active=Object.keys(layers).filter(k=>layers[k]),architecture=document.getElementById("architecture");architecture.innerHTML="";
- active.forEach(function(k){var x=document.createElement("div");x.className="arch-box "+(k==="model"?"core":"extra");x.textContent=labels[k];architecture.appendChild(x)});
- var extras=active.filter(k=>!["model","ui"].includes(k)).length,title,text,verdict;
- if(!layers.model){title="Interface sans LLM";text="L’interface seule ne possède pas les capacités génératives du modèle étudié ici.";verdict="Une interface n’est pas un modèle."}
- else if(!layers.ui){title="Modèle sans chatbot";text="Un programme ou une API peut appeler le modèle sans interface conversationnelle.";verdict="LLM ≠ chatbot."}
- else if(extras===0){title="Chatbot minimal";text="Une interface conversationnelle autour d’un LLM, sans mémoire persistante ni outil externe ajouté.";verdict="Le produit visible contient déjà plus que le modèle : au minimum une interface."}
- else{title="Application LLM enrichie";text="Le système combine le modèle avec "+extras+" composant(s) applicatif(s) supplémentaire(s).";verdict="Les capacités visibles ne proviennent pas toutes des poids du LLM."}
- document.getElementById("systemTitle").textContent=title;document.getElementById("systemText").textContent=text;document.getElementById("systemVerdict").textContent=verdict;
+function renderCapabilities(){
+ const list=$("capabilityList");list.innerHTML="";
+ Object.keys(layers).forEach(k=>{const d=document.createElement("div");d.className="capability"+(layers[k]?" on":"");d.textContent=(layers[k]?"✓ ":"○ ")+labels[k];list.appendChild(d)});
 }
-document.querySelectorAll("[data-layer]").forEach(function(btn){btn.addEventListener("click",function(){var k=btn.dataset.layer;layers[k]=!layers[k];btn.classList.toggle("on",layers[k]);btn.textContent=layers[k]?"ON":"OFF";btn.closest(".layer").classList.toggle("on",layers[k]);renderSystem()})});renderSystem();
+document.querySelectorAll("[data-layer]").forEach(btn=>btn.addEventListener("click",()=>{
+ const k=btn.dataset.layer;layers[k]=!layers[k];btn.classList.toggle("on",layers[k]);btn.textContent=layers[k]?"ON":"OFF";btn.closest(".layer").classList.toggle("on",layers[k]);renderCapabilities();
+}));
+$("testMission").addEventListener("click",()=>{
+ const m=missions[$("missionSelect").value],missing=m.need.filter(k=>!layers[k]),extra=Object.keys(layers).filter(k=>layers[k]&&!m.need.includes(k));
+ const box=$("missionFeedback");
+ if(missing.length===0){
+   box.innerHTML="<b>Mission possible.</b> La configuration contient "+m.need.map(k=>labels[k]).join(" + ")+(extra.length?" ; "+extra.map(k=>labels[k]).join(", ")+" n'est pas nécessaire pour cette mission.":".");
+ }else{
+   box.innerHTML="<b>Mission impossible dans cette configuration.</b> Il manque : "+missing.map(k=>labels[k]).join(", ")+". Modifiez un composant puis retestez.";
+ }
+});
+renderCapabilities();
 
-document.getElementById("checkCompletion").addEventListener("click",function(){var total=0,ok=0;document.querySelectorAll("#completer [data-completion]").forEach(function(s){total++;if(s.value===s.dataset.completion)ok++});var box=document.getElementById("completionFeedback");box.classList.add("show");box.innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Très bien. Vous distinguez maintenant modèle, interface, mémoire et retrieval.":"Relisez surtout la différence entre ce qui est appris dans le modèle et ce que l’application peut ajouter autour.")});
-document.getElementById("resetCompletion").addEventListener("click",function(){document.querySelectorAll("#completer [data-completion]").forEach(s=>s.value="");document.getElementById("completionFeedback").classList.remove("show")});
+// Completion.
+$("checkCompletion").addEventListener("click",()=>{
+ let total=0,ok=0;document.querySelectorAll("#completer [data-completion]").forEach(s=>{total++;if(s.value===s.dataset.completion)ok++});
+ const box=$("completionFeedback");box.classList.add("show");box.innerHTML="<b>"+ok+" / "+total+"</b> — "+(ok===total?"Vous localisez correctement les capacités.":"Revenez au System Builder et demandez-vous : « quelle brique doit exister pour que cette action soit possible ? »");
+});
+$("resetCompletion").addEventListener("click",()=>{document.querySelectorAll("#completer [data-completion]").forEach(s=>s.value="");$("completionFeedback").classList.remove("show")});
 
-document.getElementById("quizForm").addEventListener("submit",function(e){e.preventDefault();var ok=0,total=0;document.querySelectorAll(".q").forEach(function(q){total++;var chosen=q.querySelector("input:checked"),good=chosen&&chosen.value===q.dataset.answer;q.classList.toggle("ok",!!good);q.classList.toggle("bad",!good);if(good)ok++});document.getElementById("quizScore").textContent=ok+" / "+total+(ok===total?" · maîtrise solide":" · relisez les feedbacks")});
-document.getElementById("resetQuiz").addEventListener("click",function(){document.getElementById("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("ok","bad"));document.getElementById("quizScore").textContent=""});
+// Microcycle 3: hierarchy construction.
+const familyOrder=["ai","ml","dl","llm"],familyLabels={ai:"Intelligence artificielle",ml:"Machine learning",dl:"Deep learning",llm:"LLM"};
+let familyChosen=[];
+function renderFamily(){
+ document.querySelectorAll("#familyPath .path-slot").forEach((slot,i)=>{const k=familyChosen[i];slot.textContent=k?(i+1)+" · "+familyLabels[k]:(i+1)+" · "+["le champ le plus large","une famille de méthodes","une sous-famille neuronale","un type de modèle de langage"][i];slot.classList.toggle("filled",!!k)});
+ document.querySelectorAll("#familyButtons .family-btn").forEach(b=>b.disabled=familyChosen.includes(b.dataset.family));
+}
+document.querySelectorAll("#familyButtons .family-btn").forEach(b=>b.addEventListener("click",()=>{if(familyChosen.length<4){familyChosen.push(b.dataset.family);renderFamily()}}));
+$("resetFamily").addEventListener("click",()=>{familyChosen=[];renderFamily();$("familyFeedback").classList.remove("show")});
+$("checkFamily").addEventListener("click",()=>{
+ const box=$("familyFeedback");box.classList.add("show");
+ const good=familyChosen.length===4&&familyChosen.every((x,i)=>x===familyOrder[i]);
+ box.innerHTML=good?"<b>Chaîne correcte.</b> IA est le champ large ; ML puis deep learning sont des familles de méthodes ; un LLM moderne appartient à cette lignée.":"<b>À reconstruire.</b> Partez du champ le plus large, puis resserrez : IA → machine learning → deep learning → LLM.";
+});
 
-document.getElementById("checkTransfer").addEventListener("click",function(){var score=0,total=0;document.querySelectorAll(".transfer-card").forEach(function(c){total++;var good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});document.getElementById("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":"")});
+// Quiz + transfer.
+$("quizForm").addEventListener("submit",e=>{e.preventDefault();let ok=0,total=0;document.querySelectorAll(".q").forEach(q=>{total++;const c=q.querySelector("input:checked"),good=c&&c.value===q.dataset.answer;q.classList.toggle("ok",!!good);q.classList.toggle("bad",!good);if(good)ok++});$("quizScore").textContent=ok+" / "+total+(ok===total?" · maîtrise solide":" · utilisez les feedbacks pour corriger le raisonnement")});
+$("resetQuiz").addEventListener("click",()=>{$("quizForm").reset();document.querySelectorAll(".q").forEach(q=>q.classList.remove("ok","bad"));$("quizScore").textContent=""});
+$("checkTransfer").addEventListener("click",()=>{let score=0,total=0;document.querySelectorAll(".transfer-card").forEach(c=>{total++;const good=c.querySelector("select").value===c.dataset.answer;c.classList.toggle("good",good);c.classList.toggle("bad",!good);if(good)score++});$("transferScore").textContent=score+" / "+total+(score===total?" · transfert réussi":" · justifiez chaque choix par l'origine de la capacité")});
+renderFamily();
 })();
 </script>
 <script data-learning-system="v2" data-step-registry="v1">
 (function(){"use strict";
-const KEY="formation-llm-learning-v2",MODULE="A",QUIZ_MIS=["A.MODEL_APP","A.MODEL_APP","A.PARAMETERS","A.OPENNESS","A.GPAI","A.LM_LLM"],TRANSFER_MIS=["A.MODEL_APP","A.MODEL_APP","A.MODEL_APP","A.OPENNESS"],META={"A.MODEL_APP":["Modèle ≠ application","exemple"],"A.PARAMETERS":["Paramètres ≠ base documentaire","pieges"],"A.OPENNESS":["Open weights ≠ open source","pieges"],"A.GPAI":["GPAI : catégorie juridique européenne","definitions"],"A.LM_LLM":["Modèle de langage ≠ LLM moderne","definitions"],"B.TOKEN_WORD":["Token ≠ mot","pieges"],"B.ID_SEMANTICS":["ID ≠ sens","pieges"],"B.EMBEDDING_CONTEXT":["Embedding initial ≠ représentation contextualisée","synthese"],"B.COSINE_TRUTH":["Cosinus ≠ vérité","pieges"],"B.CONTEXT_MEMORY":["Contexte ≠ mémoire","contexte"],"B.SUBWORD":["Pourquoi les sous-mots","definitions"],"C.QKV_OBJECTS":["Q/K/V sont des vecteurs","qkv"],"C.DOT_PROB":["Q·K ≠ probabilité","pieges"],"C.SCALING":["Rôle de √dₖ","exemple"],"C.SOFTMAX":["Softmax d’attention = poids locaux","exemple"],"C.CAUSAL":["Masque causal et futur interdit","masque"],"C.ATTENTION_TRUTH":["Poids d’attention ≠ vérité","pieges"],"P1S3.ATTENTION_ONLY":["Transformer ≠ attention seule","intuition"],"P1S3.MLP":["Attention communique, MLP transforme","mlp"],"P1S3.RESIDUAL":["Connexion résiduelle x + F(x)","exemple"],"P1S3.POSITION":["Rôle de la position / RoPE","position"],"P1S3.KV_MEMORY":["KV cache ≠ mémoire applicative","pieges"],"P1S3.STACK":["Les représentations évoluent bloc après bloc","stack"],"P1S4.LOGIT_PROB":["Logit ≠ probabilité","pieges"],"P1S4.GREEDY_GLOBAL":["Greedy = argmax local","pieges"],"P1S4.TEMP":["Température et distribution","exemple"],"P1S4.TOPP":["Top-p = masse cumulée","filters"],"P1S4.TEMP_TRUTH":["Température basse ≠ factualité","truth"],"P1S4.AUTOREGRESSIVE":["Chaque token devient du contexte","loop"],"HALL.FLUENCY_TRUTH":["Fluidité ≠ factualité","pieges"],"HALL.CALIBRATION":["Confiance verbale ≠ calibration","calibration"],"HALL.VERIFICATION":["Auto-révision ≠ preuve indépendante","scenarios"],"HALL.ABSTENTION":["Clarification ou abstention","abstention"],"HALL.CITATION":["Citation ≠ preuve pertinente","pieges"],"HALL.NO_EVIDENCE":["Absence de preuve ≠ contradiction","pieges"],"RAG.CHUNKING":["Chunking : taille, frontières, overlap","definitions"],"RAG.ANN":["ANN = compromis vitesse / recall","pieges"],"RAG.RERANK":["Reranker : candidats déjà récupérés","pieges"],"RAG.RECALL":["Recall = couverture, pas vérité","metrics-intro"],"RAG.HYBRID":["Lexical + vectoriel","exemple"],"RAG.RETRIEVAL_GENERATION":["Retrieval ≠ génération","synthese"]};
+const KEY="formation-llm-learning-v2",MODULE="A",QUIZ_MIS=["A.MODEL_APP","A.CAPABILITY_SOURCE","A.MEMORY","A.HIERARCHY","A.OPENNESS","A.LM_LLM"],TRANSFER_MIS=["A.MODEL_APP","A.GENERATIVE","A.HIERARCHY","A.OPENNESS"],META={"A.MODEL_APP":["Modèle ≠ application","premier-defi"],"A.CAPABILITY_SOURCE":["Capacité visible ≠ capacité intrinsèque du LLM","systeme"],"A.MEMORY":["Mémoire applicative ≠ apprentissage des poids","pieges"],"A.HIERARCHY":["IA → ML → deep learning → LLM","familles"],"A.PARAMETERS":["Paramètres ≠ base documentaire","pieges"],"A.OPENNESS":["Open weights ≠ open source","pieges"],"A.LM_LLM":["Modèle de langage ≠ LLM moderne","familles"],"A.GENERATIVE":["Génératif ≠ LLM obligatoire","transfert"]};
 function load(){try{return JSON.parse(window.LATENT_STORAGE.get(KEY)||"{}")}catch(e){return{}}}
 function save(s){try{window.LATENT_STORAGE.set(KEY,JSON.stringify(s))}catch(e){}}
-function ensure(s){s.version=2;s.modules=s.modules||{};s.modules[MODULE]=s.modules[MODULE]||{};s.misconceptions=s.misconceptions||{};s.preferences=s.preferences||{progressive:true};return s}
+function ensure(s){s.version=2;s.modules=s.modules||{};const old=s.modules[MODULE]||{};if(old.pedagogyVersion!=="p0-v2"){s.modules[MODULE]={pedagogyVersion:"p0-v2"};}else{s.modules[MODULE]=old}s.misconceptions=s.misconceptions||{};s.preferences=s.preferences||{progressive:true};return s}
 function addMis(s,id,source){if(!id)return;const old=s.misconceptions[id]||{},meta=META[id]||[id,""];s.misconceptions[id]={...old,count:(old.count||0)+1,lastAt:new Date().toISOString(),resolvedAt:null,module:MODULE,label:meta[0],anchor:meta[1],source:source}}function resolveMis(s,id,source){if(!id||!s.misconceptions[id])return;s.misconceptions[id].resolvedAt=new Date().toISOString();s.misconceptions[id].resolvedSource=source}
 function mastery(s){const m=s.modules[MODULE]||{},qr=m.quiz?m.quiz.score/m.quiz.total:0,tr=m.transfer?m.transfer.score/m.transfer.total:0,had=m.mastery?.status==="mastered",ok=qr>=.8&&tr>=.8;m.mastery=m.mastery||{};if(ok){m.mastery.status="mastered";if(!m.mastery.masteredAt)m.mastery.masteredAt=new Date().toISOString();if(!m.review?.nextDue){const next=new Date(Date.now()+86400000).toISOString();m.review={level:0,nextDue:next,lastAt:null,lastScore:null}}}else if(m.quiz||m.transfer)m.mastery.status="evidence";else m.mastery.status="learning";s.modules[MODULE]=m;return ok}
 function saveQuiz(){const form=document.getElementById("quizForm");if(!form)return;const qs=[...form.querySelectorAll(".q")];let score=0;const s=ensure(load()),wrong=new Set(),seen=new Set();qs.forEach((q,i)=>{const id=QUIZ_MIS[i];seen.add(id);const c=q.querySelector("input:checked"),ok=!!c&&c.value===q.dataset.answer;if(ok)score++;else wrong.add(id)});seen.forEach(id=>wrong.has(id)?addMis(s,id,"module-quiz"):resolveMis(s,id,"module-quiz"));s.modules[MODULE].quiz={score,total:qs.length,at:new Date().toISOString()};mastery(s);save(s);updateGuide()}
@@ -731,7 +797,7 @@ window.LATENT_STEP_REGISTRY=segments;
 segments.forEach((seg,i)=>{seg.dataset.step=String(i+1);const badge=seg.querySelector(".section-head .num,.section-head .section-num");if(badge){badge.textContent=String(i+1).padStart(2,"0");badge.dataset.stepNumber=String(i+1)}});
 let allVisible=false,unlocked=0;
 function roleTrainer(){return window.LATENT_STORAGE.get("formation-llm-role")==="trainer"}
-function initialUnlock(){const s=ensure(load()),mod=s.modules[MODULE]||{},saved=mod.progressiveStepIndex,legacy=mod.progressiveIndex,route=s.diagnostic?.routes?.[MODULE],fastIndex=Math.max(0,segments.findIndex(x=>x.dataset.pedagogy==="worked-example"));unlocked=Number.isInteger(saved)?saved:Number.isInteger(legacy)?Math.max(0,legacy-1):(route==="fast"?fastIndex:route==="normal"?1:0);if(location.hash){const target=document.querySelector(location.hash);if(target){const seg=target.closest("section.section");const idx=segments.indexOf(seg);if(idx>=0){unlocked=Math.max(unlocked,idx);currentStep=idx}}}unlocked=Math.min(Math.max(unlocked,0),Math.max(0,segments.length-1));currentStep=Math.min(Math.max(currentStep,0),unlocked);}
+function initialUnlock(){const s=ensure(load()),mod=s.modules[MODULE]||{},saved=mod.progressiveStepIndex,legacy=mod.progressiveIndex;unlocked=Number.isInteger(saved)?saved:Number.isInteger(legacy)?Math.max(0,legacy-1):0;if(location.hash){const target=document.querySelector(location.hash);if(target){const seg=target.closest("section.section");const idx=segments.indexOf(seg);if(idx>=0){unlocked=Math.max(unlocked,idx);currentStep=idx}}}unlocked=Math.min(Math.max(unlocked,0),Math.max(0,segments.length-1));currentStep=Math.min(Math.max(currentStep,0),unlocked);}
 function applySegments(){const s=ensure(load()),guided=s.preferences.progressive!==false&&!roleTrainer()&&!allVisible;segments.forEach((seg,i)=>{seg.hidden=guided&&i>unlocked});document.querySelectorAll(".next-step,.footer").forEach(x=>x.hidden=guided&&unlocked<segments.length-1);s.modules[MODULE].progressiveStepIndex=unlocked;s.modules[MODULE].progressiveIndex=unlocked+1;s.lastActivity={module:MODULE,anchor:location.hash||"",at:new Date().toISOString()};save(s);updateGuide()}
 function next(){if(unlocked<segments.length-1){unlocked++;currentStep=unlocked;applySegments();segments[unlocked]?.scrollIntoView({behavior:"smooth",block:"start"})}}
 function toggleAll(){allVisible=!allVisible;applySegments()}
