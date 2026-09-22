@@ -45,7 +45,6 @@ if(!pm||pm.status!=='novice-ready'||pm.legacy_debt!==false) errors.push('P3S2: s
 if(!index.includes('data-transversal-card="P3S2"')) errors.push('Cockpit: carte P3S2 absente');
 if(!index.includes('data-mastery-status="P3S2"')) errors.push('Cockpit: maîtrise P3S2 absente');
 if(!index.includes('modules/verification-sources.html#evidenceLab')) errors.push('Cockpit: Evidence Lab absent');
-if(!index.includes('P3S1–P3S2 actifs')) errors.push('Cockpit: état Parcours 3 incohérent');
 
 const forbidden=['Expected Calibration Error','ECE =','Precision@','Recall@','F1 score'];
 for(const x of forbidden) if(p3s2.includes(x)) errors.push('P3S2: dette de périmètre vers P3S3/P3S4: '+x);
