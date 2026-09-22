@@ -52,7 +52,9 @@ if (!html.includes('flex-wrap:nowrap!important')) errors.push('header desktop: n
 if (!html.includes('--module-topbar-h')) errors.push('header desktop: hauteur dynamique absente');
 if (!html.includes('ResizeObserver(syncTopbarOffset)')) errors.push('header desktop: mesure réelle de hauteur absente');
 if (!html.includes('scroll-margin-top:calc(var(--module-topbar-h) + 16px)!important')) errors.push('header desktop: offset des ancres non lié à la hauteur réelle');
-if (!html.includes('"○ Stagiaire":"◆ Formateur"')) errors.push('header desktop: libellé formateur encore trop long');
+if (!/id="trainerBtn"[^>]*aria-pressed="false"[^>]*>◆ Activer mode formateur<\/button>/.test(html)) errors.push('header desktop: libellé sémantique formateur incomplet');
+if (!html.includes('#trainerBtn[aria-pressed="true"]::after{content:"○ Stagiaire"}')) errors.push('header desktop: libellé visuel compact du mode formateur absent');
+if (!html.includes('#projectorBtn::after{content:"▣ Projection"')) errors.push('header desktop: libellé visuel compact projection absent');
 if (!/@media\(prefers-reduced-motion:reduce\)/.test(html)) errors.push('respect prefers-reduced-motion absent');
 if (errors.length) { console.error('\n❌ MODULE B INVALIDE\n- '+errors.join('\n- ')); process.exit(1); }
 console.log('✅ Module B valide — BPE didactique, header desktop anti-recouvrement, autonomie, JavaScript et responsive vérifiés.');
