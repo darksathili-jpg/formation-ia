@@ -43,6 +43,10 @@ if(!html.includes('id="doneMetric">0/5</div>')) errors.push('compteur initial de
 if(!html.includes('id="dueMetric">0</div>')) errors.push('compteur réactivation due absent');
 if(!/const GUIDED=\["A","B","C","P1S3","P1S4"\]/.test(html)) errors.push('liste guidée JS incohérente');
 if(!html.includes('.module-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto;padding-top:14px}')) errors.push('alignement vertical des actions non verrouillé');
+if(!html.includes('data-sidebar-viewport-guard="v1"')) errors.push('garde-fou hauteur sidebar absent');
+if(!html.includes('grid-template-rows:auto minmax(0,1fr) auto!important')) errors.push('sidebar: footer non verrouillé dans le viewport');
+if(!html.includes('overflow-y:auto!important')) errors.push('sidebar: navigation centrale non scrollable');
+if(!html.includes('@media(min-width:981px) and (max-height:720px)')) errors.push('sidebar: adaptation aux faibles hauteurs absente');
 if(!html.includes('Réinitialiser apprentissage')) errors.push('action de reset apprentissage mal nommée');
 if(/<span class="badge ready">Nouveau<\/span>/.test(html)) errors.push('badge temporel Nouveau interdit');
 if(errors.length){console.error('\n❌ TABLEAU DE BORD INCOHÉRENT\n- '+errors.join('\n- '));process.exit(1)}
