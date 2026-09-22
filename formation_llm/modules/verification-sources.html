@@ -407,20 +407,33 @@ html.projector .journey-card .k{color:#245c62!important}
 }
 </style>
 
-<style data-p3s2-visual-audit="v1">
+<style data-p3s2-visual-audit="v2">
 /* P3S2 — Evidence Lab : lisibilité des preuves, provenance et décisions. */
 .evidence-lab-grid{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);gap:16px;align-items:start}
-.source-preview{display:grid;gap:12px}
+.source-preview{display:grid;gap:12px;min-width:0}
 .source-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.source-meta .metric{min-height:86px}
-.passage{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);line-height:1.55}
+.source-meta .metric{min-height:86px;min-width:0}
+.source-meta .metric .v{font-size:clamp(.94rem,1.35vw,1.16rem);line-height:1.25;overflow-wrap:anywhere}
+.passage{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);line-height:1.55;overflow-wrap:anywhere}
 .passage mark{background:rgba(239,135,167,.22);color:inherit;border-radius:4px;padding:0 .15em}
+#evidenceLab .mode{min-height:56px;overflow-wrap:anywhere}
 .trace-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
-.trace-cell{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);min-width:0}
+.trace-cell{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);min-width:0;overflow-wrap:anywhere}
 .trace-cell b{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
-.source-choice small{display:block;margin-top:4px;color:var(--muted);font-weight:700}
+.source-choice small{display:block;margin-top:4px;color:var(--muted);font-weight:700;overflow-wrap:anywhere}
+#evidenceLab .table-wrap{overflow-x:hidden}
+#evidenceLab table{min-width:0!important;table-layout:fixed}
+#evidenceLab th:first-child,#evidenceLab td:first-child{width:29%}
+#evidenceLab th,#evidenceLab td{overflow-wrap:anywhere;word-break:normal}
 .provenance-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.provenance-flow button{text-align:left;min-height:112px}
+.provenance-flow button{
+ text-align:left;min-height:112px;min-width:0;padding:14px;border:1px solid var(--line);
+ border-radius:13px;background:var(--panel2);color:var(--text);font-weight:850;line-height:1.35;
+ overflow-wrap:anywhere;transition:border-color .16s ease,background .16s ease,transform .16s ease
+}
+.provenance-flow button small{display:block;margin-top:7px;color:var(--muted);font-weight:650;line-height:1.45}
+.provenance-flow button:hover,.provenance-flow button:focus-visible{border-color:var(--accent);background:var(--soft)}
+.provenance-flow button.active{border-color:var(--accent);background:var(--soft);color:var(--accent)}
 @media(max-width:850px){
  .evidence-lab-grid{grid-template-columns:1fr}
  .source-meta{grid-template-columns:1fr 1fr}
@@ -430,8 +443,20 @@ html.projector .journey-card .k{color:#245c62!important}
 @media(max-width:650px){
  .source-meta,.trace-grid{grid-template-columns:1fr}
  #evidenceLab .mode-grid{grid-template-columns:1fr!important}
+ #evidenceLab .panel{padding:14px}
+ #evidenceLab th,#evidenceLab td{padding:8px;font-size:.78rem}
+ #evidenceLab th:first-child,#evidenceLab td:first-child{width:34%}
+ .provenance-flow button{min-height:0}
+}
+@media(max-width:430px){
+ #evidenceLab th:first-child,#evidenceLab td:first-child{width:38%}
+ .trace-cell{padding:10px}
 }
 html.projector .passage,html.projector .trace-cell{background:#ffffff!important;color:#000000!important;border-color:#a8a8a8!important}
+html.projector .provenance-flow button{background:#ffffff!important;color:#000000!important;border:2px solid #68777a!important;box-shadow:none!important}
+html.projector .provenance-flow button small{color:#37474c!important}
+html.projector .provenance-flow button.active{background:#e4f3f1!important;border-color:#005a62!important;color:#005a62!important}
+html.projector #evidenceLab th,html.projector #evidenceLab td{color:#000000!important;border-color:#8b979a!important}
 </style>
 <script data-latent-safe-storage="v1">
 (function(){
