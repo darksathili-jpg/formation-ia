@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+const manifest=JSON.parse(await readFile(new URL('../data/pedagogy-manifest.json',import.meta.url),'utf8'));
 const errors=[],sequence=['A','B','C','P1S3','P1S4'];
 const seqMatch=html.match(/<div class="now-grid" id="learningSequence"[\s\S]*?<\/div><\/div>\s*<div class="section" id="laboratoire-transversal"/);
 if(!seqMatch) errors.push('bloc progression guidée introuvable ou labs transversaux non séparés');
@@ -18,13 +19,14 @@ const transversal=html.match(/<div class="transversal-grid" id="transversalLabs"
 if(!transversal) errors.push('bloc transversalLabs absent');
 else{
  if(!transversal.includes('data-transversal-card="RAG"')) errors.push('RAG absent du bloc transversal');
- if(!transversal.includes('data-transversal-card="HALL"')) errors.push('Hallucination Lab absent du bloc transversal');
+ if(!transversal.includes('data-transversal-card="HALL"')) errors.push('P3S1 absent du bloc transversal');
+ if(!transversal.includes('data-transversal-card="P3S2"')) errors.push('P3S2 Evidence Lab absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S1"')) errors.push('Parcours 2 · Spécifier une tâche absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S2"')) errors.push('Parcours 2 · Exemples, frontières & format absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S3"')) errors.push('Parcours 2 · Tester et itérer absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S4"')) errors.push('Parcours 2 · Dialogue multi-tour absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S5"')) errors.push('Parcours 2 · Tâche complexe absent du bloc transversal');
- if(!transversal.includes('data-mastery-status="RAG"')||!transversal.includes('data-mastery-status="HALL"')||!transversal.includes('data-mastery-status="P2S1"')||!transversal.includes('data-mastery-status="P2S2"')||!transversal.includes('data-mastery-status="P2S3"')||!transversal.includes('data-mastery-status="P2S4"')||!transversal.includes('data-mastery-status="P2S5"')) errors.push('statut de maîtrise transversal absent');
+ if(!transversal.includes('data-mastery-status="RAG"')||!transversal.includes('data-mastery-status="HALL"')||!transversal.includes('data-mastery-status="P3S2"')||!transversal.includes('data-mastery-status="P2S1"')||!transversal.includes('data-mastery-status="P2S2"')||!transversal.includes('data-mastery-status="P2S3"')||!transversal.includes('data-mastery-status="P2S4"')||!transversal.includes('data-mastery-status="P2S5"')) errors.push('statut de maîtrise transversal absent');
  if(!transversal.includes('Hors progression guidée')) errors.push('statut transversal non expliqué');
 }
 if(html.includes('Marquer acquis')||html.includes('data-complete=')) errors.push('ancienne auto-déclaration de maîtrise interdite');
@@ -34,7 +36,9 @@ if(!html.includes('diagnostic.html')) errors.push('diagnostic initial absent');
 if(!html.includes('review.html')) errors.push('réactivation cumulative absente');
 if(!html.includes('id="progressiveBtn"')) errors.push('contrôle progressive disclosure absent');
 if(!html.includes('formation-llm-learning-v2')) errors.push('storage Learning System V2 absent');
-if(!html.includes('<div class="value">12</div><div class="label">Modules novice-ready</div>')) errors.push('compteur novice-ready incohérent');
+const noviceReady=(manifest.modules||[]).filter(m=>m.status==='novice-ready').length;
+const noviceMetric=html.match(/<div class="value">(\d+)<\/div><div class="label">Modules novice-ready<\/div>/);
+if(!noviceMetric||Number(noviceMetric[1])!==noviceReady) errors.push('compteur novice-ready incohérent avec le manifeste ('+noviceReady+' attendu)');
 if(!html.includes('id="doneMetric">0/5</div>')) errors.push('compteur initial de maîtrise incohérent');
 if(!html.includes('id="dueMetric">0</div>')) errors.push('compteur réactivation due absent');
 if(!/const GUIDED=\["A","B","C","P1S3","P1S4"\]/.test(html)) errors.push('liste guidée JS incohérente');
