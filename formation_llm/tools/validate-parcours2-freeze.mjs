@@ -57,10 +57,9 @@ for(const spec of specs){
  if(!index.includes('data-transversal-card="'+spec.id+'"')) errors.push('Cockpit: carte '+spec.id+' absente');
  if(!index.includes('data-mastery-status="'+spec.id+'"')) errors.push('Cockpit: statut de maîtrise '+spec.id+' absent');
 }
-if(!index.includes('<div class="value">12</div><div class="label">Modules novice-ready</div>')) errors.push('Cockpit: compteur novice-ready attendu à 12');
 
 if(errors.length){
  console.error('\n❌ PARCOURS 2 NON GELABLE\n- '+errors.join('\n- '));
  process.exit(1);
 }
-console.log('✅ PARCOURS 2 GELÉ — P2S1→P2S5, pédagogie, maîtrise, navigation et garde-fous visuels vérifiés.');
+console.log('✅ PARCOURS 2 GELÉ — P2S1→P2S5 restent intacts ; le compteur global peut évoluer avec les autres parcours.');
