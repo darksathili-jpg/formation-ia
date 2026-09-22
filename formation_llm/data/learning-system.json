@@ -419,7 +419,7 @@
     },
     {
       "id": "HALL",
-      "label": "Parcours 3 · Hallucination",
+      "label": "Parcours 3 · Étape 1 · Hallucinations & abstention",
       "href": "modules/hallucination-lab.html",
       "quiz_total": 6,
       "transfer_total": 3,
@@ -430,29 +430,29 @@
           "anchor": "pieges"
         },
         {
-          "id": "HALL.CALIBRATION",
-          "label": "Confiance verbale ≠ calibration",
-          "anchor": "calibration"
+          "id": "HALL.FALSE_PREMISE",
+          "label": "Une question peut contenir une prémisse fausse",
+          "anchor": "pieges"
         },
         {
-          "id": "HALL.VERIFICATION",
-          "label": "Auto-révision ≠ preuve indépendante",
+          "id": "HALL.SELF_REVIEW",
+          "label": "Redemander au même modèle ≠ vérifier",
           "anchor": "scenarios"
         },
         {
           "id": "HALL.ABSTENTION",
-          "label": "Savoir demander une preuve ou s’abstenir",
+          "label": "Clarifier, limiter ou s’abstenir",
           "anchor": "abstention"
-        },
-        {
-          "id": "HALL.CITATION",
-          "label": "Citation ≠ preuve pertinente",
-          "anchor": "pieges"
         },
         {
           "id": "HALL.NO_EVIDENCE",
           "label": "Absence de preuve ≠ contradiction",
           "anchor": "pieges"
+        },
+        {
+          "id": "HALL.CONTRADICTION",
+          "label": "Contradiction ≠ simple incertitude",
+          "anchor": "definitions"
         }
       ]
     },
@@ -782,28 +782,6 @@
       "answer": 1
     },
     {
-      "id": "R-H1",
-      "module": "HALL",
-      "misconception": "HALL.NO_EVIDENCE",
-      "q": "Aucune preuve disponible : peut-on conclure automatiquement que le claim est faux ?",
-      "choices": [
-        "Oui",
-        "Non"
-      ],
-      "answer": 1
-    },
-    {
-      "id": "R-H2",
-      "module": "HALL",
-      "misconception": "HALL.CITATION",
-      "q": "Une citation réelle suffit-elle si elle ne soutient pas l'affirmation ?",
-      "choices": [
-        "Oui",
-        "Non"
-      ],
-      "answer": 1
-    },
-    {
       "id": "R-R1",
       "module": "RAG",
       "misconception": "RAG.RERANK",
@@ -934,6 +912,39 @@
         "Non"
       ],
       "answer": 0
+    },
+    {
+      "id": "R-H1",
+      "module": "HALL",
+      "misconception": "HALL.NO_EVIDENCE",
+      "q": "Aucun élément disponible ne traite un détail : peut-on conclure automatiquement que ce détail est faux ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-H2",
+      "module": "HALL",
+      "misconception": "HALL.FALSE_PREMISE",
+      "q": "Une question contient une affirmation factuelle douteuse. Faut-il l’accepter comme vraie pour répondre directement ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-H3",
+      "module": "HALL",
+      "misconception": "HALL.SELF_REVIEW",
+      "q": "Redemander « es-tu sûr ? » au même modèle constitue-t-il à lui seul une vérification indépendante ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
     }
   ]
 }
