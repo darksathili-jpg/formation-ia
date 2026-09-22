@@ -37,7 +37,22 @@
         {
           "id": "A.MODEL_APP",
           "label": "Modèle ≠ application",
-          "anchor": "exemple"
+          "anchor": "premier-defi"
+        },
+        {
+          "id": "A.CAPABILITY_SOURCE",
+          "label": "Capacité visible ≠ capacité intrinsèque du LLM",
+          "anchor": "systeme"
+        },
+        {
+          "id": "A.MEMORY",
+          "label": "Mémoire applicative ≠ apprentissage des poids",
+          "anchor": "pieges"
+        },
+        {
+          "id": "A.HIERARCHY",
+          "label": "IA → ML → deep learning → LLM",
+          "anchor": "familles"
         },
         {
           "id": "A.PARAMETERS",
@@ -50,14 +65,14 @@
           "anchor": "pieges"
         },
         {
-          "id": "A.GPAI",
-          "label": "GPAI : catégorie juridique européenne",
-          "anchor": "definitions"
-        },
-        {
           "id": "A.LM_LLM",
           "label": "Modèle de langage ≠ LLM moderne",
-          "anchor": "definitions"
+          "anchor": "familles"
+        },
+        {
+          "id": "A.GENERATIVE",
+          "label": "Génératif ≠ LLM obligatoire",
+          "anchor": "transfert"
         }
       ]
     },
@@ -586,36 +601,36 @@
         "id": "D-A1",
         "module": "A",
         "misconception": "A.MODEL_APP",
-        "q": "Un assistant conversationnel peut utiliser un LLM, une mémoire et des outils. Le LLM est…",
+        "q": "Un assistant conversationnel utilise un LLM, une mémoire et des outils. Le LLM est…",
         "choices": [
           "l'application entière",
-          "un composant modèle de l'application",
-          "la mémoire"
+          "un composant appris de l'application",
+          "la mémoire persistante"
         ],
         "answer": 1
       },
       {
         "id": "D-A2",
         "module": "A",
-        "misconception": "A.PARAMETERS",
-        "q": "Les paramètres d'un LLM sont principalement…",
+        "misconception": "A.MEMORY",
+        "q": "Une application retrouve demain votre prénom. Cela prouve-t-il que les poids du LLM ont forcément changé ?",
         "choices": [
-          "des valeurs numériques apprises",
-          "une liste de pages web",
-          "l'historique utilisateur"
+          "oui",
+          "non, une mémoire applicative peut stocker puis réinjecter la donnée"
         ],
-        "answer": 0
+        "answer": 1
       },
       {
         "id": "D-A3",
         "module": "A",
-        "misconception": "A.OPENNESS",
-        "q": "Des poids téléchargeables suffisent-ils à conclure « open source » ?",
+        "misconception": "A.HIERARCHY",
+        "q": "Quelle chaîne situe correctement un LLM moderne ?",
         "choices": [
-          "oui",
-          "non, il faut examiner licence et éléments fournis"
+          "IA → machine learning → deep learning → LLM",
+          "LLM → chatbot → IA → mémoire",
+          "deep learning → IA → LLM → machine learning"
         ],
-        "answer": 1
+        "answer": 0
       },
       {
         "id": "D-B1",
@@ -767,13 +782,24 @@
     {
       "id": "R-A2",
       "module": "A",
-      "misconception": "A.PARAMETERS",
-      "q": "Les poids sont-ils une base de documents adressables ?",
+      "misconception": "A.MEMORY",
+      "q": "Une préférence retrouvée après fermeture de l'application implique-t-elle nécessairement un réentraînement du LLM ?",
       "choices": [
         "Oui",
         "Non"
       ],
       "answer": 1
+    },
+    {
+      "id": "R-A3",
+      "module": "A",
+      "misconception": "A.HIERARCHY",
+      "q": "Un LLM moderne se situe-t-il dans la chaîne IA → machine learning → deep learning → LLM ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
     },
     {
       "id": "R-B1",
