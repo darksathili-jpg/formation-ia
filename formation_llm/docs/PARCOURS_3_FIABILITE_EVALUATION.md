@@ -1,8 +1,8 @@
 # Parcours 3 — Fiabilité & évaluation
 
-Version : 1.1  
+Version : 1.2  
 Date : 2026-09-22  
-Statut : architecture de référence · P3S1 et P3S2 actifs
+Statut : architecture de référence · P3S1, P3S2 et P3S3 actifs
 
 ## Principe de découpage
 
@@ -67,6 +67,8 @@ L'apprenant sait passer d'un claim à un dossier de preuve minimal, explicite et
 - politique de décision à risque.
 
 ## P3S3 — Évaluation systématique
+
+**Implémentation :** `modules/evaluation-systematique.html` · identifiant `P3S3` · Eval Lab + Regression Lab.
 
 **Question directrice :** « Comment mesurer de façon reproductible la qualité d'un système sur un ensemble de cas ? »
 
