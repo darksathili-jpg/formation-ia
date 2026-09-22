@@ -583,7 +583,7 @@ html.projector .micro-lab,html.projector .prediction-card,html.projector .core-t
 <div class="completion-row"><strong>Conserver une préférence après fermeture de la session</strong><span class="arrow">→</span><select data-completion="memory"><option value="">Choisir…</option><option value="memory">Mémoire applicative</option><option value="model">Taille du LLM</option><option value="ui">Couleur de l'interface</option></select></div>
 <div class="completion-row"><strong>Ajouter un rendez-vous dans un agenda</strong><span class="arrow">→</span><select data-completion="tools"><option value="">Choisir…</option><option value="tools">Outil / fonction autorisée</option><option value="weights">Paramètres du modèle</option><option value="rag">Recherche seule</option></select></div>
 <div class="actions"><button class="primary" id="checkCompletion" type="button">Vérifier</button><button class="secondary" id="resetCompletion" type="button">Réinitialiser</button></div>
-<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite"></div>
+<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite" aria-atomic="true"></div>
 </div>
 </section>
 
