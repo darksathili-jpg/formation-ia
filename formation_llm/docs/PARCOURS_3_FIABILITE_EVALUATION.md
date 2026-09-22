@@ -1,8 +1,8 @@
 # Parcours 3 — Fiabilité & évaluation
 
-Version : 1.0  
+Version : 1.1  
 Date : 2026-09-22  
-Statut : architecture de référence
+Statut : architecture de référence · P3S1 et P3S2 actifs
 
 ## Principe de découpage
 
@@ -43,6 +43,8 @@ L'apprenant sait diagnostiquer une sortie sans confondre précision verbale et v
 Le fichier actuel reste `modules/hallucination-lab.html` et l'identifiant interne `HALL` est conservé pour ne pas casser la progression déjà enregistrée.
 
 ## P3S2 — Vérification & sources
+
+**Implémentation :** `modules/verification-sources.html` · identifiant `P3S2` · Evidence Lab.
 
 **Question directrice :** « Comment vérifier une affirmation avec des sources réellement probantes ? »
 
