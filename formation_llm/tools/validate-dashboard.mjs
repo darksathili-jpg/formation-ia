@@ -21,12 +21,13 @@ else{
  if(!transversal.includes('data-transversal-card="RAG"')) errors.push('RAG absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="HALL"')) errors.push('P3S1 absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P3S2"')) errors.push('P3S2 Evidence Lab absent du bloc transversal');
+ if(!transversal.includes('data-transversal-card="P3S3"')) errors.push('P3S3 Eval Lab absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S1"')) errors.push('Parcours 2 · Spécifier une tâche absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S2"')) errors.push('Parcours 2 · Exemples, frontières & format absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S3"')) errors.push('Parcours 2 · Tester et itérer absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S4"')) errors.push('Parcours 2 · Dialogue multi-tour absent du bloc transversal');
  if(!transversal.includes('data-transversal-card="P2S5"')) errors.push('Parcours 2 · Tâche complexe absent du bloc transversal');
- if(!transversal.includes('data-mastery-status="RAG"')||!transversal.includes('data-mastery-status="HALL"')||!transversal.includes('data-mastery-status="P3S2"')||!transversal.includes('data-mastery-status="P2S1"')||!transversal.includes('data-mastery-status="P2S2"')||!transversal.includes('data-mastery-status="P2S3"')||!transversal.includes('data-mastery-status="P2S4"')||!transversal.includes('data-mastery-status="P2S5"')) errors.push('statut de maîtrise transversal absent');
+ if(!transversal.includes('data-mastery-status="RAG"')||!transversal.includes('data-mastery-status="HALL"')||!transversal.includes('data-mastery-status="P3S2"')||!transversal.includes('data-mastery-status="P3S3"')||!transversal.includes('data-mastery-status="P2S1"')||!transversal.includes('data-mastery-status="P2S2"')||!transversal.includes('data-mastery-status="P2S3"')||!transversal.includes('data-mastery-status="P2S4"')||!transversal.includes('data-mastery-status="P2S5"')) errors.push('statut de maîtrise transversal absent');
  if(!transversal.includes('Hors progression guidée')) errors.push('statut transversal non expliqué');
 }
 if(html.includes('Marquer acquis')||html.includes('data-complete=')) errors.push('ancienne auto-déclaration de maîtrise interdite');
