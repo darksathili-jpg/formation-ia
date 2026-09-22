@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
+  "version": "2.0.0",
   "updated_on": "2026-09-22",
   "policy": {
     "new_modules_must_be_novice_ready": true,
@@ -10,11 +10,16 @@
     {
       "path": "modules/domaine-a.html",
       "label": "Parcours 0 — Situer les LLM",
-      "status": "novice-ready",
+      "status": "pilot-ready",
       "legacy_debt": false,
       "priority": 1,
       "reviewed_on": "2026-09-20",
-      "notes": "Module pilote reconstruit selon le standard NOVICE-FIRST : exemple travaillé, guidage progressif, auto-explication, récupération active, transfert et synthèse."
+      "notes": "Pilote NOVICE-FIRST V2 manipulation-first : première prédiction avant glossaire, System Builder causal, Family Lab, vocabulaire secondaire repliable. Le statut novice-ready ne sera restauré qu'après nouveau test terrain.",
+      "pedagogy_version": "2.0",
+      "learner_validation": {
+        "status": "pending-retest",
+        "reason": "Terminale learner test exposed excessive abstraction and insufficient manipulation in V1."
+      }
     },
     {
       "path": "modules/domaine-b.html",
