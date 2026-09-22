@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "updated_on": "2026-09-20",
+  "version": "1.3.0",
+  "updated_on": "2026-09-22",
   "policy": {
     "new_modules_must_be_novice_ready": true,
     "legacy_debt_allowed_only_for_listed_modules": true,
@@ -54,12 +54,12 @@
     },
     {
       "path": "modules/hallucination-lab.html",
-      "label": "Parcours 3 — Hallucination Lab",
+      "label": "Parcours 3 — Étape 1 · Hallucinations & abstention",
       "status": "novice-ready",
       "legacy_debt": false,
       "priority": 6,
-      "reviewed_on": "2026-09-20",
-      "notes": "Fiabilité reconstruite : méthode claim-preuve-verdict, exemple travaillé, calibration, abstention, pratique guidée, auto-explication, quiz et transfert."
+      "reviewed_on": "2026-09-22",
+      "notes": "P3S1 recentré : fluidité ≠ factualité, prémisses fausses, claims confirmés/contredits/insuffisamment étayés, réponse limitée et abstention. Vérification des sources reportée à P3S2 ; calibration reportée à P3S4."
     },
     {
       "path": "modules/rag-lab.html",
