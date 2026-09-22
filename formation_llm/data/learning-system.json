@@ -457,6 +457,45 @@
       ]
     },
     {
+      "id": "P3S2",
+      "label": "Parcours 3 · Étape 2 · Vérification & sources",
+      "href": "modules/verification-sources.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P3S2.SOURCE_SUPPORT",
+          "label": "Source fiable ≠ soutien du claim",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S2.SCOPE",
+          "label": "Respecter portée, conditions et quantificateurs",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S2.INDEPENDENCE",
+          "label": "URLs multiples ≠ sources indépendantes",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S2.VERSION",
+          "label": "Date et version font partie de la preuve",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S2.PROVENANCE",
+          "label": "Passage sans provenance ≠ preuve auditable",
+          "anchor": "provenance"
+        },
+        {
+          "id": "P3S2.TRACE",
+          "label": "Une preuve doit laisser une trace reproductible",
+          "anchor": "synthese"
+        }
+      ]
+    },
+    {
       "id": "RAG",
       "label": "Parcours 4 · RAG",
       "href": "modules/rag-lab.html",
@@ -945,6 +984,39 @@
         "Non"
       ],
       "answer": 1
+    },
+    {
+      "id": "R-P3S2-1",
+      "module": "P3S2",
+      "misconception": "P3S2.SOURCE_SUPPORT",
+      "q": "Une source fiable parle du bon sujet mais ne contient pas l’information précise du claim. Le claim est-il confirmé ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P3S2-2",
+      "module": "P3S2",
+      "misconception": "P3S2.INDEPENDENCE",
+      "q": "Trois pages recopient la même source originale. Cela constitue-t-il automatiquement trois confirmations indépendantes ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P3S2-3",
+      "module": "P3S2",
+      "misconception": "P3S2.VERSION",
+      "q": "Pour vérifier une affirmation datée, la version du document consulté peut-elle changer le verdict ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
     }
   ]
 }
