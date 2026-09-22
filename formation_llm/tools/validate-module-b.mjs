@@ -46,6 +46,13 @@ if (!script) errors.push('script principal introuvable');
 else { try { new vm.Script(script); } catch (e) { errors.push(`JavaScript invalide: ${e.message}`); } }
 if (!/<meta\s+name="viewport"/i.test(html)) errors.push('viewport mobile absent');
 if (!/@media\(max-width:600px\)/.test(html)) errors.push('règles responsive mobile absentes');
+if (!html.includes('data-topbar-viewport-guard="v1"')) errors.push('header desktop: garde-fou viewport absent');
+if (!html.includes('grid-template-columns:max-content minmax(0,1fr) max-content!important')) errors.push('header desktop: grille mono-ligne non verrouillée');
+if (!html.includes('flex-wrap:nowrap!important')) errors.push('header desktop: navigation/contrôles peuvent encore passer sur deux lignes');
+if (!html.includes('--module-topbar-h')) errors.push('header desktop: hauteur dynamique absente');
+if (!html.includes('ResizeObserver(syncTopbarOffset)')) errors.push('header desktop: mesure réelle de hauteur absente');
+if (!html.includes('scroll-margin-top:calc(var(--module-topbar-h) + 16px)!important')) errors.push('header desktop: offset des ancres non lié à la hauteur réelle');
+if (!html.includes('"○ Stagiaire":"◆ Formateur"')) errors.push('header desktop: libellé formateur encore trop long');
 if (!/@media\(prefers-reduced-motion:reduce\)/.test(html)) errors.push('respect prefers-reduced-motion absent');
 if (errors.length) { console.error('\n❌ MODULE B INVALIDE\n- '+errors.join('\n- ')); process.exit(1); }
-console.log('✅ Module B valide — BPE didactique testé sur sous-mots, trace pédagogique, autonomie, JavaScript et responsive vérifiés.');
+console.log('✅ Module B valide — BPE didactique, header desktop anti-recouvrement, autonomie, JavaScript et responsive vérifiés.');
