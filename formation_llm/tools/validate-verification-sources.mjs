@@ -17,7 +17,7 @@ const must=[
  'ALCE',
  'FActScore',
  'Evaluation of Machine-Generated Reports',
- 'data-p3s2-visual-audit="v1"',
+ 'data-p3s2-visual-audit="v2"',
  'MODULE="P3S2"',
  'hallucination-lab.html',
  'Test de maîtrise',
@@ -67,6 +67,10 @@ if(!html.includes(':focus-visible')) errors.push('focus clavier absent');
 if(!/@media\(max-width:650px\)/.test(html)) errors.push('responsive mobile absent');
 if(!/@media\(prefers-reduced-motion:reduce\)/.test(html)) errors.push('prefers-reduced-motion absent');
 if(!html.includes('grid-template-columns:1fr!important')) errors.push('reflow mobile Evidence Lab non verrouillé');
+if(!html.includes('#evidenceLab table{min-width:0!important;table-layout:fixed}')) errors.push('table Evidence Lab encore dépendante du scroll horizontal');
+if(!html.includes('.provenance-flow button{')) errors.push('boutons Provenance Lab non stylés');
+if(!html.includes('overflow-wrap:anywhere')) errors.push('textes longs P3S2 non protégés');
+if(!html.includes('html.projector .provenance-flow button')) errors.push('contraste projection du Provenance Lab non protégé');
 if(!html.includes('Une citation visible ne prouve rien à elle seule')) errors.push('intuition citation/preuve absente');
 
 if(errors.length){
