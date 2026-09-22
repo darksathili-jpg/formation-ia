@@ -496,6 +496,50 @@
       ]
     },
     {
+      "id": "P3S3",
+      "label": "Parcours 3 · Étape 3 · Évaluation systématique",
+      "href": "modules/evaluation-systematique.html",
+      "quiz_total": 6,
+      "transfer_total": 4,
+      "misconceptions": [
+        {
+          "id": "P3S3.OBJECTIVE",
+          "label": "Métrique ≠ objectif d’évaluation",
+          "anchor": "intuition"
+        },
+        {
+          "id": "P3S3.CASE_QUALITY",
+          "label": "Cas ambigu ≠ mesure fiable",
+          "anchor": "definitions"
+        },
+        {
+          "id": "P3S3.REGRESSION",
+          "label": "Gain global ≠ absence de régression",
+          "anchor": "regressions"
+        },
+        {
+          "id": "P3S3.FAILURE_ANALYSIS",
+          "label": "Score agrégé ≠ diagnostic",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S3.BALANCE",
+          "label": "Cas positifs seuls ≠ couverture",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S3.GRADER",
+          "label": "Grader ≠ vérité infaillible",
+          "anchor": "pieges"
+        },
+        {
+          "id": "P3S3.RUBRIC",
+          "label": "Rubric vague ≠ verdict reproductible",
+          "anchor": "definitions"
+        }
+      ]
+    },
+    {
       "id": "RAG",
       "label": "Parcours 4 · RAG",
       "href": "modules/rag-lab.html",
@@ -1012,6 +1056,39 @@
       "module": "P3S2",
       "misconception": "P3S2.VERSION",
       "q": "Pour vérifier une affirmation datée, la version du document consulté peut-elle changer le verdict ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-P3S3-1",
+      "module": "P3S3",
+      "misconception": "P3S3.REGRESSION",
+      "q": "Une nouvelle version a un meilleur score global mais casse un ancien cas critique. Peut-on ignorer cette perte ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "R-P3S3-2",
+      "module": "P3S3",
+      "misconception": "P3S3.BALANCE",
+      "q": "Pour évaluer un comportement qui doit parfois se déclencher, faut-il aussi tester des cas où il ne doit pas se déclencher ?",
+      "choices": [
+        "Oui",
+        "Non"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "R-P3S3-3",
+      "module": "P3S3",
+      "misconception": "P3S3.GRADER",
+      "q": "Un grader automatique peut-il lui-même produire un verdict inadéquat ?",
       "choices": [
         "Oui",
         "Non"
