@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "updated_on": "2026-09-22",
   "policy": {
     "new_modules_must_be_novice_ready": true,
@@ -60,6 +60,15 @@
       "priority": 6,
       "reviewed_on": "2026-09-22",
       "notes": "P3S1 recentré : fluidité ≠ factualité, prémisses fausses, claims confirmés/contredits/insuffisamment étayés, réponse limitée et abstention. Vérification des sources reportée à P3S2 ; calibration reportée à P3S4."
+    },
+    {
+      "path": "modules/verification-sources.html",
+      "label": "Parcours 3 — Étape 2 · Vérification & sources",
+      "status": "novice-ready",
+      "legacy_debt": false,
+      "priority": 13,
+      "reviewed_on": "2026-09-22",
+      "notes": "Module natif P3S2 : claim, provenance, version, passage pertinent, soutien réel, indépendance des sources, Evidence Lab, trace de preuve, récupération et transfert. Les métriques d’évaluation restent hors périmètre jusqu’à P3S3."
     },
     {
       "path": "modules/rag-lab.html",
