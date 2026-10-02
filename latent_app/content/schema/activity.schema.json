@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://latent.local/schema/activity.schema.json",
+  "title": "LATENT V3 standalone activity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "type", "purpose", "evidenceIds", "config", "analytics"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[a-z0-9.-]+)?$"},
+    "type": {
+      "enum": [
+        "prediction-cards", "component-builder", "rank-order", "worked-example",
+        "completion", "self-explanation", "quiz", "transfer-cards", "tokenizer-lab",
+        "vector-lab", "parameter-lab", "attention-lab", "retrieval-lab", "evidence-lab", "eval-lab"
+      ]
+    },
+    "purpose": {"enum": ["acquire", "practice", "remediate", "retrieve", "transfer", "assess"]},
+    "evidenceIds": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "config": {"type": "object"},
+    "analytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["events"],
+      "properties": {
+        "events": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  }
+}
