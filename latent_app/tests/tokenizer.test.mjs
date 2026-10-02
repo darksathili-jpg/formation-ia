@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyRankedMerges, tokenizeText } from '../src/domain/activities/tokenizer.mjs';
+import { applyRankedMerges, getTokenizerModeInfo, tokenizeText } from '../src/domain/activities/tokenizer.mjs';
 
 test('extraordinaire produces reachable pedagogical subwords', () => {
   const detail = applyRankedMerges('extraordinaire');
@@ -51,6 +51,31 @@ test('word and byte views are alternative didactic views, not the subword engine
   const bytes = tokenizeText('é', { mode: 'byte' });
   assert.deepEqual(word.tokens.map((token) => token.display), ['Salut', '␠', '!']);
   assert.deepEqual(bytes.tokens.map((token) => token.display), ['0xC3', '0xA9']);
+  assert.equal(word.modeInfo.id, 'word');
+  assert.equal(bytes.modeInfo.id, 'byte');
+});
+
+test('switching modes keeps source facts stable while changing the didactic representation', () => {
+  const source = 'modèle 🚀';
+  const subword = tokenizeText(source, { mode: 'subword', contextLimit: 32 });
+  const word = tokenizeText(source, { mode: 'word', contextLimit: 32 });
+  const byte = tokenizeText(source, { mode: 'byte', contextLimit: 32 });
+
+  for (const result of [subword, word, byte]) {
+    assert.equal(result.source, source);
+    assert.equal(result.metrics.characters, 8);
+    assert.equal(result.metrics.bytes, 12);
+  }
+  assert.notEqual(subword.metrics.tokens, byte.metrics.tokens);
+  assert.match(subword.modeInfo.explanation, /BPE didactique/);
+  assert.match(word.modeInfo.explanation, /Vue lexicale/);
+  assert.match(byte.modeInfo.explanation, /UTF-8/);
+});
+
+test('mode descriptions are explicit about the pedagogical limits', () => {
+  assert.match(getTokenizerModeInfo('subword').explanation, /pas le vocabulaire d’un tokenizer commercial/);
+  assert.match(getTokenizerModeInfo('word').explanation, /pas une tokenisation LLM/);
+  assert.match(getTokenizerModeInfo('byte').explanation, /pas un token de modèle/);
 });
 
 test('invalid context budgets and modes fail loudly', () => {
