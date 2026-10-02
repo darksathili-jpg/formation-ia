@@ -1,4 +1,5 @@
 import { evaluateComponentMission, evaluateOrder, scoreChoiceSet } from '../../domain/activities/decision.mjs';
+import { tokenizeText } from '../../domain/activities/tokenizer.mjs';
 
 const COMPONENT_LABELS = Object.freeze({
   model: 'LLM',
@@ -278,6 +279,214 @@ function renderSelfExplanation(activity, emit) {
   return activityFrame(activity, body);
 }
 
+function renderTokenizerLab(activity, emit) {
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
+  const range = config.contextRange || { min: 1, max: 64, step: 1 };
+  const body = el('div', { className: 'tokenizer-lab' });
+  body.append(
+    el('h3', { text: config.title || 'Tokenizer Lab' }),
+    el('p', { className: 'activity-intro', text: config.instruction || '' })
+  );
+
+  const presetBar = el('div', { className: 'tokenizer-presets', attrs: { 'aria-label': 'Exemples de régression' } });
+  const textInput = el('textarea', {
+    attrs: {
+      rows: 5,
+      'data-tokenizer-input': '',
+      'aria-label': 'Texte à analyser'
+    }
+  });
+  textInput.value = config.initialText || '';
+
+  const modeSelect = el('select', { attrs: { 'data-tokenizer-mode': '', 'aria-label': 'Mode de représentation' } });
+  for (const mode of config.modes || []) {
+    modeSelect.append(el('option', { text: mode.label || mode.id, attrs: { value: mode.id } }));
+  }
+  modeSelect.value = config.initialMode || 'subword';
+
+  const contextInput = el('input', {
+    attrs: {
+      type: 'range',
+      min: range.min,
+      max: range.max,
+      step: range.step,
+      value: config.initialContextLimit || range.max,
+      'data-tokenizer-limit': '',
+      'aria-label': 'Limite de contexte'
+    }
+  });
+  const contextValue = el('output', { attrs: { 'data-tokenizer-limit-value': '' } });
+
+  for (const preset of config.presets || []) {
+    const presetButton = button(preset.label || preset.id, 'chip-button tokenizer-preset');
+    presetButton.dataset.presetId = preset.id;
+    presetButton.addEventListener('click', () => {
+      start();
+      textInput.value = preset.text;
+      modeSelect.value = 'subword';
+      update(true, 'preset', preset.id);
+      textInput.focus();
+    });
+    presetBar.append(presetButton);
+  }
+
+  const controls = el('div', { className: 'tokenizer-controls' }, [
+    el('label', { className: 'tokenizer-field' }, [
+      el('span', { text: 'Texte' }),
+      textInput
+    ]),
+    el('div', { className: 'tokenizer-control-row' }, [
+      el('label', { className: 'tokenizer-field' }, [
+        el('span', { text: 'Vue' }),
+        modeSelect
+      ]),
+      el('label', { className: 'tokenizer-field' }, [
+        el('span', { text: 'Fenêtre de contexte' }),
+        el('div', { className: 'tokenizer-range-row' }, [contextInput, contextValue])
+      ])
+    ])
+  ]);
+
+  const kpiCharacters = el('strong', { attrs: { 'data-tokenizer-kpi': 'characters' } });
+  const kpiTokens = el('strong', { attrs: { 'data-tokenizer-kpi': 'tokens' } });
+  const kpiUnique = el('strong', { attrs: { 'data-tokenizer-kpi': 'unique' } });
+  const kpiBytes = el('strong', { attrs: { 'data-tokenizer-kpi': 'bytes' } });
+  const kpis = el('div', { className: 'tokenizer-kpis' }, [
+    el('div', {}, [kpiCharacters, el('span', { text: 'caractères' })]),
+    el('div', {}, [kpiTokens, el('span', { text: 'unités' })]),
+    el('div', {}, [kpiUnique, el('span', { text: 'uniques' })]),
+    el('div', {}, [kpiBytes, el('span', { text: 'octets UTF-8' })])
+  ]);
+
+  const tokenList = el('div', {
+    className: 'tokenizer-tokens',
+    attrs: { 'data-tokenizer-tokens': '', 'aria-live': 'polite', 'aria-label': 'Unités produites' }
+  });
+  const modeHint = el('p', { className: 'small-note', attrs: { 'data-tokenizer-mode-hint': '' } });
+  const meterUsed = el('span', { className: 'tokenizer-meter-used' });
+  const meterOverflow = el('span', { className: 'tokenizer-meter-overflow' });
+  const contextStatus = el('div', { className: 'tokenizer-context-status', attrs: { 'data-tokenizer-context-status': '' } });
+  const meter = el('div', { className: 'tokenizer-meter', attrs: { 'aria-hidden': 'true' } }, [meterUsed, meterOverflow]);
+
+  const traceTitle = el('strong', { text: 'Trace BPE didactique' });
+  const traceFlow = el('div', { className: 'tokenizer-trace-flow', attrs: { 'data-tokenizer-trace': '' } });
+  const traceResult = el('p', { className: 'small-note', attrs: { 'data-tokenizer-trace-result': '' } });
+  const traceBox = el('div', { className: 'tokenizer-trace' }, [traceTitle, traceFlow, traceResult]);
+
+  const snapshotFeedback = feedbackBox();
+  const snapshot = button('Capturer cet essai');
+  snapshot.dataset.tokenizerSnapshot = '';
+  let lastResult = null;
+
+  function update(emitChange = false, source = 'control', presetId = null) {
+    const limit = Number(contextInput.value);
+    lastResult = tokenizeText(textInput.value, { mode: modeSelect.value, contextLimit: limit });
+    contextValue.textContent = `${lastResult.context.limit} unités`;
+    kpiCharacters.textContent = String(lastResult.metrics.characters);
+    kpiTokens.textContent = String(lastResult.metrics.tokens);
+    kpiUnique.textContent = String(lastResult.metrics.unique);
+    kpiBytes.textContent = String(lastResult.metrics.bytes);
+    modeHint.textContent = lastResult.modeInfo.explanation;
+
+    tokenList.replaceChildren();
+    for (const token of lastResult.tokens) {
+      tokenList.append(el('span', {
+        className: `tokenizer-token ${token.kind}${token.inContext ? '' : ' overflow'}`,
+        text: token.display,
+        attrs: {
+          'data-token-index': token.index,
+          'data-token-kind': token.kind,
+          'data-in-context': token.inContext ? 'true' : 'false'
+        }
+      }));
+    }
+
+    const usedRatio = lastResult.context.limit ? Math.min(1, lastResult.context.used / lastResult.context.limit) : 0;
+    const overflowRatio = lastResult.metrics.tokens ? Math.min(1, lastResult.context.overflow / lastResult.metrics.tokens) : 0;
+    meterUsed.style.width = `${usedRatio * 100}%`;
+    meterOverflow.style.width = `${overflowRatio * 100}%`;
+    contextStatus.textContent = lastResult.context.withinBudget
+      ? `${lastResult.metrics.tokens} / ${lastResult.context.limit} · ${lastResult.context.available} disponible(s)`
+      : `${lastResult.metrics.tokens} / ${lastResult.context.limit} · ${lastResult.context.overflow} hors fenêtre`;
+    contextStatus.dataset.state = lastResult.context.withinBudget ? 'within' : 'overflow';
+
+    const words = [...lastResult.words].sort((a, b) => b.source.length - a.source.length);
+    const target = words[0];
+    traceFlow.replaceChildren();
+    if (lastResult.mode !== 'subword' || !target) {
+      traceBox.hidden = true;
+    } else {
+      traceBox.hidden = false;
+      const shown = target.trace.slice(0, config.traceLimit || 10);
+      traceTitle.textContent = `Trace BPE didactique · « ${target.source} »`;
+      if (!shown.length) {
+        traceFlow.append(el('span', { className: 'tokenizer-trace-step', text: 'aucune fusion connue' }));
+      } else {
+        shown.forEach((step, index) => {
+          if (index) traceFlow.append(el('span', { className: 'tokenizer-trace-arrow', text: '→' }));
+          traceFlow.append(el('span', { className: 'tokenizer-trace-step', text: `${step.left} + ${step.right} → ${step.merged}` }));
+        });
+        if (target.trace.length > shown.length) {
+          traceFlow.append(el('span', { className: 'tokenizer-trace-step', text: `+${target.trace.length - shown.length} fusion(s)` }));
+        }
+      }
+      traceResult.textContent = `${target.source} → ${target.tokens.join(' | ')} · ${target.tokens.length} sous-unité(s)`;
+    }
+
+    if (emitChange) {
+      emit('manipulation.changed', activity.id, {
+        source,
+        presetId,
+        mode: lastResult.mode,
+        characters: lastResult.metrics.characters,
+        bytes: lastResult.metrics.bytes,
+        tokens: lastResult.metrics.tokens,
+        contextLimit: lastResult.context.limit,
+        overflow: lastResult.context.overflow
+      });
+    }
+  }
+
+  textInput.addEventListener('input', () => { start(); update(true, 'text'); });
+  modeSelect.addEventListener('change', () => { start(); update(true, 'mode'); });
+  contextInput.addEventListener('input', () => { start(); update(true, 'context'); });
+  snapshot.addEventListener('click', () => {
+    start();
+    update(false);
+    const payload = {
+      mode: lastResult.mode,
+      source: lastResult.source,
+      metrics: lastResult.metrics,
+      context: lastResult.context
+    };
+    emit('tokenizer.snapshot', activity.id, payload);
+    emit('attempt.completed', activity.id, payload);
+    snapshotFeedback.textContent = lastResult.context.withinBudget
+      ? `Essai enregistré : ${lastResult.metrics.tokens} unité(s), budget respecté.`
+      : `Essai enregistré : dépassement de ${lastResult.context.overflow} unité(s).`;
+  });
+
+  body.append(
+    presetBar,
+    el('div', { className: 'tokenizer-grid' }, [
+      controls,
+      el('div', { className: 'tokenizer-output' }, [
+        kpis,
+        tokenList,
+        modeHint,
+        meter,
+        contextStatus,
+        traceBox,
+        snapshot,
+        snapshotFeedback
+      ])
+    ])
+  );
+  update(false);
+  return activityFrame(activity, body);
+}
+
 function renderScoredItems(activity, items, emit, onEvidence, kind) {
   const start = startedOnce(activity, emit);
   const body = el('div');
@@ -348,12 +557,13 @@ function renderUnsupported(activity) {
   ]));
 }
 
-function renderActivity(activity, assessmentBank, emit, onEvidence) {
+export function renderActivity(activity, assessmentBank = {}, emit, onEvidence = () => {}) {
   if (activity.type === 'prediction-cards') return renderPrediction(activity, emit);
   if (activity.type === 'worked-example') return renderWorkedExample(activity);
   if (activity.type === 'component-builder') return renderComponentBuilder(activity, emit);
   if (activity.type === 'rank-order') return renderRankOrder(activity, emit);
   if (activity.type === 'self-explanation') return renderSelfExplanation(activity, emit);
+  if (activity.type === 'tokenizer-lab') return renderTokenizerLab(activity, emit);
   if (activity.type === 'quiz') return renderScoredItems(activity, assessmentBank.quiz || [], emit, onEvidence, 'quiz');
   if (activity.type === 'transfer-cards') return renderScoredItems(activity, assessmentBank.transfer || [], emit, onEvidence, 'transfer');
   return renderUnsupported(activity);
