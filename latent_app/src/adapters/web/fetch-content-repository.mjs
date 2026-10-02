@@ -9,6 +9,7 @@ export class FetchContentRepository extends ContentRepository {
     this.fetchImpl = fetchImpl;
     this.moduleCache = new Map();
     this.bankCache = new Map();
+    this.activityCache = new Map();
   }
 
   async #json(relativePath) {
@@ -29,12 +30,8 @@ export class FetchContentRepository extends ContentRepository {
   }
 
   async getActivity(activityId) {
-    for (const promise of this.moduleCache.values()) {
-      const module = await promise;
-      const activity = module.activities?.find((item) => item.id === activityId);
-      if (activity) return structuredClone(activity);
-    }
-    throw new Error(`Activity not loaded: ${activityId}`);
+    if (!this.activityCache.has(activityId)) this.activityCache.set(activityId, this.#json(`activities/${activityId}.json`));
+    return structuredClone(await this.activityCache.get(activityId));
   }
 
   async getVersion() {
