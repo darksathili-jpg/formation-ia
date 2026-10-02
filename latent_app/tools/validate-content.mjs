@@ -5,14 +5,18 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const schema = JSON.parse(await readFile(path.join(ROOT, 'content/schema/module.schema.json'), 'utf8'));
+const moduleSchema = JSON.parse(await readFile(path.join(ROOT, 'content/schema/module.schema.json'), 'utf8'));
+const activitySchema = JSON.parse(await readFile(path.join(ROOT, 'content/schema/activity.schema.json'), 'utf8'));
 const ajv = new Ajv2020({ allErrors: true, strict: true });
 addFormats(ajv);
-const validate = ajv.compile(schema);
+const validateModule = ajv.compile(moduleSchema);
+const validateActivity = ajv.compile(activitySchema);
 
 const moduleDir = path.join(ROOT, 'content/modules');
 const bankDir = path.join(ROOT, 'content/assessment-banks');
+const activityDir = path.join(ROOT, 'content/activities');
 const files = (await readdir(moduleDir)).filter((name) => name.endsWith('.json')).sort();
+const activityFiles = (await readdir(activityDir)).filter((name) => name.endsWith('.json')).sort();
 const errors = [];
 
 function unique(values) {
@@ -38,12 +42,49 @@ function validateAssessmentItems(file, label, items) {
   }
 }
 
+function validateTokenizerLab(file, activity) {
+  const config = activity.config || {};
+  if (activity.type !== 'tokenizer-lab') return;
+  if (!config.title || !config.instruction || typeof config.initialText !== 'string') {
+    errors.push(`${file}: contrat Tokenizer Lab incomplet`);
+  }
+  const modeIds = Array.isArray(config.modes) ? config.modes.map((mode) => mode.id) : [];
+  for (const required of ['subword', 'word', 'byte']) {
+    if (!modeIds.includes(required)) errors.push(`${file}: mode ${required} absent`);
+  }
+  if (!unique(modeIds)) errors.push(`${file}: modes dupliqués`);
+  if (!modeIds.includes(config.initialMode)) errors.push(`${file}: initialMode absent de modes`);
+
+  const range = config.contextRange || {};
+  if (!Number.isInteger(range.min) || !Number.isInteger(range.max) || !Number.isInteger(range.step) || range.min < 1 || range.max < range.min || range.step < 1) {
+    errors.push(`${file}: contextRange invalide`);
+  }
+  if (!Number.isInteger(config.initialContextLimit) || config.initialContextLimit < range.min || config.initialContextLimit > range.max) {
+    errors.push(`${file}: initialContextLimit hors plage`);
+  }
+
+  const presets = Array.isArray(config.presets) ? config.presets : [];
+  const presetIds = presets.map((preset) => preset.id);
+  for (const required of ['extraordinaire', 'accent', 'emoji', 'spaces']) {
+    if (!presetIds.includes(required)) errors.push(`${file}: preset de régression ${required} absent`);
+  }
+  if (!unique(presetIds)) errors.push(`${file}: presets dupliqués`);
+  for (const preset of presets) {
+    if (!preset.label || typeof preset.text !== 'string') errors.push(`${file}: preset ${preset.id || '?'} incomplet`);
+  }
+
+  const events = activity.analytics?.events || [];
+  for (const required of ['activity.started', 'manipulation.changed', 'tokenizer.snapshot', 'attempt.completed']) {
+    if (!events.includes(required)) errors.push(`${file}: événement ${required} absent`);
+  }
+}
+
 for (const file of files) {
   const full = path.join(moduleDir, file);
   const module = JSON.parse(await readFile(full, 'utf8'));
 
-  if (!validate(module)) {
-    for (const error of validate.errors || []) {
+  if (!validateModule(module)) {
+    for (const error of validateModule.errors || []) {
       errors.push(`${file}${error.instancePath || '/'} ${error.message}`);
     }
     continue;
@@ -135,11 +176,24 @@ for (const file of files) {
   }
 }
 
+for (const file of activityFiles) {
+  const activity = JSON.parse(await readFile(path.join(activityDir, file), 'utf8'));
+  if (!validateActivity(activity)) {
+    for (const error of validateActivity.errors || []) {
+      errors.push(`activities/${file}${error.instancePath || '/'} ${error.message}`);
+    }
+    continue;
+  }
+  if (`${activity.id}.json` !== file) errors.push(`activities/${file}: nom de fichier différent de l'id ${activity.id}`);
+  validateTokenizerLab(`activities/${file}`, activity);
+}
+
 if (!files.length) errors.push('Aucun module déclaratif trouvé');
+if (!activityFiles.length) errors.push('Aucune activité autonome déclarative trouvée');
 
 if (errors.length) {
   console.error(`\n❌ CONTENU LATENT V3 INVALIDE\n- ${errors.join('\n- ')}`);
   process.exit(1);
 }
 
-console.log(`✅ Contenu LATENT V3 valide — ${files.length} module(s), schéma ECDL, banques d’évaluation et références croisées vérifiés.`);
+console.log(`✅ Contenu LATENT V3 valide — ${files.length} module(s), ${activityFiles.length} activité(s) autonome(s), schémas ECDL, banques d’évaluation et références croisées vérifiés.`);
