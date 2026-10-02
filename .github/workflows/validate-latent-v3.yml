@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - refactor/latent-v3-architecture
+      - refactor/latent-v3-tokenizer-slice
     paths:
       - 'latent_app/**'
       - 'formation_llm/docs/AUDIT_ARCHITECTURE_V3_2026-10-02.md'
@@ -16,7 +17,7 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: latent_app
@@ -40,6 +41,7 @@ jobs:
           node --check src/entrypoints/electron/main.mjs
           node --check src/entrypoints/electron/preload.mjs
           node --check src/entrypoints/web/app.mjs
+          node --check src/entrypoints/web/tokenizer-app.mjs
           node --check src/application/module-presenter.mjs
           node --check src/adapters/web/fetch-content-repository.mjs
           node --check src/adapters/web/module-renderer.mjs
@@ -47,7 +49,11 @@ jobs:
           node --check src/adapters/web/local-learning-event-repository.mjs
           node --check src/domain/activities/decision.mjs
           node --check src/domain/activities/tokenizer.mjs
+          node --check tests/e2e-smoke.mjs
           node --check tools/validate-architecture.mjs
 
       - name: Validate domain, content and architecture
         run: npm run validate
+
+      - name: End-to-end Web and Electron gate
+        run: xvfb-run -a --server-args="-screen 0 1440x1000x24" npm run test:e2e
