@@ -6,7 +6,7 @@ export class FetchContentRepository extends ContentRepository {
     if (!contentRoot) throw new Error('contentRoot is required');
     if (typeof fetchImpl !== 'function') throw new Error('fetch implementation is required');
     this.contentRoot = contentRoot instanceof URL ? contentRoot : new URL(String(contentRoot), globalThis.location?.href || 'http://localhost/');
-    this.fetchImpl = fetchImpl;
+    this.fetchImpl = fetchImpl.bind(globalThis);
     this.moduleCache = new Map();
     this.bankCache = new Map();
     this.activityCache = new Map();
