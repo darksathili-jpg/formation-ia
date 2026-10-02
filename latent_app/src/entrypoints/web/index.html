@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'">
+  <title>LATENT Learning V3</title>
+  <link rel="stylesheet" href="./app.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Passer au contenu</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navigation principale">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">L</div>
+        <div><strong>LATENT V3</strong><small>Architecture sandbox</small></div>
+      </div>
+      <nav>
+        <a class="active" href="#architecture">Architecture</a>
+        <a href="#slice">Tranche pilote</a>
+        <a href="#evidence">Evidence model</a>
+      </nav>
+      <div class="runtime" id="runtimeCard">Runtime : navigateur</div>
+    </aside>
+
+    <main id="main">
+      <header class="hero" id="architecture">
+        <p class="eyebrow">ECDL × HEXAGONAL × OFFLINE-FIRST</p>
+        <h1>Le moteur d'apprentissage devient le produit.</h1>
+        <p class="lead">Cette sandbox sépare enfin le contenu, les preuves d'apprentissage, les règles métier et le runtime desktop. Electron n'est qu'un adaptateur autour du même renderer Web.</p>
+        <div class="badges"><span>Domain first</span><span>Web + Electron</span><span>Offline</span><span>Ports & Adapters</span></div>
+      </header>
+
+      <section class="cards" aria-label="Principes d'architecture">
+        <article><b>Competency</b><p>Ce que l'apprenant doit réellement savoir expliquer ou faire.</p></article>
+        <article><b>Evidence</b><p>Ce qui permet de conclure que cette compétence est démontrée.</p></article>
+        <article><b>Task</b><p>La manipulation qui fait émerger une preuve observable.</p></article>
+        <article><b>Pedagogy</b><p>L'étayage, le feedback, le retrait de l'aide et la remédiation.</p></article>
+      </section>
+
+      <section class="section" id="slice">
+        <div class="section-head"><span>01</span><div><h2>Tranche verticale pilote</h2><p>On ne migre pas quatorze modules à l'aveugle.</p></div></div>
+        <div class="timeline">
+          <div class="done"><b>P0 manipulation-first</b><small>Premier contenu déclaratif</small></div>
+          <div><b>Tokenizer Lab</b><small>Premier moteur de lab complexe</small></div>
+          <div><b>Progress repository</b><small>Persistance remplaçable</small></div>
+          <div><b>Learning events</b><small>Mesurer sans télémétrie cachée</small></div>
+          <div><b>Gate terrain</b><small>Web + Electron + élèves</small></div>
+        </div>
+      </section>
+
+      <section class="section" id="evidence">
+        <div class="section-head"><span>02</span><div><h2>Contrat pédagogique</h2><p>Une page n'est plus « terminée » parce qu'elle contient un quiz.</p></div></div>
+        <div class="contract">
+          <code>outcome</code><i>→</i><code>misconception</code><i>→</i><code>evidence</code><i>→</i><code>task</code><i>→</i><code>feedback</code><i>→</i><code>transfer</code><i>→</i><code>mastery</code><i>→</i><code>review</code>
+        </div>
+        <p class="notice">La sandbox n'est pas encore destinée aux stagiaires. Elle sert à prouver l'architecture avant migration du produit actif.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
