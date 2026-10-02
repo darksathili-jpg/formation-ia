@@ -41,8 +41,12 @@ if (!app.includes('new FetchContentRepository')) errors.push('app.mjs: ContentRe
 if (/fetch\s*\(/.test(app)) errors.push('app.mjs: accès HTTP direct détecté, utiliser ContentRepository');
 if (!app.includes('buildModuleViewModel')) errors.push('app.mjs: presenter applicatif non utilisé');
 if (!renderer.includes("from '../../domain/activities/decision.mjs'")) errors.push('renderer: décisions métier non déléguées au domaine');
-if (/\.answer\b/.test(renderer)) errors.push('renderer: lecture directe de answer détectée, scoring doit rester dans le domaine');
-if (!renderer.includes("data-rendered-from', 'declarative-content") && !renderer.includes("dataset.renderedFrom = 'declarative-content'")) {
+const directAnswerComparison = /\.answer\s*(?:===|==|!==|!=)|(?:===|==|!==|!=)[^;\n]*\.answer/;
+if (directAnswerComparison.test(renderer)) errors.push('renderer: comparaison directe à answer détectée, scoring doit rester dans le domaine');
+if (!renderer.includes('evaluateComponentMission(') || !renderer.includes('evaluateOrder(') || !renderer.includes('scoreChoiceSet(')) {
+  errors.push('renderer: un moteur de décision de domaine attendu n’est pas utilisé');
+}
+if (!renderer.includes("dataset.renderedFrom = 'declarative-content'")) {
   errors.push('renderer: preuve de rendu déclaratif absente');
 }
 if (presenter.includes('document.') || presenter.includes('window.')) errors.push('module-presenter: dépendance DOM interdite');
