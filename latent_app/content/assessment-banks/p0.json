@@ -1,0 +1,81 @@
+{
+  "moduleId": "p0",
+  "quiz": [
+    {
+      "id": "q1",
+      "prompt": "Un assistant reformule un texte déjà fourni. Quelle conclusion est la plus juste ?",
+      "choices": ["Le LLM peut produire la reformulation à partir du contexte fourni.", "Une base documentaire externe est toujours nécessaire.", "Les poids du modèle viennent forcément d'être modifiés."],
+      "answer": 0,
+      "feedback": "Le texte source est déjà dans le contexte : la génération peut être assurée par le modèle sans accès documentaire supplémentaire."
+    },
+    {
+      "id": "q2",
+      "prompt": "L'assistant cite correctement un règlement modifié ce matin. Qu'est-ce que cela prouve ?",
+      "choices": ["Que le règlement est nécessairement dans les poids du LLM.", "Qu'une version actuelle a pu être retrouvée puis fournie au modèle.", "Que la fenêtre de contexte est une mémoire permanente."],
+      "answer": 1,
+      "feedback": "Une réponse actuelle peut venir d'un composant de recherche ou d'un document injecté dans le contexte."
+    },
+    {
+      "id": "q3",
+      "prompt": "Une préférence est retrouvée après fermeture puis réouverture de l'application. L'explication la plus plausible est…",
+      "choices": ["un stockage ou une mémoire applicative", "une modification automatique des poids", "la température du modèle"],
+      "answer": 0,
+      "feedback": "La persistance entre sessions peut être assurée par l'application sans réentraînement du modèle."
+    },
+    {
+      "id": "q4",
+      "prompt": "Pour créer réellement un rendez-vous dans un agenda, il faut au minimum…",
+      "choices": ["un texte affirmant que le rendez-vous est créé", "un outil ou une fonction autorisée reliée à l'agenda", "augmenter le nombre de paramètres du LLM"],
+      "answer": 1,
+      "feedback": "Générer une phrase et effectuer une action dans un système externe sont deux opérations distinctes."
+    },
+    {
+      "id": "q5",
+      "prompt": "Quelle chaîne situe correctement un LLM moderne ?",
+      "choices": ["LLM → IA → deep learning → machine learning", "IA → machine learning → deep learning → LLM", "Application → LLM → IA → mémoire"],
+      "answer": 1,
+      "feedback": "Le LLM moderne appartient à une famille de modèles de deep learning, lui-même sous-ensemble du machine learning."
+    },
+    {
+      "id": "q6",
+      "prompt": "Que ne permet PAS de conclure la chaîne IA → ML → deep learning → LLM ?",
+      "choices": ["Qu'un LLM moderne utilise du deep learning.", "Que tout système d'IA utilise du machine learning.", "Que machine learning et deep learning ne sont pas synonymes."],
+      "answer": 1,
+      "feedback": "Il existe aussi des approches d'IA qui ne relèvent pas du machine learning."
+    }
+  ],
+  "transfer": [
+    {
+      "id": "t1",
+      "scenario": "Une application de voyage affiche les horaires de train disponibles à l'instant.",
+      "prompt": "Quelle couche doit probablement apporter cette information actuelle ?",
+      "choices": ["Le modèle seul", "Un accès externe aux horaires", "La taille de la fenêtre de contexte"],
+      "answer": 1,
+      "feedback": "Une disponibilité en temps réel nécessite une source ou un service externe actualisé."
+    },
+    {
+      "id": "t2",
+      "scenario": "Le voyageur colle un message puis demande de le reformuler plus poliment.",
+      "prompt": "Quelle capacité centrale suffit pour produire le nouveau texte ?",
+      "choices": ["La génération du modèle à partir du contexte fourni", "Une mémoire persistante", "Un accès à la billetterie"],
+      "answer": 0,
+      "feedback": "Le matériau à transformer est déjà fourni dans la requête."
+    },
+    {
+      "id": "t3",
+      "scenario": "L'application retrouve la semaine suivante la préférence « toujours côté fenêtre ».",
+      "prompt": "Quel composant explique le mieux cette persistance ?",
+      "choices": ["Une mémoire ou un stockage applicatif", "La ponctuation du prompt", "Le nombre de couches du Transformer"],
+      "answer": 0,
+      "feedback": "La donnée peut être stockée puis réinjectée lors d'une session ultérieure."
+    },
+    {
+      "id": "t4",
+      "scenario": "Après confirmation, l'application achète réellement le billet.",
+      "prompt": "Quelle capacité supplémentaire est indispensable ?",
+      "choices": ["Un outil ou une API autorisée à effectuer l'achat", "Un vocabulaire de tokenizer plus grand", "Une température plus basse"],
+      "answer": 0,
+      "feedback": "L'action réelle doit être exécutée par un composant relié au service de réservation."
+    }
+  ]
+}
