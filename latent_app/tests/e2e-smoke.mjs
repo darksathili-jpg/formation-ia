@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { app, BrowserWindow } from 'electron';
 
+console.log('▶ E2E bootstrap');
 process.env.LATENT_E2E_IMPORT = '1';
 const {
   APP_ROOT,
@@ -13,6 +14,12 @@ const {
   createWindow
 } = await import('../src/entrypoints/electron/main.mjs');
 
+const WATCHDOG_MS = 60_000;
+const watchdog = setTimeout(() => {
+  console.error(`❌ E2E watchdog exceeded ${WATCHDOG_MS} ms`);
+  app.exit(1);
+}, WATCHDOG_MS);
+
 const MIME = new Map([
   ['.html', 'text/html; charset=utf-8'],
   ['.mjs', 'text/javascript; charset=utf-8'],
@@ -20,6 +27,10 @@ const MIME = new Map([
   ['.css', 'text/css; charset=utf-8'],
   ['.json', 'application/json; charset=utf-8']
 ]);
+
+function stage(label) {
+  console.log(`▶ E2E ${label}`);
+}
 
 function safeStaticPath(pathname) {
   const relative = decodeURIComponent(pathname).replace(/^\/+/, '');
@@ -60,6 +71,8 @@ async function startStaticServer() {
 
 async function closeServer(server) {
   if (!server) return;
+  server.closeIdleConnections?.();
+  server.closeAllConnections?.();
   await new Promise((resolve) => server.close(resolve));
 }
 
@@ -67,6 +80,7 @@ async function waitFor(win, expression, { timeout = 8000, interval = 50, label =
   const deadline = Date.now() + timeout;
   let lastError = null;
   while (Date.now() < deadline) {
+    if (win.isDestroyed()) throw new Error(`Window destroyed while waiting for ${label}`);
     try {
       const value = await win.webContents.executeJavaScript(`Boolean(${expression})`, true);
       if (value) return;
@@ -79,7 +93,7 @@ async function waitFor(win, expression, { timeout = 8000, interval = 50, label =
 }
 
 async function reloadAndWait(win, expression, label) {
-  await win.webContents.reload();
+  win.webContents.reload();
   await waitFor(win, expression, { label });
 }
 
@@ -95,8 +109,7 @@ async function smokeP0(win, expectedRuntime) {
 
   const source = await win.webContents.executeJavaScript(`({
     moduleId: document.querySelector('#moduleRoot')?.dataset.moduleId,
-    title: document.querySelector('.module-hero h1')?.textContent,
-    unsupported: document.querySelectorAll('.activity .activity-intro').length
+    title: document.querySelector('.module-hero h1')?.textContent
   })`, true);
   assert.equal(source.moduleId, 'p0');
   assert.match(source.title, /assistant IA/i);
@@ -196,38 +209,53 @@ async function makeWebWindow(url) {
 
 let server;
 const windows = [];
+let exitCode = 0;
 try {
+  stage('waiting for Electron ready');
   await app.whenReady();
+  stage('Electron ready');
   await registerAppProtocol();
   registerIpc();
   const staticHost = await startStaticServer();
   server = staticHost.server;
+  stage(`static server ${staticHost.origin}`);
 
+  stage('P0 Web');
   const webP0 = await makeWebWindow(`${staticHost.origin}/${WEB_ENTRY}`);
   windows.push(webP0);
   await smokeP0(webP0, 'Web');
+  stage('P0 Web ✓');
 
+  stage('P0 Electron');
   const electronP0 = createWindow({ showWhenReady: false });
   windows.push(electronP0);
   await smokeP0(electronP0, 'Electron');
+  stage('P0 Electron ✓');
 
+  stage('Tokenizer Web');
   const webTokenizer = await makeWebWindow(`${staticHost.origin}/src/entrypoints/web/tokenizer.html`);
   windows.push(webTokenizer);
   await smokeTokenizer(webTokenizer, 'Web');
+  stage('Tokenizer Web ✓');
 
+  stage('Tokenizer Electron');
   const electronTokenizer = createWindow({ entry: 'src/entrypoints/web/tokenizer.html', showWhenReady: false });
   windows.push(electronTokenizer);
   await smokeTokenizer(electronTokenizer, 'Electron');
+  stage('Tokenizer Electron ✓');
 
   console.log('✅ E2E LATENT V3 — P0 Web/Electron, reprise de session et Tokenizer Lab validés.');
 } catch (error) {
+  exitCode = 1;
   console.error('❌ E2E LATENT V3 FAILED');
-  console.error(error);
-  process.exitCode = 1;
+  console.error(error?.stack || error);
 } finally {
+  stage('cleanup');
+  clearTimeout(watchdog);
   for (const win of windows) {
     if (!win.isDestroyed()) win.destroy();
   }
   await closeServer(server);
-  app.quit();
+  stage(`exit ${exitCode}`);
+  app.exit(exitCode);
 }
