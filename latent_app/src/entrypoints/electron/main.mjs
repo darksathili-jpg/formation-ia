@@ -4,7 +4,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const WEB_ROOT = path.resolve(__dirname, '../web');
+const APP_ROOT = path.resolve(__dirname, '../../..');
+const WEB_ENTRY = 'src/entrypoints/web/index.html';
 const PRELOAD = path.resolve(__dirname, 'preload.mjs');
 const TRUSTED_ORIGIN = 'latent://app';
 
@@ -39,18 +40,18 @@ function isTrustedSender(event) {
   return url === `${TRUSTED_ORIGIN}/` || url.startsWith(`${TRUSTED_ORIGIN}/`);
 }
 
-function safeRendererPath(requestUrl) {
+function safeAppPath(requestUrl) {
   const url = new URL(requestUrl);
-  let relative = decodeURIComponent(url.pathname.replace(/^\/+/, '')) || 'index.html';
-  if (relative.endsWith('/')) relative += 'index.html';
-  const resolved = path.resolve(WEB_ROOT, relative);
-  if (resolved !== WEB_ROOT && !resolved.startsWith(`${WEB_ROOT}${path.sep}`)) return null;
+  let relative = decodeURIComponent(url.pathname.replace(/^\/+/, '')) || WEB_ENTRY;
+  if (relative.endsWith('/')) relative += WEB_ENTRY;
+  const resolved = path.resolve(APP_ROOT, relative);
+  if (resolved !== APP_ROOT && !resolved.startsWith(`${APP_ROOT}${path.sep}`)) return null;
   return resolved;
 }
 
 async function registerAppProtocol() {
   protocol.handle('latent', async (request) => {
-    const target = safeRendererPath(request.url);
+    const target = safeAppPath(request.url);
     if (!target) return new Response('Forbidden', { status: 403 });
     try {
       const body = await readFile(target);
@@ -102,7 +103,7 @@ function createWindow() {
   });
 
   win.once('ready-to-show', () => win.show());
-  win.loadURL(`${TRUSTED_ORIGIN}/index.html`);
+  win.loadURL(`${TRUSTED_ORIGIN}/${WEB_ENTRY}`);
   return win;
 }
 
