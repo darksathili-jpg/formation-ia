@@ -1,0 +1,31 @@
+{
+  "id": "tokenizer-lab",
+  "version": "3.0.0-alpha.1",
+  "type": "tokenizer-lab",
+  "purpose": "practice",
+  "evidenceIds": [],
+  "config": {
+    "title": "Tokenizer Lab",
+    "instruction": "Modifiez le texte, le mode de représentation et la taille de contexte. Comparez ce qui change sans confondre cette simulation didactique avec le tokenizer d'un modèle commercial.",
+    "initialText": "extraordinaire modèle 🚀  IA !",
+    "initialMode": "subword",
+    "initialContextLimit": 12,
+    "contextRange": {"min": 1, "max": 64, "step": 1},
+    "modes": [
+      {"id": "subword", "label": "Sous-mots · BPE didactique"},
+      {"id": "word", "label": "Vue lexicale"},
+      {"id": "byte", "label": "Octets UTF-8"}
+    ],
+    "presets": [
+      {"id": "extraordinaire", "label": "extraordinaire", "text": "extraordinaire"},
+      {"id": "accent", "label": "accents", "text": "modèle déjà été"},
+      {"id": "emoji", "label": "emoji", "text": "🚀 IA !"},
+      {"id": "spaces", "label": "espaces", "text": "a  b"},
+      {"id": "mixed", "label": "mixte", "text": "Bonjour, extraordinaire 🚀 !"}
+    ],
+    "traceLimit": 10
+  },
+  "analytics": {
+    "events": ["activity.started", "manipulation.changed", "tokenizer.snapshot", "attempt.completed"]
+  }
+}
