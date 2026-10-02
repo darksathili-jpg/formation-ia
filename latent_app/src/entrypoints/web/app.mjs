@@ -1,13 +1,14 @@
 import { buildModuleViewModel } from '../../application/module-presenter.mjs';
 import { evaluateMastery } from '../../domain/learning/mastery.mjs';
 import { createLearningEvent } from '../../domain/analytics/learning-event.mjs';
+import { FetchContentRepository } from '../../adapters/web/fetch-content-repository.mjs';
 import { LocalProgressRepository } from '../../adapters/web/local-progress-repository.mjs';
 import { LocalLearningEventRepository } from '../../adapters/web/local-learning-event-repository.mjs';
 import { renderModule } from '../../adapters/web/module-renderer.mjs';
 
 const PROFILE_ID = 'local-profile';
 const COURSE_ID = 'latent-llm';
-const MODULE_URL = new URL('../../../content/modules/p0.json', import.meta.url);
+const MODULE_ID = 'p0';
 
 async function detectRuntime() {
   if (window.latentDesktop?.getRuntimeInfo) {
@@ -24,19 +25,14 @@ async function detectRuntime() {
   };
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`Impossible de charger ${url.pathname} (${response.status})`);
-  return response.json();
-}
-
 function sessionId() {
   return globalThis.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 const runtime = await detectRuntime();
-const moduleData = await fetchJson(MODULE_URL);
-const assessmentBank = await fetchJson(new URL(`../../../content/assessment-banks/${moduleData.moduleId}.json`, import.meta.url));
+const contentRepository = new FetchContentRepository({ contentRoot: new URL('../../../content/', import.meta.url) });
+const moduleData = await contentRepository.getModule(MODULE_ID);
+const assessmentBank = await contentRepository.getAssessmentBank(MODULE_ID);
 const view = buildModuleViewModel(moduleData);
 const progressRepository = new LocalProgressRepository();
 const eventRepository = new LocalLearningEventRepository();
