@@ -45,7 +45,9 @@ jobs:
           node --check src/adapters/web/module-renderer.mjs
           node --check src/adapters/web/local-progress-repository.mjs
           node --check src/adapters/web/local-learning-event-repository.mjs
+          node --check src/domain/activities/decision.mjs
           node --check src/domain/activities/tokenizer.mjs
+          node --check tools/validate-architecture.mjs
 
-      - name: Validate domain and content
+      - name: Validate domain, content and architecture
         run: npm run validate
