@@ -1,0 +1,45 @@
+name: Validate LATENT V3
+
+on:
+  push:
+    branches:
+      - refactor/latent-v3-architecture
+    paths:
+      - 'latent_app/**'
+      - 'formation_llm/docs/AUDIT_ARCHITECTURE_V3_2026-10-02.md'
+      - 'formation_llm/docs/ARCHITECTURE_V3_ECDL_HEXAGONAL.md'
+      - 'formation_llm/docs/BENCHMARK_FIDLE_2026-10-02.md'
+      - 'formation_llm/docs/MIGRATION_STRANGLER_V3.md'
+      - '.github/workflows/validate-latent-v3.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: latent_app
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: latent_app/package.json
+
+      - name: Install validation dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Syntax-check entrypoints
+        run: |
+          node --check src/entrypoints/electron/main.mjs
+          node --check src/entrypoints/electron/preload.mjs
+          node --check src/entrypoints/web/app.mjs
+
+      - name: Validate domain and content
+        run: npm run validate
