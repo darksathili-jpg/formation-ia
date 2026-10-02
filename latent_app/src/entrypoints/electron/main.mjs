@@ -4,10 +4,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const APP_ROOT = path.resolve(__dirname, '../../..');
-const WEB_ENTRY = 'src/entrypoints/web/index.html';
+export const APP_ROOT = path.resolve(__dirname, '../../..');
+export const WEB_ENTRY = 'src/entrypoints/web/index.html';
 const PRELOAD = path.resolve(__dirname, 'preload.mjs');
-const TRUSTED_ORIGIN = 'latent://app';
+export const TRUSTED_ORIGIN = 'latent://app';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -40,7 +40,7 @@ function isTrustedSender(event) {
   return url === `${TRUSTED_ORIGIN}/` || url.startsWith(`${TRUSTED_ORIGIN}/`);
 }
 
-function safeAppPath(requestUrl) {
+export function safeAppPath(requestUrl) {
   const url = new URL(requestUrl);
   let relative = decodeURIComponent(url.pathname.replace(/^\/+/, '')) || WEB_ENTRY;
   if (relative.endsWith('/')) relative += WEB_ENTRY;
@@ -49,7 +49,7 @@ function safeAppPath(requestUrl) {
   return resolved;
 }
 
-async function registerAppProtocol() {
+export async function registerAppProtocol() {
   protocol.handle('latent', async (request) => {
     const target = safeAppPath(request.url);
     if (!target) return new Response('Forbidden', { status: 403 });
@@ -68,7 +68,8 @@ async function registerAppProtocol() {
   });
 }
 
-function registerIpc() {
+export function registerIpc() {
+  ipcMain.removeHandler('runtime:get-info');
   ipcMain.handle('runtime:get-info', (event) => {
     if (!isTrustedSender(event)) throw new Error('Untrusted IPC sender');
     return Object.freeze({
@@ -80,7 +81,7 @@ function registerIpc() {
   });
 }
 
-function createWindow() {
+export function createWindow({ entry = WEB_ENTRY, showWhenReady = true } = {}) {
   const win = new BrowserWindow({
     width: 1360,
     height: 900,
@@ -102,21 +103,25 @@ function createWindow() {
     if (!url.startsWith(`${TRUSTED_ORIGIN}/`)) event.preventDefault();
   });
 
-  win.once('ready-to-show', () => win.show());
-  win.loadURL(`${TRUSTED_ORIGIN}/${WEB_ENTRY}`);
+  if (showWhenReady) win.once('ready-to-show', () => win.show());
+  win.loadURL(`${TRUSTED_ORIGIN}/${entry}`);
   return win;
 }
 
-app.whenReady().then(async () => {
-  await registerAppProtocol();
-  registerIpc();
-  createWindow();
+export function startElectronApp() {
+  app.whenReady().then(async () => {
+    await registerAppProtocol();
+    registerIpc();
+    createWindow();
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
   });
-});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit();
+  });
+}
+
+if (process.env.LATENT_E2E_IMPORT !== '1') startElectronApp();
