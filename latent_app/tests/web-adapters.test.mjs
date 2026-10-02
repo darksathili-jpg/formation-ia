@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { FetchContentRepository } from '../src/adapters/web/fetch-content-repository.mjs';
 import { LocalProgressRepository } from '../src/adapters/web/local-progress-repository.mjs';
 import { LocalLearningEventRepository } from '../src/adapters/web/local-learning-event-repository.mjs';
 
@@ -9,6 +10,27 @@ class MemoryStorage {
   setItem(key, value) { this.#data.set(key, String(value)); }
   removeItem(key) { this.#data.delete(key); }
 }
+
+test('content adapter loads module and bank behind the port and returns clones', async () => {
+  const calls = [];
+  const payloads = new Map([
+    ['/content/modules/p0.json', { moduleId: 'p0', title: 'P0', activities: [] }],
+    ['/content/assessment-banks/p0.json', { moduleId: 'p0', quiz: [], transfer: [] }]
+  ]);
+  const fetchImpl = async (url) => {
+    calls.push(url.pathname);
+    const payload = payloads.get(url.pathname);
+    return { ok: Boolean(payload), status: payload ? 200 : 404, json: async () => structuredClone(payload) };
+  };
+  const repository = new FetchContentRepository({ contentRoot: new URL('https://example.test/content/'), fetchImpl });
+  const first = await repository.getModule('p0');
+  first.title = 'mutated outside repository';
+  const second = await repository.getModule('p0');
+  const bank = await repository.getAssessmentBank('p0');
+  assert.equal(second.title, 'P0');
+  assert.equal(bank.moduleId, 'p0');
+  assert.deepEqual(calls, ['/content/modules/p0.json', '/content/assessment-banks/p0.json']);
+});
 
 test('progress adapter persists without leaking storage into the domain', async () => {
   const storage = new MemoryStorage();
