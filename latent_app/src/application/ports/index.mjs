@@ -16,6 +16,7 @@ export class ProgressRepository {
 export class LearningEventRepository {
   async append(_event) { throw new Error('Not implemented'); }
   async query(_filter = {}) { throw new Error('Not implemented'); }
+  async count(_filter = {}) { throw new Error('Not implemented'); }
   async export(_filter = {}) { throw new Error('Not implemented'); }
 }
 
