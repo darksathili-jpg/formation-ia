@@ -8,6 +8,7 @@ export const APP_ROOT = path.resolve(__dirname, '../../..');
 export const WEB_ENTRY = 'src/entrypoints/web/index.html';
 const PRELOAD = path.resolve(__dirname, 'preload.mjs');
 export const TRUSTED_ORIGIN = 'latent://app';
+const E2E_MODE = process.argv.includes('--latent-e2e');
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -108,19 +109,42 @@ export function createWindow({ entry = WEB_ENTRY, showWhenReady = true } = {}) {
   return win;
 }
 
+async function runE2EMode() {
+  const { runE2ESmoke } = await import('../../../tests/e2e-smoke.mjs');
+  return runE2ESmoke({
+    app,
+    BrowserWindow,
+    APP_ROOT,
+    WEB_ENTRY,
+    createWindow
+  });
+}
+
 export function startElectronApp() {
   app.whenReady().then(async () => {
     await registerAppProtocol();
     registerIpc();
-    createWindow();
 
+    if (E2E_MODE) {
+      let exitCode = 1;
+      try {
+        exitCode = await runE2EMode();
+      } catch (error) {
+        console.error('❌ E2E bootstrap failed');
+        console.error(error?.stack || error);
+      }
+      app.exit(exitCode);
+      return;
+    }
+
+    createWindow();
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
   });
 
   app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+    if (!E2E_MODE && process.platform !== 'darwin') app.quit();
   });
 }
 
