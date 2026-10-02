@@ -2,6 +2,7 @@ export class ContentRepository {
   async getCourse(_courseId) { throw new Error('Not implemented'); }
   async getModule(_moduleId) { throw new Error('Not implemented'); }
   async getActivity(_activityId) { throw new Error('Not implemented'); }
+  async getAssessmentBank(_moduleId) { throw new Error('Not implemented'); }
   async listModules() { throw new Error('Not implemented'); }
   async getVersion() { throw new Error('Not implemented'); }
 }
