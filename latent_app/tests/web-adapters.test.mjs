@@ -11,11 +11,12 @@ class MemoryStorage {
   removeItem(key) { this.#data.delete(key); }
 }
 
-test('content adapter loads module and bank behind the port and returns clones', async () => {
+test('content adapter loads module, bank and standalone activity behind the port and returns clones', async () => {
   const calls = [];
   const payloads = new Map([
     ['/content/modules/p0.json', { moduleId: 'p0', title: 'P0', activities: [] }],
-    ['/content/assessment-banks/p0.json', { moduleId: 'p0', quiz: [], transfer: [] }]
+    ['/content/assessment-banks/p0.json', { moduleId: 'p0', quiz: [], transfer: [] }],
+    ['/content/activities/tokenizer-lab.json', { id: 'tokenizer-lab', type: 'tokenizer-lab', config: { initialText: 'extraordinaire' } }]
   ]);
   const fetchImpl = async (url) => {
     calls.push(url.pathname);
@@ -27,9 +28,18 @@ test('content adapter loads module and bank behind the port and returns clones',
   first.title = 'mutated outside repository';
   const second = await repository.getModule('p0');
   const bank = await repository.getAssessmentBank('p0');
+  const activity = await repository.getActivity('tokenizer-lab');
+  activity.config.initialText = 'mutated';
+  const activityAgain = await repository.getActivity('tokenizer-lab');
+
   assert.equal(second.title, 'P0');
   assert.equal(bank.moduleId, 'p0');
-  assert.deepEqual(calls, ['/content/modules/p0.json', '/content/assessment-banks/p0.json']);
+  assert.equal(activityAgain.config.initialText, 'extraordinaire');
+  assert.deepEqual(calls, [
+    '/content/modules/p0.json',
+    '/content/assessment-banks/p0.json',
+    '/content/activities/tokenizer-lab.json'
+  ]);
 });
 
 test('progress adapter persists without leaking storage into the domain', async () => {
