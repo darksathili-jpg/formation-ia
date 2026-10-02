@@ -11,11 +11,31 @@ addFormats(ajv);
 const validate = ajv.compile(schema);
 
 const moduleDir = path.join(ROOT, 'content/modules');
+const bankDir = path.join(ROOT, 'content/assessment-banks');
 const files = (await readdir(moduleDir)).filter((name) => name.endsWith('.json')).sort();
 const errors = [];
 
 function unique(values) {
   return new Set(values).size === values.length;
+}
+
+function validateAssessmentItems(file, label, items) {
+  if (!Array.isArray(items) || !items.length) {
+    errors.push(`${file}: banque ${label} vide`);
+    return;
+  }
+  const ids = items.map((item) => item.id);
+  if (!unique(ids)) errors.push(`${file}: IDs dupliqués dans la banque ${label}`);
+  for (const item of items) {
+    if (!item.id || !item.prompt || !Array.isArray(item.choices) || item.choices.length < 2) {
+      errors.push(`${file}: item ${label}/${item.id || '?'} incomplet`);
+      continue;
+    }
+    if (!Number.isInteger(item.answer) || item.answer < 0 || item.answer >= item.choices.length) {
+      errors.push(`${file}: answer invalide pour ${label}/${item.id}`);
+    }
+    if (!item.feedback) errors.push(`${file}: feedback absent pour ${label}/${item.id}`);
+  }
 }
 
 for (const file of files) {
@@ -95,6 +115,24 @@ for (const file of files) {
   if (!eventTypes.includes('attempt.completed')) {
     errors.push(`${file}: aucune activité n'émet attempt.completed`);
   }
+
+  const quizActivity = module.activities.find((activity) => activity.id === module.assessment.quizActivityId);
+  const transferActivity = module.activities.find((activity) => activity.id === module.assessment.transferActivityId);
+  try {
+    const bankFile = `${module.moduleId}.json`;
+    const bank = JSON.parse(await readFile(path.join(bankDir, bankFile), 'utf8'));
+    if (bank.moduleId !== module.moduleId) errors.push(`${file}: assessment bank lié au mauvais module`);
+    validateAssessmentItems(file, 'quiz', bank.quiz);
+    validateAssessmentItems(file, 'transfer', bank.transfer);
+    if (Number.isInteger(quizActivity?.config?.itemCount) && bank.quiz.length !== quizActivity.config.itemCount) {
+      errors.push(`${file}: banque quiz=${bank.quiz.length}, itemCount=${quizActivity.config.itemCount}`);
+    }
+    if (transferActivity?.type === 'transfer-cards' && bank.transfer.length < 1) {
+      errors.push(`${file}: aucune tâche de transfert exécutable`);
+    }
+  } catch (error) {
+    errors.push(`${file}: assessment bank manquante ou illisible (${error.code || error.message})`);
+  }
 }
 
 if (!files.length) errors.push('Aucun module déclaratif trouvé');
@@ -104,4 +142,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`✅ Contenu LATENT V3 valide — ${files.length} module(s), schéma ECDL et références croisées vérifiés.`);
+console.log(`✅ Contenu LATENT V3 valide — ${files.length} module(s), schéma ECDL, banques d’évaluation et références croisées vérifiés.`);
