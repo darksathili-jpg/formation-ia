@@ -3,6 +3,7 @@ const ALLOWED_TYPES = new Set([
   'activity.started',
   'prediction.submitted',
   'manipulation.changed',
+  'tokenizer.snapshot',
   'feedback.shown',
   'hint.requested',
   'attempt.completed',
