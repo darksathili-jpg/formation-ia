@@ -18,8 +18,32 @@ export const DIDACTIC_BPE_MERGES = Object.freeze([
   ['m','ent'],['le','ment'],['nel','lement']
 ].map((pair) => Object.freeze(pair)));
 
+export const TOKENIZER_MODE_INFO = Object.freeze({
+  subword: Object.freeze({
+    id: 'subword',
+    label: 'Sous-mots · BPE didactique',
+    explanation: 'BPE didactique : le moteur part de petites unités et applique un minuscule jeu local de fusions classées. Ce n’est pas le vocabulaire d’un tokenizer commercial.'
+  }),
+  word: Object.freeze({
+    id: 'word',
+    label: 'Vue lexicale',
+    explanation: 'Vue lexicale didactique : mots, espaces et ponctuation sont séparés pour comparer les représentations. Ce n’est pas une tokenisation LLM.'
+  }),
+  byte: Object.freeze({
+    id: 'byte',
+    label: 'Octets UTF-8',
+    explanation: 'Vue UTF-8 : chaque case représente un octet de l’encodage du texte. Un octet affiché ici n’est pas un token de modèle.'
+  })
+});
+
 const WORD_RE = /^[\p{L}\p{M}\p{N}_]+$/u;
 const SPACE_RE = /^\s+$/u;
+
+export function getTokenizerModeInfo(mode) {
+  const info = TOKENIZER_MODE_INFO[mode];
+  if (!info) throw new RangeError(`Unsupported tokenizer mode: ${mode}`);
+  return info;
+}
 
 export function splitText(text) {
   return String(text).match(/\s+|[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]/gu) || [];
@@ -104,7 +128,7 @@ function byteTokens(text) {
 export function tokenizeText(text, { mode = 'subword', contextLimit = 32, merges = DIDACTIC_BPE_MERGES } = {}) {
   const source = String(text);
   if (!Number.isInteger(contextLimit) || contextLimit < 1) throw new RangeError('contextLimit must be a positive integer');
-  if (!['subword', 'word', 'byte'].includes(mode)) throw new RangeError(`Unsupported tokenizer mode: ${mode}`);
+  const modeInfo = getTokenizerModeInfo(mode);
 
   const detail = mode === 'subword' ? subwordTokens(source, merges) : mode === 'word' ? wordTokens(source) : byteTokens(source);
   const tokenCount = detail.tokens.length;
@@ -115,6 +139,7 @@ export function tokenizeText(text, { mode = 'subword', contextLimit = 32, merges
   return Object.freeze({
     source,
     mode,
+    modeInfo,
     tokens: Object.freeze(detail.tokens.map((token, index) => Object.freeze({ ...token, index, inContext: index < contextLimit }))),
     words: Object.freeze(detail.words),
     metrics: Object.freeze({
