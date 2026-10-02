@@ -63,7 +63,13 @@
           "invalidEvidence": {"type": "array", "items": {"type": "string"}},
           "rubric": {
             "type": "object",
-            "additionalProperties": {"type": ["string", "number", "boolean"]}
+            "additionalProperties": {
+              "anyOf": [
+                {"type": "string"},
+                {"type": "number"},
+                {"type": "boolean"}
+              ]
+            }
           }
         }
       }
