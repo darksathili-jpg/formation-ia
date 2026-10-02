@@ -41,6 +41,7 @@ jobs:
           node --check src/entrypoints/electron/preload.mjs
           node --check src/entrypoints/web/app.mjs
           node --check src/application/module-presenter.mjs
+          node --check src/adapters/web/fetch-content-repository.mjs
           node --check src/adapters/web/module-renderer.mjs
           node --check src/adapters/web/local-progress-repository.mjs
           node --check src/adapters/web/local-learning-event-repository.mjs
