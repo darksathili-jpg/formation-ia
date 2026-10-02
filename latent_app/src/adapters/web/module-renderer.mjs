@@ -1,3 +1,5 @@
+import { evaluateComponentMission, evaluateOrder, scoreChoiceSet } from '../../domain/activities/decision.mjs';
+
 const COMPONENT_LABELS = Object.freeze({
   model: 'LLM',
   ui: 'Interface',
@@ -37,19 +39,23 @@ function button(label, className = 'button') {
 }
 
 function feedbackBox() {
-  return el('div', { className: 'feedback', attrs: { role: 'status', 'aria-live': 'polite' } });
+  return el('div', { className: 'feedback', attrs: { role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' } });
 }
 
 function activityFrame(activity, body) {
   const meta = el('div', { className: 'activity-meta' }, [
     el('span', { text: activity.purpose }),
     el('span', { text: activity.type }),
-    ...activity.evidenceIds.map((id) => el('span', { text: id }))
+    ...(activity.evidenceIds || []).map((id) => el('span', { text: id }))
   ]);
-  return el('article', { className: 'activity', id: activity.id }, [meta, body]);
+  return el('article', {
+    className: 'activity',
+    id: activity.id,
+    attrs: { 'data-activity-type': activity.type, 'data-content-source': 'module-json' }
+  }, [meta, body]);
 }
 
-function withStarted(activity, emit) {
+function startedOnce(activity, emit) {
   let started = false;
   return () => {
     if (started) return;
@@ -59,21 +65,30 @@ function withStarted(activity, emit) {
 }
 
 function renderPrediction(activity, emit) {
-  const start = withStarted(activity, emit);
-  const config = activity.config;
-  const wrapper = el('div');
-  wrapper.append(el('h3', { text: config.title || 'Prédire' }), el('p', { className: 'activity-intro', text: config.instruction || '' }));
-  const rows = [];
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
+  const body = el('div');
+  body.append(
+    el('h3', { text: config.title || 'Prédire' }),
+    el('p', { className: 'activity-intro', text: config.instruction || '' })
+  );
 
+  const rows = [];
   for (const item of config.items || []) {
     const select = el('select', { attrs: { 'aria-label': `Réponse : ${item.situation}` } });
     select.append(el('option', { text: 'Je prédis…', attrs: { value: '' } }));
-    for (const choice of item.choices || []) select.append(el('option', { text: ORIGIN_LABELS[choice] || choice, attrs: { value: choice } }));
+    for (const choice of item.choices || []) {
+      select.append(el('option', { text: ORIGIN_LABELS[choice] || choice, attrs: { value: choice } }));
+    }
     select.addEventListener('change', start);
-    const rationale = el('p', { className: 'item-feedback', text: item.feedback });
+    const rationale = el('p', { className: 'item-feedback', text: item.feedback || '' });
     rationale.hidden = true;
-    const row = el('div', { className: 'prediction-row' }, [el('strong', { text: item.situation }), select, rationale]);
-    wrapper.append(row);
+    const row = el('div', { className: 'prediction-row' }, [
+      el('strong', { text: item.situation }),
+      select,
+      rationale
+    ]);
+    body.append(row);
     rows.push({ item, select, rationale, row });
   }
 
@@ -81,46 +96,52 @@ function renderPrediction(activity, emit) {
   const check = button('Vérifier mes prédictions');
   check.addEventListener('click', () => {
     start();
-    let score = 0;
-    let answered = 0;
+    const responses = Object.fromEntries(rows.map(({ item, select }) => [item.id, select.value]));
+    const evaluation = scoreChoiceSet(config.items || [], responses);
+
     for (const row of rows) {
-      const answer = row.select.value;
-      if (!answer) continue;
-      answered += 1;
-      const correct = answer === row.item.answer;
-      if (correct) score += 1;
-      row.row.dataset.state = correct ? 'correct' : 'wrong';
+      const itemResult = evaluation.results.find((entry) => entry.id === row.item.id);
+      if (!itemResult?.answered) continue;
+      row.row.dataset.state = itemResult.correct ? 'correct' : 'wrong';
       row.rationale.hidden = false;
-      emit('prediction.submitted', activity.id, { itemId: row.item.id, answer, correct });
-      emit('feedback.shown', activity.id, { itemId: row.item.id, correct });
+      emit('prediction.submitted', activity.id, { itemId: row.item.id, answer: itemResult.answer, correct: itemResult.correct });
+      emit('feedback.shown', activity.id, { itemId: row.item.id, correct: itemResult.correct });
     }
-    result.textContent = answered < rows.length
-      ? `Répondez encore à ${rows.length - answered} situation(s). Les feedbacks déjà disponibles restent visibles.`
-      : `${score}/${rows.length}. L'objectif est surtout de pouvoir expliquer pourquoi chaque capacité vient de cette couche.`;
-    if (answered === rows.length) emit('attempt.completed', activity.id, { score, total: rows.length });
+
+    result.textContent = evaluation.complete
+      ? `${evaluation.score}/${evaluation.total}. Expliquez maintenant pourquoi chaque capacité vient de cette couche.`
+      : `Il reste ${evaluation.total - evaluation.answered} situation(s) à traiter.`;
+
+    if (evaluation.complete) emit('attempt.completed', activity.id, { score: evaluation.score, total: evaluation.total, ratio: evaluation.ratio });
   });
-  wrapper.append(check, result);
-  return activityFrame(activity, wrapper);
+
+  body.append(check, result);
+  return activityFrame(activity, body);
 }
 
 function renderWorkedExample(activity) {
-  const config = activity.config;
+  const config = activity.config || {};
   const body = el('div', {}, [
     el('h3', { text: 'Exemple travaillé' }),
-    el('p', { className: 'worked-situation', text: config.situation }),
+    el('p', { className: 'worked-situation', text: config.situation || '' }),
     el('ol', { className: 'worked-steps' }, (config.steps || []).map((step) => el('li', { text: step })))
   ]);
   return activityFrame(activity, body);
 }
 
 function renderComponentBuilder(activity, emit) {
-  const start = withStarted(activity, emit);
-  const config = activity.config;
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
   const body = el('div');
-  body.append(el('h3', { text: 'System Builder' }), el('p', { className: 'activity-intro', text: config.goal }));
+  body.append(
+    el('h3', { text: 'System Builder' }),
+    el('p', { className: 'activity-intro', text: config.goal || '' })
+  );
 
   const missionSelect = el('select', { attrs: { 'aria-label': 'Mission à rendre possible' } });
-  for (const mission of config.missions || []) missionSelect.append(el('option', { text: MISSION_LABELS[mission.id] || mission.id, attrs: { value: mission.id } }));
+  for (const mission of config.missions || []) {
+    missionSelect.append(el('option', { text: MISSION_LABELS[mission.id] || mission.id, attrs: { value: mission.id } }));
+  }
   missionSelect.addEventListener('change', start);
   body.append(el('label', { className: 'field-label', text: 'Mission' }), missionSelect);
 
@@ -132,8 +153,10 @@ function renderComponentBuilder(activity, emit) {
       start();
       emit('manipulation.changed', activity.id, { component, enabled: input.checked, missionId: missionSelect.value });
     });
-    const label = el('label', { className: 'component-toggle' }, [input, el('span', { text: COMPONENT_LABELS[component] || component })]);
-    componentGrid.append(label);
+    componentGrid.append(el('label', { className: 'component-toggle' }, [
+      input,
+      el('span', { text: COMPONENT_LABELS[component] || component })
+    ]));
     controls.push({ component, input });
   }
   body.append(componentGrid);
@@ -142,99 +165,128 @@ function renderComponentBuilder(activity, emit) {
   const check = button('Tester cette architecture');
   check.addEventListener('click', () => {
     start();
-    const mission = (config.missions || []).find((item) => item.id === missionSelect.value);
+    const mission = (config.missions || []).find((item) => item.id === missionSelect.value) || { id: missionSelect.value, needs: [] };
     const selected = controls.filter(({ input }) => input.checked).map(({ component }) => component);
-    const missing = (mission?.needs || []).filter((need) => !selected.includes(need));
-    const extras = selected.filter((item) => !(mission?.needs || []).includes(item));
-    const capable = missing.length === 0;
-    if (!capable) {
-      result.textContent = `Il manque : ${missing.map((item) => COMPONENT_LABELS[item] || item).join(', ')}. Ajoutez uniquement ce qui rend la mission possible.`;
-    } else if (extras.length) {
-      result.textContent = `Mission possible, mais architecture suréquipée : ${extras.map((item) => COMPONENT_LABELS[item] || item).join(', ')} n'est pas nécessaire ici.`;
+    const evaluation = evaluateComponentMission(mission, selected);
+
+    if (!evaluation.capable) {
+      result.textContent = `Il manque : ${evaluation.missing.map((item) => COMPONENT_LABELS[item] || item).join(', ')}. Ajoutez seulement les capacités nécessaires.`;
+    } else if (!evaluation.minimal) {
+      result.textContent = `Mission possible, mais architecture suréquipée : ${evaluation.extras.map((item) => COMPONENT_LABELS[item] || item).join(', ')} n'est pas nécessaire ici.`;
     } else {
-      result.textContent = 'Configuration minimale correcte. Chaque capacité supplémentaire devrait maintenant pouvoir être reliée à un composant précis.';
+      result.textContent = 'Configuration minimale correcte. Vous pouvez relier chaque capacité visible à un composant précis.';
     }
-    emit('feedback.shown', activity.id, { missionId: mission?.id, capable, missing, extras });
-    emit('attempt.completed', activity.id, { missionId: mission?.id, capable, minimal: capable && extras.length === 0 });
+
+    const payload = { missionId: mission.id, ...evaluation };
+    emit('feedback.shown', activity.id, payload);
+    emit('attempt.completed', activity.id, payload);
   });
+
   body.append(check, result);
   return activityFrame(activity, body);
 }
 
 function renderRankOrder(activity, emit) {
-  const start = withStarted(activity, emit);
-  const config = activity.config;
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
   const body = el('div');
-  body.append(el('h3', { text: 'Family Lab' }), el('p', { className: 'activity-intro', text: 'Construisez la chaîne du champ le plus large vers la famille la plus spécifique. La réponse n’apparaît pas avant votre essai.' }));
+  body.append(
+    el('h3', { text: 'Family Lab' }),
+    el('p', { className: 'activity-intro', text: 'Construisez la chaîne du champ le plus large vers la famille la plus spécifique. La réponse reste cachée avant votre essai.' })
+  );
+
   const pool = el('div', { className: 'rank-pool' });
   const chosen = el('div', { className: 'rank-chosen', attrs: { 'aria-live': 'polite' } });
   let order = [];
 
-  function render() {
+  function rerender() {
     pool.replaceChildren();
     chosen.replaceChildren();
     for (const item of config.items || []) {
       if (order.includes(item)) continue;
       const pick = button(item, 'chip-button');
-      pick.addEventListener('click', () => { start(); order.push(item); emit('manipulation.changed', activity.id, { order: [...order] }); render(); });
+      pick.addEventListener('click', () => {
+        start();
+        order = [...order, item];
+        emit('manipulation.changed', activity.id, { order: [...order] });
+        rerender();
+      });
       pool.append(pick);
     }
     order.forEach((item, index) => chosen.append(el('span', { className: 'rank-item', text: `${index + 1}. ${item}` })));
   }
-  render();
+  rerender();
 
   const result = feedbackBox();
   const check = button('Vérifier la chaîne');
   const reset = button('Recommencer', 'button secondary');
-  reset.addEventListener('click', () => { order = []; result.textContent = ''; render(); });
+  reset.addEventListener('click', () => {
+    order = [];
+    result.textContent = '';
+    rerender();
+  });
   check.addEventListener('click', () => {
     start();
-    const expected = config.answer || [];
-    const correct = order.length === expected.length && order.every((item, index) => item === expected[index]);
-    result.textContent = correct ? config.explanationAfterSuccess : 'La chaîne est à reconstruire. Repartez du champ général puis resserrez progressivement.';
-    emit('feedback.shown', activity.id, { correct });
-    emit('attempt.completed', activity.id, { correct, order: [...order] });
+    const evaluation = evaluateOrder(config.answer || [], order);
+    result.textContent = evaluation.correct
+      ? config.explanationAfterSuccess
+      : evaluation.complete
+        ? 'La chaîne contient tous les éléments mais leur ordre doit être revu.'
+        : `Il manque encore ${evaluation.expectedLength - evaluation.actualLength} élément(s).`;
+    emit('feedback.shown', activity.id, evaluation);
+    emit('attempt.completed', activity.id, { ...evaluation, order: [...order] });
   });
+
   body.append(pool, chosen, el('div', { className: 'button-row' }, [check, reset]), result);
   return activityFrame(activity, body);
 }
 
 function renderSelfExplanation(activity, emit) {
-  const start = withStarted(activity, emit);
-  const config = activity.config;
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
   const body = el('div');
-  body.append(el('h3', { text: 'Expliquer avec ses mots' }), el('p', { className: 'activity-intro', text: config.prompt }));
+  body.append(
+    el('h3', { text: 'Expliquer avec ses mots' }),
+    el('p', { className: 'activity-intro', text: config.prompt || '' })
+  );
+
   const textarea = el('textarea', { attrs: { rows: 5, placeholder: 'Votre explication…' } });
   textarea.addEventListener('input', start);
-  body.append(textarea, el('p', { className: 'small-note', text: 'LATENT ne prétend pas noter automatiquement cette explication. Utilisez les critères pour vous relire.' }));
+  body.append(
+    textarea,
+    el('p', { className: 'small-note', text: 'LATENT ne prétend pas noter sémantiquement cette réponse. Les critères servent à une auto-vérification explicite.' })
+  );
+
   const criteria = el('div', { className: 'criteria-list' });
   const checks = [];
   for (const criterion of config.criteria || []) {
     const input = el('input', { attrs: { type: 'checkbox' } });
-    const label = el('label', {}, [input, el('span', { text: criterion })]);
-    criteria.append(label);
+    criteria.append(el('label', {}, [input, el('span', { text: criterion })]));
     checks.push(input);
   }
+
   const save = button('Enregistrer mon auto-vérification');
   const result = feedbackBox();
   save.addEventListener('click', () => {
     start();
     const checked = checks.filter((input) => input.checked).length;
-    result.textContent = `${checked}/${checks.length} critères retrouvés dans votre explication. Revenez au System Builder si un rôle reste difficile à justifier.`;
+    result.textContent = `${checked}/${checks.length} critères retrouvés. Revenez au System Builder si un rôle reste difficile à justifier.`;
     emit('explanation.self_checked', activity.id, { checked, total: checks.length, characters: textarea.value.length });
   });
+
   body.append(criteria, save, result);
   return activityFrame(activity, body);
 }
 
 function renderScoredItems(activity, items, emit, onEvidence, kind) {
-  const start = withStarted(activity, emit);
+  const start = startedOnce(activity, emit);
   const body = el('div');
-  const title = kind === 'quiz' ? 'Quiz de récupération' : 'Transfert — changer de contexte';
-  body.append(el('h3', { text: title }));
-  if (kind === 'transfer' && activity.config.scenario) body.append(el('p', { className: 'transfer-scenario', text: activity.config.scenario }));
-  const rows = [];
+  body.append(el('h3', { text: kind === 'quiz' ? 'Quiz de récupération' : 'Transfert — changer de contexte' }));
+  if (kind === 'transfer' && activity.config?.scenario) {
+    body.append(el('p', { className: 'transfer-scenario', text: activity.config.scenario }));
+  }
 
+  const rows = [];
   for (const [index, item] of items.entries()) {
     const fieldset = el('fieldset', { className: 'question' });
     fieldset.append(el('legend', { text: item.scenario ? `${item.scenario} — ${item.prompt}` : item.prompt }));
@@ -246,7 +298,7 @@ function renderScoredItems(activity, items, emit, onEvidence, kind) {
       fieldset.append(el('label', { className: 'choice' }, [input, el('span', { text: choice })]));
       inputs.push(input);
     }
-    const rationale = el('p', { className: 'item-feedback', text: item.feedback });
+    const rationale = el('p', { className: 'item-feedback', text: item.feedback || '' });
     rationale.hidden = true;
     fieldset.append(rationale);
     body.append(fieldset);
@@ -257,29 +309,34 @@ function renderScoredItems(activity, items, emit, onEvidence, kind) {
   const submit = button(kind === 'quiz' ? 'Corriger le quiz' : 'Vérifier le transfert');
   submit.addEventListener('click', () => {
     start();
-    let score = 0;
-    let answered = 0;
+    const responses = {};
     for (const row of rows) {
       const selected = row.inputs.find((input) => input.checked);
-      if (!selected) continue;
-      answered += 1;
-      const answer = Number(selected.value);
-      const correct = answer === row.item.answer;
-      if (correct) score += 1;
-      row.fieldset.dataset.state = correct ? 'correct' : 'wrong';
-      row.rationale.hidden = false;
-      if (kind === 'quiz') emit('quiz.answered', activity.id, { itemId: row.item.id, answer, correct });
+      if (selected) responses[row.item.id] = Number(selected.value);
     }
-    if (answered < rows.length) {
-      result.textContent = `Il reste ${rows.length - answered} réponse(s) à donner.`;
+    const evaluation = scoreChoiceSet(items, responses);
+
+    for (const row of rows) {
+      const itemResult = evaluation.results.find((entry) => entry.id === row.item.id);
+      if (!itemResult?.answered) continue;
+      row.fieldset.dataset.state = itemResult.correct ? 'correct' : 'wrong';
+      row.rationale.hidden = false;
+      if (kind === 'quiz') emit('quiz.answered', activity.id, { itemId: row.item.id, answer: itemResult.answer, correct: itemResult.correct });
+    }
+
+    if (!evaluation.complete) {
+      result.textContent = `Il reste ${evaluation.total - evaluation.answered} réponse(s) à donner.`;
       return;
     }
-    const ratio = rows.length ? score / rows.length : 0;
-    result.textContent = `${score}/${rows.length} · ${Math.round(ratio * 100)} %. ${ratio >= (activity.config.threshold || 0.8) ? 'Seuil atteint.' : 'Reprenez les feedbacks puis réessayez.'}`;
-    emit(kind === 'transfer' ? 'transfer.completed' : 'attempt.completed', activity.id, { score, total: rows.length, ratio });
-    if (kind === 'quiz') emit('attempt.completed', activity.id, { score, total: rows.length, ratio });
-    onEvidence(kind, score, rows.length);
+
+    const threshold = activity.config?.threshold ?? 0.8;
+    result.textContent = `${evaluation.score}/${evaluation.total} · ${Math.round(evaluation.ratio * 100)} %. ${evaluation.ratio >= threshold ? 'Seuil atteint.' : 'Reprenez les feedbacks puis réessayez.'}`;
+    const payload = { score: evaluation.score, total: evaluation.total, ratio: evaluation.ratio };
+    if (kind === 'transfer') emit('transfer.completed', activity.id, payload);
+    else emit('attempt.completed', activity.id, payload);
+    onEvidence(kind, evaluation.score, evaluation.total);
   });
+
   body.append(submit, result);
   return activityFrame(activity, body);
 }
@@ -291,12 +348,29 @@ function renderUnsupported(activity) {
   ]));
 }
 
+function renderActivity(activity, assessmentBank, emit, onEvidence) {
+  if (activity.type === 'prediction-cards') return renderPrediction(activity, emit);
+  if (activity.type === 'worked-example') return renderWorkedExample(activity);
+  if (activity.type === 'component-builder') return renderComponentBuilder(activity, emit);
+  if (activity.type === 'rank-order') return renderRankOrder(activity, emit);
+  if (activity.type === 'self-explanation') return renderSelfExplanation(activity, emit);
+  if (activity.type === 'quiz') return renderScoredItems(activity, assessmentBank.quiz || [], emit, onEvidence, 'quiz');
+  if (activity.type === 'transfer-cards') return renderScoredItems(activity, assessmentBank.transfer || [], emit, onEvidence, 'transfer');
+  return renderUnsupported(activity);
+}
+
 export function renderModule({ root, navigation, view, assessmentBank = {}, emit, onEvidence }) {
   if (!root) throw new Error('root is required');
+  if (typeof emit !== 'function') throw new Error('emit is required');
+  if (typeof onEvidence !== 'function') throw new Error('onEvidence is required');
+
   root.replaceChildren();
   navigation?.replaceChildren();
+  root.dataset.moduleId = view.id;
+  root.dataset.contentVersion = view.version;
+  root.dataset.renderedFrom = 'declarative-content';
 
-  const header = el('header', { className: 'module-hero' }, [
+  root.append(el('header', { className: 'module-hero' }, [
     el('p', { className: 'eyebrow', text: `${view.track.toUpperCase()} · ${view.status} · ${view.version}` }),
     el('h1', { text: view.title }),
     el('p', { className: 'lead', text: 'Ce module est rendu à partir du contrat de contenu V3 : compétences, preuves, tâches et progression ne sont plus codées dans la page HTML.' }),
@@ -305,32 +379,24 @@ export function renderModule({ root, navigation, view, assessmentBank = {}, emit
       el('span', { text: `${view.outcomes.length} objectifs observables` }),
       el('span', { text: `${view.sections.length} micro-séquences` })
     ])
-  ]);
-  root.append(header);
+  ]));
 
   for (const section of view.sections) {
-    const sectionNode = el('section', { className: 'module-section', id: `section-${section.id}` });
+    const sectionNode = el('section', { className: 'module-section', id: `section-${section.id}`, attrs: { 'data-section-id': section.id } });
     sectionNode.append(el('div', { className: 'section-head' }, [
       el('span', { text: String(section.ordinal).padStart(2, '0') }),
       el('h2', { text: section.title })
     ]));
 
     if (navigation) {
-      const link = el('a', { text: `${String(section.ordinal).padStart(2, '0')} ${section.title}`, attrs: { href: `#section-${section.id}` } });
-      navigation.append(link);
+      navigation.append(el('a', {
+        text: `${String(section.ordinal).padStart(2, '0')} ${section.title}`,
+        attrs: { href: `#section-${section.id}` }
+      }));
     }
 
     for (const activity of section.activities) {
-      let node;
-      if (activity.type === 'prediction-cards') node = renderPrediction(activity, emit);
-      else if (activity.type === 'worked-example') node = renderWorkedExample(activity);
-      else if (activity.type === 'component-builder') node = renderComponentBuilder(activity, emit);
-      else if (activity.type === 'rank-order') node = renderRankOrder(activity, emit);
-      else if (activity.type === 'self-explanation') node = renderSelfExplanation(activity, emit);
-      else if (activity.type === 'quiz') node = renderScoredItems(activity, assessmentBank.quiz || [], emit, onEvidence, 'quiz');
-      else if (activity.type === 'transfer-cards') node = renderScoredItems(activity, assessmentBank.transfer || [], emit, onEvidence, 'transfer');
-      else node = renderUnsupported(activity);
-      sectionNode.append(node);
+      sectionNode.append(renderActivity(activity, assessmentBank, emit, onEvidence));
     }
     root.append(sectionNode);
   }
