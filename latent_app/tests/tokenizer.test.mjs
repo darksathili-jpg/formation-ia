@@ -6,6 +6,8 @@ test('extraordinaire produces reachable pedagogical subwords', () => {
   const detail = applyRankedMerges('extraordinaire');
   assert.deepEqual(detail.tokens, ['extra', 'ord', 'inaire']);
   assert.ok(detail.trace.length >= 8);
+  const result = tokenizeText('extraordinaire');
+  assert.deepEqual(result.metrics, { characters: 14, bytes: 14, tokens: 3, unique: 3 });
 });
 
 test('accented word keeps Unicode semantics and UTF-8 byte count', () => {
@@ -21,7 +23,7 @@ test('emoji is one code point but four UTF-8 bytes', () => {
   assert.equal(result.metrics.characters, 6);
   assert.equal(result.metrics.bytes, 9);
   assert.equal(result.tokens[0].display, '🚀');
-  assert.equal(result.tokens[0].kind, 'punctuation');
+  assert.equal(result.tokens[0].kind, 'symbol');
 });
 
 test('spaces are preserved as explicit pedagogical units', () => {
@@ -49,4 +51,9 @@ test('word and byte views are alternative didactic views, not the subword engine
   const bytes = tokenizeText('é', { mode: 'byte' });
   assert.deepEqual(word.tokens.map((token) => token.display), ['Salut', '␠', '!']);
   assert.deepEqual(bytes.tokens.map((token) => token.display), ['0xC3', '0xA9']);
+});
+
+test('invalid context budgets and modes fail loudly', () => {
+  assert.throws(() => tokenizeText('x', { contextLimit: 0 }), /positive integer/);
+  assert.throws(() => tokenizeText('x', { mode: 'mystery' }), /Unsupported tokenizer mode/);
 });
