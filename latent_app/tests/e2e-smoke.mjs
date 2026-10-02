@@ -2,23 +2,8 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { app, BrowserWindow } from 'electron';
-
-console.log('▶ E2E bootstrap');
-process.env.LATENT_E2E_IMPORT = '1';
-const {
-  APP_ROOT,
-  WEB_ENTRY,
-  registerAppProtocol,
-  registerIpc,
-  createWindow
-} = await import('../src/entrypoints/electron/main.mjs');
 
 const WATCHDOG_MS = 60_000;
-const watchdog = setTimeout(() => {
-  console.error(`❌ E2E watchdog exceeded ${WATCHDOG_MS} ms`);
-  app.exit(1);
-}, WATCHDOG_MS);
 
 const MIME = new Map([
   ['.html', 'text/html; charset=utf-8'],
@@ -32,17 +17,17 @@ function stage(label) {
   console.log(`▶ E2E ${label}`);
 }
 
-function safeStaticPath(pathname) {
+function safeStaticPath(appRoot, pathname) {
   const relative = decodeURIComponent(pathname).replace(/^\/+/, '');
-  const target = path.resolve(APP_ROOT, relative);
-  if (target !== APP_ROOT && !target.startsWith(`${APP_ROOT}${path.sep}`)) return null;
+  const target = path.resolve(appRoot, relative);
+  if (target !== appRoot && !target.startsWith(`${appRoot}${path.sep}`)) return null;
   return target;
 }
 
-async function startStaticServer() {
+async function startStaticServer(appRoot) {
   const server = http.createServer(async (request, response) => {
     const requestUrl = new URL(request.url || '/', 'http://127.0.0.1');
-    const target = safeStaticPath(requestUrl.pathname);
+    const target = safeStaticPath(appRoot, requestUrl.pathname);
     if (!target) {
       response.writeHead(403).end('Forbidden');
       return;
@@ -191,7 +176,7 @@ async function smokeTokenizer(win, expectedRuntime) {
   await waitFor(win, `Number((document.getElementById('eventCount')?.textContent || '0').match(/\\d+/)?.[0] || 0) >= 3`, { label: `${expectedRuntime} Tokenizer events` });
 }
 
-async function makeWebWindow(url) {
+async function makeWebWindow(BrowserWindow, url) {
   const win = new BrowserWindow({
     width: 1360,
     height: 900,
@@ -207,55 +192,58 @@ async function makeWebWindow(url) {
   return win;
 }
 
-let server;
-const windows = [];
-let exitCode = 0;
-try {
-  stage('waiting for Electron ready');
-  await app.whenReady();
-  stage('Electron ready');
-  await registerAppProtocol();
-  registerIpc();
-  const staticHost = await startStaticServer();
-  server = staticHost.server;
-  stage(`static server ${staticHost.origin}`);
+export async function runE2ESmoke({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, createWindow }) {
+  console.log('▶ E2E production main ready');
+  const watchdog = setTimeout(() => {
+    console.error(`❌ E2E watchdog exceeded ${WATCHDOG_MS} ms`);
+    app.exit(1);
+  }, WATCHDOG_MS);
 
-  stage('P0 Web');
-  const webP0 = await makeWebWindow(`${staticHost.origin}/${WEB_ENTRY}`);
-  windows.push(webP0);
-  await smokeP0(webP0, 'Web');
-  stage('P0 Web ✓');
+  let server;
+  const windows = [];
+  let exitCode = 0;
+  try {
+    const staticHost = await startStaticServer(APP_ROOT);
+    server = staticHost.server;
+    stage(`static server ${staticHost.origin}`);
 
-  stage('P0 Electron');
-  const electronP0 = createWindow({ showWhenReady: false });
-  windows.push(electronP0);
-  await smokeP0(electronP0, 'Electron');
-  stage('P0 Electron ✓');
+    stage('P0 Web');
+    const webP0 = await makeWebWindow(BrowserWindow, `${staticHost.origin}/${WEB_ENTRY}`);
+    windows.push(webP0);
+    await smokeP0(webP0, 'Web');
+    stage('P0 Web ✓');
 
-  stage('Tokenizer Web');
-  const webTokenizer = await makeWebWindow(`${staticHost.origin}/src/entrypoints/web/tokenizer.html`);
-  windows.push(webTokenizer);
-  await smokeTokenizer(webTokenizer, 'Web');
-  stage('Tokenizer Web ✓');
+    stage('P0 Electron');
+    const electronP0 = createWindow({ showWhenReady: false });
+    windows.push(electronP0);
+    await smokeP0(electronP0, 'Electron');
+    stage('P0 Electron ✓');
 
-  stage('Tokenizer Electron');
-  const electronTokenizer = createWindow({ entry: 'src/entrypoints/web/tokenizer.html', showWhenReady: false });
-  windows.push(electronTokenizer);
-  await smokeTokenizer(electronTokenizer, 'Electron');
-  stage('Tokenizer Electron ✓');
+    stage('Tokenizer Web');
+    const webTokenizer = await makeWebWindow(BrowserWindow, `${staticHost.origin}/src/entrypoints/web/tokenizer.html`);
+    windows.push(webTokenizer);
+    await smokeTokenizer(webTokenizer, 'Web');
+    stage('Tokenizer Web ✓');
 
-  console.log('✅ E2E LATENT V3 — P0 Web/Electron, reprise de session et Tokenizer Lab validés.');
-} catch (error) {
-  exitCode = 1;
-  console.error('❌ E2E LATENT V3 FAILED');
-  console.error(error?.stack || error);
-} finally {
-  stage('cleanup');
-  clearTimeout(watchdog);
-  for (const win of windows) {
-    if (!win.isDestroyed()) win.destroy();
+    stage('Tokenizer Electron');
+    const electronTokenizer = createWindow({ entry: 'src/entrypoints/web/tokenizer.html', showWhenReady: false });
+    windows.push(electronTokenizer);
+    await smokeTokenizer(electronTokenizer, 'Electron');
+    stage('Tokenizer Electron ✓');
+
+    console.log('✅ E2E LATENT V3 — P0 Web/Electron, reprise de session et Tokenizer Lab validés.');
+  } catch (error) {
+    exitCode = 1;
+    console.error('❌ E2E LATENT V3 FAILED');
+    console.error(error?.stack || error);
+  } finally {
+    stage('cleanup');
+    clearTimeout(watchdog);
+    for (const win of windows) {
+      if (!win.isDestroyed()) win.destroy();
+    }
+    await closeServer(server);
+    stage(`return ${exitCode}`);
   }
-  await closeServer(server);
-  stage(`exit ${exitCode}`);
-  app.exit(exitCode);
+  return exitCode;
 }
