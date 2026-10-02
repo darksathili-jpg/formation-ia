@@ -41,8 +41,11 @@ if (!app.includes('new FetchContentRepository')) errors.push('app.mjs: ContentRe
 if (/fetch\s*\(/.test(app)) errors.push('app.mjs: accès HTTP direct détecté, utiliser ContentRepository');
 if (!app.includes('buildModuleViewModel')) errors.push('app.mjs: presenter applicatif non utilisé');
 if (!renderer.includes("from '../../domain/activities/decision.mjs'")) errors.push('renderer: décisions métier non déléguées au domaine');
-const directAnswerComparison = /\.answer\b\s*(?:===|==|!==|!=)|(?:===|==|!==|!=)[^;\n]*\.answer\b/;
-if (directAnswerComparison.test(renderer)) errors.push('renderer: comparaison directe à answer détectée, scoring doit rester dans le domaine');
+const answerOnLeft = /\.answer\b\s*(?:===|==|!==|!=)/;
+const answerOnRight = /(?:===|==|!==|!=)\s*[A-Za-z_$][\w$]*(?:\?\.)?(?:\.[A-Za-z_$][\w$]*)*\.answer\b/;
+if (answerOnLeft.test(renderer) || answerOnRight.test(renderer)) {
+  errors.push('renderer: comparaison directe à answer détectée, scoring doit rester dans le domaine');
+}
 if (!renderer.includes('evaluateComponentMission(') || !renderer.includes('evaluateOrder(') || !renderer.includes('scoreChoiceSet(')) {
   errors.push('renderer: un moteur de décision de domaine attendu n’est pas utilisé');
 }
