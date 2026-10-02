@@ -16,7 +16,7 @@ export const DIDACTIC_BPE_MERGES = Object.freeze([
   ['n','e'],['ne','l'],
   ['e','m'],['em','e'],['eme','n'],['emen','t'],
   ['m','ent'],['le','ment'],['nel','lement']
-]);
+].map((pair) => Object.freeze(pair)));
 
 const WORD_RE = /^[\p{L}\p{M}\p{N}_]+$/u;
 const SPACE_RE = /^\s+$/u;
@@ -45,7 +45,7 @@ export function applyRankedMerges(word, merges = DIDACTIC_BPE_MERGES) {
     }
     if (changed) {
       symbols = next;
-      trace.push(Object.freeze({ left, right, merged: left + right, state: [...symbols] }));
+      trace.push(Object.freeze({ left, right, merged: left + right, state: Object.freeze([...symbols]) }));
     }
   }
 
@@ -74,7 +74,7 @@ function subwordTokens(text, merges) {
       tokens.push(...detail.tokens.map((value) => ({ value, display: value, kind: 'subword' })));
       continue;
     }
-    tokens.push({ value: chunk, display: chunk, kind: 'punctuation' });
+    tokens.push({ value: chunk, display: chunk, kind: 'symbol' });
   }
   return { tokens, words };
 }
@@ -84,7 +84,7 @@ function wordTokens(text) {
     words: [],
     tokens: splitText(text).flatMap((chunk) => {
       if (SPACE_RE.test(chunk)) return whitespaceTokens(chunk);
-      return [{ value: chunk, display: chunk, kind: WORD_RE.test(chunk) ? 'word' : 'punctuation' }];
+      return [{ value: chunk, display: chunk, kind: WORD_RE.test(chunk) ? 'word' : 'symbol' }];
     })
   };
 }
