@@ -42,6 +42,17 @@ test('content adapter loads module, bank and standalone activity behind the port
   ]);
 });
 
+test('content adapter binds fetch to the runtime instead of the repository instance', async () => {
+  let receiver;
+  function fetchImpl(url) {
+    receiver = this;
+    return Promise.resolve({ ok: true, status: 200, json: async () => ({ moduleId: url.pathname.split('/').at(-1).replace('.json', '') }) });
+  }
+  const repository = new FetchContentRepository({ contentRoot: new URL('https://example.test/content/'), fetchImpl });
+  await repository.getModule('p0');
+  assert.equal(receiver, globalThis);
+});
+
 test('progress adapter persists without leaking storage into the domain', async () => {
   const storage = new MemoryStorage();
   const repository = new LocalProgressRepository({ storage, key: 'test-progress' });
