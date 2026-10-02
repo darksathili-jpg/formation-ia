@@ -35,11 +35,16 @@ jobs:
       - name: Install validation dependencies
         run: npm install --ignore-scripts --no-audit --no-fund
 
-      - name: Syntax-check entrypoints
+      - name: Syntax-check V3 layers
         run: |
           node --check src/entrypoints/electron/main.mjs
           node --check src/entrypoints/electron/preload.mjs
           node --check src/entrypoints/web/app.mjs
+          node --check src/application/module-presenter.mjs
+          node --check src/adapters/web/module-renderer.mjs
+          node --check src/adapters/web/local-progress-repository.mjs
+          node --check src/adapters/web/local-learning-event-repository.mjs
+          node --check src/domain/activities/tokenizer.mjs
 
       - name: Validate domain and content
         run: npm run validate
