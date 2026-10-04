@@ -44,6 +44,12 @@ const masteryStatus = document.getElementById('masteryStatus');
 const eventCount = document.getElementById('eventCount');
 const moduleRoot = document.getElementById('moduleRoot');
 const moduleNav = document.getElementById('moduleNav');
+const moduleIdentity = document.getElementById('moduleIdentity');
+const moduleSourceLabel = document.getElementById('moduleSourceLabel');
+
+document.title = `LATENT V3 · ${view.title}`;
+if (moduleIdentity) moduleIdentity.textContent = `${view.id.toUpperCase()} · ${view.status}`;
+if (moduleSourceLabel) moduleSourceLabel.textContent = `${view.id}.json · ${view.version}`;
 
 if (runtimeCard) {
   runtimeCard.textContent = runtime.runtime === 'electron'
@@ -134,7 +140,7 @@ if ('IntersectionObserver' in window) {
 }
 
 document.getElementById('resetProgress')?.addEventListener('click', async () => {
-  if (!confirm('Réinitialiser les preuves de maîtrise et la progression locale de ce pilote ?')) return;
+  if (!confirm('Réinitialiser les preuves de maîtrise et la progression locale de ce module ?')) return;
   state = await progressRepository.resetLearnerState(PROFILE_ID);
   state.modules ||= {};
   state.modules[view.id] = {};
