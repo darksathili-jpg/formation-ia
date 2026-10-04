@@ -1,4 +1,4 @@
-import { buildModuleViewModel } from '../../application/module-presenter.mjs';
+import { loadModuleBundle } from '../../application/load-module-bundle.mjs';
 import { evaluateMastery } from '../../domain/learning/mastery.mjs';
 import { createLearningEvent } from '../../domain/analytics/learning-event.mjs';
 import { FetchContentRepository } from '../../adapters/web/fetch-content-repository.mjs';
@@ -8,7 +8,7 @@ import { renderModule } from '../../adapters/web/module-renderer.mjs';
 
 const PROFILE_ID = 'local-profile';
 const COURSE_ID = 'latent-llm';
-const MODULE_ID = 'p0';
+const MODULE_ID = new URLSearchParams(globalThis.location?.search || '').get('module') || 'p0';
 
 async function detectRuntime() {
   if (window.latentDesktop?.getRuntimeInfo) {
@@ -31,9 +31,7 @@ function sessionId() {
 
 const runtime = await detectRuntime();
 const contentRepository = new FetchContentRepository({ contentRoot: new URL('../../../content/', import.meta.url) });
-const moduleData = await contentRepository.getModule(MODULE_ID);
-const assessmentBank = await contentRepository.getAssessmentBank(MODULE_ID);
-const view = buildModuleViewModel(moduleData);
+const { view, assessmentBank } = await loadModuleBundle({ contentRepository, moduleId: MODULE_ID });
 const progressRepository = new LocalProgressRepository();
 const eventRepository = new LocalLearningEventRepository();
 const session = sessionId();
