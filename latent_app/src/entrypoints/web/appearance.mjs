@@ -46,3 +46,5 @@ export function initDisplayMode() {
 
   return initial;
 }
+
+initDisplayMode();
