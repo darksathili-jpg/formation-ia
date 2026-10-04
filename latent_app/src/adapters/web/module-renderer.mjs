@@ -251,7 +251,7 @@ function renderSelfExplanation(activity, emit) {
     el('p', { className: 'activity-intro', text: config.prompt || '' })
   );
 
-  const textarea = el('textarea', { attrs: { rows: 5, placeholder: 'Votre explication…' } });
+  const textarea = el('textarea', { attrs: { rows: 5, placeholder: 'Votre explication…', 'aria-label': 'Votre explication personnelle' } });
   textarea.addEventListener('input', start);
   body.append(
     textarea,
