@@ -36,6 +36,26 @@ async function prepareTokenizerStress(win) {
   })()`, true);
 }
 
+async function prepareP1S1Stress(win) {
+  await win.webContents.executeJavaScript(`(() => {
+    const tokenizer=document.getElementById('tokenizer-lab');
+    const text=tokenizer?.querySelector('[data-tokenizer-input]');
+    const limit=tokenizer?.querySelector('[data-tokenizer-limit]');
+    if(text&&limit){
+      text.value='extraordinaire modèle déjà 😊 anticonstitutionnellement — contexte pédagogique répété';
+      text.dispatchEvent(new Event('input',{bubbles:true}));
+      limit.value='8';limit.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    const context=document.getElementById('p1s1-context-lab');
+    const ranges=[...context?.querySelectorAll('input[type="range"]')||[]];
+    if(ranges.length===2){
+      ranges[0].value='50';ranges[0].dispatchEvent(new Event('input',{bubbles:true}));
+      ranges[1].value='8';ranges[1].dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    return true;
+  })()`, true);
+}
+
 async function focusProbe(win) {
   if (!win.isVisible()) win.show();
   win.focus();
@@ -67,7 +87,7 @@ async function snapshot(win, pageKind) {
     const positiveTabindex=[...document.querySelectorAll('[tabindex]')].filter(el=>Number(el.getAttribute('tabindex'))>0).map(el=>el.outerHTML.slice(0,180));
     const unfocusable=interactive.filter(el=>el.tabIndex<0||el.disabled).map(el=>({tag:el.tagName,label:(el.textContent||el.getAttribute('aria-label')||'').trim().slice(0,60),tabIndex:el.tabIndex,disabled:Boolean(el.disabled)}));
     const smallTargets=interactive.filter(el=>!el.matches('.skip,input[type="checkbox"],input[type="radio"]')).map(el=>{const r=el.getBoundingClientRect();return {el,r}}).filter(({r})=>r.width<40||r.height<40).map(({el,r})=>({tag:el.tagName,label:(el.textContent||el.getAttribute('aria-label')||'').trim().slice(0,60),width:Math.round(r.width),height:Math.round(r.height)}));
-    const majors=[...document.querySelectorAll('.app-shell,main,.module-hero,.activity,.tokenizer-grid,.tokenizer-controls,.tokenizer-output')].filter(visible);
+    const majors=[...document.querySelectorAll('.app-shell,main,.module-hero,.activity,.tokenizer-grid,.tokenizer-controls,.tokenizer-output,.vector-lab,.vector-controls,.vector-kpis,.context-budget-lab,.context-budget-controls,.context-budget-kpis')].filter(visible);
     const clipped=majors.map(el=>{const r=el.getBoundingClientRect();return {el,r}}).filter(({r})=>r.left<-2||r.right>innerWidth+2).map(({el,r})=>({className:el.className||el.tagName,left:Math.round(r.left),right:Math.round(r.right),viewport:innerWidth}));
 
     const active=document.activeElement;
@@ -103,6 +123,22 @@ async function snapshot(win, pageKind) {
       return {stacked:Boolean(controls&&output&&output.top>=controls.bottom-2),tokens:document.querySelectorAll('.tokenizer-token').length,kpis:document.querySelectorAll('.tokenizer-kpis>div').length};
     })():null;
 
+    const p1s1=${JSON.stringify(pageKind)}==='p1s1'?(()=>{
+      const vector=document.getElementById('p1s1-vector-lab');
+      const context=document.getElementById('p1s1-context-lab');
+      const vectorRows=[...vector?.querySelectorAll('.vector-control')||[]].map(el=>el.getBoundingClientRect());
+      const contextRows=[...context?.querySelectorAll('.context-budget-controls label')||[]].map(el=>el.getBoundingClientRect());
+      const stacked=(rows)=>rows.length<2?true:rows[1].top>=rows[0].bottom-2;
+      return {
+        vectorMetrics:vector?.querySelectorAll('[data-vector-metric]').length||0,
+        contextMetrics:context?.querySelectorAll('[data-context-metric]').length||0,
+        vectorStacked:stacked(vectorRows),
+        contextStacked:stacked(contextRows),
+        tokenizerCount:document.querySelectorAll('#tokenizer-lab').length,
+        unsupported:[...document.querySelectorAll('.activity-intro')].filter(n=>/adaptateur de rendu V3 n’est pas encore installé/.test(n.textContent||'')).length
+      };
+    })():null;
+
     return {
       theme:document.documentElement.dataset.theme,
       width:innerWidth,
@@ -118,7 +154,8 @@ async function snapshot(win, pageKind) {
       focusProbe,
       skipLink,
       colors,
-      tokenizer
+      tokenizer,
+      p1s1
     };
   })()`, true);
 }
@@ -147,6 +184,14 @@ function assertSnapshot(report, { runtime, pageKind, viewport, mode }) {
     assert.ok(report.tokenizer.tokens > 0, `${label}: Tokenizer tokens missing`);
     assert.equal(report.tokenizer.stacked, viewport.name === 'mobile', `${label}: Tokenizer density/grid does not match viewport`);
   }
+  if (pageKind === 'p1s1') {
+    assert.equal(report.p1s1.vectorMetrics, 4, `${label}: Vector Lab metrics incomplete`);
+    assert.equal(report.p1s1.contextMetrics, 3, `${label}: Context Lab metrics incomplete`);
+    assert.equal(report.p1s1.tokenizerCount, 1, `${label}: shared Tokenizer Lab must render once`);
+    assert.equal(report.p1s1.unsupported, 0, `${label}: unsupported P1S1 activity visible`);
+    assert.equal(report.p1s1.vectorStacked, viewport.name === 'mobile', `${label}: Vector Lab density does not match viewport`);
+    assert.equal(report.p1s1.contextStacked, viewport.name === 'mobile', `${label}: Context Lab density does not match viewport`);
+  }
 }
 
 async function persistReport(report, target, metadata) {
@@ -155,6 +200,7 @@ async function persistReport(report, target, metadata) {
 
 export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, artifactDir }) {
   if (pageKind === 'tokenizer') await prepareTokenizerStress(win);
+  if (pageKind === 'p1s1') await prepareP1S1Stress(win);
   const viewports = runtime === 'Web'
     ? [{ name:'desktop', width:1360, height:900 }, { name:'mobile', width:390, height:844 }]
     : [{ name:'desktop', width:1360, height:900 }];
