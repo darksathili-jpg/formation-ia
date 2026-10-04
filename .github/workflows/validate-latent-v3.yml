@@ -67,11 +67,11 @@ jobs:
       - name: End-to-end Web, Electron, Visual and Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" npm run test:e2e
 
-      - name: Publish Visual Accessibility Gate screenshots
+      - name: Publish Visual Accessibility Gate reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: latent-v3-visual-a11y
-          path: latent_app/artifacts/visual-a11y/*.png
+          name: latent-v3-visual-a11y-reports
+          path: latent_app/artifacts/visual-a11y/*.json
           if-no-files-found: ignore
           retention-days: 14
