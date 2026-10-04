@@ -37,13 +37,17 @@ async function prepareTokenizerStress(win) {
 }
 
 async function focusProbe(win) {
+  if (!win.isVisible()) win.show();
+  win.focus();
+  win.webContents.focus();
+  await pause(80);
   const focused = await win.webContents.executeJavaScript(`(() => {
     const target=document.querySelector('[data-display-mode="dark"]');
     if(!target)return false;
     target.focus({preventScroll:true});
-    return document.activeElement===target;
+    return document.activeElement===target && target.matches(':focus');
   })()`, true);
-  assert.equal(focused, true, 'Display mode control could not receive focus');
+  assert.equal(focused, true, 'Display mode control could not receive real window focus');
   await pause(40);
 }
 
@@ -72,6 +76,8 @@ async function snapshot(win, pageKind) {
       tag:active.tagName,
       label:(active.textContent||active.getAttribute('aria-label')||'').trim().slice(0,80),
       isBody:active===document.body,
+      matchesFocus:active.matches(':focus'),
+      matchesFocusVisible:active.matches(':focus-visible'),
       width:activeStyle?parseFloat(activeStyle.outlineWidth)||0:0,
       style:activeStyle?.outlineStyle||'none',
       color:activeStyle?.outlineColor||''
@@ -131,7 +137,7 @@ function assertSnapshot(report, { runtime, pageKind, viewport, mode }) {
   assert.equal(report.skipLink.href, '#main', `${label}: skip link must target #main`);
   assert.equal(report.skipLink.targetExists, true, `${label}: skip-link target missing`);
   assert.equal(report.skipLink.targetTabIndex, -1, `${label}: #main must be programmatically focusable`);
-  assert.ok(report.focusProbe && !report.focusProbe.isBody, `${label}: focus probe did not reach a real control`);
+  assert.ok(report.focusProbe && !report.focusProbe.isBody && report.focusProbe.matchesFocus, `${label}: focus probe did not reach a real control`);
   assert.match(report.focusProbe.label, /Sombre/i, `${label}: focus probe targeted the wrong control`);
   assert.ok(report.focusProbe.width >= 3 && report.focusProbe.style !== 'none', `${label}: visible focus ring missing on ${JSON.stringify(report.focusProbe)}`);
   const minimumContrast = mode === 'projector' ? 7 : 4.5;
@@ -143,36 +149,8 @@ function assertSnapshot(report, { runtime, pageKind, viewport, mode }) {
   }
 }
 
-async function captureWithDevTools(win, target) {
-  const debug = win.webContents.debugger;
-  let attachedHere = false;
-  try {
-    if (!debug.isAttached()) {
-      debug.attach('1.3');
-      attachedHere = true;
-    }
-    const result = await debug.sendCommand('Page.captureScreenshot', {
-      format: 'png',
-      fromSurface: true,
-      captureBeyondViewport: false
-    });
-    await writeFile(target, Buffer.from(result.data, 'base64'));
-  } finally {
-    if (attachedHere && debug.isAttached()) debug.detach();
-  }
-}
-
-async function capture(win, target) {
-  try {
-    const image = await win.webContents.capturePage();
-    await writeFile(target, image.toPNG());
-  } catch (primaryError) {
-    try {
-      await captureWithDevTools(win, target);
-    } catch (fallbackError) {
-      throw new Error(`capturePage=${primaryError?.message || primaryError}; devtools=${fallbackError?.message || fallbackError}`);
-    }
-  }
+async function persistReport(report, target, metadata) {
+  await writeFile(target, `${JSON.stringify({ ...metadata, report }, null, 2)}\n`, 'utf8');
 }
 
 export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, artifactDir }) {
@@ -192,13 +170,8 @@ export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, art
       await focusProbe(win);
       console.log(`  … VISUAL ${label} snapshot`);
       const report = await snapshot(win, pageKind);
-      const name = `${runtime.toLowerCase()}-${pageKind}-${viewport.name}-${mode}.png`;
-      console.log(`  … VISUAL ${label} capture`);
-      try {
-        await capture(win, path.join(artifactDir, name));
-      } catch (error) {
-        console.warn(`  ⚠ VISUAL ${label} screenshot unavailable: ${error?.message || error}`);
-      }
+      const name = `${runtime.toLowerCase()}-${pageKind}-${viewport.name}-${mode}.json`;
+      await persistReport(report, path.join(artifactDir, name), { runtime, pageKind, viewport, mode });
       console.log(`  … VISUAL ${label} assert`);
       assertSnapshot(report, { runtime, pageKind, viewport, mode });
       console.log(`  ✓ VISUAL ${label}`);
