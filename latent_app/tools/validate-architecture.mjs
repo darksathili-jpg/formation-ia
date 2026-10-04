@@ -11,6 +11,8 @@ async function text(relative) {
 
 const domainFiles = [
   'src/domain/activities/tokenizer.mjs',
+  'src/domain/activities/context-budget.mjs',
+  'src/domain/activities/representation.mjs',
   'src/domain/activities/decision.mjs',
   'src/domain/learning/mastery.mjs',
   'src/domain/analytics/learning-event.mjs'
@@ -33,6 +35,7 @@ const tokenizerHtml = await text('src/entrypoints/web/tokenizer.html');
 const tokenizerApp = await text('src/entrypoints/web/tokenizer-app.mjs');
 const renderer = await text('src/adapters/web/module-renderer.mjs');
 const presenter = await text('src/application/module-presenter.mjs');
+const moduleLoader = await text('src/application/load-module-bundle.mjs');
 const contentRepository = await text('src/adapters/web/fetch-content-repository.mjs');
 const electron = await text('src/entrypoints/electron/main.mjs');
 const packageJson = await text('package.json');
@@ -44,7 +47,11 @@ if (index.includes('Comprendre ce qui se cache derrière un assistant IA')) {
 if (!index.includes('id="moduleRoot"')) errors.push('index.html: host déclaratif moduleRoot absent');
 if (!app.includes('new FetchContentRepository')) errors.push('app.mjs: ContentRepository non utilisé');
 if (/fetch\s*\(/.test(app)) errors.push('app.mjs: accès HTTP direct détecté, utiliser ContentRepository');
-if (!app.includes('buildModuleViewModel')) errors.push('app.mjs: presenter applicatif non utilisé');
+if (!app.includes('loadModuleBundle(')) errors.push('app.mjs: use case loadModuleBundle non utilisé');
+if (!app.includes("from '../../application/load-module-bundle.mjs'")) errors.push('app.mjs: dépendance explicite vers le use case absente');
+if (!moduleLoader.includes("from './module-presenter.mjs'")) errors.push('load-module-bundle: presenter applicatif non délégué au use case');
+if (!moduleLoader.includes('buildModuleViewModel(')) errors.push('load-module-bundle: presenter non utilisé');
+if (!moduleLoader.includes('contentRepository.getActivity(')) errors.push('load-module-bundle: activités partagées non résolues via ContentRepository');
 
 if (!renderer.includes("from '../../domain/activities/decision.mjs'")) errors.push('renderer: décisions métier non déléguées au domaine');
 if (!renderer.includes("from '../../domain/activities/tokenizer.mjs'")) errors.push('renderer: Tokenizer Lab non branché sur le domaine tokenizer');
@@ -74,6 +81,9 @@ if (tokenizerApp.includes('tokenizeText(') || tokenizerApp.includes('TextEncoder
 if (!contentRepository.includes('activities/${activityId}.json')) errors.push('ContentRepository: activités autonomes non prises en charge');
 
 if (presenter.includes('document.') || presenter.includes('window.')) errors.push('module-presenter: dépendance DOM interdite');
+if (moduleLoader.includes('document.') || moduleLoader.includes('window.') || moduleLoader.includes('localStorage')) {
+  errors.push('load-module-bundle: dépendance runtime interdite dans le use case');
+}
 if (!electron.includes("APP_ROOT = path.resolve(__dirname, '../../..')")) errors.push('Electron: protocole ne sert pas tout latent_app');
 if (!electron.includes('nodeIntegration: false') || !electron.includes('contextIsolation: true') || !electron.includes('sandbox: true')) {
   errors.push('Electron: garde-fous de sécurité incomplets');
@@ -88,4 +98,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log('✅ Architecture LATENT V3 valide — domaine sans runtime, P0 déclaratif, Tokenizer Lab sans logique DOM, contenu via ports, décisions hors UI, Electron isolé et gate E2E présent.');
+console.log('✅ Architecture LATENT V3 valide — entrypoint → use case → presenter, domaine sans runtime, activités partagées via ports, Tokenizer sans logique DOM, décisions hors UI, Electron isolé et gate E2E présent.');
