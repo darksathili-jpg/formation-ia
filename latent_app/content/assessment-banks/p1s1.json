@@ -1,0 +1,78 @@
+{
+  "moduleId": "p1s1",
+  "version": "3.0.0-alpha.1",
+  "quiz": [
+    {
+      "id": "p1s1-q1",
+      "prompt": "Un token est-il nécessairement un mot entier ?",
+      "choices": ["Oui, toujours", "Non, il peut être un mot, un fragment ou une autre unité du tokenizer"],
+      "answer": 1,
+      "feedback": "La tokenisation dépend du vocabulaire et des règles du tokenizer. Un mot rare peut être découpé en plusieurs sous-unités."
+    },
+    {
+      "id": "p1s1-q2",
+      "prompt": "Que représente principalement le token ID 821 ?",
+      "choices": ["Une adresse/index dans le vocabulaire", "Une mesure de sens égale à 821", "Une probabilité de 82,1 %"],
+      "answer": 0,
+      "feedback": "L'ID est un index discret. Sa valeur numérique n'exprime ni importance ni quantité de sens."
+    },
+    {
+      "id": "p1s1-q3",
+      "prompt": "Quelle affirmation distingue correctement ID et embedding ?",
+      "choices": ["L'ID est un entier d'indexation ; l'embedding est un vecteur numérique", "Ils sont strictement la même représentation", "L'embedding est seulement le nom lisible du token"],
+      "answer": 0,
+      "feedback": "L'ID sert à retrouver une représentation ; l'embedding est un vecteur utilisé dans les calculs du réseau."
+    },
+    {
+      "id": "p1s1-q4",
+      "prompt": "Une similarité cosinus de 0,9 entre deux vecteurs prouve-t-elle qu'ils ont 90 % du même sens ?",
+      "choices": ["Oui", "Non"],
+      "answer": 1,
+      "feedback": "Le cosinus mesure une relation géométrique entre vecteurs. Son interprétation dépend de la façon dont ces vecteurs ont été construits et de la tâche."
+    },
+    {
+      "id": "p1s1-q5",
+      "prompt": "Que signifie un dépassement de la fenêtre de contexte dans la simulation ?",
+      "choices": ["Tous les tokens restent nécessairement accessibles", "Le budget disponible est dépassé et une partie de la séquence ne tient plus dans cette fenêtre", "Les poids du modèle sont effacés"],
+      "answer": 1,
+      "feedback": "La fenêtre de contexte est un budget de tokens pour un traitement donné. Elle ne correspond ni aux poids ni à une mémoire persistante."
+    },
+    {
+      "id": "p1s1-q6",
+      "prompt": "Une application retrouve demain une préférence utilisateur. Peut-on en conclure que cette préférence était restée dans la fenêtre de contexte ?",
+      "choices": ["Oui", "Non, elle peut provenir d'une mémoire applicative réinjectée"],
+      "answer": 1,
+      "feedback": "Contexte courant et stockage persistant sont deux mécanismes différents."
+    }
+  ],
+  "transfer": [
+    {
+      "id": "p1s1-t1",
+      "prompt": "Un mot scientifique rare est découpé en cinq fragments par le tokenizer. Quelle conclusion est la plus prudente ?",
+      "choices": ["Le modèle ne peut jamais traiter ce mot", "Le mot consomme plusieurs tokens dans ce tokenizer", "Les cinq fragments sont cinq définitions différentes"],
+      "answer": 1,
+      "feedback": "Le découpage augmente le nombre d'unités utilisées, mais ne suffit pas à conclure que le modèle est incapable de traiter le mot."
+    },
+    {
+      "id": "p1s1-t2",
+      "prompt": "Deux tokens possèdent des IDs 10 et 9000. Que peut-on déduire directement ?",
+      "choices": ["Le second est plus important", "Le second est plus récent", "Seulement qu'ils occupent deux index différents dans le vocabulaire"],
+      "answer": 2,
+      "feedback": "L'ordre numérique des IDs n'encode pas une échelle sémantique."
+    },
+    {
+      "id": "p1s1-t3",
+      "prompt": "Deux représentations ont une forte similarité cosinus dans un espace donné. Quelle conclusion est acceptable ?",
+      "choices": ["Elles sont géométriquement proches selon cette mesure", "Elles expriment nécessairement un fait vrai", "Elles doivent être le même token"],
+      "answer": 0,
+      "feedback": "Une proximité géométrique peut être utile, mais ne devient pas automatiquement une preuve de vérité ou d'identité."
+    },
+    {
+      "id": "p1s1-t4",
+      "prompt": "Une conversation dépasse le budget de contexte, mais l'application retrouve ensuite un ancien choix utilisateur. Quelle explication est la plus cohérente ?",
+      "choices": ["La fenêtre de contexte est donc infinie", "L'application peut avoir utilisé un stockage persistant distinct du contexte courant", "Le token ID a mémorisé le choix"],
+      "answer": 1,
+      "feedback": "Le stockage applicatif peut conserver une information que la fenêtre courante ne contient plus."
+    }
+  ]
+}
