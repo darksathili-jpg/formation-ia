@@ -67,14 +67,22 @@ jobs:
           node --check src/domain/activities/attention.mjs
           node --check tests/e2e-smoke.mjs
           node --check tests/visual-a11y.mjs
+          node --check tests/p1s2-e2e.mjs
+          node --check tests/p1s2-visual-a11y.mjs
           node --check tools/validate-architecture.mjs
+          node --check tools/validate-p1s2-architecture.mjs
           node --check tools/validate-content.mjs
 
       - name: Validate domain, content and architecture
-        run: npm run validate
+        run: |
+          npm run validate
+          node tools/validate-p1s2-architecture.mjs
 
-      - name: End-to-end Web, Electron, Visual and Accessibility gate
+      - name: Baseline E2E Web Electron Visual Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" npm run test:e2e
+
+      - name: P1S2 Attention E2E Web Electron Visual Accessibility gate
+        run: xvfb-run -a --server-args="-screen 0 1440x1000x24" ./node_modules/.bin/electron . --latent-e2e-p1s2
 
       - name: Publish Visual Accessibility Gate reports
         if: always()
