@@ -32,11 +32,12 @@ test('spaces are preserved as explicit pedagogical units', () => {
   assert.equal(result.metrics.characters, 4);
 });
 
-test('context budget reports overflow instead of silently truncating metrics', () => {
+test('context budget reports total and overflow instead of silently truncating metrics', () => {
   const result = tokenizeText('extraordinaire', { contextLimit: 2 });
   assert.equal(result.metrics.tokens, 3);
   assert.deepEqual(result.context, {
     limit: 2,
+    total: 3,
     used: 2,
     available: 0,
     overflow: 1,
