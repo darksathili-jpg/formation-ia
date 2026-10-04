@@ -12,9 +12,14 @@ for(const token of forbidden) if(domain.includes(token)) errors.push(`sampling.m
 for(const marker of ['export function softmax(','export function topKMask(','export function topPMask(','export function sampleIndex(','export function decodeStep(','export function advanceAutoregressive(']) if(!domain.includes(marker)) errors.push(`sampling.mjs: primitive domaine absente ${marker}`);
 
 const renderer=await text('src/adapters/web/sampling-renderer.mjs');
-for(const marker of ["from '../../domain/activities/sampling.mjs'",'decodeStep(','advanceAutoregressive(','randomFromSeed(']) if(!renderer.includes(marker)) errors.push(`sampling-renderer: délégation manquante ${marker}`);
+for(const marker of ["from '../../domain/activities/sampling.mjs'",'decodeStep(','advanceAutoregressive(','randomFromSeed(','probabilityBar(','el(\'progress\'']) if(!renderer.includes(marker)) errors.push(`sampling-renderer: délégation/visualisation manquante ${marker}`);
 for(const forbiddenLogic of ['Math.exp(','Math.imul(','sort((a, b) => b.value','cumulative +=']) if(renderer.includes(forbiddenLogic)) errors.push(`sampling-renderer: logique domaine dupliquée ${forbiddenLogic}`);
+for(const unsafeStyle of ['attrs: { style:', 'style:', '.style.', "setAttribute('style'", 'setAttribute("style"']) if(renderer.includes(unsafeStyle)) errors.push(`sampling-renderer: style inline interdit par CSP (${unsafeStyle})`);
 for(const boundary of ['aucune source externe', 'aucune vérité']) if(!renderer.includes(boundary)) errors.push(`sampling-renderer: frontière vérité absente: ${boundary}`);
+
+const css=await text('src/entrypoints/web/sampling-labs.css');
+if(!css.includes('.sampling-probbar::-webkit-progress-value')||!css.includes('.sampling-probbar::-moz-progress-bar')) errors.push('sampling-labs.css: rendu progress CSP-safe incomplet');
+if(css.includes('.sampling-probbar>span')) errors.push('sampling-labs.css: ancien bargraph à span dynamique encore présent');
 
 const app=await text('src/entrypoints/web/app.mjs');
 if(!app.includes("from '../../adapters/web/sampling-renderer.mjs'")) errors.push('app.mjs: renderer P1S4 non importé');
@@ -36,7 +41,11 @@ if(JSON.stringify(sampling?.config?.tokens)!==JSON.stringify(['calcule','choisit
 const truth=module.activities.find(a=>a.id==='p1s4-truth-lab');
 if(!(truth?.config?.logits?.[0]>truth?.config?.logits?.[1])) errors.push('p1s4.json: Truth Trap doit rendre le candidat faux dominant avant température');
 
+const bank=JSON.parse(await text('content/assessment-banks/p1s4.json'));
+const answerPositions=[...(bank.quiz||[]),...(bank.transfer||[])].map(item=>item.answer);
+if(new Set(answerPositions).size<3) errors.push('p1s4 assessment: positions de bonnes réponses insuffisamment variées');
+
 for(const required of ['tests/p1s4-e2e.mjs','tests/p1s4-visual-a11y.mjs']){try{await text(required)}catch{errors.push(`${required}: gate P1S4 absent`)}}
 
 if(errors.length){console.error(`\n❌ P1S4 ARCHITECTURE INVALIDE\n- ${errors.join('\n- ')}`);process.exit(1)}
-console.log('✅ P1S4 architecture valide — trois candidats avant jargon, décodage pur, vérité bornée, renderer délégué et statut terrain protégé.');
+console.log('✅ P1S4 architecture valide — trois candidats avant jargon, décodage pur, vérité bornée, rendu CSP-safe, renderer délégué et statut terrain protégé.');
