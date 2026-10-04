@@ -1,5 +1,7 @@
 import { evaluateComponentMission, evaluateOrder, scoreChoiceSet } from '../../domain/activities/decision.mjs';
 import { tokenizeText } from '../../domain/activities/tokenizer.mjs';
+import { evaluateContextBudget } from '../../domain/activities/context-budget.mjs';
+import { cosineSimilarity, dotProduct, vectorNorm } from '../../domain/activities/representation.mjs';
 
 const COMPONENT_LABELS = Object.freeze({
   model: 'LLM',
@@ -110,7 +112,7 @@ function renderPrediction(activity, emit) {
     }
 
     result.textContent = evaluation.complete
-      ? `${evaluation.score}/${evaluation.total}. Expliquez maintenant pourquoi chaque capacité vient de cette couche.`
+      ? `${evaluation.score}/${evaluation.total}. Expliquez maintenant le critère qui permettait de décider.`
       : `Il reste ${evaluation.total - evaluation.answered} situation(s) à traiter.`;
 
     if (evaluation.complete) emit('attempt.completed', activity.id, { score: evaluation.score, total: evaluation.total, ratio: evaluation.ratio });
@@ -271,7 +273,7 @@ function renderSelfExplanation(activity, emit) {
   save.addEventListener('click', () => {
     start();
     const checked = checks.filter((input) => input.checked).length;
-    result.textContent = `${checked}/${checks.length} critères retrouvés. Revenez au System Builder si un rôle reste difficile à justifier.`;
+    result.textContent = `${checked}/${checks.length} critères retrouvés. Reprenez la manipulation associée à la notion qui reste difficile à justifier.`;
     emit('explanation.self_checked', activity.id, { checked, total: checks.length, characters: textarea.value.length });
   });
 
@@ -487,6 +489,206 @@ function renderTokenizerLab(activity, emit) {
   return activityFrame(activity, body);
 }
 
+function renderVectorLab(activity, emit) {
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
+  const vectors = config.initialVectors || {};
+  const reference = Array.isArray(vectors.a) ? [...vectors.a] : [1, 0];
+  let candidate = Array.isArray(vectors.b) ? [...vectors.b] : [0.8, 0.2];
+  const alternative = Array.isArray(vectors.c) ? [...vectors.c] : [0, 1];
+  if (reference.length !== 2 || candidate.length !== 2 || alternative.length !== 2) {
+    throw new Error('Vector Lab V3 currently requires 2D vectors');
+  }
+
+  const body = el('div', { className: 'vector-lab' });
+  body.append(
+    el('h3', { text: config.title || 'Vector Lab' }),
+    el('p', { className: 'activity-intro', text: config.instruction || '' })
+  );
+
+  const referenceText = el('code', { text: `A = [${reference.join(', ')}]` });
+  const candidateText = el('code', { attrs: { 'data-vector-value': 'candidate' } });
+  const dotOut = el('strong', { attrs: { 'data-vector-metric': 'dot' } });
+  const normAOut = el('strong', { attrs: { 'data-vector-metric': 'norm-a' } });
+  const normBOut = el('strong', { attrs: { 'data-vector-metric': 'norm-b' } });
+  const cosineOut = el('strong', { attrs: { 'data-vector-metric': 'cosine' } });
+  const cosineBarFill = el('span', { className: 'vector-cosine-fill' });
+  const cosineBar = el('div', { className: 'vector-cosine-bar', attrs: { 'aria-hidden': 'true' } }, [cosineBarFill]);
+  const interpretation = feedbackBox();
+
+  const sliderRows = candidate.map((value, index) => {
+    const input = el('input', {
+      attrs: {
+        type: 'range', min: -2, max: 2, step: 0.1, value,
+        'aria-label': `Coordonnée ${index + 1} du vecteur B`,
+        'data-vector-coordinate': index
+      }
+    });
+    const output = el('output', { text: Number(value).toFixed(1) });
+    input.addEventListener('input', () => {
+      start();
+      candidate[index] = Number(input.value);
+      output.textContent = candidate[index].toFixed(1);
+      update(true, `coordinate-${index}`);
+    });
+    return el('label', { className: 'vector-control' }, [
+      el('span', { text: `B${index + 1}` }), input, output
+    ]);
+  });
+
+  function update(emitChange = false, source = 'render') {
+    const cosine = cosineSimilarity(reference, candidate);
+    const dot = dotProduct(reference, candidate);
+    const normA = vectorNorm(reference);
+    const normB = vectorNorm(candidate);
+    candidateText.textContent = `B = [${candidate.map((value) => Number(value).toFixed(1)).join(', ')}]`;
+    dotOut.textContent = dot.toFixed(3);
+    normAOut.textContent = normA.toFixed(3);
+    normBOut.textContent = normB.toFixed(3);
+    cosineOut.textContent = cosine.defined ? cosine.value.toFixed(3) : 'indéfini';
+    const visual = cosine.defined ? Math.max(0, Math.min(1, (cosine.value + 1) / 2)) : 0;
+    cosineBarFill.style.width = `${visual * 100}%`;
+    interpretation.textContent = cosine.defined
+      ? `cos(A,B) = ${cosine.value.toFixed(3)}. C'est une relation géométrique dans cet espace, pas une probabilité de vérité ni un pourcentage de sens commun.`
+      : 'Le cosinus est indéfini lorsqu’un des vecteurs est nul : il n’a alors aucune direction à comparer.';
+    interpretation.dataset.state = cosine.defined ? 'defined' : 'undefined';
+    if (emitChange) {
+      emit('manipulation.changed', activity.id, {
+        source,
+        reference: [...reference], candidate: [...candidate],
+        cosine: cosine.value, cosineDefined: cosine.defined
+      });
+    }
+  }
+
+  const useB = button('Revenir au vecteur B initial', 'button secondary');
+  useB.addEventListener('click', () => {
+    start();
+    candidate = [...(vectors.b || [0.8, 0.2])];
+    const inputs = sliderRows.map((row) => row.querySelector('input'));
+    inputs.forEach((input, index) => { input.value = candidate[index]; rowOutput(input).textContent = Number(candidate[index]).toFixed(1); });
+    update(true, 'preset-b');
+  });
+
+  const useC = button('Comparer au vecteur C', 'button secondary');
+  useC.addEventListener('click', () => {
+    start();
+    candidate = [...alternative];
+    const inputs = sliderRows.map((row) => row.querySelector('input'));
+    inputs.forEach((input, index) => { input.value = candidate[index]; rowOutput(input).textContent = Number(candidate[index]).toFixed(1); });
+    update(true, 'preset-c');
+  });
+
+  function rowOutput(input) {
+    return input.closest('label')?.querySelector('output');
+  }
+
+  const capture = button('Capturer cette comparaison');
+  capture.addEventListener('click', () => {
+    start();
+    const cosine = cosineSimilarity(reference, candidate);
+    const payload = { reference: [...reference], candidate: [...candidate], cosine: cosine.value, cosineDefined: cosine.defined };
+    emit('feedback.shown', activity.id, payload);
+    emit('attempt.completed', activity.id, payload);
+  });
+
+  body.append(
+    el('div', { className: 'vector-readout' }, [referenceText, candidateText]),
+    el('div', { className: 'vector-controls' }, sliderRows),
+    el('div', { className: 'vector-kpis' }, [
+      el('div', {}, [el('span', { text: 'A·B' }), dotOut]),
+      el('div', {}, [el('span', { text: '‖A‖' }), normAOut]),
+      el('div', {}, [el('span', { text: '‖B‖' }), normBOut]),
+      el('div', {}, [el('span', { text: 'cos(A,B)' }), cosineOut])
+    ]),
+    cosineBar,
+    interpretation,
+    el('div', { className: 'button-row' }, [useB, useC, capture])
+  );
+  update(false);
+  return activityFrame(activity, body);
+}
+
+function renderParameterLab(activity, emit) {
+  const start = startedOnce(activity, emit);
+  const config = activity.config || {};
+  if (config.domainEngine !== 'context-budget-engine') return renderUnsupported(activity);
+
+  const min = Number.isFinite(Number(config.min)) ? Number(config.min) : 1;
+  const max = Number.isFinite(Number(config.max)) ? Number(config.max) : 64;
+  const step = Number.isFinite(Number(config.step)) ? Number(config.step) : 1;
+  const initialLimit = Number.isInteger(config.initial) ? config.initial : Math.min(12, max);
+  const initialTotal = Number.isInteger(config.initialTokenCount) ? config.initialTokenCount : Math.min(18, max * 2);
+
+  const body = el('div', { className: 'context-budget-lab' });
+  body.append(
+    el('h3', { text: config.title || 'Context Budget Lab' }),
+    el('p', { className: 'activity-intro', text: config.instruction || '' })
+  );
+
+  const totalInput = el('input', {
+    attrs: { type: 'range', min: 0, max: Math.max(max * 2, initialTotal), step: 1, value: initialTotal, 'aria-label': 'Nombre total de tokens à faire tenir' }
+  });
+  const limitInput = el('input', {
+    attrs: { type: 'range', min, max, step, value: initialLimit, 'aria-label': 'Limite de la fenêtre de contexte' }
+  });
+  const totalOut = el('output');
+  const limitOut = el('output');
+  const usedOut = el('strong', { attrs: { 'data-context-metric': 'used' } });
+  const availableOut = el('strong', { attrs: { 'data-context-metric': 'available' } });
+  const overflowOut = el('strong', { attrs: { 'data-context-metric': 'overflow' } });
+  const status = feedbackBox();
+  const meterFill = el('span', { className: 'context-budget-fill' });
+  const meterOverflow = el('span', { className: 'context-budget-overflow' });
+  const meter = el('div', { className: 'context-budget-meter', attrs: { 'aria-hidden': 'true' } }, [meterFill, meterOverflow]);
+
+  function update(emitChange = false, source = 'render') {
+    const total = Number(totalInput.value);
+    const limit = Number(limitInput.value);
+    const budget = evaluateContextBudget(total, limit);
+    totalOut.textContent = `${budget.total} tokens`;
+    limitOut.textContent = `${budget.limit} tokens`;
+    usedOut.textContent = String(budget.used);
+    availableOut.textContent = String(budget.available);
+    overflowOut.textContent = String(budget.overflow);
+    meterFill.style.width = `${Math.min(1, budget.used / budget.limit) * 100}%`;
+    meterOverflow.style.width = budget.total ? `${Math.min(1, budget.overflow / budget.total) * 100}%` : '0%';
+    status.textContent = budget.withinBudget
+      ? `${budget.total} token(s) tiennent dans cette fenêtre. Il reste ${budget.available} place(s).`
+      : `${budget.overflow} token(s) dépassent cette fenêtre. Cela ne signifie pas qu'une mémoire persistante a été effacée : ce sont deux mécanismes différents.`;
+    status.dataset.state = budget.withinBudget ? 'within' : 'overflow';
+    if (emitChange) emit('manipulation.changed', activity.id, { source, ...budget });
+    return budget;
+  }
+
+  totalInput.addEventListener('input', () => { start(); update(true, 'total'); });
+  limitInput.addEventListener('input', () => { start(); update(true, 'limit'); });
+  const capture = button('Capturer ce budget');
+  capture.addEventListener('click', () => {
+    start();
+    const budget = update(false);
+    emit('feedback.shown', activity.id, budget);
+    emit('attempt.completed', activity.id, budget);
+  });
+
+  body.append(
+    el('div', { className: 'context-budget-controls' }, [
+      el('label', {}, [el('span', { text: 'Séquence à faire tenir' }), totalInput, totalOut]),
+      el('label', {}, [el('span', { text: 'Taille de la fenêtre' }), limitInput, limitOut])
+    ]),
+    el('div', { className: 'context-budget-kpis' }, [
+      el('div', {}, [el('span', { text: 'Utilisés' }), usedOut]),
+      el('div', {}, [el('span', { text: 'Disponibles' }), availableOut]),
+      el('div', {}, [el('span', { text: 'Hors fenêtre' }), overflowOut])
+    ]),
+    meter,
+    status,
+    capture
+  );
+  update(false);
+  return activityFrame(activity, body);
+}
+
 function renderScoredItems(activity, items, emit, onEvidence, kind) {
   const start = startedOnce(activity, emit);
   const body = el('div');
@@ -564,6 +766,8 @@ export function renderActivity(activity, assessmentBank = {}, emit, onEvidence =
   if (activity.type === 'rank-order') return renderRankOrder(activity, emit);
   if (activity.type === 'self-explanation') return renderSelfExplanation(activity, emit);
   if (activity.type === 'tokenizer-lab') return renderTokenizerLab(activity, emit);
+  if (activity.type === 'vector-lab') return renderVectorLab(activity, emit);
+  if (activity.type === 'parameter-lab') return renderParameterLab(activity, emit);
   if (activity.type === 'quiz') return renderScoredItems(activity, assessmentBank.quiz || [], emit, onEvidence, 'quiz');
   if (activity.type === 'transfer-cards') return renderScoredItems(activity, assessmentBank.transfer || [], emit, onEvidence, 'transfer');
   return renderUnsupported(activity);
