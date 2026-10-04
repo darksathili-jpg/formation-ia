@@ -205,7 +205,7 @@
   },
   "pedagogy": {
     "firstMeaningfulActionTargetWords": 220,
-    "minimumMeaningfulManipulations": 1,
+    "minimumMeaningfulManipulations": 4,
     "fieldValidation": {"status": "pending", "evidenceRef": "formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md"}
   },
   "references": [
