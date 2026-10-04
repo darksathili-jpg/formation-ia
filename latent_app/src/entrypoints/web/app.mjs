@@ -7,6 +7,7 @@ import { LocalLearningEventRepository } from '../../adapters/web/local-learning-
 import { renderModule } from '../../adapters/web/module-renderer.mjs';
 import { enhanceAttentionActivities } from '../../adapters/web/attention-renderer.mjs';
 import { enhanceTransformerBlockActivities } from '../../adapters/web/transformer-block-renderer.mjs';
+import { enhanceSamplingActivities } from '../../adapters/web/sampling-renderer.mjs';
 
 const PROFILE_ID = 'local-profile';
 const COURSE_ID = 'latent-llm';
@@ -127,6 +128,7 @@ renderModule({
 });
 enhanceAttentionActivities({ root: moduleRoot, view, emit });
 enhanceTransformerBlockActivities({ root: moduleRoot, view, emit });
+enhanceSamplingActivities({ root: moduleRoot, view, emit });
 
 updateMasteryUi();
 await eventRepository.append(makeEvent('module.opened', null, { runtime: runtime.runtime }));
