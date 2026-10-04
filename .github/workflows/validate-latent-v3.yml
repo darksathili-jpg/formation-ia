@@ -8,6 +8,7 @@ on:
       - refactor/latent-v3-p1-migration
       - refactor/latent-v3-p1s2-attention
       - refactor/latent-v3-p1s3-transformer-block
+      - refactor/latent-v3-p1s4-sampling
     paths:
       - 'latent_app/**'
       - 'formation_llm/docs/AUDIT_ARCHITECTURE_V3_2026-10-02.md'
@@ -60,6 +61,7 @@ jobs:
           node --check src/adapters/web/module-renderer.mjs
           node --check src/adapters/web/attention-renderer.mjs
           node --check src/adapters/web/transformer-block-renderer.mjs
+          node --check src/adapters/web/sampling-renderer.mjs
           node --check src/adapters/web/local-progress-repository.mjs
           node --check src/adapters/web/local-learning-event-repository.mjs
           node --check src/domain/activities/decision.mjs
@@ -70,15 +72,19 @@ jobs:
           node --check src/domain/activities/transformer-block.mjs
           node --check src/domain/activities/position.mjs
           node --check src/domain/activities/kv-cache.mjs
+          node --check src/domain/activities/sampling.mjs
           node --check tests/e2e-smoke.mjs
           node --check tests/visual-a11y.mjs
           node --check tests/p1s2-e2e.mjs
           node --check tests/p1s2-visual-a11y.mjs
           node --check tests/p1s3-e2e.mjs
           node --check tests/p1s3-visual-a11y.mjs
+          node --check tests/p1s4-e2e.mjs
+          node --check tests/p1s4-visual-a11y.mjs
           node --check tools/validate-architecture.mjs
           node --check tools/validate-p1s2-architecture.mjs
           node --check tools/validate-p1s3-architecture.mjs
+          node --check tools/validate-p1s4-architecture.mjs
           node --check tools/validate-content.mjs
 
       - name: Validate domain, content and architecture
@@ -86,6 +92,7 @@ jobs:
           npm run validate
           node tools/validate-p1s2-architecture.mjs
           node tools/validate-p1s3-architecture.mjs
+          node tools/validate-p1s4-architecture.mjs
 
       - name: Baseline E2E Web Electron Visual Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" npm run test:e2e
@@ -95,6 +102,9 @@ jobs:
 
       - name: P1S3 Transformer Block E2E Web Electron Visual Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" ./node_modules/.bin/electron . --latent-e2e-p1s3
+
+      - name: P1S4 Sampling E2E Web Electron Visual Accessibility gate
+        run: xvfb-run -a --server-args="-screen 0 1440x1000x24" ./node_modules/.bin/electron . --latent-e2e-p1s4
 
       - name: Publish Visual Accessibility Gate reports
         if: always()
