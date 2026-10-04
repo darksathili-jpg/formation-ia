@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const APP_ROOT = path.resolve(__dirname, '../../..');
 export const WEB_ENTRY = 'src/entrypoints/web/index.html';
-const PRELOAD = path.resolve(__dirname, 'preload.mjs');
+const PRELOAD = path.resolve(__dirname, 'preload.cjs');
 export const TRUSTED_ORIGIN = 'latent://app';
 const E2E_MODE = process.argv.includes('--latent-e2e');
 
@@ -27,6 +27,7 @@ const MIME = new Map([
   ['.html', 'text/html; charset=utf-8'],
   ['.js', 'text/javascript; charset=utf-8'],
   ['.mjs', 'text/javascript; charset=utf-8'],
+  ['.cjs', 'text/javascript; charset=utf-8'],
   ['.css', 'text/css; charset=utf-8'],
   ['.json', 'application/json; charset=utf-8'],
   ['.svg', 'image/svg+xml'],
