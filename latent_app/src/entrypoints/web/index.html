@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,6 +7,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'">
   <title>LATENT Learning V3 · Parcours 0</title>
   <link rel="stylesheet" href="./app.css">
+  <script type="module" src="./appearance.mjs"></script>
   <script type="module" src="./app.mjs"></script>
 </head>
 <body>
@@ -24,6 +25,11 @@
       </div>
 
       <div class="side-footer">
+        <div class="display-modes" role="group" aria-label="Mode d’affichage">
+          <button type="button" data-display-mode="dark" aria-pressed="true">Sombre</button>
+          <button type="button" data-display-mode="light" aria-pressed="false">Clair</button>
+          <button type="button" data-display-mode="projector" aria-pressed="false">Projection</button>
+        </div>
         <div class="status-card"><span>Maîtrise</span><strong id="masteryStatus">À charger…</strong></div>
         <div class="status-card"><span>Traces locales</span><strong id="eventCount">0 événement</strong></div>
         <button class="reset-button" id="resetProgress" type="button">Réinitialiser ce pilote</button>
@@ -31,7 +37,7 @@
       </div>
     </aside>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <div class="system-banner" role="status">
         <span class="system-dot" aria-hidden="true"></span>
         <div><strong>Tranche verticale V3</strong><small>Contenu déclaratif → presenter pur → renderer Web · progression et événements via ports</small></div>
