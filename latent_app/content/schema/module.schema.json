@@ -93,6 +93,7 @@
               "prediction-cards", "component-builder", "rank-order", "worked-example",
               "completion", "self-explanation", "quiz", "transfer-cards", "tokenizer-lab",
               "vector-lab", "parameter-lab", "attention-lab", "position-lab", "transformer-block-lab", "kv-cache-lab",
+              "sampling-lab", "truth-temperature-lab", "autoregressive-lab",
               "retrieval-lab", "evidence-lab", "eval-lab"
             ]
           },
