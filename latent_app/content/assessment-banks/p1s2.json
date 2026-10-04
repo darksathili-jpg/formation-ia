@@ -1,0 +1,82 @@
+{
+  "moduleId": "p1s2",
+  "version": "3.0.0-alpha.1",
+  "quiz": [
+    {
+      "id": "p1s2-q1",
+      "prompt": "Pourquoi la représentation initiale du token « avocat » ne suffit-elle pas à distinguer profession juridique et aliment ?",
+      "choices": ["Parce que son ID change à chaque phrase", "Parce qu'une représentation utile doit intégrer des informations du contexte", "Parce que le tokenizer connaît déjà la vérité de la phrase"],
+      "answer": 1,
+      "feedback": "Le contexte transforme la représentation interne. L'ID et l'embedding initial ne codent pas à eux seuls le sens contextuel complet."
+    },
+    {
+      "id": "p1s2-q2",
+      "prompt": "Quel est le rôle principal de Q et K dans une tête d'attention simplifiée ?",
+      "choices": ["Calculer des scores de compatibilité", "Stocker une phrase lisible", "Choisir directement le prochain token"],
+      "answer": 0,
+      "feedback": "Le produit Q·K produit un score brut de compatibilité entre positions."
+    },
+    {
+      "id": "p1s2-q3",
+      "prompt": "Q·K = 2 signifie-t-il déjà une probabilité d'attention de 200 % ?",
+      "choices": ["Oui", "Non, c'est un score brut qui doit encore être traité"],
+      "answer": 1,
+      "feedback": "Le produit scalaire est un score. Après scaling, masque éventuel et softmax, on obtient des poids normalisés."
+    },
+    {
+      "id": "p1s2-q4",
+      "prompt": "Dans un modèle causal, que fait le masque pour une position future interdite ?",
+      "choices": ["Il lui donne un poids nul après normalisation", "Il augmente son score", "Il modifie définitivement les poids du modèle"],
+      "answer": 0,
+      "feedback": "Le score effectif d'une position interdite est traité comme -∞, ce qui donne un poids nul après softmax."
+    },
+    {
+      "id": "p1s2-q5",
+      "prompt": "Après softmax, que représentent les poids obtenus dans cette tête d'attention ?",
+      "choices": ["Des contributions normalisées pour combiner les V", "Des probabilités de vérité universelles", "Des IDs de tokens"],
+      "answer": 0,
+      "feedback": "Les poids servent à la combinaison locale des vecteurs V. Leur somme vaut 1 sur les positions autorisées."
+    },
+    {
+      "id": "p1s2-q6",
+      "prompt": "Le token recevant le poids d'attention le plus élevé explique-t-il nécessairement tout le raisonnement du modèle ?",
+      "choices": ["Oui", "Non"],
+      "answer": 1,
+      "feedback": "Un poids d'attention décrit une opération locale dans une tête et une couche. Il ne constitue pas à lui seul une explication causale complète."
+    }
+  ],
+  "transfer": [
+    {
+      "id": "p1s2-t1",
+      "scenario": "Phrase nouvelle",
+      "prompt": "Dans « La banque ferme après le braquage », le mot banque est ambigu hors contexte. Quelle démarche est cohérente avec l'attention ?",
+      "choices": ["Utiliser des informations des autres positions accessibles pour contextualiser banque", "Changer arbitrairement son token ID", "Considérer que son embedding initial suffit toujours"],
+      "answer": 0,
+      "feedback": "La contextualisation combine des informations provenant d'autres positions, sans changer l'identité du token en fonction de sa définition."
+    },
+    {
+      "id": "p1s2-t2",
+      "scenario": "Masque causal",
+      "prompt": "À la position 3 d'une génération autoregressive, un token situé en position 5 possède un score Q·K très élevé. Que doit faire le masque causal ?",
+      "choices": ["Autoriser ce token car son score est élevé", "L'interdire malgré son score", "Réentraîner le modèle"],
+      "answer": 1,
+      "feedback": "Le masque encode une contrainte d'accessibilité. Un score brut élevé ne permet pas de contourner une position future interdite."
+    },
+    {
+      "id": "p1s2-t3",
+      "scenario": "Interprétation",
+      "prompt": "Une position reçoit un poids d'attention de 0,72. Quelle conclusion est acceptable ?",
+      "choices": ["Sa Value contribue fortement à cette combinaison locale", "Cette position est vraie à 72 %", "Elle explique à elle seule la sortie finale du réseau"],
+      "answer": 0,
+      "feedback": "Le poids quantifie une contribution dans ce calcul local, pas une vérité ni une explication globale."
+    },
+    {
+      "id": "p1s2-t4",
+      "scenario": "Scaling",
+      "prompt": "On double fortement la dimension des keys et les produits scalaires deviennent plus dispersés. Pourquoi le facteur 1/√dₖ est-il utile dans l'attention standard ?",
+      "choices": ["Pour contrôler l'amplitude des scores avant softmax", "Pour créer les tokens", "Pour rendre tous les poids égaux"],
+      "answer": 0,
+      "feedback": "Le scaling limite l'amplitude typique des produits scalaires afin d'éviter un softmax inutilement saturé."
+    }
+  ]
+}
