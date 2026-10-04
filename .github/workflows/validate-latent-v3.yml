@@ -46,7 +46,7 @@ jobs:
       - name: Syntax-check V3 layers
         run: |
           node --check src/entrypoints/electron/main.mjs
-          node --check src/entrypoints/electron/preload.mjs
+          node --check src/entrypoints/electron/preload.cjs
           node --check src/entrypoints/web/app.mjs
           node --check src/entrypoints/web/tokenizer-app.mjs
           node --check src/application/module-presenter.mjs
