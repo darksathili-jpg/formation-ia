@@ -79,11 +79,12 @@ select,textarea{background:var(--surface-control);color:var(--text)}
 .tokenizer-token{color:var(--text)}
 .tokenizer-token.byte{color:var(--violet)}
 
+button:focus,a:focus,select:focus,textarea:focus,input:focus,
 button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{
   outline:3px solid var(--focus)!important;
   outline-offset:3px!important;
 }
-.sidebar nav a:focus-visible{outline:3px solid var(--focus)!important;outline-offset:2px!important}
+.sidebar nav a:focus,.sidebar nav a:focus-visible{outline:3px solid var(--focus)!important;outline-offset:2px!important}
 
 .display-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem}
 .display-modes button{
