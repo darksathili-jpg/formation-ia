@@ -1,6 +1,6 @@
 {
   "moduleId": "p1s1",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "title": "Tokens, représentations et contexte",
   "status": "design-ready",
   "audience": {
@@ -69,7 +69,7 @@
       "claim": "L'apprenant ne réduit plus la tokenisation à un découpage en mots ou en caractères.",
       "observable": "Il prédit une segmentation, confronte sa prédiction au Tokenizer Lab et explique pourquoi un mot peut produire plusieurs sous-tokens.",
       "taskIds": ["p1s1-token-prediction", "tokenizer-lab", "p1s1-token-id-example"],
-      "invalidEvidence": ["Réciter token ≠ mot sans réussir à interpréter extraordinaire, un emoji ou des espaces."],
+      "invalidEvidence": ["Réciter token ≠ mot sans réussir à interpréter extraordinaire, un accent ou des espaces."],
       "rubric": {
         "requiresPrediction": true,
         "requiresBoundaryExplanation": true
@@ -120,28 +120,28 @@
       "evidenceIds": ["p1s1-e1"],
       "config": {
         "title": "Prédire avant de tokeniser",
-        "instruction": "Avant le laboratoire, prédisez si chaque entrée restera entière ou sera probablement découpée en plusieurs unités dans notre simulation didactique.",
+        "instruction": "Avant le laboratoire, prédisez si chaque mot restera en une seule unité ou sera découpé en plusieurs unités dans le mode sous-mots de notre simulation didactique.",
         "items": [
           {
             "id": "bonjour",
             "situation": "bonjour",
-            "choices": ["model", "external"],
-            "answer": "model",
+            "choices": ["une seule unité", "plusieurs unités"],
+            "answer": "une seule unité",
             "feedback": "Dans notre petit vocabulaire didactique, bon + jour peut être fusionné jusqu'à former bonjour."
           },
           {
             "id": "extraordinaire",
             "situation": "extraordinaire",
-            "choices": ["model", "external"],
-            "answer": "external",
-            "feedback": "Dans la simulation, extraordinaire est représenté par plusieurs sous-unités, ce qui montre qu'un token n'est pas forcément un mot."
+            "choices": ["une seule unité", "plusieurs unités"],
+            "answer": "plusieurs unités",
+            "feedback": "Dans la simulation, extraordinaire devient extra | ord | inaire : un token n'est donc pas nécessairement un mot entier."
           },
           {
-            "id": "emoji",
-            "situation": "🚀",
-            "choices": ["model", "external"],
-            "answer": "external",
-            "feedback": "Selon la vue choisie, le même symbole Unicode peut être observé comme symbole ou comme plusieurs octets UTF-8."
+            "id": "modele",
+            "situation": "modèle",
+            "choices": ["une seule unité", "plusieurs unités"],
+            "answer": "plusieurs unités",
+            "feedback": "Dans la simulation, modèle devient mod | èle. L'accent reste un caractère Unicode, mais il participe ici à des sous-unités apprises."
           }
         ]
       },
@@ -192,12 +192,13 @@
       "evidenceIds": ["p1s1-e3"],
       "config": {
         "title": "Context Budget Lab",
-        "instruction": "Faites varier la fenêtre et observez utilisés, disponibles et overflow sans confondre ce budget avec une mémoire persistante.",
+        "instruction": "Faites varier la longueur de la séquence et la fenêtre. Observez utilisés, disponibles et overflow sans confondre ce budget avec une mémoire persistante.",
         "parameter": "contextLimit",
         "min": 1,
         "max": 64,
         "step": 1,
         "initial": 12,
+        "initialTokenCount": 18,
         "domainEngine": "context-budget-engine"
       },
       "analytics": {
