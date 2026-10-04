@@ -92,7 +92,8 @@
             "enum": [
               "prediction-cards", "component-builder", "rank-order", "worked-example",
               "completion", "self-explanation", "quiz", "transfer-cards", "tokenizer-lab",
-              "vector-lab", "parameter-lab", "attention-lab", "retrieval-lab", "evidence-lab", "eval-lab"
+              "vector-lab", "parameter-lab", "attention-lab", "position-lab", "transformer-block-lab", "kv-cache-lab",
+              "retrieval-lab", "evidence-lab", "eval-lab"
             ]
           },
           "purpose": {"enum": ["acquire", "practice", "remediate", "retrieve", "transfer", "assess"]},
