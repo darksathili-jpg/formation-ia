@@ -58,6 +58,7 @@ jobs:
           node --check src/domain/activities/decision.mjs
           node --check src/domain/activities/tokenizer.mjs
           node --check tests/e2e-smoke.mjs
+          node --check tests/visual-a11y.mjs
           node --check tools/validate-architecture.mjs
 
       - name: Validate domain, content and architecture
