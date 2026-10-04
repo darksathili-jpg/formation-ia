@@ -1,3 +1,5 @@
+import { evaluateContextBudget } from './context-budget.mjs';
+
 export const DIDACTIC_BPE_MERGES = Object.freeze([
   ['t','e'],['te','x'],['tex','t'],['text','e'],
   ['e','x'],['ex','t'],['ext','r'],['extr','a'],
@@ -127,14 +129,11 @@ function byteTokens(text) {
 
 export function tokenizeText(text, { mode = 'subword', contextLimit = 32, merges = DIDACTIC_BPE_MERGES } = {}) {
   const source = String(text);
-  if (!Number.isInteger(contextLimit) || contextLimit < 1) throw new RangeError('contextLimit must be a positive integer');
   const modeInfo = getTokenizerModeInfo(mode);
 
   const detail = mode === 'subword' ? subwordTokens(source, merges) : mode === 'word' ? wordTokens(source) : byteTokens(source);
   const tokenCount = detail.tokens.length;
-  const used = Math.min(tokenCount, contextLimit);
-  const overflow = Math.max(0, tokenCount - contextLimit);
-  const available = Math.max(0, contextLimit - tokenCount);
+  const context = evaluateContextBudget(tokenCount, contextLimit);
 
   return Object.freeze({
     source,
@@ -148,13 +147,6 @@ export function tokenizeText(text, { mode = 'subword', contextLimit = 32, merges
       tokens: tokenCount,
       unique: new Set(detail.tokens.map((token) => `${token.kind}:${String(token.value)}`)).size
     }),
-    context: Object.freeze({
-      limit: contextLimit,
-      used,
-      available,
-      overflow,
-      withinBudget: overflow === 0,
-      ratio: tokenCount === 0 ? 0 : used / contextLimit
-    })
+    context
   });
 }
