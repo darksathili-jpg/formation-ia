@@ -177,7 +177,8 @@ for (const file of files) {
   const manipulationTypes = new Set([
     'prediction-cards', 'component-builder', 'rank-order', 'completion', 'tokenizer-lab',
     'vector-lab', 'parameter-lab', 'attention-lab', 'position-lab', 'transformer-block-lab',
-    'kv-cache-lab', 'retrieval-lab', 'evidence-lab', 'eval-lab'
+    'kv-cache-lab', 'sampling-lab', 'truth-temperature-lab', 'autoregressive-lab',
+    'retrieval-lab', 'evidence-lab', 'eval-lab'
   ]);
   const manipulationCount = allActivities.filter((activity) => manipulationTypes.has(activity.type)).length;
   const minimum = module.pedagogy?.minimumMeaningfulManipulations || 0;
