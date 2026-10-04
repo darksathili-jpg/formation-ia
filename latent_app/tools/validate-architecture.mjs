@@ -40,9 +40,13 @@ const contentRepository = await text('src/adapters/web/fetch-content-repository.
 const electron = await text('src/entrypoints/electron/main.mjs');
 const packageJson = await text('package.json');
 const e2e = await text('tests/e2e-smoke.mjs');
+const visualA11y = await text('tests/visual-a11y.mjs');
 
 if (index.includes('Comprendre ce qui se cache derrière un assistant IA')) {
   errors.push('index.html: contenu pédagogique P0 encore codé dans le shell');
+}
+if (index.includes('p0.json') || index.includes('Vertical slice · P0')) {
+  errors.push('index.html: shell encore couplé à P0');
 }
 if (!index.includes('id="moduleRoot"')) errors.push('index.html: host déclaratif moduleRoot absent');
 if (!app.includes('new FetchContentRepository')) errors.push('app.mjs: ContentRepository non utilisé');
@@ -55,7 +59,13 @@ if (!moduleLoader.includes('contentRepository.getActivity(')) errors.push('load-
 
 if (!renderer.includes("from '../../domain/activities/decision.mjs'")) errors.push('renderer: décisions métier non déléguées au domaine');
 if (!renderer.includes("from '../../domain/activities/tokenizer.mjs'")) errors.push('renderer: Tokenizer Lab non branché sur le domaine tokenizer');
+if (!renderer.includes("from '../../domain/activities/context-budget.mjs'")) errors.push('renderer: Context Lab non branché sur le domaine context-budget');
+if (!renderer.includes("from '../../domain/activities/representation.mjs'")) errors.push('renderer: Vector Lab non branché sur le domaine representation');
 if (!renderer.includes('tokenizeText(')) errors.push('renderer: Tokenizer Lab ne consomme pas tokenizeText');
+if (!renderer.includes('evaluateContextBudget(')) errors.push('renderer: Context Lab ne consomme pas evaluateContextBudget');
+if (!renderer.includes('cosineSimilarity(') || !renderer.includes('dotProduct(') || !renderer.includes('vectorNorm(')) {
+  errors.push('renderer: Vector Lab ne délègue pas tous les calculs au domaine representation');
+}
 for (const forbidden of ['TextEncoder', 'DIDACTIC_BPE_MERGES', 'applyRankedMerges(', 'splitText(']) {
   if (renderer.includes(forbidden)) errors.push(`renderer: logique tokenizer dupliquée détectée: ${forbidden}`);
 }
@@ -89,13 +99,16 @@ if (!electron.includes('nodeIntegration: false') || !electron.includes('contextI
   errors.push('Electron: garde-fous de sécurité incomplets');
 }
 if (!packageJson.includes('"test:e2e"')) errors.push('package.json: gate E2E absent');
-if (!e2e.includes("smokeP0") || !e2e.includes("smokeTokenizer") || !e2e.includes("createWindow")) {
-  errors.push('tests/e2e-smoke.mjs: couverture Web/Electron P0 + Tokenizer incomplète');
+for (const marker of ['smokeP0', 'smokeP1S1', 'smokeTokenizer', 'createWindow']) {
+  if (!e2e.includes(marker)) errors.push(`tests/e2e-smoke.mjs: couverture attendue absente: ${marker}`);
 }
+if (!e2e.includes('?module=p1s1')) errors.push('tests/e2e-smoke.mjs: P1S1 non exercé via le shell multi-module');
+if (!visualA11y.includes("pageKind === 'p1s1'")) errors.push('tests/visual-a11y.mjs: matrice P1S1 absente');
+if (!visualA11y.includes('vectorMetrics') || !visualA11y.includes('contextMetrics')) errors.push('tests/visual-a11y.mjs: invariants Vector/Context absents');
 
 if (errors.length) {
   console.error(`\n❌ ARCHITECTURE LATENT V3 INVALIDE\n- ${errors.join('\n- ')}`);
   process.exit(1);
 }
 
-console.log('✅ Architecture LATENT V3 valide — entrypoint → use case → presenter, domaine sans runtime, activités partagées via ports, Tokenizer sans logique DOM, décisions hors UI, Electron isolé et gate E2E présent.');
+console.log('✅ Architecture LATENT V3 valide — entrypoint → use case → presenter, domaine sans runtime, activités partagées via ports, Tokenizer/Vector/Context délégués au domaine, P1S1 E2E + Visual/A11y, Electron isolé.');
