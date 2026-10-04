@@ -64,6 +64,10 @@ body{background:radial-gradient(circle at 82% 0,rgba(92,240,210,.08),transparent
 html[data-theme="light"] body{background:linear-gradient(180deg,#ffffff 0,var(--bg) 26rem)}
 html[data-theme="projector"] body{background:#ffffff}
 
+.app-shell,.sidebar,main,#moduleRoot,#tokenizerRoot,.module-section,.activity,.prediction-row,.component-grid,.tokenizer-grid,.tokenizer-controls,.tokenizer-output{min-width:0}
+main,#moduleRoot,#tokenizerRoot,.module-section{max-width:100%}
+select,textarea{min-width:0}
+
 .sidebar{background:var(--surface-sidebar)}
 .system-banner{background:var(--surface-banner)}
 select,textarea{background:var(--surface-control);color:var(--text)}
@@ -120,11 +124,15 @@ html[data-theme="projector"] .module-hero h1,
 html[data-theme="projector"] .lab-slice-hero h1{letter-spacing:-.025em}
 
 @media(max-width:820px){
+  .app-shell{grid-template-columns:minmax(0,1fr);width:100%;max-width:100%}
+  .sidebar{min-width:0;max-width:100%}
+  main{max-width:100%}
   .display-modes{max-width:30rem}
   .sidebar nav a{display:flex;align-items:center}
 }
 
 @media(max-width:620px){
+  main{width:calc(100% - 1.1rem);max-width:calc(100% - 1.1rem)}
   .display-modes{grid-template-columns:1fr 1fr 1fr}
   .display-modes button{font-size:.72rem}
   .module-hero{min-height:auto;padding-top:2rem}
@@ -136,7 +144,7 @@ html[data-theme="projector"] .lab-slice-hero h1{letter-spacing:-.025em}
   .side-footer{gap:.45rem}
   .display-modes{grid-template-columns:1fr}
   .display-modes button{min-height:2.6rem}
-  main{width:calc(100% - .8rem)}
+  main{width:calc(100% - .8rem);max-width:calc(100% - .8rem)}
   .activity{border-radius:.75rem}
   .tokenizer-kpis{grid-template-columns:1fr}
   .tokenizer-field textarea{min-height:7.5rem}
