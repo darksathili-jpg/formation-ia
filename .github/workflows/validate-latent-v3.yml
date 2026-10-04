@@ -47,6 +47,7 @@ jobs:
         run: |
           node --check src/entrypoints/electron/main.mjs
           node --check src/entrypoints/electron/preload.cjs
+          node --check src/entrypoints/web/appearance.mjs
           node --check src/entrypoints/web/app.mjs
           node --check src/entrypoints/web/tokenizer-app.mjs
           node --check src/application/module-presenter.mjs
@@ -62,5 +63,14 @@ jobs:
       - name: Validate domain, content and architecture
         run: npm run validate
 
-      - name: End-to-end Web and Electron gate
+      - name: End-to-end Web, Electron, Visual and Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" npm run test:e2e
+
+      - name: Publish Visual Accessibility Gate screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latent-v3-visual-a11y
+          path: latent_app/artifacts/visual-a11y/*.png
+          if-no-files-found: ignore
+          retention-days: 14
