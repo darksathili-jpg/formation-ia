@@ -3,15 +3,25 @@ function requireArray(value, name) {
   return value;
 }
 
-export function buildModuleViewModel(module) {
+export function buildModuleViewModel(module, sharedActivities = []) {
   if (!module || typeof module !== 'object') throw new TypeError('module must be an object');
   if (!module.moduleId || !module.title) throw new Error('moduleId and title are required');
 
-  const activities = requireArray(module.activities, 'activities');
+  const inlineActivities = requireArray(module.activities, 'activities');
+  const shared = requireArray(sharedActivities, 'sharedActivities');
+  const activities = [...inlineActivities, ...shared];
   const sections = requireArray(module.sections, 'sections');
   const activityById = new Map(activities.map((activity) => [activity.id, activity]));
 
-  if (activityById.size !== activities.length) throw new Error('duplicate activity id');
+  if (activityById.size !== activities.length) throw new Error('duplicate activity id across inline/shared activities');
+
+  const declaredSharedIds = new Set(module.sharedActivityIds || []);
+  for (const activity of shared) {
+    if (!declaredSharedIds.has(activity.id)) throw new Error(`undeclared shared activity ${activity.id}`);
+  }
+  for (const activityId of declaredSharedIds) {
+    if (!activityById.has(activityId)) throw new Error(`shared activity not resolved: ${activityId}`);
+  }
 
   const sectionModels = sections.map((section, index) => ({
     id: section.id,
@@ -43,6 +53,7 @@ export function buildModuleViewModel(module) {
     assessment,
     pedagogy: module.pedagogy || {},
     references: [...(module.references || [])],
+    sharedActivityIds: [...declaredSharedIds],
     activityById
   });
 }
