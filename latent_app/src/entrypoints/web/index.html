@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'">
-  <title>LATENT Learning V3 · Parcours 0</title>
+  <title>LATENT Learning V3</title>
   <link rel="stylesheet" href="./app.css">
+  <link rel="stylesheet" href="./activity-labs.css">
   <link rel="stylesheet" href="./display-modes.css">
   <script type="module" src="./appearance.mjs"></script>
   <script type="module" src="./app.mjs"></script>
@@ -17,11 +18,11 @@
     <aside class="sidebar" aria-label="Navigation du module">
       <div class="brand">
         <div class="mark" aria-hidden="true">L</div>
-        <div><strong>LATENT V3</strong><small>Vertical slice · P0</small></div>
+        <div><strong>LATENT V3</strong><small id="moduleIdentity">Module déclaratif</small></div>
       </div>
 
       <div class="side-block">
-        <p class="side-label">Module rendu depuis p0.json</p>
+        <p class="side-label" id="moduleSourceLabel">Chargement du contrat de contenu…</p>
         <nav id="moduleNav" aria-label="Étapes du parcours"></nav>
       </div>
 
@@ -33,7 +34,7 @@
         </div>
         <div class="status-card"><span>Maîtrise</span><strong id="masteryStatus">À charger…</strong></div>
         <div class="status-card"><span>Traces locales</span><strong id="eventCount">0 événement</strong></div>
-        <button class="reset-button" id="resetProgress" type="button">Réinitialiser ce pilote</button>
+        <button class="reset-button" id="resetProgress" type="button">Réinitialiser ce module</button>
         <div class="runtime" id="runtimeCard">Runtime : navigateur</div>
       </div>
     </aside>
@@ -41,7 +42,7 @@
     <main id="main" tabindex="-1">
       <div class="system-banner" role="status">
         <span class="system-dot" aria-hidden="true"></span>
-        <div><strong>Tranche verticale V3</strong><small>Contenu déclaratif → presenter pur → renderer Web · progression et événements via ports</small></div>
+        <div><strong>LATENT Learning V3</strong><small>Contenu déclaratif → use case → presenter pur → renderer · progression et événements via ports</small></div>
       </div>
       <div id="moduleRoot" aria-live="polite">
         <p class="loading">Chargement du module déclaratif…</p>
