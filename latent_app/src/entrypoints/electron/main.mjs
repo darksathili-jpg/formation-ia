@@ -9,6 +9,7 @@ export const WEB_ENTRY = 'src/entrypoints/web/index.html';
 const PRELOAD = path.resolve(__dirname, 'preload.cjs');
 export const TRUSTED_ORIGIN = 'latent://app';
 const E2E_MODE = process.argv.includes('--latent-e2e');
+const P1S2_E2E_MODE = process.argv.includes('--latent-e2e-p1s2');
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -112,13 +113,12 @@ export function createWindow({ entry = WEB_ENTRY, showWhenReady = true } = {}) {
 
 async function runE2EMode() {
   const { runE2ESmoke } = await import('../../../tests/e2e-smoke.mjs');
-  return runE2ESmoke({
-    app,
-    BrowserWindow,
-    APP_ROOT,
-    WEB_ENTRY,
-    createWindow
-  });
+  return runE2ESmoke({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, createWindow });
+}
+
+async function runP1S2E2EMode() {
+  const { runP1S2E2E } = await import('../../../tests/p1s2-e2e.mjs');
+  return runP1S2E2E({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, createWindow });
 }
 
 export function startElectronApp() {
@@ -126,10 +126,10 @@ export function startElectronApp() {
     await registerAppProtocol();
     registerIpc();
 
-    if (E2E_MODE) {
+    if (E2E_MODE || P1S2_E2E_MODE) {
       let exitCode = 1;
       try {
-        exitCode = await runE2EMode();
+        exitCode = P1S2_E2E_MODE ? await runP1S2E2EMode() : await runE2EMode();
       } catch (error) {
         console.error('❌ E2E bootstrap failed');
         console.error(error?.stack || error);
@@ -145,7 +145,7 @@ export function startElectronApp() {
   });
 
   app.on('window-all-closed', () => {
-    if (!E2E_MODE && process.platform !== 'darwin') app.quit();
+    if (!E2E_MODE && !P1S2_E2E_MODE && process.platform !== 'darwin') app.quit();
   });
 }
 
