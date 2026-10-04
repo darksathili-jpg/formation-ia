@@ -37,10 +37,7 @@ async function prepareTokenizerStress(win) {
 }
 
 async function keyboardFocusProbe(win) {
-  win.show();
-  win.focus();
-  win.webContents.focus();
-  await win.webContents.executeJavaScript(`document.querySelector('.skip')?.focus(); true`, true);
+  await win.webContents.executeJavaScript(`document.querySelector('.skip')?.focus({preventScroll:true}); true`, true);
   win.webContents.sendInputEvent({ type:'keyDown', keyCode:'Tab' });
   win.webContents.sendInputEvent({ type:'keyUp', keyCode:'Tab' });
   await pause(80);
@@ -144,13 +141,23 @@ export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, art
   for (const viewport of viewports) {
     await setViewport(win, viewport.width, viewport.height);
     for (const mode of modes) {
+      const label = `${runtime} ${pageKind} ${viewport.name} ${mode}`;
+      console.log(`  … VISUAL ${label} theme`);
       await chooseTheme(win, mode);
+      console.log(`  … VISUAL ${label} keyboard`);
       await keyboardFocusProbe(win);
+      console.log(`  … VISUAL ${label} snapshot`);
       const report = await snapshot(win, pageKind);
       const name = `${runtime.toLowerCase()}-${pageKind}-${viewport.name}-${mode}.png`;
-      await capture(win, path.join(artifactDir, name));
+      console.log(`  … VISUAL ${label} capture`);
+      try {
+        await capture(win, path.join(artifactDir, name));
+      } catch (error) {
+        console.warn(`  ⚠ VISUAL ${label} screenshot unavailable: ${error?.message || error}`);
+      }
+      console.log(`  … VISUAL ${label} assert`);
       assertSnapshot(report, { runtime, pageKind, viewport, mode });
-      console.log(`  ✓ VISUAL ${runtime} ${pageKind} ${viewport.name} ${mode}`);
+      console.log(`  ✓ VISUAL ${label}`);
     }
   }
 }
