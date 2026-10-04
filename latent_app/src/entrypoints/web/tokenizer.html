@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,6 +8,7 @@
   <title>LATENT Learning V3 · Tokenizer Lab</title>
   <link rel="stylesheet" href="./app.css">
   <link rel="stylesheet" href="./tokenizer.css">
+  <script type="module" src="./appearance.mjs"></script>
   <script type="module" src="./tokenizer-app.mjs"></script>
 </head>
 <body>
@@ -28,13 +29,18 @@
       </div>
 
       <div class="side-footer">
+        <div class="display-modes" role="group" aria-label="Mode d’affichage">
+          <button type="button" data-display-mode="dark" aria-pressed="true">Sombre</button>
+          <button type="button" data-display-mode="light" aria-pressed="false">Clair</button>
+          <button type="button" data-display-mode="projector" aria-pressed="false">Projection</button>
+        </div>
         <div class="status-card"><span>Moteur</span><strong>tokenizeText()</strong></div>
         <div class="status-card"><span>Traces locales</span><strong id="eventCount">0 événement</strong></div>
         <div class="runtime" id="runtimeCard">Runtime : navigateur</div>
       </div>
     </aside>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <div class="system-banner" role="status">
         <span class="system-dot" aria-hidden="true"></span>
         <div><strong>Tokenizer vertical slice V3</strong><small>activité JSON → ContentRepository → renderer → moteur de domaine pur</small></div>
