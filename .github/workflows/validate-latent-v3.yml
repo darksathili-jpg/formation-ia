@@ -5,12 +5,14 @@ on:
     branches:
       - refactor/latent-v3-architecture
       - refactor/latent-v3-tokenizer-slice
+      - refactor/latent-v3-p1-migration
     paths:
       - 'latent_app/**'
       - 'formation_llm/docs/AUDIT_ARCHITECTURE_V3_2026-10-02.md'
       - 'formation_llm/docs/ARCHITECTURE_V3_ECDL_HEXAGONAL.md'
       - 'formation_llm/docs/BENCHMARK_FIDLE_2026-10-02.md'
       - 'formation_llm/docs/MIGRATION_STRANGLER_V3.md'
+      - 'formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md'
       - '.github/workflows/validate-latent-v3.yml'
   workflow_dispatch:
 
@@ -51,15 +53,19 @@ jobs:
           node --check src/entrypoints/web/app.mjs
           node --check src/entrypoints/web/tokenizer-app.mjs
           node --check src/application/module-presenter.mjs
+          node --check src/application/load-module-bundle.mjs
           node --check src/adapters/web/fetch-content-repository.mjs
           node --check src/adapters/web/module-renderer.mjs
           node --check src/adapters/web/local-progress-repository.mjs
           node --check src/adapters/web/local-learning-event-repository.mjs
           node --check src/domain/activities/decision.mjs
           node --check src/domain/activities/tokenizer.mjs
+          node --check src/domain/activities/context-budget.mjs
+          node --check src/domain/activities/representation.mjs
           node --check tests/e2e-smoke.mjs
           node --check tests/visual-a11y.mjs
           node --check tools/validate-architecture.mjs
+          node --check tools/validate-content.mjs
 
       - name: Validate domain, content and architecture
         run: npm run validate
