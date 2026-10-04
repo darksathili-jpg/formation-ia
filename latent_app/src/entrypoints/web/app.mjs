@@ -5,6 +5,7 @@ import { FetchContentRepository } from '../../adapters/web/fetch-content-reposit
 import { LocalProgressRepository } from '../../adapters/web/local-progress-repository.mjs';
 import { LocalLearningEventRepository } from '../../adapters/web/local-learning-event-repository.mjs';
 import { renderModule } from '../../adapters/web/module-renderer.mjs';
+import { enhanceAttentionActivities } from '../../adapters/web/attention-renderer.mjs';
 
 const PROFILE_ID = 'local-profile';
 const COURSE_ID = 'latent-llm';
@@ -123,6 +124,7 @@ renderModule({
   emit,
   onEvidence
 });
+enhanceAttentionActivities({ root: moduleRoot, view, emit });
 
 updateMasteryUi();
 await eventRepository.append(makeEvent('module.opened', null, { runtime: runtime.runtime }));
