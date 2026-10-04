@@ -162,6 +162,100 @@ async function smokeP0(win, runtime) {
   assert.equal(after, before, `${runtime} mastery state must survive reload`);
 }
 
+async function smokeP1S1(win, runtime) {
+  const ready = `document.querySelector('#moduleRoot')?.dataset.moduleId === 'p1s1' && document.querySelectorAll('.module-section').length === 6 && document.getElementById('p1s1-vector-lab') && document.getElementById('p1s1-context-lab') && document.getElementById('tokenizer-lab')`;
+  await waitFor(win, ready, { label: `${runtime} P1S1 declarative render` });
+  await assertRuntime(win, runtime);
+
+  const identity = await win.webContents.executeJavaScript(`({
+    title: document.querySelector('.module-hero h1')?.textContent || '',
+    moduleIdentity: document.getElementById('moduleIdentity')?.textContent || '',
+    sharedTokenizerCount: document.querySelectorAll('#tokenizer-lab').length,
+    unsupported: [...document.querySelectorAll('.activity-intro')].some(n=>/adaptateur de rendu V3 n’est pas encore installé/.test(n.textContent||'')),
+    predictionChoices: [...document.querySelectorAll('#p1s1-token-prediction option')].map(n=>n.textContent)
+  })`, true);
+  assert.match(identity.title, /Tokens, représentations et contexte/);
+  assert.match(identity.moduleIdentity, /P1S1/);
+  assert.equal(identity.sharedTokenizerCount, 1, `${runtime} shared Tokenizer Lab must be rendered once`);
+  assert.equal(identity.unsupported, false, `${runtime} P1S1 contains an unsupported activity`);
+  assert.ok(identity.predictionChoices.includes('une seule unité'));
+  assert.ok(identity.predictionChoices.includes('plusieurs unités'));
+
+  await win.webContents.executeJavaScript(`localStorage.clear(); true`, true);
+  await reloadAndWait(win, ready, `${runtime} P1S1 clean reload`);
+
+  const tokenizer = await win.webContents.executeJavaScript(`(() => {
+    const lab=document.getElementById('tokenizer-lab');
+    const text=lab?.querySelector('[data-tokenizer-input]');
+    const mode=lab?.querySelector('[data-tokenizer-mode]');
+    const limit=lab?.querySelector('[data-tokenizer-limit]');
+    if(!text||!mode||!limit)return null;
+    text.value='extraordinaire';text.dispatchEvent(new Event('input',{bubbles:true}));
+    mode.value='subword';mode.dispatchEvent(new Event('change',{bubbles:true}));
+    limit.value='2';limit.dispatchEvent(new Event('input',{bubbles:true}));
+    return {
+      tokens:[...lab.querySelectorAll('.tokenizer-token')].map(n=>n.textContent),
+      status:lab.querySelector('[data-tokenizer-context-status]')?.textContent||''
+    };
+  })()`, true);
+  assert.deepEqual(tokenizer?.tokens, ['extra', 'ord', 'inaire']);
+  assert.match(tokenizer?.status || '', /1 hors fenêtre/);
+
+  const vector = await win.webContents.executeJavaScript(`(() => {
+    const lab=document.getElementById('p1s1-vector-lab');
+    const inputs=[...lab.querySelectorAll('[data-vector-coordinate]')];
+    if(inputs.length!==2)return null;
+    inputs[0].value='0';inputs[0].dispatchEvent(new Event('input',{bubbles:true}));
+    inputs[1].value='1';inputs[1].dispatchEvent(new Event('input',{bubbles:true}));
+    return {
+      cosine:lab.querySelector('[data-vector-metric="cosine"]')?.textContent||'',
+      dot:lab.querySelector('[data-vector-metric="dot"]')?.textContent||''
+    };
+  })()`, true);
+  assert.equal(vector?.cosine, '0.000');
+  assert.equal(vector?.dot, '0.000');
+
+  const context = await win.webContents.executeJavaScript(`(() => {
+    const lab=document.getElementById('p1s1-context-lab');
+    const ranges=[...lab.querySelectorAll('input[type="range"]')];
+    if(ranges.length!==2)return null;
+    ranges[0].value='20';ranges[0].dispatchEvent(new Event('input',{bubbles:true}));
+    ranges[1].value='8';ranges[1].dispatchEvent(new Event('input',{bubbles:true}));
+    return {
+      used:lab.querySelector('[data-context-metric="used"]')?.textContent||'',
+      available:lab.querySelector('[data-context-metric="available"]')?.textContent||'',
+      overflow:lab.querySelector('[data-context-metric="overflow"]')?.textContent||'',
+      feedback:lab.querySelector('.feedback')?.textContent||''
+    };
+  })()`, true);
+  assert.deepEqual({ used: context?.used, available: context?.available, overflow: context?.overflow }, { used: '8', available: '0', overflow: '12' });
+  assert.match(context?.feedback || '', /12 token\(s\) dépassent/);
+  assert.match(context?.feedback || '', /mémoire persistante/);
+
+  const evidenceSubmitted = await win.webContents.executeJavaScript(`(() => {
+    function complete(activityId, buttonPattern){
+      const activity=document.getElementById(activityId);if(!activity)return false;
+      for(const q of activity.querySelectorAll('fieldset.question')){
+        const input=q.querySelector('input[type="radio"]');if(!input)return false;
+        input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+      const submit=[...activity.querySelectorAll('button')].find(b=>buttonPattern.test(b.textContent||''));
+      if(!submit)return false;submit.click();return true;
+    }
+    return complete('p1s1-quiz',/Corriger le quiz/) && complete('p1s1-transfer',/Vérifier le transfert/);
+  })()`, true);
+  assert.equal(evidenceSubmitted, true, `${runtime} P1S1 quiz/transfer could not be submitted`);
+
+  await waitFor(win, `(() => { const raw=localStorage.getItem('latent-v3-progress')||''; return raw.includes('"p1s1"') && raw.includes('"quiz"') && raw.includes('"transfer"'); })()`, {
+    label: `${runtime} P1S1 evidence persistence`
+  });
+  const before = await win.webContents.executeJavaScript(`document.getElementById('masteryStatus')?.dataset.state || ''`, true);
+  assert.ok(['learning', 'evidence', 'mastered'].includes(before));
+  await reloadAndWait(win, ready, `${runtime} P1S1 persisted reload`);
+  const after = await win.webContents.executeJavaScript(`document.getElementById('masteryStatus')?.dataset.state || ''`, true);
+  assert.equal(after, before, `${runtime} P1S1 mastery state must survive reload`);
+}
+
 async function smokeTokenizer(win, runtime) {
   const ready = `document.querySelector('[data-activity-type="tokenizer-lab"]') && document.querySelector('[data-tokenizer-input]')`;
   await waitFor(win, ready, { label: `${runtime} Tokenizer render` });
@@ -260,6 +354,20 @@ export async function runE2ESmoke({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, cre
     await runVisualAccessibilityMatrix(electronP0, { runtime: 'Electron', pageKind: 'p0', artifactDir });
     stage('P0 Electron ✓');
 
+    stage('P1S1 Web');
+    const webP1S1 = await makeWebWindow(BrowserWindow, `${host.origin}/${WEB_ENTRY}?module=p1s1`, 'P1S1 Web');
+    windows.push(webP1S1);
+    await smokeP1S1(webP1S1, 'Web');
+    await runVisualAccessibilityMatrix(webP1S1, { runtime: 'Web', pageKind: 'p1s1', artifactDir });
+    stage('P1S1 Web ✓');
+
+    stage('P1S1 Electron');
+    const electronP1S1 = diagnoseWindow(createWindow({ entry: `${WEB_ENTRY}?module=p1s1`, showWhenReady: false }), 'P1S1 Electron');
+    windows.push(electronP1S1);
+    await smokeP1S1(electronP1S1, 'Electron');
+    await runVisualAccessibilityMatrix(electronP1S1, { runtime: 'Electron', pageKind: 'p1s1', artifactDir });
+    stage('P1S1 Electron ✓');
+
     stage('Tokenizer Web');
     const webTokenizer = await makeWebWindow(
       BrowserWindow,
@@ -285,7 +393,7 @@ export async function runE2ESmoke({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, cre
     });
     stage('Tokenizer Electron ✓');
 
-    console.log(`✅ E2E LATENT V3 — fonctionnel + Visual & Accessibility Gate validés. Captures: ${artifactDir}`);
+    console.log(`✅ E2E LATENT V3 — P0 + P1S1 + Tokenizer, Web/Electron, fonctionnel + Visual & Accessibility Gate validés. Rapports: ${artifactDir}`);
   } catch (error) {
     exitCode = 1;
     console.error('❌ E2E LATENT V3 FAILED');
