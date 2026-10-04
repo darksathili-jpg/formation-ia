@@ -23,6 +23,13 @@ function formatProbability(value) {
   return `${(value * 100).toFixed(1).replace('.', ',')} %`;
 }
 
+function probabilityBar(value) {
+  return el('progress', {
+    className: 'sampling-probbar',
+    attrs: { max: 1, value: Math.max(0, Math.min(1, value)), 'aria-hidden': 'true' }
+  });
+}
+
 function activityHeader(activity, fallbackTitle) {
   const config = activity.config || {};
   return [
@@ -38,26 +45,28 @@ function activityHeader(activity, fallbackTitle) {
 
 function createDistributionTable() {
   const body = el('tbody', { attrs: { 'data-sampling-rows': '' } });
-  const table = el('div', { className: 'sampling-table-wrap' }, [
-    el('table', { className: 'sampling-table' }, [
-      el('thead', {}, [el('tr', {}, [
-        el('th', { text: 'Candidat' }),
-        el('th', { text: 'Logit' }),
-        el('th', { text: 'P avant filtre' }),
-        el('th', { text: 'Éligible' }),
-        el('th', { text: 'P finale' })
-      ])]),
-      body
+  return {
+    body,
+    table: el('div', { className: 'sampling-table-wrap' }, [
+      el('table', { className: 'sampling-table' }, [
+        el('thead', {}, [el('tr', {}, [
+          el('th', { text: 'Candidat' }),
+          el('th', { text: 'Logit' }),
+          el('th', { text: 'P avant filtre' }),
+          el('th', { text: 'Éligible' }),
+          el('th', { text: 'P finale' })
+        ])]),
+        body
+      ])
     ])
-  ]);
-  return { table, body };
+  };
 }
 
 function fillDistributionRows(body, result) {
   body.replaceChildren();
   result.tokens.forEach((token, index) => {
     const eligible = result.mask[index];
-    const row = el('tr', {
+    body.append(el('tr', {
       attrs: {
         'data-token-index': index,
         'data-eligible': eligible ? 'true' : 'false',
@@ -66,16 +75,10 @@ function fillDistributionRows(body, result) {
     }, [
       el('td', { className: 'sampling-token', text: token }),
       el('td', { text: result.logits[index].toFixed(2) }),
-      el('td', {}, [
-        el('div', { className: 'sampling-probbar', attrs: { 'aria-hidden': 'true' } }, [
-          el('span', { attrs: { style: `width:${Math.max(0, Math.min(100, result.baseProbabilities[index] * 100))}%` } })
-        ]),
-        el('small', { text: formatProbability(result.baseProbabilities[index]) })
-      ]),
+      el('td', {}, [probabilityBar(result.baseProbabilities[index]), el('small', { text: formatProbability(result.baseProbabilities[index]) })]),
       el('td', {}, [el('span', { className: eligible ? 'sampling-eligible' : 'sampling-filtered', text: eligible ? 'oui' : 'filtré' })]),
       el('td', { text: formatProbability(result.probabilities[index]) })
-    ]);
-    body.append(row);
+    ]));
   });
 }
 
@@ -88,6 +91,7 @@ function renderSamplingLab(activity, emit) {
 
   let started = false;
   let drawStep = 0;
+  let last = null;
   const start = () => {
     if (started) return;
     started = true;
@@ -113,21 +117,18 @@ function renderSamplingLab(activity, emit) {
     value: config.initialTemperature ?? 1, 'aria-label': 'Température', 'data-sampling-temperature': ''
   } });
   const temperatureOut = el('output', { attrs: { 'data-sampling-temperature-output': '' } });
-
   const topK = el('input', { attrs: {
     type: 'range', min: 1, max: tokens.length, step: 1, value: config.initialTopK || Math.min(2, tokens.length),
     'aria-label': 'Nombre de candidats top-k', 'data-sampling-topk': ''
   } });
   const topKOut = el('output', { attrs: { 'data-sampling-topk-output': '' } });
   const topKField = el('label', { className: 'sampling-field sampling-filter-parameter' }, [el('span', { text: 'Top-k · nombre de candidats' }), topK, topKOut]);
-
   const topP = el('input', { attrs: {
     type: 'range', min: 0.1, max: 1, step: 0.05, value: config.initialTopP ?? 0.8,
     'aria-label': 'Masse cumulée top-p', 'data-sampling-topp': ''
   } });
   const topPOut = el('output', { attrs: { 'data-sampling-topp-output': '' } });
   const topPField = el('label', { className: 'sampling-field sampling-filter-parameter' }, [el('span', { text: 'Top-p · masse cumulée cible' }), topP, topPOut]);
-
   const seed = el('input', { attrs: {
     type: 'number', step: 1, value: config.seed ?? 17,
     'aria-label': 'Graine déterministe du tirage', 'data-sampling-seed': ''
@@ -141,14 +142,12 @@ function renderSamplingLab(activity, emit) {
     topPField,
     el('label', { className: 'sampling-field' }, [el('span', { text: 'Graine de tirage' }), seed])
   ]);
-
   const { table, body: tableBody } = createDistributionTable();
   const selected = el('strong', { className: 'sampling-selected-token', attrs: { 'data-sampling-selected': '' } });
   const meta = el('span', { className: 'sampling-choice-meta', attrs: { 'data-sampling-choice-meta': '' } });
   const feedback = feedbackBox();
   const decide = button('Décider maintenant', { 'data-sampling-decide': '' });
   const nextDraw = button('Nouveau tirage', { 'data-sampling-next-draw': '' });
-  let last = null;
 
   function settings() {
     return {
@@ -193,16 +192,17 @@ function renderSamplingLab(activity, emit) {
 
   for (const control of [strategy, filter, temperature, topK, topP, seed]) {
     const eventName = control === temperature || control === topK || control === topP ? 'input' : 'change';
-    control.addEventListener(eventName, () => { start(); update({ emitChange: true, source: control.dataset.samplingStrategy != null ? 'strategy' : control.dataset.samplingFilter != null ? 'filter' : 'parameter' }); });
+    control.addEventListener(eventName, () => {
+      start();
+      update({ emitChange: true, source: control.dataset.samplingStrategy != null ? 'strategy' : control.dataset.samplingFilter != null ? 'filter' : 'parameter' });
+    });
   }
-
   decide.addEventListener('click', () => {
     start();
     update();
     emit('feedback.shown', activity.id, { selectedToken: last.selectedToken, selectedIndex: last.selectedIndex, ...settings() });
     emit('attempt.completed', activity.id, { selectedToken: last.selectedToken, probabilities: [...last.probabilities], mask: [...last.mask], ...settings() });
   });
-
   nextDraw.addEventListener('click', () => {
     start();
     drawStep += 1;
@@ -210,21 +210,14 @@ function renderSamplingLab(activity, emit) {
   });
 
   const body = el('div', { className: 'sampling-lab-v3' }, [
-    ...activityHeader(activity, 'Sampling Lab'),
-    controls,
-    table,
-    el('div', { className: 'sampling-decision-card' }, [
-      el('span', { text: 'Token sélectionné' }), selected, meta
-    ]),
+    ...activityHeader(activity, 'Sampling Lab'), controls, table,
+    el('div', { className: 'sampling-decision-card' }, [el('span', { text: 'Token sélectionné' }), selected, meta]),
     feedback,
     el('div', { className: 'sampling-actions' }, [decide, nextDraw])
   ]);
   update();
   return el('article', { className: 'activity sampling-activity', attrs: {
-    id: activity.id,
-    'data-activity-type': 'sampling-lab',
-    'data-content-source': 'module-json',
-    'data-domain-engine': 'sampling-engine'
+    id: activity.id, 'data-activity-type': 'sampling-lab', 'data-content-source': 'module-json', 'data-domain-engine': 'sampling-engine'
   } }, [body]);
 }
 
@@ -232,6 +225,7 @@ function renderTruthLab(activity, emit) {
   const config = activity.config || {};
   if (config.domainEngine !== 'sampling-engine') throw new Error('truth-temperature-lab must delegate to sampling-engine');
   let started = false;
+  let last = null;
   const range = config.temperatureRange || { min: 0.3, max: 2, step: 0.1 };
   const temperature = el('input', { attrs: {
     type: 'range', min: range.min, max: range.max, step: range.step, value: config.initialTemperature ?? 1,
@@ -241,7 +235,6 @@ function renderTruthLab(activity, emit) {
   const rows = el('div', { className: 'truth-distribution', attrs: { 'data-truth-rows': '' } });
   const feedback = feedbackBox();
   const capture = button('Capturer cette observation', { 'data-truth-capture': '' });
-  let last = null;
 
   function update(emitChange = false) {
     last = decodeStep({ tokens: config.tokens, logits: config.logits, temperature: Number(temperature.value), strategy: 'greedy', filter: 'none' });
@@ -250,7 +243,7 @@ function renderTruthLab(activity, emit) {
     last.tokens.forEach((token, index) => {
       rows.append(el('div', { className: 'truth-row', attrs: { 'data-truth-token': index } }, [
         el('span', { className: 'sampling-token', text: token }),
-        el('div', { className: 'sampling-probbar', attrs: { 'aria-hidden': 'true' } }, [el('span', { attrs: { style: `width:${last.baseProbabilities[index] * 100}%` } })]),
+        probabilityBar(last.baseProbabilities[index]),
         el('strong', { text: formatProbability(last.baseProbabilities[index]) })
       ]));
     });
@@ -272,16 +265,11 @@ function renderTruthLab(activity, emit) {
   const body = el('div', { className: 'truth-lab-v3' }, [
     ...activityHeader(activity, 'Truth Trap'),
     el('label', { className: 'sampling-field truth-temperature-field' }, [el('span', { text: 'Température T' }), el('div', { className: 'sampling-range-row' }, [temperature, output])]),
-    rows,
-    feedback,
-    capture
+    rows, feedback, capture
   ]);
   update(false);
   return el('article', { className: 'activity sampling-activity truth-activity', attrs: {
-    id: activity.id,
-    'data-activity-type': 'truth-temperature-lab',
-    'data-content-source': 'module-json',
-    'data-domain-engine': 'sampling-engine'
+    id: activity.id, 'data-activity-type': 'truth-temperature-lab', 'data-content-source': 'module-json', 'data-domain-engine': 'sampling-engine'
   } }, [body]);
 }
 
@@ -292,7 +280,6 @@ function renderAutoregressiveLab(activity, emit) {
   let context = [config.prompt || ''];
   let step = 0;
   let started = false;
-
   const stateOutput = el('strong', { attrs: { 'data-loop-state': '' } });
   const contextOutput = el('div', { className: 'autoregressive-context', attrs: { 'data-loop-context': '' } });
   const candidateRows = el('div', { className: 'loop-candidates', attrs: { 'data-loop-candidates': '' } });
@@ -323,8 +310,7 @@ function renderAutoregressiveLab(activity, emit) {
     const preview = currentPreview();
     if (preview) {
       preview.tokens.forEach((token, index) => candidateRows.append(el('div', { className: 'loop-candidate' }, [
-        el('span', { className: 'sampling-token', text: token }),
-        el('span', { text: formatProbability(preview.probabilities[index]) })
+        el('span', { className: 'sampling-token', text: token }), el('span', { text: formatProbability(preview.probabilities[index]) })
       ])));
       feedback.textContent = 'Une seule distribution locale est utilisée à cette étape. Après sélection, le token rejoint le contexte et la simulation passe à un nouvel état de logits.';
     } else {
@@ -347,8 +333,7 @@ function renderAutoregressiveLab(activity, emit) {
       topP: config.topP || 0.9,
       randomValue: randomFromSeed(config.seed ?? 23, step)
     });
-    const item = el('li', { text: `Étape ${step + 1} · ${result.stateId} → « ${result.decision.selectedToken} » → ${result.nextStateId ?? 'fin'}` });
-    history.append(item);
+    history.append(el('li', { text: `Étape ${step + 1} · ${result.stateId} → « ${result.decision.selectedToken} » → ${result.nextStateId ?? 'fin'}` }));
     context = [...result.contextAfter];
     stateId = result.nextStateId;
     step += 1;
@@ -380,10 +365,7 @@ function renderAutoregressiveLab(activity, emit) {
   ]);
   render();
   return el('article', { className: 'activity sampling-activity autoregressive-activity', attrs: {
-    id: activity.id,
-    'data-activity-type': 'autoregressive-lab',
-    'data-content-source': 'module-json',
-    'data-domain-engine': 'sampling-engine'
+    id: activity.id, 'data-activity-type': 'autoregressive-lab', 'data-content-source': 'module-json', 'data-domain-engine': 'sampling-engine'
   } }, [body]);
 }
 
