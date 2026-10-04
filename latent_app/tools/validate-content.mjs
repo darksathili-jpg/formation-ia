@@ -79,6 +79,21 @@ function validateTokenizerLab(file, activity) {
   }
 }
 
+const activityCatalog = new Map();
+for (const file of activityFiles) {
+  const activity = JSON.parse(await readFile(path.join(activityDir, file), 'utf8'));
+  if (!validateActivity(activity)) {
+    for (const error of validateActivity.errors || []) {
+      errors.push(`activities/${file}${error.instancePath || '/'} ${error.message}`);
+    }
+    continue;
+  }
+  if (`${activity.id}.json` !== file) errors.push(`activities/${file}: nom de fichier différent de l'id ${activity.id}`);
+  if (activityCatalog.has(activity.id)) errors.push(`activities/${file}: id autonome dupliqué ${activity.id}`);
+  activityCatalog.set(activity.id, activity);
+  validateTokenizerLab(`activities/${file}`, activity);
+}
+
 for (const file of files) {
   const full = path.join(moduleDir, file);
   const module = JSON.parse(await readFile(full, 'utf8'));
@@ -90,19 +105,36 @@ for (const file of files) {
     continue;
   }
 
+  const sharedIds = module.sharedActivityIds || [];
+  if (!unique(sharedIds)) errors.push(`${file}: sharedActivityIds dupliqués`);
+  const sharedActivities = [];
+  for (const activityId of sharedIds) {
+    const activity = activityCatalog.get(activityId);
+    if (!activity) {
+      errors.push(`${file}: activité partagée absente: ${activityId}`);
+      continue;
+    }
+    if ((activity.evidenceIds || []).length) {
+      errors.push(`${file}: activité partagée ${activityId} doit rester indépendante des evidence d'un module`);
+    }
+    sharedActivities.push(activity);
+  }
+
   const outcomeIds = module.outcomes.map((x) => x.id);
   const evidenceIds = module.evidence.map((x) => x.id);
-  const activityIds = module.activities.map((x) => x.id);
+  const inlineActivityIds = module.activities.map((x) => x.id);
+  const activityIds = [...inlineActivityIds, ...sharedActivities.map((x) => x.id)];
   const sectionIds = module.sections.map((x) => x.id);
 
   if (!unique(outcomeIds)) errors.push(`${file}: outcome IDs dupliqués`);
   if (!unique(evidenceIds)) errors.push(`${file}: evidence IDs dupliqués`);
-  if (!unique(activityIds)) errors.push(`${file}: activity IDs dupliqués`);
+  if (!unique(activityIds)) errors.push(`${file}: activity IDs dupliqués entre activités inline et partagées`);
   if (!unique(sectionIds)) errors.push(`${file}: section IDs dupliqués`);
 
   const outcomes = new Set(outcomeIds);
   const evidence = new Set(evidenceIds);
   const activities = new Set(activityIds);
+  const allActivities = [...module.activities, ...sharedActivities];
 
   for (const item of module.evidence) {
     if (!outcomes.has(item.outcomeId)) errors.push(`${file}: evidence ${item.id} référence un outcome absent: ${item.outcomeId}`);
@@ -146,19 +178,19 @@ for (const file of files) {
     'prediction-cards', 'component-builder', 'rank-order', 'completion', 'tokenizer-lab',
     'vector-lab', 'parameter-lab', 'attention-lab', 'retrieval-lab', 'evidence-lab', 'eval-lab'
   ]);
-  const manipulationCount = module.activities.filter((activity) => manipulationTypes.has(activity.type)).length;
+  const manipulationCount = allActivities.filter((activity) => manipulationTypes.has(activity.type)).length;
   const minimum = module.pedagogy?.minimumMeaningfulManipulations || 0;
   if (manipulationCount < minimum) {
     errors.push(`${file}: ${manipulationCount} manipulation(s) déclarée(s), ${minimum} attendue(s)`);
   }
 
-  const eventTypes = module.activities.flatMap((activity) => activity.analytics?.events || []);
+  const eventTypes = allActivities.flatMap((activity) => activity.analytics?.events || []);
   if (!eventTypes.includes('attempt.completed')) {
     errors.push(`${file}: aucune activité n'émet attempt.completed`);
   }
 
-  const quizActivity = module.activities.find((activity) => activity.id === module.assessment.quizActivityId);
-  const transferActivity = module.activities.find((activity) => activity.id === module.assessment.transferActivityId);
+  const quizActivity = allActivities.find((activity) => activity.id === module.assessment.quizActivityId);
+  const transferActivity = allActivities.find((activity) => activity.id === module.assessment.transferActivityId);
   try {
     const bankFile = `${module.moduleId}.json`;
     const bank = JSON.parse(await readFile(path.join(bankDir, bankFile), 'utf8'));
@@ -176,18 +208,6 @@ for (const file of files) {
   }
 }
 
-for (const file of activityFiles) {
-  const activity = JSON.parse(await readFile(path.join(activityDir, file), 'utf8'));
-  if (!validateActivity(activity)) {
-    for (const error of validateActivity.errors || []) {
-      errors.push(`activities/${file}${error.instancePath || '/'} ${error.message}`);
-    }
-    continue;
-  }
-  if (`${activity.id}.json` !== file) errors.push(`activities/${file}: nom de fichier différent de l'id ${activity.id}`);
-  validateTokenizerLab(`activities/${file}`, activity);
-}
-
 if (!files.length) errors.push('Aucun module déclaratif trouvé');
 if (!activityFiles.length) errors.push('Aucune activité autonome déclarative trouvée');
 
@@ -196,4 +216,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`✅ Contenu LATENT V3 valide — ${files.length} module(s), ${activityFiles.length} activité(s) autonome(s), schémas ECDL, banques d’évaluation et références croisées vérifiés.`);
+console.log(`✅ Contenu LATENT V3 valide — ${files.length} module(s), ${activityFiles.length} activité(s) autonome(s), activités partagées, schémas ECDL, banques d'évaluation et références croisées vérifiés.`);
