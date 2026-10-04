@@ -147,9 +147,9 @@ export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, art
       await chooseTheme(win, mode);
       await keyboardFocusProbe(win);
       const report = await snapshot(win, pageKind);
-      assertSnapshot(report, { runtime, pageKind, viewport, mode });
       const name = `${runtime.toLowerCase()}-${pageKind}-${viewport.name}-${mode}.png`;
       await capture(win, path.join(artifactDir, name));
+      assertSnapshot(report, { runtime, pageKind, viewport, mode });
       console.log(`  ✓ VISUAL ${runtime} ${pageKind} ${viewport.name} ${mode}`);
     }
   }
