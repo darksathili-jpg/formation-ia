@@ -36,11 +36,15 @@ async function prepareTokenizerStress(win) {
   })()`, true);
 }
 
-async function keyboardFocusProbe(win) {
-  await win.webContents.executeJavaScript(`document.querySelector('.skip')?.focus({preventScroll:true}); true`, true);
-  win.webContents.sendInputEvent({ type:'keyDown', keyCode:'Tab' });
-  win.webContents.sendInputEvent({ type:'keyUp', keyCode:'Tab' });
-  await pause(80);
+async function focusProbe(win) {
+  const focused = await win.webContents.executeJavaScript(`(() => {
+    const target=document.querySelector('[data-display-mode="dark"]');
+    if(!target)return false;
+    target.focus({preventScroll:true});
+    return document.activeElement===target;
+  })()`, true);
+  assert.equal(focused, true, 'Display mode control could not receive focus');
+  await pause(40);
 }
 
 async function snapshot(win, pageKind) {
@@ -57,13 +61,14 @@ async function snapshot(win, pageKind) {
     const interactive=[...document.querySelectorAll('a[href],button,input,select,textarea')].filter(visible);
     const unnamed=interactive.filter(el=>!labelled(el)).map(el=>({tag:el.tagName,type:el.type||'',id:el.id||'',className:el.className||''}));
     const positiveTabindex=[...document.querySelectorAll('[tabindex]')].filter(el=>Number(el.getAttribute('tabindex'))>0).map(el=>el.outerHTML.slice(0,180));
+    const unfocusable=interactive.filter(el=>el.tabIndex<0||el.disabled).map(el=>({tag:el.tagName,label:(el.textContent||el.getAttribute('aria-label')||'').trim().slice(0,60),tabIndex:el.tabIndex,disabled:Boolean(el.disabled)}));
     const smallTargets=interactive.filter(el=>!el.matches('.skip,input[type="checkbox"],input[type="radio"]')).map(el=>{const r=el.getBoundingClientRect();return {el,r}}).filter(({r})=>r.width<40||r.height<40).map(({el,r})=>({tag:el.tagName,label:(el.textContent||el.getAttribute('aria-label')||'').trim().slice(0,60),width:Math.round(r.width),height:Math.round(r.height)}));
     const majors=[...document.querySelectorAll('.app-shell,main,.module-hero,.activity,.tokenizer-grid,.tokenizer-controls,.tokenizer-output')].filter(visible);
     const clipped=majors.map(el=>{const r=el.getBoundingClientRect();return {el,r}}).filter(({r})=>r.left<-2||r.right>innerWidth+2).map(({el,r})=>({className:el.className||el.tagName,left:Math.round(r.left),right:Math.round(r.right),viewport:innerWidth}));
 
     const active=document.activeElement;
     const activeStyle=active?getComputedStyle(active):null;
-    const keyboardFocus=active?{
+    const focusProbe=active?{
       tag:active.tagName,
       label:(active.textContent||active.getAttribute('aria-label')||'').trim().slice(0,80),
       isBody:active===document.body,
@@ -71,6 +76,11 @@ async function snapshot(win, pageKind) {
       style:activeStyle?.outlineStyle||'none',
       color:activeStyle?.outlineColor||''
     }:null;
+
+    const skip=document.querySelector('.skip');
+    const skipTarget=skip?.getAttribute('href')||'';
+    const target=skipTarget.startsWith('#')?document.querySelector(skipTarget):null;
+    const skipLink={href:skipTarget,targetExists:Boolean(target),targetTabIndex:target?.tabIndex??null};
 
     const parseHex=(value)=>{const v=value.trim();if(!/^#[0-9a-f]{6}$/i.test(v))return null;return [1,3,5].map(i=>parseInt(v.slice(i,i+2),16)/255)};
     const lum=(rgb)=>{const c=rgb.map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]};
@@ -95,10 +105,12 @@ async function snapshot(win, pageKind) {
       main:Boolean(document.querySelector('main')),
       unnamed,
       positiveTabindex,
+      unfocusable,
       smallTargets,
       clipped,
       documentOverflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth,
-      keyboardFocus,
+      focusProbe,
+      skipLink,
       colors,
       tokenizer
     };
@@ -112,11 +124,16 @@ function assertSnapshot(report, { runtime, pageKind, viewport, mode }) {
   assert.equal(report.main, true, `${label}: missing main landmark`);
   assert.deepEqual(report.unnamed, [], `${label}: unnamed interactive controls`);
   assert.deepEqual(report.positiveTabindex, [], `${label}: positive tabindex forbidden`);
+  assert.deepEqual(report.unfocusable, [], `${label}: visible control missing from keyboard order`);
   assert.deepEqual(report.smallTargets, [], `${label}: interactive target below 40px`);
   assert.deepEqual(report.clipped, [], `${label}: major layout element clipped horizontally`);
   assert.ok(report.documentOverflow <= 2, `${label}: horizontal overflow ${report.documentOverflow}px`);
-  assert.ok(report.keyboardFocus && !report.keyboardFocus.isBody, `${label}: Tab did not reach an interactive control`);
-  assert.ok(report.keyboardFocus.width >= 3 && report.keyboardFocus.style !== 'none', `${label}: visible keyboard focus ring missing on ${JSON.stringify(report.keyboardFocus)}`);
+  assert.equal(report.skipLink.href, '#main', `${label}: skip link must target #main`);
+  assert.equal(report.skipLink.targetExists, true, `${label}: skip-link target missing`);
+  assert.equal(report.skipLink.targetTabIndex, -1, `${label}: #main must be programmatically focusable`);
+  assert.ok(report.focusProbe && !report.focusProbe.isBody, `${label}: focus probe did not reach a real control`);
+  assert.match(report.focusProbe.label, /Sombre/i, `${label}: focus probe targeted the wrong control`);
+  assert.ok(report.focusProbe.width >= 3 && report.focusProbe.style !== 'none', `${label}: visible focus ring missing on ${JSON.stringify(report.focusProbe)}`);
   const minimumContrast = mode === 'projector' ? 7 : 4.5;
   for (const [pair, value] of Object.entries(report.colors)) assert.ok(value >= minimumContrast, `${label}: contrast ${pair}=${value.toFixed(2)} < ${minimumContrast}`);
   if (pageKind === 'tokenizer') {
@@ -126,9 +143,36 @@ function assertSnapshot(report, { runtime, pageKind, viewport, mode }) {
   }
 }
 
+async function captureWithDevTools(win, target) {
+  const debug = win.webContents.debugger;
+  let attachedHere = false;
+  try {
+    if (!debug.isAttached()) {
+      debug.attach('1.3');
+      attachedHere = true;
+    }
+    const result = await debug.sendCommand('Page.captureScreenshot', {
+      format: 'png',
+      fromSurface: true,
+      captureBeyondViewport: false
+    });
+    await writeFile(target, Buffer.from(result.data, 'base64'));
+  } finally {
+    if (attachedHere && debug.isAttached()) debug.detach();
+  }
+}
+
 async function capture(win, target) {
-  const image = await win.webContents.capturePage();
-  await writeFile(target, image.toPNG());
+  try {
+    const image = await win.webContents.capturePage();
+    await writeFile(target, image.toPNG());
+  } catch (primaryError) {
+    try {
+      await captureWithDevTools(win, target);
+    } catch (fallbackError) {
+      throw new Error(`capturePage=${primaryError?.message || primaryError}; devtools=${fallbackError?.message || fallbackError}`);
+    }
+  }
 }
 
 export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, artifactDir }) {
@@ -144,8 +188,8 @@ export async function runVisualAccessibilityMatrix(win, { runtime, pageKind, art
       const label = `${runtime} ${pageKind} ${viewport.name} ${mode}`;
       console.log(`  … VISUAL ${label} theme`);
       await chooseTheme(win, mode);
-      console.log(`  … VISUAL ${label} keyboard`);
-      await keyboardFocusProbe(win);
+      console.log(`  … VISUAL ${label} focus`);
+      await focusProbe(win);
       console.log(`  … VISUAL ${label} snapshot`);
       const report = await snapshot(win, pageKind);
       const name = `${runtime.toLowerCase()}-${pageKind}-${viewport.name}-${mode}.png`;
