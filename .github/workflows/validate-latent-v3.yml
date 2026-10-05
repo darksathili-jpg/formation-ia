@@ -9,6 +9,7 @@ on:
       - refactor/latent-v3-p1s2-attention
       - refactor/latent-v3-p1s3-transformer-block
       - refactor/latent-v3-p1s4-sampling
+      - refactor/latent-v3-p1-integration-freeze
     paths:
       - 'latent_app/**'
       - 'formation_llm/docs/AUDIT_ARCHITECTURE_V3_2026-10-02.md'
@@ -16,6 +17,7 @@ on:
       - 'formation_llm/docs/BENCHMARK_FIDLE_2026-10-02.md'
       - 'formation_llm/docs/MIGRATION_STRANGLER_V3.md'
       - 'formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md'
+      - 'formation_llm/docs/P1_INTEGRATION_FREEZE_LEARNER_GATE_2026-10-05.md'
       - '.github/workflows/validate-latent-v3.yml'
   workflow_dispatch:
 
@@ -55,6 +57,7 @@ jobs:
           node --check src/entrypoints/web/appearance.mjs
           node --check src/entrypoints/web/app.mjs
           node --check src/entrypoints/web/tokenizer-app.mjs
+          node --check src/entrypoints/web/learner-gate-app.mjs
           node --check src/application/module-presenter.mjs
           node --check src/application/load-module-bundle.mjs
           node --check src/adapters/web/fetch-content-repository.mjs
@@ -64,6 +67,8 @@ jobs:
           node --check src/adapters/web/sampling-renderer.mjs
           node --check src/adapters/web/local-progress-repository.mjs
           node --check src/adapters/web/local-learning-event-repository.mjs
+          node --check src/adapters/web/local-field-observation-repository.mjs
+          node --check src/domain/analytics/learner-gate.mjs
           node --check src/domain/activities/decision.mjs
           node --check src/domain/activities/tokenizer.mjs
           node --check src/domain/activities/context-budget.mjs
@@ -81,10 +86,12 @@ jobs:
           node --check tests/p1s3-visual-a11y.mjs
           node --check tests/p1s4-e2e.mjs
           node --check tests/p1s4-visual-a11y.mjs
+          node --check tests/p1-integration-e2e.mjs
           node --check tools/validate-architecture.mjs
           node --check tools/validate-p1s2-architecture.mjs
           node --check tools/validate-p1s3-architecture.mjs
           node --check tools/validate-p1s4-architecture.mjs
+          node --check tools/validate-p1-integration-freeze.mjs
           node --check tools/validate-content.mjs
 
       - name: Validate domain, content and architecture
@@ -93,6 +100,7 @@ jobs:
           node tools/validate-p1s2-architecture.mjs
           node tools/validate-p1s3-architecture.mjs
           node tools/validate-p1s4-architecture.mjs
+          node tools/validate-p1-integration-freeze.mjs
 
       - name: Baseline E2E Web Electron Visual Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" npm run test:e2e
@@ -105,6 +113,9 @@ jobs:
 
       - name: P1S4 Sampling E2E Web Electron Visual Accessibility gate
         run: xvfb-run -a --server-args="-screen 0 1440x1000x24" ./node_modules/.bin/electron . --latent-e2e-p1s4
+
+      - name: P1 Integration Freeze Learner Gate Web Electron gate
+        run: xvfb-run -a --server-args="-screen 0 1440x1000x24" ./node_modules/.bin/electron . --latent-e2e-p1-integration
 
       - name: Publish Visual Accessibility Gate reports
         if: always()
