@@ -61,7 +61,7 @@ for (const marker of ["getCourse(INTEGRATED_COURSE_ID)", 'renderCourseNavigation
 const html = await text('src/entrypoints/web/index.html');
 for (const marker of ['id="courseNav"', 'id="coursePager"', 'id="p2LockState"', 'id="learnerGateLink"']) if (!html.includes(marker)) errors.push(`index: marqueur integration freeze absent ${marker}`);
 
-for (const file of ['src/entrypoints/web/learner-gate.html', 'src/entrypoints/web/learner-gate-app.mjs', 'src/entrypoints/web/learner-gate.css', 'src/adapters/web/local-field-observation-repository.mjs', 'tests/learner-gate.test.mjs']) {
+for (const file of ['src/entrypoints/web/learner-gate.html', 'src/entrypoints/web/learner-gate-app.mjs', 'src/entrypoints/web/learner-gate.css', 'src/adapters/web/local-field-observation-repository.mjs', 'tests/learner-gate.test.mjs', 'tests/p1-integration-e2e.mjs', 'tests/p1-integration-visual-a11y.mjs']) {
   try { await text(file); } catch { errors.push(`Learner Gate: fichier absent ${file}`); }
 }
 const gateHtml = await text('src/entrypoints/web/learner-gate.html');
@@ -70,9 +70,11 @@ const gateApp = await text('src/entrypoints/web/learner-gate-app.mjs');
 if (!gateApp.includes("EVENT_COURSE_ID = 'latent-llm'")) errors.push('Learner Gate UI: lecture des traces du parcours absente');
 if (!gateApp.includes('evaluateLearnerGate({ packets, course, gateConfig })')) errors.push('Learner Gate UI: agrégation cohorte non déléguée au domaine');
 if (!gateApp.includes("link.download = `latent-p1-${packet.participantId}.json`")) errors.push('Learner Gate UI: export terrain pseudonyme absent');
+const integrationE2E = await text('tests/p1-integration-e2e.mjs');
+if (!integrationE2E.includes('runP1IntegrationVisualAccessibilityMatrix')) errors.push('Learner Gate: Visual/A11y matrix non branchée à E2E');
 
 if (errors.length) {
   console.error(`\n❌ P1 INTEGRATION FREEZE INVALIDE\n- ${errors.join('\n- ')}`);
   process.exit(1);
 }
-console.log('✅ P1 Integration Freeze valide — P0→P1S4 gelé, P2 verrouillé, Learner Gate privacy-first et décision humaine protégés.');
+console.log('✅ P1 Integration Freeze valide — P0→P1S4 gelé, P2 verrouillé, Learner Gate privacy-first, Visual/A11y et décision humaine protégés.');
