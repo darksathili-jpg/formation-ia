@@ -1,0 +1,61 @@
+{
+  "gateId": "p1",
+  "version": "1.0.0",
+  "status": "pending-field-evidence",
+  "title": "P1 Learner Gate — validation terrain du parcours P0 → P1S4",
+  "purpose": "Décider si le parcours manipulation-first est suffisamment compréhensible et transférable pour autoriser une revue humaine avant ouverture de P2.",
+  "privacy": {
+    "anonymousByDefault": true,
+    "forbidNames": true,
+    "localFirst": true,
+    "exportOnlyByUserAction": true,
+    "notice": "Ne saisir aucun nom, prénom, adresse, identifiant scolaire ou autre donnée directement identifiante."
+  },
+  "protocol": {
+    "minimumParticipants": 8,
+    "recommendedParticipants": 10,
+    "audience": "apprenants novices ou peu familiers avec le fonctionnement interne des LLM",
+    "delivery": "Le parcours peut être réparti sur plusieurs séances. Aucun cours magistral préalable ne doit expliquer la réponse avant la première manipulation de chaque module.",
+    "observerRule": "L'observateur peut clarifier la consigne mais note toute aide conceptuelle directe donnée avant la première manipulation.",
+    "delayedTransferWindowHours": {"min": 24, "max": 168}
+  },
+  "meaningfulActionTypes": [
+    "prediction.submitted",
+    "manipulation.changed",
+    "attempt.completed",
+    "tokenizer.snapshot",
+    "explanation.self_checked"
+  ],
+  "thresholds": {
+    "courseCompletionRate": 0.75,
+    "moduleCompletionRate": 0.75,
+    "medianFirstMeaningfulActionSecondsMax": 180,
+    "directHelpBeforeFirstActionRateMax": 0.25,
+    "medianQuizRatioMin": 0.75,
+    "medianTransferRatioMin": 0.70,
+    "masteryRateMin": 0.65,
+    "medianExplanationScoreMin": 1.5,
+    "delayedTransferPassRateMin": 0.70,
+    "criticalMisconceptionPersistenceRateMax": 0.25,
+    "majorBlockerCountMax": 0
+  },
+  "observerScale": {
+    "explanationScore": {
+      "0": "ne peut pas expliquer le mécanisme même avec reformulation de la question",
+      "1": "explication partielle ou correcte mais sans relation causale claire",
+      "2": "explication causale correcte avec au moins une limite ou distinction importante"
+    },
+    "blockerSeverity": {
+      "none": "aucun blocage notable",
+      "minor": "hésitation ou aide ponctuelle sans empêcher la poursuite autonome",
+      "major": "blocage nécessitant une explication conceptuelle directe ou empêchant la poursuite"
+    }
+  },
+  "decisionPolicy": {
+    "insufficientEvidence": "pending-field-evidence",
+    "thresholdFailure": "revise-before-p2",
+    "allThresholdsMet": "eligible-for-human-approval",
+    "automaticP2UnlockForbidden": true,
+    "humanApprovalRequired": true
+  }
+}
