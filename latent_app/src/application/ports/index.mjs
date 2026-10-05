@@ -1,5 +1,6 @@
 export class ContentRepository {
   async getCourse(_courseId) { throw new Error('Not implemented'); }
+  async getLearnerGate(_gateId) { throw new Error('Not implemented'); }
   async getModule(_moduleId) { throw new Error('Not implemented'); }
   async getActivity(_activityId) { throw new Error('Not implemented'); }
   async getAssessmentBank(_moduleId) { throw new Error('Not implemented'); }
@@ -18,6 +19,11 @@ export class LearningEventRepository {
   async query(_filter = {}) { throw new Error('Not implemented'); }
   async count(_filter = {}) { throw new Error('Not implemented'); }
   async export(_filter = {}) { throw new Error('Not implemented'); }
+}
+
+export class FieldObservationRepository {
+  async load(_gateId) { throw new Error('Not implemented'); }
+  async save(_gateId, _value) { throw new Error('Not implemented'); }
 }
 
 export class Clock {
