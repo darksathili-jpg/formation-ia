@@ -10,7 +10,8 @@ import { enhanceTransformerBlockActivities } from '../../adapters/web/transforme
 import { enhanceSamplingActivities } from '../../adapters/web/sampling-renderer.mjs';
 
 const PROFILE_ID = 'local-profile';
-const COURSE_ID = 'latent-llm';
+const EVENT_COURSE_ID = 'latent-llm';
+const INTEGRATED_COURSE_ID = 'p1';
 const MODULE_ID = new URLSearchParams(globalThis.location?.search || '').get('module') || 'p0';
 
 async function detectRuntime() {
@@ -32,8 +33,16 @@ function sessionId() {
   return globalThis.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function courseHref(moduleId) {
+  return `./index.html?module=${encodeURIComponent(moduleId)}`;
+}
+
 const runtime = await detectRuntime();
 const contentRepository = new FetchContentRepository({ contentRoot: new URL('../../../content/', import.meta.url) });
+const course = await contentRepository.getCourse(INTEGRATED_COURSE_ID);
+if (!course.moduleSequence?.some((module) => module.id === MODULE_ID)) {
+  throw new Error(`Module ${MODULE_ID} absent du parcours intégré ${course.courseId}`);
+}
 const { view, assessmentBank } = await loadModuleBundle({ contentRepository, moduleId: MODULE_ID });
 const progressRepository = new LocalProgressRepository();
 const eventRepository = new LocalLearningEventRepository();
@@ -47,12 +56,19 @@ const masteryStatus = document.getElementById('masteryStatus');
 const eventCount = document.getElementById('eventCount');
 const moduleRoot = document.getElementById('moduleRoot');
 const moduleNav = document.getElementById('moduleNav');
+const courseNav = document.getElementById('courseNav');
+const coursePager = document.getElementById('coursePager');
 const moduleIdentity = document.getElementById('moduleIdentity');
 const moduleSourceLabel = document.getElementById('moduleSourceLabel');
+const p2LockState = document.getElementById('p2LockState');
 
 document.title = `LATENT V3 · ${view.title}`;
 if (moduleIdentity) moduleIdentity.textContent = `${view.id.toUpperCase()} · ${view.status}`;
 if (moduleSourceLabel) moduleSourceLabel.textContent = `${view.id}.json · ${view.version}`;
+if (p2LockState) {
+  p2LockState.textContent = course.p2Unlocked ? 'Ouvert après revue humaine' : 'Verrouillé · Learner Gate requis';
+  p2LockState.dataset.state = course.p2Unlocked ? 'open' : 'locked';
+}
 
 if (runtimeCard) {
   runtimeCard.textContent = runtime.runtime === 'electron'
@@ -67,6 +83,10 @@ function masteryLabel(status) {
     evidence: 'Preuve partielle',
     mastered: 'Maîtrise démontrée'
   })[status] || status;
+}
+
+function moduleProgress(moduleId) {
+  return state.modules?.[moduleId]?.mastery?.status || 'not-started';
 }
 
 function updateMasteryUi() {
@@ -91,7 +111,7 @@ function makeEvent(type, activityId, payload) {
     at: new Date().toISOString(),
     profileId: PROFILE_ID,
     sessionId: session,
-    courseId: COURSE_ID,
+    courseId: EVENT_COURSE_ID,
     moduleId: view.id,
     activityId,
     type,
@@ -107,6 +127,54 @@ function emit(type, activityId, payload = {}) {
   return event;
 }
 
+function renderCourseNavigation() {
+  if (!courseNav || !coursePager) return;
+  courseNav.replaceChildren();
+  const currentIndex = course.moduleSequence.findIndex((module) => module.id === view.id);
+  course.moduleSequence.forEach((module, index) => {
+    const link = document.createElement('a');
+    link.href = courseHref(module.id);
+    link.dataset.courseModule = module.id;
+    link.dataset.progress = moduleProgress(module.id);
+    link.textContent = `${index + 1}. ${module.title}`;
+    if (module.id === view.id) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    }
+    link.addEventListener('click', () => emit('course.navigation', null, { from: view.id, to: module.id }));
+    courseNav.append(link);
+  });
+
+  coursePager.replaceChildren();
+  const previous = course.moduleSequence[currentIndex - 1];
+  const next = course.moduleSequence[currentIndex + 1];
+  if (previous) {
+    const link = document.createElement('a');
+    link.className = 'course-pager-link previous';
+    link.href = courseHref(previous.id);
+    link.textContent = `← ${previous.title}`;
+    link.addEventListener('click', () => emit('course.navigation', null, { from: view.id, to: previous.id }));
+    coursePager.append(link);
+  }
+  const spacer = document.createElement('span');
+  spacer.className = 'course-pager-spacer';
+  coursePager.append(spacer);
+  if (next) {
+    const link = document.createElement('a');
+    link.className = 'course-pager-link next';
+    link.href = courseHref(next.id);
+    link.textContent = `${next.title} →`;
+    link.addEventListener('click', () => emit('course.navigation', null, { from: view.id, to: next.id }));
+    coursePager.append(link);
+  } else {
+    const gate = document.createElement('a');
+    gate.className = 'course-pager-link next gate';
+    gate.href = './learner-gate.html';
+    gate.textContent = 'Passer au Learner Gate →';
+    coursePager.append(gate);
+  }
+}
+
 async function onEvidence(kind, score, total) {
   const moduleState = state.modules[view.id] ||= {};
   const previous = evaluateMastery(moduleState, view.assessment.masteryPolicy);
@@ -115,6 +183,7 @@ async function onEvidence(kind, score, total) {
   moduleState.mastery = { status: next, updatedAt: new Date().toISOString() };
   await progressRepository.saveLearnerState(PROFILE_ID, state);
   updateMasteryUi();
+  renderCourseNavigation();
   if (next !== previous) emit('mastery.changed', null, { from: previous, to: next, trigger: kind });
 }
 
@@ -131,7 +200,8 @@ enhanceTransformerBlockActivities({ root: moduleRoot, view, emit });
 enhanceSamplingActivities({ root: moduleRoot, view, emit });
 
 updateMasteryUi();
-await eventRepository.append(makeEvent('module.opened', null, { runtime: runtime.runtime }));
+renderCourseNavigation();
+await eventRepository.append(makeEvent('module.opened', null, { runtime: runtime.runtime, integratedCourseId: course.courseId }));
 await refreshEventCount();
 
 const links = [...moduleNav.querySelectorAll('a')];
@@ -151,5 +221,6 @@ document.getElementById('resetProgress')?.addEventListener('click', async () => 
   state.modules ||= {};
   state.modules[view.id] = {};
   updateMasteryUi();
+  renderCourseNavigation();
   emit('mastery.changed', null, { from: 'reset', to: 'not-started', trigger: 'manual-reset' });
 });
