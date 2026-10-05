@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { runP1IntegrationVisualAccessibilityMatrix } from './p1-integration-visual-a11y.mjs';
 
 const MIME = new Map([['.html','text/html; charset=utf-8'],['.mjs','text/javascript; charset=utf-8'],['.js','text/javascript; charset=utf-8'],['.cjs','text/javascript; charset=utf-8'],['.css','text/css; charset=utf-8'],['.json','application/json; charset=utf-8']]);
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -115,6 +116,7 @@ export async function runP1IntegrationE2E({ BrowserWindow, APP_ROOT, WEB_ENTRY, 
   let server;
   const windows = [];
   let exitCode = 0;
+  const artifactDir = path.join(APP_ROOT, 'artifacts', 'visual-a11y');
   try {
     const host = await startServer(APP_ROOT);
     server = host.server;
@@ -124,6 +126,7 @@ export async function runP1IntegrationE2E({ BrowserWindow, APP_ROOT, WEB_ENTRY, 
     await web.webContents.executeJavaScript(`localStorage.clear();true`, true);
     web.webContents.reload();
     await walkCourse(web, 'Web');
+    await runP1IntegrationVisualAccessibilityMatrix(web, { runtime: 'Web', artifactDir });
     console.log('▶ P1 Integration Freeze E2E Web ✓');
 
     console.log('▶ P1 Integration Freeze E2E Electron');
@@ -133,8 +136,9 @@ export async function runP1IntegrationE2E({ BrowserWindow, APP_ROOT, WEB_ENTRY, 
     await electron.webContents.executeJavaScript(`localStorage.clear();true`, true);
     electron.webContents.reload();
     await walkCourse(electron, 'Electron');
+    await runP1IntegrationVisualAccessibilityMatrix(electron, { runtime: 'Electron', artifactDir });
     console.log('▶ P1 Integration Freeze E2E Electron ✓');
-    console.log('✅ P1 Integration Freeze — parcours P0→P1S4, Learner Gate local et verrou P2 validés Web/Electron.');
+    console.log('✅ P1 Integration Freeze — parcours P0→P1S4, Learner Gate local, Visual/A11y et verrou P2 validés Web/Electron.');
   } catch (error) {
     exitCode = 1;
     console.error('❌ P1 INTEGRATION E2E FAILED');
