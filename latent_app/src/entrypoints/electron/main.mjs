@@ -12,6 +12,7 @@ const E2E_MODE = process.argv.includes('--latent-e2e');
 const P1S2_E2E_MODE = process.argv.includes('--latent-e2e-p1s2');
 const P1S3_E2E_MODE = process.argv.includes('--latent-e2e-p1s3');
 const P1S4_E2E_MODE = process.argv.includes('--latent-e2e-p1s4');
+const P1_INTEGRATION_E2E_MODE = process.argv.includes('--latent-e2e-p1-integration');
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -133,21 +134,28 @@ async function runP1S4E2EMode() {
   return runP1S4E2E({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, createWindow });
 }
 
+async function runP1IntegrationE2EMode() {
+  const { runP1IntegrationE2E } = await import('../../../tests/p1-integration-e2e.mjs');
+  return runP1IntegrationE2E({ app, BrowserWindow, APP_ROOT, WEB_ENTRY, createWindow });
+}
+
 export function startElectronApp() {
   app.whenReady().then(async () => {
     await registerAppProtocol();
     registerIpc();
 
-    if (E2E_MODE || P1S2_E2E_MODE || P1S3_E2E_MODE || P1S4_E2E_MODE) {
+    if (E2E_MODE || P1S2_E2E_MODE || P1S3_E2E_MODE || P1S4_E2E_MODE || P1_INTEGRATION_E2E_MODE) {
       let exitCode = 1;
       try {
-        exitCode = P1S4_E2E_MODE
-          ? await runP1S4E2EMode()
-          : P1S3_E2E_MODE
-            ? await runP1S3E2EMode()
-            : P1S2_E2E_MODE
-              ? await runP1S2E2EMode()
-              : await runE2EMode();
+        exitCode = P1_INTEGRATION_E2E_MODE
+          ? await runP1IntegrationE2EMode()
+          : P1S4_E2E_MODE
+            ? await runP1S4E2EMode()
+            : P1S3_E2E_MODE
+              ? await runP1S3E2EMode()
+              : P1S2_E2E_MODE
+                ? await runP1S2E2EMode()
+                : await runE2EMode();
       } catch (error) {
         console.error('❌ E2E bootstrap failed');
         console.error(error?.stack || error);
@@ -163,7 +171,7 @@ export function startElectronApp() {
   });
 
   app.on('window-all-closed', () => {
-    if (!E2E_MODE && !P1S2_E2E_MODE && !P1S3_E2E_MODE && !P1S4_E2E_MODE && process.platform !== 'darwin') app.quit();
+    if (!E2E_MODE && !P1S2_E2E_MODE && !P1S3_E2E_MODE && !P1S4_E2E_MODE && !P1_INTEGRATION_E2E_MODE && process.platform !== 'darwin') app.quit();
   });
 }
 
