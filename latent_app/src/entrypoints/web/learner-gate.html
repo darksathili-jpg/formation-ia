@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>LATENT V3 · P1 Learner Gate</title>
+  <link rel="stylesheet" href="./app.css">
+  <link rel="stylesheet" href="./learner-gate.css">
+  <link rel="stylesheet" href="./display-modes.css">
+  <script type="module" src="./appearance.mjs"></script>
+  <script type="module" src="./learner-gate-app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Passer au contenu</a>
+  <div class="gate-shell">
+    <aside class="gate-sidebar" aria-label="Outils du test terrain">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">L</div>
+        <div><strong>LATENT V3</strong><small>P1 Learner Gate</small></div>
+      </div>
+      <div class="gate-sidebar-copy">
+        <p class="side-label">Validation terrain</p>
+        <p>Cette page ne transmet aucune donnée. Les traces et observations restent locales jusqu'à un export volontaire.</p>
+        <p class="privacy-warning"><strong>Aucune identité.</strong> Ne saisissez ni nom, ni prénom, ni identifiant scolaire.</p>
+      </div>
+      <div class="display-modes" role="group" aria-label="Mode d’affichage">
+        <button type="button" data-display-mode="dark" aria-pressed="true">Sombre</button>
+        <button type="button" data-display-mode="light" aria-pressed="false">Clair</button>
+        <button type="button" data-display-mode="projector" aria-pressed="false">Projection</button>
+      </div>
+      <a class="gate-back" href="./index.html?module=p0">← Revenir au parcours</a>
+    </aside>
+
+    <main id="main" tabindex="-1" class="gate-main">
+      <header class="gate-hero">
+        <p class="eyebrow">P1 INTEGRATION FREEZE · LEARNER GATE</p>
+        <h1>Le parcours est-il vraiment apprenable&nbsp;?</h1>
+        <p class="lead">Le gate combine les traces d'interaction avec une observation humaine minimale. Il peut recommander une revue, mais il ne déverrouille jamais P2 automatiquement.</p>
+        <div class="gate-status-line">
+          <span id="gateStatusBadge">Chargement…</span>
+          <span id="participantCode">Participant pseudonyme : …</span>
+        </div>
+      </header>
+
+      <section class="gate-section" aria-labelledby="localTitle">
+        <div class="gate-section-head">
+          <div><p class="eyebrow">01 · PARTICIPANT LOCAL</p><h2 id="localTitle">Observer sans surinterpréter</h2></div>
+          <button class="button" id="exportPacket" type="button">Exporter le paquet terrain</button>
+        </div>
+        <p class="gate-note">Les métriques automatiques proviennent uniquement de l'appareil courant. Les champs d'observation doivent être complétés par l'enseignant ou l'observateur, sans donnée personnelle.</p>
+        <div id="localSummary" class="gate-summary" aria-live="polite"></div>
+        <div id="moduleObservationGrid" class="gate-module-grid"></div>
+      </section>
+
+      <section class="gate-section" aria-labelledby="cohortTitle">
+        <div class="gate-section-head">
+          <div><p class="eyebrow">02 · COHORTE</p><h2 id="cohortTitle">Décision fondée sur plusieurs élèves</h2></div>
+        </div>
+        <p class="gate-note">Importez plusieurs paquets JSON exportés depuis les postes élèves. Tout le calcul est effectué localement dans l'application.</p>
+        <label class="gate-file-field">
+          <span>Paquets terrain JSON</span>
+          <input id="cohortFiles" type="file" accept="application/json,.json" multiple>
+        </label>
+        <div id="cohortDecision" class="gate-decision" aria-live="polite"></div>
+        <div id="cohortModules" class="gate-cohort-grid"></div>
+      </section>
+
+      <section class="gate-section" aria-labelledby="ruleTitle">
+        <p class="eyebrow">03 · RÈGLE DE SORTIE</p>
+        <h2 id="ruleTitle">P2 reste verrouillé</h2>
+        <div id="thresholdSummary" class="threshold-grid"></div>
+        <p class="gate-lock">Même si tous les seuils sont atteints, le résultat maximal du moteur est <strong>eligible-for-human-approval</strong>. Une décision humaine explicite reste obligatoire avant toute ouverture de P2.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
