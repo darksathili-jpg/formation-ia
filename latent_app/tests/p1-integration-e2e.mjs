@@ -95,7 +95,8 @@ async function walkCourse(win, runtime) {
     observerCards:document.querySelectorAll('#moduleObservationGrid .observer-card').length,
     decision:document.getElementById('cohortDecision')?.dataset.state||'',
     privacy:document.body.textContent.includes('Aucune identité'),
-    lock:document.body.textContent.includes('P2 reste verrouillé')
+    lock:document.body.textContent.includes('P2 reste verrouillé'),
+    pack:document.querySelector('.field-trial-pack-link')?.getAttribute('href')||''
   }))()`, true);
   assert.match(gate.title, /vraiment apprenable/i);
   assert.match(gate.code, /P-[A-Z0-9]{6,12}/);
@@ -104,6 +105,30 @@ async function walkCourse(win, runtime) {
   assert.equal(gate.decision, 'pending-field-evidence');
   assert.equal(gate.privacy, true);
   assert.equal(gate.lock, true);
+  assert.equal(gate.pack, './field-trial-pack.html', `${runtime}: lien Session Pack absent`);
+}
+
+async function assertFieldTrialPack(win, runtime) {
+  const clicked = await win.webContents.executeJavaScript(`(() => {const a=document.querySelector('.field-trial-pack-link');if(!a)return false;a.click();return true})()`, true);
+  assert.equal(clicked, true, `${runtime}: ouverture Session Pack impossible`);
+  await waitFor(win, `document.body?.dataset.packVersion==='1.0'`, `${runtime} Session Pack ready`);
+  const pack = await win.webContents.executeJavaScript(`(() => ({
+    modules:[...document.querySelectorAll('.transfer-card')].map(card=>card.dataset.module),
+    teacher:Boolean(document.querySelector('.teacher-sheet')),
+    student:Boolean(document.querySelector('.student-instructions')),
+    observation:Boolean(document.querySelector('.observation-sheet')),
+    cohort:Boolean(document.querySelector('.cohort-analysis')),
+    privacy:document.body.textContent.includes('Ne saisissez ni nom, ni prénom, ni identifiant scolaire'),
+    lock:document.body.textContent.includes('P2 reste verrouillé'),
+    overflow:Math.max(0,document.documentElement.scrollWidth-window.innerWidth),
+    css:[...document.styleSheets].some(sheet=>sheet.href?.endsWith('/field-trial-pack.css'))
+  }))()`, true);
+  assert.deepEqual(pack.modules, sequence, `${runtime}: cartes de transfert incomplètes`);
+  assert.equal(pack.teacher && pack.student && pack.observation && pack.cohort, true, `${runtime}: section du pack absente`);
+  assert.equal(pack.privacy, true, `${runtime}: garde privacy absente du pack`);
+  assert.equal(pack.lock, true, `${runtime}: verrou P2 absent du pack`);
+  assert.equal(pack.css, true, `${runtime}: feuille d'impression du pack absente`);
+  assert.ok(pack.overflow <= 1, `${runtime}: Session Pack déborde horizontalement de ${pack.overflow}px`);
 }
 
 async function makeWebWindow(BrowserWindow, url) {
@@ -127,6 +152,7 @@ export async function runP1IntegrationE2E({ BrowserWindow, APP_ROOT, WEB_ENTRY, 
     web.webContents.reload();
     await walkCourse(web, 'Web');
     await runP1IntegrationVisualAccessibilityMatrix(web, { runtime: 'Web', artifactDir });
+    await assertFieldTrialPack(web, 'Web');
     console.log('▶ P1 Integration Freeze E2E Web ✓');
 
     console.log('▶ P1 Integration Freeze E2E Electron');
@@ -137,8 +163,9 @@ export async function runP1IntegrationE2E({ BrowserWindow, APP_ROOT, WEB_ENTRY, 
     electron.webContents.reload();
     await walkCourse(electron, 'Electron');
     await runP1IntegrationVisualAccessibilityMatrix(electron, { runtime: 'Electron', artifactDir });
+    await assertFieldTrialPack(electron, 'Electron');
     console.log('▶ P1 Integration Freeze E2E Electron ✓');
-    console.log('✅ P1 Integration Freeze — parcours P0→P1S4, Learner Gate local, Visual/A11y et verrou P2 validés Web/Electron.');
+    console.log('✅ P1 Integration Freeze — parcours P0→P1S4, Learner Gate, Session Pack, Visual/A11y et verrou P2 validés Web/Electron.');
   } catch (error) {
     exitCode = 1;
     console.error('❌ P1 INTEGRATION E2E FAILED');
