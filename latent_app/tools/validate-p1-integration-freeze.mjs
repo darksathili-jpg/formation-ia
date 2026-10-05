@@ -83,7 +83,7 @@ if (/type="text"/i.test(packHtml)) errors.push('Field Trial Pack: champ texte id
 for (const marker of ['@media print', '@page{size:A4 portrait', 'print-color-adjust:economy!important', 'break-before:page']) if (!packCss.includes(marker)) errors.push(`Field Trial Pack CSS: contrat impression absent ${marker}`);
 try {
   const doc = await text('../formation_llm/docs/P1_FIELD_TRIAL_SESSION_PACK_2026-10-05.md');
-  for (const marker of ['Fiche enseignant', 'Consignes élèves', 'Grille d’observation', 'Scénarios de transfert différé', 'Fiche d’analyse de cohorte']) if (!doc.includes(marker)) errors.push(`Field Trial doc: section absente ${marker}`);
+  for (const marker of ['Fiche enseignant', 'Consignes élèves', "Grille d'observation", 'Scénarios de transfert différé', "Fiche d'analyse de cohorte"]) if (!doc.includes(marker)) errors.push(`Field Trial doc: section absente ${marker}`);
 } catch {
   errors.push('Field Trial doc: P1_FIELD_TRIAL_SESSION_PACK_2026-10-05.md absent');
 }
