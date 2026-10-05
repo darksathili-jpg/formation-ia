@@ -87,6 +87,7 @@ jobs:
           node --check tests/p1s4-e2e.mjs
           node --check tests/p1s4-visual-a11y.mjs
           node --check tests/p1-integration-e2e.mjs
+          node --check tests/p1-integration-visual-a11y.mjs
           node --check tools/validate-architecture.mjs
           node --check tools/validate-p1s2-architecture.mjs
           node --check tools/validate-p1s3-architecture.mjs
