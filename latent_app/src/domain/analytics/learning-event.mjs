@@ -1,5 +1,6 @@
 const ALLOWED_TYPES = new Set([
   'module.opened',
+  'course.navigation',
   'activity.started',
   'prediction.submitted',
   'manipulation.changed',
