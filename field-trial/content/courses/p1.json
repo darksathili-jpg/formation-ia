@@ -1,0 +1,37 @@
+{
+  "courseId": "p1",
+  "version": "3.0.0-integration-freeze.1",
+  "title": "Comprendre le fonctionnement d'un LLM — parcours intégré P0 → P1S4",
+  "status": "integration-frozen-pending-learner-gate",
+  "track": "discover",
+  "moduleSequence": [
+    {"id":"p0","title":"Comprendre ce qui se cache derrière un assistant IA","required":true},
+    {"id":"p1s1","title":"Tokens, représentations et contexte","required":true},
+    {"id":"p1s2","title":"Transformer et attention","required":true},
+    {"id":"p1s3","title":"Transformer Block Lab","required":true},
+    {"id":"p1s4","title":"Sampling et décodage","required":true}
+  ],
+  "learnerGateId": "p1",
+  "p2Unlocked": false,
+  "unlockPolicy": {
+    "automaticUnlockForbidden": true,
+    "requiresHumanReview": true,
+    "requiresLearnerGateDecision": "eligible-for-human-approval"
+  },
+  "freeze": {
+    "reason": "P0 à P1S4 ont passé leurs gates techniques Web/Electron/Visual-A11y. Toute modification des contrats pédagogiques ou banques d'évaluation exige une requalification explicite.",
+    "gitBlobSha": {
+      "content/modules/p0.json": "6f166e332c40edf12a0db83009e0bdd9517f5484",
+      "content/modules/p1s1.json": "3a0ebccb0a74ca365ef3440f193c1136fc148956",
+      "content/modules/p1s2.json": "a96e85db2877599321017e57b07bd992eadcf064",
+      "content/modules/p1s3.json": "718624a624d1dea288ca60f854fcc0f696d97ea4",
+      "content/modules/p1s4.json": "761f577b1e30730769855ee07674fd10dd86b6e3",
+      "content/assessment-banks/p0.json": "bc8dff9337c7d7aaeb4e561aa228d33c442368b9",
+      "content/assessment-banks/p1s1.json": "b1ff532e88605b340f18ca6a71dc4126aeac3b1b",
+      "content/assessment-banks/p1s2.json": "39b504f6ba7a787bfffc452237f8bd3c3b7386e9",
+      "content/assessment-banks/p1s3.json": "a79b1b40f9ad2c881593ea1f0142115aa8829ab4",
+      "content/assessment-banks/p1s4.json": "30402c607c08c70605519473f1ef5df359ed8e36",
+      "content/activities/tokenizer-lab.json": "d58baf1f7a168f6e21454a70329c1a709d7e1d51"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'">
+  <title>LATENT Learning V3 · Tokenizer Lab</title>
+  <link rel="stylesheet" href="./app.css">
+  <link rel="stylesheet" href="./tokenizer.css">
+  <link rel="stylesheet" href="./display-modes.css">
+  <script type="module" src="./appearance.mjs"></script>
+  <script type="module" src="./tokenizer-app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Passer au laboratoire</a>
+  <div class="app-shell lab-slice-shell">
+    <aside class="sidebar" aria-label="Navigation du laboratoire">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">L</div>
+        <div><strong>LATENT V3</strong><small>Vertical slice · Tokenizer</small></div>
+      </div>
+
+      <div class="side-block">
+        <p class="side-label">Phase 2 · moteur de domaine pur</p>
+        <nav aria-label="Navigation">
+          <a href="./index.html">← P0 V3</a>
+          <a class="active" href="#tokenizerRoot">Tokenizer Lab</a>
+        </nav>
+      </div>
+
+      <div class="side-footer">
+        <div class="display-modes" role="group" aria-label="Mode d’affichage">
+          <button type="button" data-display-mode="dark" aria-pressed="true">Sombre</button>
+          <button type="button" data-display-mode="light" aria-pressed="false">Clair</button>
+          <button type="button" data-display-mode="projector" aria-pressed="false">Projection</button>
+        </div>
+        <div class="status-card"><span>Moteur</span><strong>tokenizeText()</strong></div>
+        <div class="status-card"><span>Traces locales</span><strong id="eventCount">0 événement</strong></div>
+        <div class="runtime" id="runtimeCard">Runtime : navigateur</div>
+      </div>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <div class="system-banner" role="status">
+        <span class="system-dot" aria-hidden="true"></span>
+        <div><strong>Tokenizer vertical slice V3</strong><small>activité JSON → ContentRepository → renderer → moteur de domaine pur</small></div>
+      </div>
+      <header class="lab-slice-hero">
+        <p class="eyebrow">PHASE 2 · STRANGLER FIG</p>
+        <h1>Tokenizer Lab</h1>
+        <p class="lead">La page n’implémente aucune règle de segmentation. Elle transmet les commandes au domaine et affiche l’état observable qu’il renvoie.</p>
+      </header>
+      <div id="tokenizerRoot" data-rendered-from="standalone-activity">
+        <p class="loading">Chargement de l’activité déclarative…</p>
+      </div>
+      <noscript>JavaScript est nécessaire pour exécuter le Tokenizer Lab LATENT V3.</noscript>
+    </main>
+  </div>
+</body>
+</html>

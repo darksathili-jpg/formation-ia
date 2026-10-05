@@ -1,0 +1,294 @@
+{
+  "moduleId": "p1s1",
+  "version": "3.0.0-alpha.2",
+  "title": "Tokens, représentations et contexte",
+  "status": "design-ready",
+  "audience": {
+    "track": "discover",
+    "prerequisites": ["p0"]
+  },
+  "estimatedMinutes": 70,
+  "outcomes": [
+    {
+      "id": "p1s1-o1",
+      "statement": "Expliquer comment un texte devient une séquence de tokens puis d'identifiants.",
+      "observable": "L'apprenant prédit puis observe différentes segmentations et distingue token, caractère, mot, vocabulaire et ID.",
+      "misconceptions": [
+        {
+          "id": "p1s1-token-word",
+          "label": "Un token est toujours un mot entier.",
+          "remediationActivityId": "tokenizer-lab"
+        },
+        {
+          "id": "p1s1-id-meaning",
+          "label": "Un ID numérique plus grand signifie davantage de sens ou d'importance.",
+          "remediationActivityId": "p1s1-token-id-example"
+        }
+      ]
+    },
+    {
+      "id": "p1s1-o2",
+      "statement": "Distinguer un identifiant discret d'une représentation vectorielle et interpréter prudemment une similarité.",
+      "observable": "L'apprenant manipule de petits vecteurs, calcule ou compare une similarité cosinus et explique ce que cette valeur ne prouve pas.",
+      "misconceptions": [
+        {
+          "id": "p1s1-id-embedding",
+          "label": "L'ID du token est déjà son embedding.",
+          "remediationActivityId": "p1s1-vector-lab"
+        },
+        {
+          "id": "p1s1-cosine-truth",
+          "label": "Une forte similarité cosinus prouve une vérité ou une équivalence de sens.",
+          "remediationActivityId": "p1s1-vector-lab"
+        }
+      ]
+    },
+    {
+      "id": "p1s1-o3",
+      "statement": "Raisonner sur une fenêtre de contexte limitée sans la confondre avec une mémoire persistante.",
+      "observable": "L'apprenant ajuste un budget de contexte, identifie un dépassement et explique pourquoi la fenêtre courante n'est pas une mémoire applicative.",
+      "misconceptions": [
+        {
+          "id": "p1s1-context-memory",
+          "label": "Fenêtre de contexte et mémoire persistante sont la même chose.",
+          "remediationActivityId": "p1s1-context-lab"
+        }
+      ]
+    },
+    {
+      "id": "p1s1-o4",
+      "statement": "Transférer le pipeline texte → tokens → IDs → vecteurs → contexte à une situation nouvelle.",
+      "observable": "Sur un texte inédit, l'apprenant identifie correctement les transformations et leurs limites d'interprétation.",
+      "misconceptions": []
+    }
+  ],
+  "evidence": [
+    {
+      "id": "p1s1-e1",
+      "outcomeId": "p1s1-o1",
+      "claim": "L'apprenant ne réduit plus la tokenisation à un découpage en mots ou en caractères.",
+      "observable": "Il prédit une segmentation, confronte sa prédiction au Tokenizer Lab et explique pourquoi un mot peut produire plusieurs sous-tokens.",
+      "taskIds": ["p1s1-token-prediction", "tokenizer-lab", "p1s1-token-id-example"],
+      "invalidEvidence": ["Réciter token ≠ mot sans réussir à interpréter extraordinaire, un accent ou des espaces."],
+      "rubric": {
+        "requiresPrediction": true,
+        "requiresBoundaryExplanation": true
+      }
+    },
+    {
+      "id": "p1s1-e2",
+      "outcomeId": "p1s1-o2",
+      "claim": "L'apprenant distingue index discret, vecteur et mesure géométrique.",
+      "observable": "Il manipule des vecteurs simples et interprète correctement le sens limité d'une similarité cosinus.",
+      "taskIds": ["p1s1-vector-lab", "p1s1-self-explanation"],
+      "invalidEvidence": ["Reconnaître le mot embedding sans distinguer ID et vecteur."],
+      "rubric": {
+        "requiresIdVectorDistinction": true,
+        "requiresCosineLimit": true
+      }
+    },
+    {
+      "id": "p1s1-e3",
+      "outcomeId": "p1s1-o3",
+      "claim": "L'apprenant raisonne correctement sur un budget de contexte borné.",
+      "observable": "Il détecte un overflow et explique ce qui devient inaccessible dans la simulation sans invoquer une disparition de la mémoire applicative.",
+      "taskIds": ["tokenizer-lab", "p1s1-context-lab"],
+      "invalidEvidence": ["Assimiler une fenêtre de contexte longue à une mémoire permanente."],
+      "rubric": {
+        "requiresOverflowReasoning": true,
+        "requiresContextMemoryDistinction": true
+      }
+    },
+    {
+      "id": "p1s1-e4",
+      "outcomeId": "p1s1-o4",
+      "claim": "Le pipeline d'entrée est transférable à un texte et à une contrainte de contexte non vus pendant l'acquisition.",
+      "observable": "L'apprenant réussit les tâches de transfert sans recopier les exemples du laboratoire.",
+      "taskIds": ["p1s1-transfer"],
+      "invalidEvidence": ["Réussir uniquement les presets du Tokenizer Lab."],
+      "rubric": {
+        "minimumScore": 0.8
+      }
+    }
+  ],
+  "sharedActivityIds": ["tokenizer-lab"],
+  "activities": [
+    {
+      "id": "p1s1-token-prediction",
+      "type": "prediction-cards",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s1-e1"],
+      "config": {
+        "title": "Prédire avant de tokeniser",
+        "instruction": "Avant le laboratoire, prédisez si chaque mot restera en une seule unité ou sera découpé en plusieurs unités dans le mode sous-mots de notre simulation didactique.",
+        "items": [
+          {
+            "id": "bonjour",
+            "situation": "bonjour",
+            "choices": ["une seule unité", "plusieurs unités"],
+            "answer": "une seule unité",
+            "feedback": "Dans notre petit vocabulaire didactique, bon + jour peut être fusionné jusqu'à former bonjour."
+          },
+          {
+            "id": "extraordinaire",
+            "situation": "extraordinaire",
+            "choices": ["une seule unité", "plusieurs unités"],
+            "answer": "plusieurs unités",
+            "feedback": "Dans la simulation, extraordinaire devient extra | ord | inaire : un token n'est donc pas nécessairement un mot entier."
+          },
+          {
+            "id": "modele",
+            "situation": "modèle",
+            "choices": ["une seule unité", "plusieurs unités"],
+            "answer": "plusieurs unités",
+            "feedback": "Dans la simulation, modèle devient mod | èle. L'accent reste un caractère Unicode, mais il participe ici à des sous-unités apprises."
+          }
+        ]
+      },
+      "analytics": {
+        "events": ["activity.started", "prediction.submitted", "feedback.shown", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p1s1-token-id-example",
+      "type": "worked-example",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s1-e1"],
+      "config": {
+        "situation": "Le tokenizer a produit [bonjour, mod, èle, !]. Le vocabulaire associe ensuite un entier à chaque token.",
+        "steps": [
+          "Le texte brut est une chaîne Unicode.",
+          "Le tokenizer transforme cette chaîne en unités discrètes.",
+          "Le vocabulaire associe un index entier à chaque unité connue.",
+          "La valeur numérique de l'ID sert d'adresse : elle n'exprime ni importance ni sens.",
+          "Cet ID permettra ensuite de récupérer une représentation vectorielle."
+        ]
+      }
+    },
+    {
+      "id": "p1s1-vector-lab",
+      "type": "vector-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s1-e2"],
+      "config": {
+        "title": "Vector Lab",
+        "instruction": "Déplacez et comparez de petits vecteurs 2D avant d'introduire la formule du cosinus.",
+        "dimensions": 2,
+        "initialVectors": {
+          "a": [1, 0],
+          "b": [0.8, 0.2],
+          "c": [0, 1]
+        },
+        "showFormulaAfterManipulation": true
+      },
+      "analytics": {
+        "events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p1s1-context-lab",
+      "type": "parameter-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s1-e3"],
+      "config": {
+        "title": "Context Budget Lab",
+        "instruction": "Faites varier la longueur de la séquence et la fenêtre. Observez utilisés, disponibles et overflow sans confondre ce budget avec une mémoire persistante.",
+        "parameter": "contextLimit",
+        "min": 1,
+        "max": 64,
+        "step": 1,
+        "initial": 12,
+        "initialTokenCount": 18,
+        "domainEngine": "context-budget-engine"
+      },
+      "analytics": {
+        "events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p1s1-self-explanation",
+      "type": "self-explanation",
+      "purpose": "retrieve",
+      "evidenceIds": ["p1s1-e2", "p1s1-e3"],
+      "config": {
+        "prompt": "Expliquez à un camarade pourquoi un token ID n'est pas un embedding, pourquoi une similarité cosinus n'est pas une probabilité de vérité et pourquoi la fenêtre de contexte n'est pas une mémoire permanente.",
+        "criteria": [
+          "distingue token et ID",
+          "distingue ID et vecteur",
+          "limite l'interprétation du cosinus",
+          "distingue contexte et mémoire applicative"
+        ]
+      },
+      "analytics": {
+        "events": ["explanation.self_checked"]
+      }
+    },
+    {
+      "id": "p1s1-quiz",
+      "type": "quiz",
+      "purpose": "assess",
+      "evidenceIds": ["p1s1-e1", "p1s1-e2", "p1s1-e3"],
+      "config": {
+        "itemCount": 6,
+        "threshold": 0.8
+      },
+      "analytics": {
+        "events": ["quiz.answered", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p1s1-transfer",
+      "type": "transfer-cards",
+      "purpose": "transfer",
+      "evidenceIds": ["p1s1-e4"],
+      "config": {
+        "itemCount": 4,
+        "threshold": 0.8
+      },
+      "analytics": {
+        "events": ["transfer.completed", "attempt.completed"]
+      }
+    }
+  ],
+  "sections": [
+    {"id": "predict", "title": "Prédire le découpage", "activityIds": ["p1s1-token-prediction", "tokenizer-lab"]},
+    {"id": "identify", "title": "Distinguer token et ID", "activityIds": ["p1s1-token-id-example"]},
+    {"id": "represent", "title": "Passer des IDs aux vecteurs", "activityIds": ["p1s1-vector-lab"]},
+    {"id": "context", "title": "Raisonner sur le budget de contexte", "activityIds": ["p1s1-context-lab"]},
+    {"id": "explain", "title": "Expliquer les limites", "activityIds": ["p1s1-self-explanation"]},
+    {"id": "assess", "title": "Récupérer et transférer", "activityIds": ["p1s1-quiz", "p1s1-transfer"]}
+  ],
+  "assessment": {
+    "masteryPolicy": {
+      "quizThreshold": 0.8,
+      "transferThreshold": 0.8
+    },
+    "quizActivityId": "p1s1-quiz",
+    "transferActivityId": "p1s1-transfer"
+  },
+  "pedagogy": {
+    "firstMeaningfulActionTargetWords": 250,
+    "minimumMeaningfulManipulations": 3,
+    "fieldValidation": {
+      "status": "pending",
+      "evidenceRef": "formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md"
+    }
+  },
+  "references": [
+    {
+      "id": "fidle-home",
+      "title": "FIDLE — Formation Introduction au Deep Learning",
+      "url": "https://fidle.cnrs.fr/w3/"
+    },
+    {
+      "id": "jurafsky-martin",
+      "title": "Speech and Language Processing — Jurafsky & Martin",
+      "url": "https://web.stanford.edu/~jurafsky/slp3/"
+    },
+    {
+      "id": "bpe-sennrich",
+      "title": "Neural Machine Translation of Rare Words with Subword Units",
+      "url": "https://arxiv.org/abs/1508.07909"
+    }
+  ]
+}

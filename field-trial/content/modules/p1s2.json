@@ -1,0 +1,286 @@
+{
+  "moduleId": "p1s2",
+  "version": "3.0.0-alpha.1",
+  "title": "Transformer et attention",
+  "status": "design-ready",
+  "audience": {
+    "track": "discover",
+    "prerequisites": ["p1s1"]
+  },
+  "estimatedMinutes": 70,
+  "outcomes": [
+    {
+      "id": "p1s2-o1",
+      "statement": "Expliquer pourquoi une représentation de token doit intégrer des informations du contexte.",
+      "observable": "L'apprenant compare deux usages du mot avocat et identifie des positions contextuelles utiles sans invoquer encore Q, K ou V.",
+      "misconceptions": [
+        {
+          "id": "p1s2-static-meaning",
+          "label": "L'embedding initial d'un token contient déjà son sens contextuel complet.",
+          "remediationActivityId": "p1s2-context-prediction"
+        }
+      ]
+    },
+    {
+      "id": "p1s2-o2",
+      "statement": "Distinguer les rôles calculatoires de Query, Key et Value sans les confondre avec des objets linguistiques symboliques.",
+      "observable": "L'apprenant associe Q et K au calcul de compatibilité et V à l'information combinée, tout en explicitant les limites de la métaphore.",
+      "misconceptions": [
+        {
+          "id": "p1s2-qkv-magic",
+          "label": "Q est une question en français, K un mot-clé et V une case mémoire textuelle.",
+          "remediationActivityId": "p1s2-qkv-prediction"
+        }
+      ]
+    },
+    {
+      "id": "p1s2-o3",
+      "statement": "Reconstruire le calcul d'une tête d'attention simplifiée : produit scalaire, scaling, masque, softmax et somme pondérée des V.",
+      "observable": "L'apprenant manipule une attention déterministe, lit scores et poids, active le masque causal et explique l'effet du scaling.",
+      "misconceptions": [
+        {
+          "id": "p1s2-dot-probability",
+          "label": "Le produit Q·K est déjà une probabilité.",
+          "remediationActivityId": "p1s2-attention-lab"
+        },
+        {
+          "id": "p1s2-causal-future",
+          "label": "Une position autoregressive peut utiliser librement les tokens futurs.",
+          "remediationActivityId": "p1s2-attention-lab"
+        }
+      ]
+    },
+    {
+      "id": "p1s2-o4",
+      "statement": "Interpréter prudemment un poids d'attention et transférer le mécanisme à une séquence nouvelle.",
+      "observable": "L'apprenant explique qu'un poids d'attention mesure une contribution dans un calcul local et ne constitue ni une preuve de vérité ni une explication humaine complète.",
+      "misconceptions": [
+        {
+          "id": "p1s2-attention-truth",
+          "label": "Le plus grand poids d'attention prouve ce qui est vrai ou explique tout le raisonnement du modèle.",
+          "remediationActivityId": "p1s2-self-explanation"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "p1s2-e1",
+      "outcomeId": "p1s2-o1",
+      "claim": "L'apprenant comprend le besoin de contextualisation avant le vocabulaire Q/K/V.",
+      "observable": "Il relie avocat au tribunal à plaide/tribunal et avocat aliment à mange/citron, puis explique que la représentation initiale seule ne suffit pas.",
+      "taskIds": ["p1s2-context-prediction"],
+      "invalidEvidence": ["Réciter le mot attention sans savoir pourquoi le contexte change la représentation."],
+      "rubric": {"requiresPrediction": true, "requiresContextContrast": true}
+    },
+    {
+      "id": "p1s2-e2",
+      "outcomeId": "p1s2-o2",
+      "claim": "L'apprenant distingue les rôles Q/K/V.",
+      "observable": "Il sait que Q et K servent à obtenir des scores de compatibilité et que V porte l'information ensuite combinée.",
+      "taskIds": ["p1s2-qkv-prediction", "p1s2-worked-example"],
+      "invalidEvidence": ["Utiliser les mots query, key et value comme synonymes de question, mot-clé et réponse."],
+      "rubric": {"requiresQKRole": true, "requiresVRole": true}
+    },
+    {
+      "id": "p1s2-e3",
+      "outcomeId": "p1s2-o3",
+      "claim": "L'apprenant peut suivre le calcul d'attention et raisonner sur ses paramètres.",
+      "observable": "Il observe Q·K, scaling, masque, softmax et sortie pondérée dans le laboratoire et explique au moins une conséquence d'un toggle.",
+      "taskIds": ["p1s2-attention-lab"],
+      "invalidEvidence": ["Savoir lire la formule complète sans pouvoir prédire l'effet du masque causal."],
+      "rubric": {"requiresManipulation": true, "requiresCausalReasoning": true}
+    },
+    {
+      "id": "p1s2-e4",
+      "outcomeId": "p1s2-o4",
+      "claim": "L'apprenant limite correctement l'interprétation des poids d'attention et transfère le mécanisme.",
+      "observable": "Il réussit l'auto-explication et des cas de transfert sans assimiler poids d'attention, importance absolue et vérité.",
+      "taskIds": ["p1s2-self-explanation", "p1s2-transfer"],
+      "invalidEvidence": ["Choisir mécaniquement le plus grand poids comme preuve d'une explication causale complète."],
+      "rubric": {"requiresBoundaryExplanation": true, "minimumScore": 0.8}
+    }
+  ],
+  "activities": [
+    {
+      "id": "p1s2-context-prediction",
+      "type": "prediction-cards",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s2-e1"],
+      "config": {
+        "title": "Avant Q/K/V : de quels mots avez-vous besoin ?",
+        "instruction": "Pour comprendre le sens du mot avocat, choisissez d'abord les indices contextuels les plus utiles. Le vocabulaire technique viendra après.",
+        "items": [
+          {
+            "id": "juriste",
+            "situation": "L'avocat plaide aujourd'hui au tribunal.",
+            "choices": ["plaide + tribunal", "aujourd'hui seulement", "aucun autre token"],
+            "answer": "plaide + tribunal",
+            "feedback": "Plaide et tribunal apportent ici des indices contextuels particulièrement utiles pour le sens juridique."
+          },
+          {
+            "id": "fruit",
+            "situation": "Je mange un avocat mûr avec du citron.",
+            "choices": ["mange + citron", "mûr seulement", "aucun autre token"],
+            "answer": "mange + citron",
+            "feedback": "Mange et citron apportent ici des indices cohérents avec l'aliment. La représentation utile d'avocat doit donc dépendre du contexte."
+          }
+        ]
+      },
+      "analytics": {"events": ["activity.started", "prediction.submitted", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s2-qkv-prediction",
+      "type": "prediction-cards",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s2-e2"],
+      "config": {
+        "title": "Donner un rôle à Q, K et V",
+        "instruction": "Associez chaque rôle de calcul au bon vecteur. Ici, les lettres désignent des projections numériques apprises, pas des objets symboliques.",
+        "items": [
+          {
+            "id": "query",
+            "situation": "Vecteur de la position courante utilisé pour comparer sa compatibilité aux autres positions",
+            "choices": ["Q", "K", "V"],
+            "answer": "Q",
+            "feedback": "Q est comparé aux keys. Ce n'est pas une question rédigée en langage naturel."
+          },
+          {
+            "id": "key",
+            "situation": "Vecteur d'une position utilisé dans le score de compatibilité avec Q",
+            "choices": ["Q", "K", "V"],
+            "answer": "K",
+            "feedback": "K participe au produit Q·K. Ce n'est pas un mot-clé symbolique."
+          },
+          {
+            "id": "value",
+            "situation": "Vecteur d'information qui sera combiné selon les poids calculés",
+            "choices": ["Q", "K", "V"],
+            "answer": "V",
+            "feedback": "V fournit la contribution vectorielle à la somme pondérée."
+          }
+        ]
+      },
+      "analytics": {"events": ["activity.started", "prediction.submitted", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s2-worked-example",
+      "type": "worked-example",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s2-e2", "p1s2-e3"],
+      "config": {
+        "situation": "Une tête d'attention fictive doit contextualiser avocat avec des vecteurs 2D volontairement simples.",
+        "steps": [
+          "Prendre Q(avocat) = [1, 0].",
+          "Comparer Q aux keys par produit scalaire : les scores bruts ne sont pas encore des probabilités.",
+          "Diviser les scores par √dₖ pour contrôler leur amplitude avant softmax.",
+          "Appliquer éventuellement un masque : une position interdite reçoit un score effectif -∞.",
+          "Softmax transforme les scores autorisés en poids positifs de somme 1.",
+          "La sortie est la somme pondérée des vecteurs V.",
+          "Le résultat est une représentation contextualisée ; un poids élevé n'est pas une preuve de vérité ni une explication humaine complète."
+        ]
+      }
+    },
+    {
+      "id": "p1s2-attention-lab",
+      "type": "attention-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s2-e3"],
+      "config": {
+        "title": "Attention Lab",
+        "instruction": "Choisissez une situation, puis activez/désactivez scaling et masque causal. Lisez la chaîne score brut → score utilisé → poids → sortie.",
+        "domainEngine": "attention-engine",
+        "initialScenarioId": "juriste",
+        "scenarios": [
+          {
+            "id": "juriste",
+            "label": "L'avocat plaide au tribunal",
+            "tokens": ["L'avocat", "plaide", "au", "tribunal"],
+            "queryIndex": 3,
+            "query": [1, 0],
+            "keys": [[0.2, 0.8], [0.9, 0.1], [0.3, 0.7], [0.8, 0.2]],
+            "values": [[0.1, 0.8], [0.9, 0.2], [0.2, 0.5], [0.8, 0.1]]
+          },
+          {
+            "id": "fruit",
+            "label": "Je mange un avocat avec du citron",
+            "tokens": ["Je", "mange", "avocat", "citron"],
+            "queryIndex": 2,
+            "query": [0, 1],
+            "keys": [[0.2, 0.8], [0.1, 0.9], [0.4, 0.6], [0.05, 0.95]],
+            "values": [[0.2, 0.4], [0.1, 0.9], [0.5, 0.5], [0.05, 1.0]]
+          },
+          {
+            "id": "causal",
+            "label": "Position 2 avec un futur interdit",
+            "tokens": ["Le", "modèle", "prévoit", "demain"],
+            "queryIndex": 1,
+            "query": [1, 1],
+            "keys": [[1, 0], [0, 1], [1, 1], [0.8, 0.8]],
+            "values": [[1, 0], [0, 1], [9, 9], [8, 8]]
+          }
+        ]
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s2-self-explanation",
+      "type": "self-explanation",
+      "purpose": "retrieve",
+      "evidenceIds": ["p1s2-e4"],
+      "config": {
+        "prompt": "Expliquez à un camarade la chaîne Q·K → scaling → masque → softmax → somme des V, puis dites pourquoi le plus grand poids d'attention ne constitue pas à lui seul une preuve de vérité ou une explication complète.",
+        "criteria": [
+          "Q et K servent au score de compatibilité",
+          "le scaling agit avant softmax",
+          "le masque peut interdire certaines positions",
+          "softmax normalise les scores autorisés",
+          "les V sont combinés par somme pondérée",
+          "poids d'attention ≠ vérité ni explication complète"
+        ]
+      },
+      "analytics": {"events": ["explanation.self_checked"]}
+    },
+    {
+      "id": "p1s2-quiz",
+      "type": "quiz",
+      "purpose": "assess",
+      "evidenceIds": ["p1s2-e1", "p1s2-e2", "p1s2-e3"],
+      "config": {"itemCount": 6, "threshold": 0.8},
+      "analytics": {"events": ["quiz.answered", "attempt.completed"]}
+    },
+    {
+      "id": "p1s2-transfer",
+      "type": "transfer-cards",
+      "purpose": "transfer",
+      "evidenceIds": ["p1s2-e4"],
+      "config": {"itemCount": 4, "threshold": 0.8},
+      "analytics": {"events": ["transfer.completed", "attempt.completed"]}
+    }
+  ],
+  "sections": [
+    {"id": "need-context", "title": "Faire naître le besoin de contexte", "activityIds": ["p1s2-context-prediction"]},
+    {"id": "qkv", "title": "Nommer Q, K et V après le phénomène", "activityIds": ["p1s2-qkv-prediction", "p1s2-worked-example"]},
+    {"id": "attention", "title": "Manipuler le calcul d'attention", "activityIds": ["p1s2-attention-lab"]},
+    {"id": "explain", "title": "Limiter l'interprétation", "activityIds": ["p1s2-self-explanation"]},
+    {"id": "assess", "title": "Récupérer et transférer", "activityIds": ["p1s2-quiz", "p1s2-transfer"]}
+  ],
+  "assessment": {
+    "masteryPolicy": {"quizThreshold": 0.8, "transferThreshold": 0.8},
+    "quizActivityId": "p1s2-quiz",
+    "transferActivityId": "p1s2-transfer"
+  },
+  "pedagogy": {
+    "firstMeaningfulActionTargetWords": 200,
+    "minimumMeaningfulManipulations": 3,
+    "fieldValidation": {
+      "status": "pending",
+      "evidenceRef": "formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md"
+    }
+  },
+  "references": [
+    {"id": "fidle-home", "title": "FIDLE — Formation Introduction au Deep Learning", "url": "https://fidle.cnrs.fr/w3/"},
+    {"id": "vaswani-attention", "title": "Attention Is All You Need — Vaswani et al.", "url": "https://arxiv.org/abs/1706.03762"},
+    {"id": "jurafsky-martin", "title": "Speech and Language Processing — Jurafsky & Martin", "url": "https://web.stanford.edu/~jurafsky/slp3/"}
+  ]
+}

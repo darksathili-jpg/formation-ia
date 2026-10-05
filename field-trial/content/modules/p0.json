@@ -1,0 +1,259 @@
+{
+  "moduleId": "p0",
+  "version": "3.0.0-alpha.1",
+  "title": "Comprendre ce qui se cache derrière un assistant IA",
+  "status": "pilot-ready",
+  "audience": {
+    "track": "discover",
+    "prerequisites": []
+  },
+  "estimatedMinutes": 50,
+  "outcomes": [
+    {
+      "id": "p0-o1",
+      "statement": "Distinguer le modèle de langage de l'application qui l'entoure.",
+      "observable": "L'apprenant attribue correctement génération, mémoire, recherche documentaire et action à la bonne couche du système et justifie son choix.",
+      "misconceptions": [
+        {
+          "id": "p0-model-app",
+          "label": "Le chatbot visible est le LLM lui-même.",
+          "remediationActivityId": "p0-system-builder"
+        },
+        {
+          "id": "p0-capability-source",
+          "label": "Toute capacité visible est intrinsèque aux poids du modèle.",
+          "remediationActivityId": "p0-capability-origin"
+        },
+        {
+          "id": "p0-memory",
+          "label": "Se souvenir implique forcément un réentraînement des poids.",
+          "remediationActivityId": "p0-system-builder"
+        }
+      ]
+    },
+    {
+      "id": "p0-o2",
+      "statement": "Situer un LLM moderne dans la chaîne IA, machine learning et deep learning.",
+      "observable": "L'apprenant reconstruit la hiérarchie dans le bon ordre et explique qu'elle ne couvre pas toute l'IA.",
+      "misconceptions": [
+        {
+          "id": "p0-hierarchy",
+          "label": "LLM, IA, application et chatbot sont des niveaux équivalents d'une même taxonomie.",
+          "remediationActivityId": "p0-family-order"
+        }
+      ]
+    },
+    {
+      "id": "p0-o3",
+      "statement": "Transférer le raisonnement modèle/application à un système IA nouveau.",
+      "observable": "Sur un cas inédit, l'apprenant identifie les capacités qui exigent probablement des composants externes et les justifie.",
+      "misconceptions": []
+    }
+  ],
+  "evidence": [
+    {
+      "id": "p0-e1",
+      "outcomeId": "p0-o1",
+      "claim": "L'apprenant distingue la source des capacités visibles d'un assistant.",
+      "observable": "Il explique pourquoi une donnée actuelle, une mémoire persistante ou une action réelle ne sont pas prouvées par la seule génération de texte.",
+      "taskIds": ["p0-capability-origin", "p0-system-builder", "p0-self-explanation"],
+      "invalidEvidence": ["Reconnaître le mot LLM dans un QCM sans justification."],
+      "rubric": {
+        "minimumDistinctComponents": 3,
+        "requiresCausalExplanation": true
+      }
+    },
+    {
+      "id": "p0-e2",
+      "outcomeId": "p0-o2",
+      "claim": "L'apprenant sait situer un LLM moderne dans une hiérarchie de familles.",
+      "observable": "Il ordonne IA, machine learning, deep learning et LLM puis formule la limite de cette chaîne.",
+      "taskIds": ["p0-family-order", "p0-quiz"],
+      "invalidEvidence": ["Lire la chaîne déjà affichée avant de répondre."],
+      "rubric": {
+        "requiresCorrectOrder": true,
+        "requiresBoundaryStatement": true
+      }
+    },
+    {
+      "id": "p0-e3",
+      "outcomeId": "p0-o3",
+      "claim": "La distinction modèle/application est transférable à un autre produit.",
+      "observable": "L'apprenant raisonne correctement sur un assistant de voyage qui discute, recherche des horaires, mémorise et réserve.",
+      "taskIds": ["p0-transfer"],
+      "invalidEvidence": ["Répéter uniquement la définition modèle/application sans analyser les capacités."],
+      "rubric": {
+        "minimumScore": 0.8
+      }
+    }
+  ],
+  "activities": [
+    {
+      "id": "p0-capability-origin",
+      "type": "prediction-cards",
+      "purpose": "acquire",
+      "evidenceIds": ["p0-e1"],
+      "config": {
+        "title": "Qui fait réellement quoi ?",
+        "instruction": "Prédire avant toute définition l'origine la plus plausible de chaque capacité.",
+        "items": [
+          {
+            "id": "rewrite",
+            "situation": "Reformuler un paragraphe déjà présent dans la conversation.",
+            "choices": ["model", "external"],
+            "answer": "model",
+            "feedback": "Le texte à transformer est déjà fourni : la génération linguistique peut être réalisée par le modèle."
+          },
+          {
+            "id": "current-document",
+            "situation": "Retrouver un règlement modifié hier et absent de la conversation.",
+            "choices": ["model", "external"],
+            "answer": "external",
+            "feedback": "Pour garantir la version actuelle, l'application doit retrouver le document puis le fournir au modèle."
+          },
+          {
+            "id": "persistent-name",
+            "situation": "Se souvenir demain d'un prénom après fermeture de la session.",
+            "choices": ["model", "external"],
+            "answer": "external",
+            "feedback": "Une mémoire applicative peut stocker puis réinjecter la donnée sans modifier les poids."
+          },
+          {
+            "id": "calendar-action",
+            "situation": "Créer réellement un événement dans un agenda.",
+            "choices": ["model", "external"],
+            "answer": "external",
+            "feedback": "Produire une phrase ne modifie pas un agenda : une fonction autorisée doit effectuer l'action."
+          }
+        ]
+      },
+      "analytics": {
+        "events": ["activity.started", "prediction.submitted", "feedback.shown", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p0-model-app-example",
+      "type": "worked-example",
+      "purpose": "acquire",
+      "evidenceIds": ["p0-e1"],
+      "config": {
+        "situation": "L'assistant cite un règlement intérieur modifié hier.",
+        "steps": [
+          "La donnée actuelle n'est pas déjà dans la conversation.",
+          "Le LLM peut exploiter un passage qu'on lui fournit.",
+          "L'application doit retrouver la version actuelle du document.",
+          "La génération finale et l'accès documentaire sont deux responsabilités différentes."
+        ]
+      }
+    },
+    {
+      "id": "p0-system-builder",
+      "type": "component-builder",
+      "purpose": "practice",
+      "evidenceIds": ["p0-e1"],
+      "config": {
+        "components": ["model", "ui", "memory", "retrieval", "tools"],
+        "missions": [
+          {"id": "chat", "needs": ["model", "ui"]},
+          {"id": "docs", "needs": ["model", "ui", "retrieval"]},
+          {"id": "remember", "needs": ["model", "ui", "memory"]},
+          {"id": "calendar", "needs": ["model", "ui", "tools"]}
+        ],
+        "goal": "Trouver une configuration suffisante et expliquer le rôle de chaque composant ajouté."
+      },
+      "analytics": {
+        "events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p0-family-order",
+      "type": "rank-order",
+      "purpose": "practice",
+      "evidenceIds": ["p0-e2"],
+      "config": {
+        "items": ["Intelligence artificielle", "Machine learning", "Deep learning", "LLM"],
+        "answer": ["Intelligence artificielle", "Machine learning", "Deep learning", "LLM"],
+        "explanationAfterSuccess": "Cette chaîne situe les LLM modernes ; elle ne signifie pas que toute l'IA relève du machine learning."
+      },
+      "analytics": {
+        "events": ["activity.started", "manipulation.changed", "attempt.completed", "feedback.shown"]
+      }
+    },
+    {
+      "id": "p0-self-explanation",
+      "type": "self-explanation",
+      "purpose": "retrieve",
+      "evidenceIds": ["p0-e1"],
+      "config": {
+        "prompt": "Explique pourquoi consulter un règlement actuel et créer un rendez-vous ne prouvent pas que ces capacités sont dans le LLM.",
+        "criteria": ["distingue modèle et application", "identifie la recherche documentaire", "identifie l'outil", "n'attribue pas toute capacité aux poids"]
+      },
+      "analytics": {
+        "events": ["explanation.self_checked"]
+      }
+    },
+    {
+      "id": "p0-quiz",
+      "type": "quiz",
+      "purpose": "assess",
+      "evidenceIds": ["p0-e1", "p0-e2"],
+      "config": {
+        "itemCount": 6,
+        "threshold": 0.8
+      },
+      "analytics": {
+        "events": ["quiz.answered", "attempt.completed"]
+      }
+    },
+    {
+      "id": "p0-transfer",
+      "type": "transfer-cards",
+      "purpose": "transfer",
+      "evidenceIds": ["p0-e3"],
+      "config": {
+        "scenario": "Une application de voyage discute, consulte des horaires en temps réel, mémorise les préférences et réserve un billet après confirmation.",
+        "prompt": "Attribuer chaque capacité à la couche la plus plausible et justifier.",
+        "threshold": 0.8
+      },
+      "analytics": {
+        "events": ["transfer.completed"]
+      }
+    }
+  ],
+  "sections": [
+    {"id": "predict", "title": "Prédire avant de nommer", "activityIds": ["p0-capability-origin"]},
+    {"id": "formalize", "title": "Formaliser ce qui vient d'être observé", "activityIds": ["p0-model-app-example"]},
+    {"id": "build", "title": "Construire un système", "activityIds": ["p0-system-builder"]},
+    {"id": "situate", "title": "Situer un LLM", "activityIds": ["p0-family-order"]},
+    {"id": "explain", "title": "Expliquer sans recopier", "activityIds": ["p0-self-explanation"]},
+    {"id": "assess", "title": "Récupérer et transférer", "activityIds": ["p0-quiz", "p0-transfer"]}
+  ],
+  "assessment": {
+    "masteryPolicy": {
+      "quizThreshold": 0.8,
+      "transferThreshold": 0.8
+    },
+    "quizActivityId": "p0-quiz",
+    "transferActivityId": "p0-transfer"
+  },
+  "pedagogy": {
+    "firstMeaningfulActionTargetWords": 350,
+    "minimumMeaningfulManipulations": 3,
+    "fieldValidation": {
+      "status": "pending",
+      "evidenceRef": "formation_llm/docs/PROTOCOLE_TEST_TERRAIN_P0_V2.md"
+    }
+  },
+  "references": [
+    {
+      "id": "fidle-bases",
+      "title": "FIDLE — Bases, Concepts et Enjeux",
+      "url": "https://fidle.cnrs.fr/w3/parcours/01-Bases%20et%20Concepts.html"
+    },
+    {
+      "id": "latent-p0-field-protocol",
+      "title": "LATENT — Protocole de test terrain P0",
+      "url": "https://github.com/darksathili-jpg/formation-ia/blob/main/formation_llm/docs/PROTOCOLE_TEST_TERRAIN_P0_V2.md"
+    }
+  ]
+}

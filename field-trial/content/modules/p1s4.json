@@ -1,0 +1,232 @@
+{
+  "moduleId": "p1s4",
+  "version": "3.0.0-alpha.1",
+  "title": "Sampling et décodage",
+  "status": "design-ready",
+  "audience": {"track": "discover", "prerequisites": ["p1s3"]},
+  "estimatedMinutes": 70,
+  "outcomes": [
+    {
+      "id": "p1s4-o1",
+      "statement": "Distinguer un logit, une probabilité conditionnelle de prochain token et une preuve de vérité.",
+      "observable": "L'apprenant part de trois scores, observe leur softmax et explique que la distribution obtenue porte sur le prochain token, pas sur la véracité de la phrase.",
+      "misconceptions": [
+        {"id": "p1s4-logit-probability", "label": "Un logit est déjà une probabilité.", "remediationActivityId": "p1s4-sampling-lab"},
+        {"id": "p1s4-probability-truth", "label": "Une forte probabilité locale prouve qu'une proposition est vraie.", "remediationActivityId": "p1s4-truth-lab"}
+      ]
+    },
+    {
+      "id": "p1s4-o2",
+      "statement": "Distinguer greedy et sampling comme deux règles de sélection appliquées à une distribution.",
+      "observable": "L'apprenant prédit l'argmax, provoque un tirage pondéré déterministe et explique pourquoi sampling n'est pas un hasard uniforme.",
+      "misconceptions": [
+        {"id": "p1s4-greedy-global", "label": "Greedy optimise toute la réponse future.", "remediationActivityId": "p1s4-loop-lab"},
+        {"id": "p1s4-sampling-uniform", "label": "Sampling choisit uniformément parmi les candidats.", "remediationActivityId": "p1s4-sampling-lab"}
+      ]
+    },
+    {
+      "id": "p1s4-o3",
+      "statement": "Raisonner sur l'effet de la température, de top-k et de top-p avant la sélection d'un token.",
+      "observable": "L'apprenant fait varier T, top-k et top-p, identifie quels candidats restent éligibles et observe la renormalisation de leur masse.",
+      "misconceptions": [
+        {"id": "p1s4-low-temp-true", "label": "Une faible température rend la réponse plus vraie.", "remediationActivityId": "p1s4-truth-lab"},
+        {"id": "p1s4-topp-percent", "label": "Top-p=0,9 conserve 90 % du vocabulaire.", "remediationActivityId": "p1s4-sampling-lab"}
+      ]
+    },
+    {
+      "id": "p1s4-o4",
+      "statement": "Expliquer la génération autoregressive comme une suite de décisions locales dépendant du contexte produit jusque-là.",
+      "observable": "L'apprenant génère plusieurs étapes et montre qu'un token sélectionné est ajouté au contexte puis modifie l'état utilisé pour la distribution suivante.",
+      "misconceptions": [
+        {"id": "p1s4-one-shot", "label": "Le modèle écrit nécessairement toute la réponse en une seule décision.", "remediationActivityId": "p1s4-loop-lab"},
+        {"id": "p1s4-independent-tokens", "label": "Les tokens générés successivement sont indépendants les uns des autres.", "remediationActivityId": "p1s4-loop-lab"}
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "p1s4-e1",
+      "outcomeId": "p1s4-o1",
+      "claim": "L'apprenant distingue score brut, distribution locale et vérité.",
+      "observable": "Il passe de [2,1,0] à une distribution normalisée, nomme les logits après l'expérience et refuse d'interpréter la probabilité locale comme une preuve factuelle.",
+      "taskIds": ["p1s4-three-candidate-prediction", "p1s4-worked-example", "p1s4-truth-lab"],
+      "invalidEvidence": ["Réciter le mot softmax sans savoir ce qui est normalisé ni ce que la distribution signifie."],
+      "rubric": {"requiresScoreProbabilityDistinction": true, "requiresTruthBoundary": true}
+    },
+    {
+      "id": "p1s4-e2",
+      "outcomeId": "p1s4-o2",
+      "claim": "L'apprenant distingue sélection déterministe et tirage pondéré.",
+      "observable": "Il explique que greedy prend l'argmax local tandis que sampling tire selon les probabilités disponibles après filtrage.",
+      "taskIds": ["p1s4-three-candidate-prediction", "p1s4-sampling-lab"],
+      "invalidEvidence": ["Dire que sampling est aléatoire sans préciser que le tirage est pondéré."],
+      "rubric": {"requiresGreedySamplingContrast": true}
+    },
+    {
+      "id": "p1s4-e3",
+      "outcomeId": "p1s4-o3",
+      "claim": "L'apprenant peut prédire puis observer l'effet de T, top-k et top-p.",
+      "observable": "Il montre qu'une faible T concentre une distribution déjà orientée, que top-k conserve un nombre fixe de candidats et que top-p conserve une masse cumulée variable.",
+      "taskIds": ["p1s4-sampling-lab", "p1s4-truth-lab"],
+      "invalidEvidence": ["Associer faible température à factualité ou top-p à un pourcentage fixe du vocabulaire."],
+      "rubric": {"requiresParameterManipulation": true, "requiresRenormalizationReasoning": true}
+    },
+    {
+      "id": "p1s4-e4",
+      "outcomeId": "p1s4-o4",
+      "claim": "L'apprenant comprend la boucle autoregressive et ses conséquences.",
+      "observable": "Il suit contexte → distribution → sélection → nouveau contexte sur plusieurs étapes et réussit le transfert vers une divergence de deux générations.",
+      "taskIds": ["p1s4-loop-lab", "p1s4-self-explanation", "p1s4-transfer"],
+      "invalidEvidence": ["Décrire la génération comme un choix unique du meilleur mot ou de la meilleure phrase complète."],
+      "rubric": {"requiresAutoregressiveLoop": true, "minimumScore": 0.8}
+    }
+  ],
+  "activities": [
+    {
+      "id": "p1s4-three-candidate-prediction",
+      "type": "prediction-cards",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s4-e1", "p1s4-e2"],
+      "config": {
+        "title": "Trois candidats, une décision",
+        "instruction": "Avant les mots logit, softmax ou température, raisonnez seulement sur trois scores pour la suite de « Le modèle… ».",
+        "items": [
+          {"id": "highest", "situation": "Scores : calcule = 2 ; choisit = 1 ; hésite = 0. Si la règle est « prendre toujours le score le plus élevé », quel token part ?", "choices": ["calcule", "choisit", "hésite"], "answer": "calcule", "feedback": "La règle choisit ici le maximum local. Nous la nommerons bientôt greedy."},
+          {"id": "weighted", "situation": "Après normalisation, calcule reçoit environ 66,5 %, choisit 24,5 % et hésite 9 %. Un tirage pondéré peut-il parfois choisir « choisit » ?", "choices": ["Oui", "Non", "Seulement si les trois sont à 33 %"], "answer": "Oui", "feedback": "Un tirage pondéré peut choisir un candidat non maximal ; il n'est pas uniforme pour autant."}
+        ]
+      },
+      "analytics": {"events": ["activity.started", "prediction.submitted", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s4-worked-example",
+      "type": "worked-example",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s4-e1", "p1s4-e2"],
+      "config": {
+        "situation": "Nous pouvons maintenant nommer ce qui vient d'être manipulé avec les trois candidats calcule, choisit et hésite.",
+        "steps": [
+          "Les nombres [2, 1, 0] sont des logits : des scores bruts, pas des probabilités.",
+          "Softmax transforme ces scores en probabilités positives dont la somme vaut 1 : environ [0,665 ; 0,245 ; 0,090].",
+          "Cette distribution décrit la plausibilité locale du prochain token conditionnée par le contexte ; elle ne mesure pas la vérité de la phrase.",
+          "Greedy prend l'argmax de cette distribution : ici calcule.",
+          "Sampling effectue au contraire un tirage pondéré : choisit reste possible avec environ 24,5 % de masse.",
+          "Le token retenu devient ensuite une partie du contexte de l'étape suivante."
+        ]
+      }
+    },
+    {
+      "id": "p1s4-sampling-lab",
+      "type": "sampling-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s4-e1", "p1s4-e2", "p1s4-e3"],
+      "config": {
+        "title": "Sampling Lab — voir la décision se construire",
+        "instruction": "Commencez sans filtre. Comparez greedy et sampling, puis changez la température. Activez seulement ensuite top-k ou top-p et observez éligibilité puis renormalisation.",
+        "domainEngine": "sampling-engine",
+        "tokens": ["calcule", "choisit", "hésite"],
+        "logits": [2, 1, 0],
+        "initialStrategy": "greedy",
+        "initialFilter": "none",
+        "initialTemperature": 1,
+        "temperatureRange": {"min": 0.3, "max": 2, "step": 0.1},
+        "initialTopK": 2,
+        "initialTopP": 0.8,
+        "seed": 17
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s4-truth-lab",
+      "type": "truth-temperature-lab",
+      "purpose": "remediate",
+      "evidenceIds": ["p1s4-e1", "p1s4-e3"],
+      "config": {
+        "title": "Truth Trap — rendre une erreur plus sûre d'elle",
+        "instruction": "Le candidat faux reçoit volontairement le plus grand logit. Baissez la température : observez ce qui change et surtout ce qui ne change pas.",
+        "domainEngine": "sampling-engine",
+        "tokens": ["affirmation fausse", "affirmation vraie", "je ne sais pas"],
+        "logits": [3.2, 2, 1],
+        "initialTemperature": 1,
+        "temperatureRange": {"min": 0.3, "max": 2, "step": 0.1}
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s4-loop-lab",
+      "type": "autoregressive-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s4-e2", "p1s4-e4"],
+      "config": {
+        "title": "Autoregressive Loop Lab",
+        "instruction": "Générez un token à la fois. La branche choisie détermine l'état de décodage suivant : une décision locale modifie donc réellement la suite de cette simulation.",
+        "domainEngine": "sampling-engine",
+        "prompt": "Le modèle",
+        "initialStateId": "start",
+        "strategy": "sample",
+        "temperature": 1,
+        "filter": "none",
+        "seed": 23,
+        "graph": {
+          "start": {"tokens": [" calcule", " choisit", " hésite"], "logits": [2, 1.1, 0.3], "nextStates": ["calc", "choice", "hesitate"]},
+          "calc": {"tokens": [" une", " vite", " encore"], "logits": [2.1, 0.7, 0.2], "nextStates": ["calc2", "calc2", "calc2"]},
+          "choice": {"tokens": [" un", " la", " autre"], "logits": [0.7, 2.0, 0.5], "nextStates": ["choice2", "choice2", "choice2"]},
+          "hesitate": {"tokens": [" puis", " encore", " ."], "logits": [0.5, 0.9, 2.0], "nextStates": ["hesitate2", "hesitate2", "hesitate2"]},
+          "calc2": {"tokens": [" distribution", " réponse", " ."], "logits": [2.2, 0.8, 0.1], "nextStates": [null, null, null]},
+          "choice2": {"tokens": [" token", " résultat", " ."], "logits": [2.0, 1.0, 0.2], "nextStates": [null, null, null]},
+          "hesitate2": {"tokens": [" réponse", " option", " ."], "logits": [1.0, 0.5, 2.1], "nextStates": [null, null, null]}
+        }
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s4-self-explanation",
+      "type": "self-explanation",
+      "purpose": "retrieve",
+      "evidenceIds": ["p1s4-e3", "p1s4-e4"],
+      "config": {
+        "prompt": "Expliquez sans dire « le modèle choisit un mot » : partez des logits, passez par softmax, distinguez greedy et sampling, expliquez un filtre top-k ou top-p, puis montrez comment le token retenu devient du contexte. Terminez par une phrase sur la vérité.",
+        "criteria": ["logit ≠ probabilité", "softmax produit une distribution locale", "greedy ≠ sampling", "top-k/top-p filtre puis renormalise", "le token choisi alimente l'étape suivante", "probabilité locale ≠ vérité"]
+      },
+      "analytics": {"events": ["explanation.self_checked"]}
+    },
+    {
+      "id": "p1s4-quiz",
+      "type": "quiz",
+      "purpose": "assess",
+      "evidenceIds": ["p1s4-e1", "p1s4-e2", "p1s4-e3"],
+      "config": {"itemCount": 6, "threshold": 0.8},
+      "analytics": {"events": ["quiz.answered", "attempt.completed"]}
+    },
+    {
+      "id": "p1s4-transfer",
+      "type": "transfer-cards",
+      "purpose": "transfer",
+      "evidenceIds": ["p1s4-e4"],
+      "config": {"itemCount": 4, "threshold": 0.8},
+      "analytics": {"events": ["transfer.completed", "attempt.completed"]}
+    }
+  ],
+  "sections": [
+    {"id": "three-candidates", "title": "Décider avant le jargon", "activityIds": ["p1s4-three-candidate-prediction", "p1s4-worked-example"]},
+    {"id": "distribution", "title": "Manipuler logits, probabilités et sélection", "activityIds": ["p1s4-sampling-lab"]},
+    {"id": "truth", "title": "Dissocier confiance locale et vérité", "activityIds": ["p1s4-truth-lab"]},
+    {"id": "loop", "title": "Voir la boucle autoregressive", "activityIds": ["p1s4-loop-lab"]},
+    {"id": "explain", "title": "Reconstruire le mécanisme", "activityIds": ["p1s4-self-explanation"]},
+    {"id": "assess", "title": "Récupérer et transférer", "activityIds": ["p1s4-quiz", "p1s4-transfer"]}
+  ],
+  "assessment": {
+    "masteryPolicy": {"quizThreshold": 0.8, "transferThreshold": 0.8},
+    "quizActivityId": "p1s4-quiz",
+    "transferActivityId": "p1s4-transfer"
+  },
+  "pedagogy": {
+    "firstMeaningfulActionTargetWords": 140,
+    "minimumMeaningfulManipulations": 4,
+    "fieldValidation": {"status": "pending", "evidenceRef": "formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md"}
+  },
+  "references": [
+    {"id": "holtzman", "title": "Holtzman et al. — The Curious Case of Neural Text Degeneration", "url": "https://arxiv.org/abs/1904.09751"},
+    {"id": "hf-generation", "title": "Hugging Face Transformers — Text generation strategies", "url": "https://huggingface.co/docs/transformers/main/generation_strategies"},
+    {"id": "fidle", "title": "FIDLE — Formation Introduction au Deep Learning", "url": "https://fidle.cnrs.fr/w3/"}
+  ]
+}

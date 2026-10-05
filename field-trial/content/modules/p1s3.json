@@ -1,0 +1,216 @@
+{
+  "moduleId": "p1s3",
+  "version": "3.0.0-alpha.1",
+  "title": "Transformer Block Lab",
+  "status": "design-ready",
+  "audience": {"track": "discover", "prerequisites": ["p1s2"]},
+  "estimatedMinutes": 75,
+  "outcomes": [
+    {
+      "id": "p1s3-o1",
+      "statement": "Distinguer le rôle de l'attention, du MLP, de la normalisation et des connexions résiduelles dans un bloc Transformer simplifié.",
+      "observable": "L'apprenant attribue à chaque brique sa responsabilité et explique pourquoi attention et MLP ne sont pas interchangeables.",
+      "misconceptions": [
+        {"id": "p1s3-attention-only", "label": "Un Transformer n'est qu'une couche d'attention.", "remediationActivityId": "p1s3-role-prediction"},
+        {"id": "p1s3-residual-replace", "label": "Une connexion résiduelle remplace l'entrée au lieu d'ajouter une mise à jour.", "remediationActivityId": "p1s3-block-lab"}
+      ]
+    },
+    {
+      "id": "p1s3-o2",
+      "statement": "Expliquer pourquoi l'ordre des positions doit entrer dans le calcul et manipuler une représentation positionnelle simplifiée.",
+      "observable": "L'apprenant compare les mêmes tokens dans des ordres différents et observe qu'une représentation positionnelle modifie les coordonnées sans changer l'identité du token.",
+      "misconceptions": [
+        {"id": "p1s3-position-token", "label": "Ajouter une information de position change l'identité du token lui-même.", "remediationActivityId": "p1s3-position-lab"}
+      ]
+    },
+    {
+      "id": "p1s3-o3",
+      "statement": "Suivre une représentation dans une architecture causale pré-norm simplifiée.",
+      "observable": "L'apprenant suit Norm → Attention → Résiduel → Norm → MLP → Résiduel et prédit l'effet de désactiver une composante de la simulation.",
+      "misconceptions": [
+        {"id": "p1s3-recipe-universal", "label": "L'ordre présenté est identique dans tous les Transformers.", "remediationActivityId": "p1s3-block-example"},
+        {"id": "p1s3-mlp-communication", "label": "Le MLP sert principalement à faire communiquer des positions entre elles.", "remediationActivityId": "p1s3-block-lab"}
+      ]
+    },
+    {
+      "id": "p1s3-o4",
+      "statement": "Expliquer l'intérêt du KV cache sans le confondre avec une mémoire applicative ou un apprentissage du modèle.",
+      "observable": "L'apprenant compare recalcul et réutilisation, identifie le compromis calcul/mémoire et explique ce que le cache ne fait pas.",
+      "misconceptions": [
+        {"id": "p1s3-kv-memory", "label": "Le KV cache est une mémoire persistante des préférences utilisateur.", "remediationActivityId": "p1s3-kv-cache-lab"}
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "p1s3-e1",
+      "outcomeId": "p1s3-o1",
+      "claim": "L'apprenant distingue les responsabilités des briques du bloc.",
+      "observable": "Il associe attention à la communication entre positions, MLP à une transformation par position, normalisation au contrôle d'échelle et résidu à l'ajout d'une mise à jour.",
+      "taskIds": ["p1s3-role-prediction", "p1s3-block-lab"],
+      "invalidEvidence": ["Réciter la suite des noms sans pouvoir expliquer ce qui change si une brique est retirée."],
+      "rubric": {"requiresRoleDistinction": true}
+    },
+    {
+      "id": "p1s3-e2",
+      "outcomeId": "p1s3-o2",
+      "claim": "L'apprenant comprend que l'ordre doit être injecté dans les représentations.",
+      "observable": "Il manipule un mode positionnel et distingue identité du token, position et coordonnées transformées.",
+      "taskIds": ["p1s3-position-lab"],
+      "invalidEvidence": ["Dire seulement que l'ordre compte sans savoir ce qui porte l'information de position dans la simulation."],
+      "rubric": {"requiresManipulation": true, "requiresTokenPositionDistinction": true}
+    },
+    {
+      "id": "p1s3-e3",
+      "outcomeId": "p1s3-o3",
+      "claim": "L'apprenant suit les mises à jour d'un bloc pré-norm didactique.",
+      "observable": "Il lit les étapes calculées, active ou désactive MLP/résidu/normalisation et explique une conséquence observée.",
+      "taskIds": ["p1s3-block-example", "p1s3-block-lab"],
+      "invalidEvidence": ["Apprendre l'ordre comme une recette universelle applicable à toute architecture."],
+      "rubric": {"requiresBlockTrace": true, "requiresArchitectureBoundary": true}
+    },
+    {
+      "id": "p1s3-e4",
+      "outcomeId": "p1s3-o4",
+      "claim": "L'apprenant distingue optimisation d'inférence, contexte et mémoire persistante.",
+      "observable": "Il montre qu'un KV cache réutilise des K/V de positions passées, économise du calcul au prix de mémoire et ne modifie pas les poids.",
+      "taskIds": ["p1s3-kv-cache-lab", "p1s3-self-explanation", "p1s3-transfer"],
+      "invalidEvidence": ["Qualifier le cache de mémoire personnelle du modèle."],
+      "rubric": {"requiresComputeMemoryTradeoff": true, "minimumScore": 0.8}
+    }
+  ],
+  "activities": [
+    {
+      "id": "p1s3-role-prediction",
+      "type": "prediction-cards",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s3-e1"],
+      "config": {
+        "title": "Avant le schéma : qui fait quoi ?",
+        "instruction": "Choisissez la responsabilité la plus plausible avant de voir l'ordre du bloc. Le but est de distinguer les fonctions, pas d'apprendre une recette graphique.",
+        "items": [
+          {"id": "attention", "situation": "Faire circuler de l'information entre positions accessibles", "choices": ["Attention", "MLP", "Résiduel"], "answer": "Attention", "feedback": "L'attention combine des informations entre positions accessibles."},
+          {"id": "mlp", "situation": "Transformer non linéairement la représentation de chaque position", "choices": ["Attention", "MLP", "KV cache"], "answer": "MLP", "feedback": "Le MLP transforme chaque position avec des paramètres appris ; ce n'est pas la brique principale de communication entre positions."},
+          {"id": "residual", "situation": "Ajouter une mise à jour au signal entrant", "choices": ["Résiduel", "Tokenizer", "Softmax vocabulaire"], "answer": "Résiduel", "feedback": "Une forme simplifiée est x + F(x) : l'entrée reste présente et la sous-couche ajoute une mise à jour."}
+        ]
+      },
+      "analytics": {"events": ["activity.started", "prediction.submitted", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s3-block-example",
+      "type": "worked-example",
+      "purpose": "acquire",
+      "evidenceIds": ["p1s3-e1", "p1s3-e3"],
+      "config": {
+        "situation": "Une architecture causale pré-norm simplifiée reçoit une représentation x. Les nombres du laboratoire sont didactiques ; l'ordre exact et les variantes diffèrent selon les modèles réels.",
+        "steps": [
+          "Normaliser x avant la sous-couche d'attention dans notre variante pré-norm.",
+          "Produire une mise à jour d'attention à partir de la représentation normalisée.",
+          "Ajouter cette mise à jour au signal entrant : x₁ = x + attention_update.",
+          "Normaliser x₁ avant le MLP.",
+          "Produire une mise à jour non linéaire par le MLP.",
+          "Ajouter la seconde mise à jour : sortie = x₁ + mlp_update.",
+          "Le bloc suivant reçoit cette nouvelle représentation ; il ne repart pas de l'embedding initial intact.",
+          "Ce chemin décrit notre simulation pré-norm : il ne faut pas le transformer en recette universelle pour tous les Transformers."
+        ]
+      }
+    },
+    {
+      "id": "p1s3-position-lab",
+      "type": "position-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s3-e2"],
+      "config": {
+        "title": "Position Lab",
+        "instruction": "Déplacez le même token à différentes positions et comparez aucune position, ajout absolu didactique et rotation RoPE simplifiée.",
+        "domainEngine": "position-engine",
+        "tokenId": 4317,
+        "baseVector": [1, 0, 0.25, 0.75],
+        "maxPosition": 8,
+        "initialPosition": 2
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s3-block-lab",
+      "type": "transformer-block-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s3-e1", "p1s3-e3"],
+      "config": {
+        "title": "Block Lab",
+        "instruction": "Activez ou désactivez normalisation, résidu et MLP. Les gains sont fictifs et déterministes : l'expérience vise les responsabilités et la forme x + F(x), pas la performance d'un modèle réel.",
+        "domainEngine": "transformer-block-engine",
+        "input": [0.7, -0.2, 0.4, 0.9],
+        "attentionGain": [0.25, -0.1, 0.2, 0.15],
+        "mlpGain": [0.3, 0.45, -0.25, 0.2]
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s3-kv-cache-lab",
+      "type": "kv-cache-lab",
+      "purpose": "practice",
+      "evidenceIds": ["p1s3-e4"],
+      "config": {
+        "title": "KV Cache Lab",
+        "instruction": "Faites varier le nombre de tokens déjà traités. Comparez recalcul sans cache, nouvelles positions calculées avec cache et quantité de K/V conservée.",
+        "domainEngine": "kv-cache-engine",
+        "minPastTokens": 0,
+        "maxPastTokens": 64,
+        "initialPastTokens": 16,
+        "newTokenCount": 1
+      },
+      "analytics": {"events": ["activity.started", "manipulation.changed", "feedback.shown", "attempt.completed"]}
+    },
+    {
+      "id": "p1s3-self-explanation",
+      "type": "self-explanation",
+      "purpose": "retrieve",
+      "evidenceIds": ["p1s3-e3", "p1s3-e4"],
+      "config": {
+        "prompt": "Expliquez à un camarade le chemin d'un bloc pré-norm simplifié, la différence attention/MLP, le rôle du résidu et pourquoi le KV cache n'est ni une mémoire personnelle ni un entraînement du modèle.",
+        "criteria": ["attention et MLP ont des rôles différents", "le résidu ajoute une mise à jour", "l'ordre du bloc présenté n'est pas universel", "la position modifie la représentation sans changer l'identité du token", "le KV cache économise du calcul au prix de mémoire", "KV cache ≠ mémoire persistante ≠ modification des poids"]
+      },
+      "analytics": {"events": ["explanation.self_checked"]}
+    },
+    {
+      "id": "p1s3-quiz",
+      "type": "quiz",
+      "purpose": "assess",
+      "evidenceIds": ["p1s3-e1", "p1s3-e2", "p1s3-e3", "p1s3-e4"],
+      "config": {"itemCount": 6, "threshold": 0.8},
+      "analytics": {"events": ["quiz.answered", "attempt.completed"]}
+    },
+    {
+      "id": "p1s3-transfer",
+      "type": "transfer-cards",
+      "purpose": "transfer",
+      "evidenceIds": ["p1s3-e4"],
+      "config": {"itemCount": 4, "threshold": 0.8},
+      "analytics": {"events": ["transfer.completed", "attempt.completed"]}
+    }
+  ],
+  "sections": [
+    {"id": "roles", "title": "Distinguer les responsabilités", "activityIds": ["p1s3-role-prediction", "p1s3-block-example"]},
+    {"id": "position", "title": "Faire entrer l'ordre dans le calcul", "activityIds": ["p1s3-position-lab"]},
+    {"id": "block", "title": "Suivre une représentation dans un bloc", "activityIds": ["p1s3-block-lab"]},
+    {"id": "cache", "title": "Réutiliser les K/V passés", "activityIds": ["p1s3-kv-cache-lab"]},
+    {"id": "explain", "title": "Expliquer les limites", "activityIds": ["p1s3-self-explanation"]},
+    {"id": "assess", "title": "Récupérer et transférer", "activityIds": ["p1s3-quiz", "p1s3-transfer"]}
+  ],
+  "assessment": {
+    "masteryPolicy": {"quizThreshold": 0.8, "transferThreshold": 0.8},
+    "quizActivityId": "p1s3-quiz",
+    "transferActivityId": "p1s3-transfer"
+  },
+  "pedagogy": {
+    "firstMeaningfulActionTargetWords": 220,
+    "minimumMeaningfulManipulations": 4,
+    "fieldValidation": {"status": "pending", "evidenceRef": "formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md"}
+  },
+  "references": [
+    {"id": "vaswani", "title": "Attention Is All You Need — Vaswani et al.", "url": "https://arxiv.org/abs/1706.03762"},
+    {"id": "rope", "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding", "url": "https://arxiv.org/abs/2104.09864"},
+    {"id": "fidle", "title": "FIDLE — Formation Introduction au Deep Learning", "url": "https://fidle.cnrs.fr/w3/"}
+  ]
+}
