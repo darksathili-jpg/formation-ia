@@ -1,0 +1,68 @@
+name: Deploy LATENT V3 Field Trial
+
+on:
+  push:
+    branches:
+      - refactor/latent-v3-p1-field-trial-pack
+    paths:
+      - 'latent_app/**'
+      - '.github/workflows/deploy-latent-field-trial.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: latent-v3-field-trial-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Field Trial branch
+        uses: actions/checkout@v7
+
+      - name: Prepare minimal static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/src/entrypoints
+          cp -R latent_app/content _site/content
+          cp -R latent_app/src/application _site/src/application
+          cp -R latent_app/src/adapters _site/src/adapters
+          cp -R latent_app/src/domain _site/src/domain
+          cp -R latent_app/src/entrypoints/web _site/src/entrypoints/web
+          cp latent_app/index.html _site/index.html
+          touch _site/.nojekyll
+
+          test -f _site/index.html
+          test -f _site/src/entrypoints/web/index.html
+          test -f _site/src/entrypoints/web/learner-gate.html
+          test -f _site/src/entrypoints/web/field-trial-pack.html
+          test -f _site/content/courses/p1.json
+          test -f _site/content/modules/p0.json
+          test -f _site/content/modules/p1s4.json
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
