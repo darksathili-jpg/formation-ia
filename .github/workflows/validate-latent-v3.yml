@@ -10,6 +10,7 @@ on:
       - refactor/latent-v3-p1s3-transformer-block
       - refactor/latent-v3-p1s4-sampling
       - refactor/latent-v3-p1-integration-freeze
+      - refactor/latent-v3-p1-field-trial-pack
     paths:
       - 'latent_app/**'
       - 'formation_llm/docs/AUDIT_ARCHITECTURE_V3_2026-10-02.md'
@@ -18,6 +19,7 @@ on:
       - 'formation_llm/docs/MIGRATION_STRANGLER_V3.md'
       - 'formation_llm/docs/P1_MIGRATION_INVENTORY_2026-10-04.md'
       - 'formation_llm/docs/P1_INTEGRATION_FREEZE_LEARNER_GATE_2026-10-05.md'
+      - 'formation_llm/docs/P1_FIELD_TRIAL_SESSION_PACK_2026-10-05.md'
       - '.github/workflows/validate-latent-v3.yml'
   workflow_dispatch:
 
@@ -88,6 +90,7 @@ jobs:
           node --check tests/p1s4-visual-a11y.mjs
           node --check tests/p1-integration-e2e.mjs
           node --check tests/p1-integration-visual-a11y.mjs
+          node --check tests/p1-field-trial-pack.test.mjs
           node --check tools/validate-architecture.mjs
           node --check tools/validate-p1s2-architecture.mjs
           node --check tools/validate-p1s3-architecture.mjs
