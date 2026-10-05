@@ -61,20 +61,35 @@ for (const marker of ["getCourse(INTEGRATED_COURSE_ID)", 'renderCourseNavigation
 const html = await text('src/entrypoints/web/index.html');
 for (const marker of ['id="courseNav"', 'id="coursePager"', 'id="p2LockState"', 'id="learnerGateLink"']) if (!html.includes(marker)) errors.push(`index: marqueur integration freeze absent ${marker}`);
 
-for (const file of ['src/entrypoints/web/learner-gate.html', 'src/entrypoints/web/learner-gate-app.mjs', 'src/entrypoints/web/learner-gate.css', 'src/adapters/web/local-field-observation-repository.mjs', 'tests/learner-gate.test.mjs', 'tests/p1-integration-e2e.mjs', 'tests/p1-integration-visual-a11y.mjs']) {
-  try { await text(file); } catch { errors.push(`Learner Gate: fichier absent ${file}`); }
+for (const file of ['src/entrypoints/web/learner-gate.html', 'src/entrypoints/web/learner-gate-app.mjs', 'src/entrypoints/web/learner-gate.css', 'src/entrypoints/web/field-trial-pack.html', 'src/entrypoints/web/field-trial-pack.css', 'src/adapters/web/local-field-observation-repository.mjs', 'tests/learner-gate.test.mjs', 'tests/p1-field-trial-pack.test.mjs', 'tests/p1-integration-e2e.mjs', 'tests/p1-integration-visual-a11y.mjs']) {
+  try { await text(file); } catch { errors.push(`Learner Gate / Field Trial: fichier absent ${file}`); }
 }
 const gateHtml = await text('src/entrypoints/web/learner-gate.html');
-for (const marker of ['Aucune identité', 'ne transmet aucune donnée', 'P2 reste verrouillé']) if (!gateHtml.includes(marker)) errors.push(`Learner Gate UI: garde privacy/humain absent ${marker}`);
+for (const marker of ['Aucune identité', 'ne transmet aucune donnée', 'P2 reste verrouillé', 'field-trial-pack-link', './field-trial-pack.html']) if (!gateHtml.includes(marker)) errors.push(`Learner Gate UI: garde ou lien terrain absent ${marker}`);
 const gateApp = await text('src/entrypoints/web/learner-gate-app.mjs');
 if (!gateApp.includes("EVENT_COURSE_ID = 'latent-llm'")) errors.push('Learner Gate UI: lecture des traces du parcours absente');
 if (!gateApp.includes('evaluateLearnerGate({ packets, course, gateConfig })')) errors.push('Learner Gate UI: agrégation cohorte non déléguée au domaine');
 if (!gateApp.includes("link.download = `latent-p1-${packet.participantId}.json`")) errors.push('Learner Gate UI: export terrain pseudonyme absent');
 const integrationE2E = await text('tests/p1-integration-e2e.mjs');
 if (!integrationE2E.includes('runP1IntegrationVisualAccessibilityMatrix')) errors.push('Learner Gate: Visual/A11y matrix non branchée à E2E');
+if (!integrationE2E.includes('assertFieldTrialPack')) errors.push('Field Trial Pack: E2E Web/Electron non branché');
+
+const packHtml = await text('src/entrypoints/web/field-trial-pack.html');
+const packCss = await text('src/entrypoints/web/field-trial-pack.css');
+for (const marker of ['data-pack-version="1.0"', 'teacher-sheet', 'student-instructions', 'observation-sheet', 'cohort-analysis', 'Ne saisissez ni nom, ni prénom, ni identifiant scolaire', 'P2 reste verrouillé']) if (!packHtml.includes(marker)) errors.push(`Field Trial Pack: contrat absent ${marker}`);
+for (const id of expectedSequence) if (!packHtml.includes(`data-module="${id}"`)) errors.push(`Field Trial Pack: transfert différé absent ${id}`);
+if ((packHtml.match(/class="print-page transfer-card"/g) || []).length !== 5) errors.push('Field Trial Pack: exactement 5 cartes de transfert sont attendues');
+if (/type="text"/i.test(packHtml)) errors.push('Field Trial Pack: champ texte identifiant interdit');
+for (const marker of ['@media print', '@page{size:A4 portrait', 'print-color-adjust:economy!important', 'break-before:page']) if (!packCss.includes(marker)) errors.push(`Field Trial Pack CSS: contrat impression absent ${marker}`);
+try {
+  const doc = await text('../formation_llm/docs/P1_FIELD_TRIAL_SESSION_PACK_2026-10-05.md');
+  for (const marker of ['Fiche enseignant', 'Consignes élèves', 'Grille d’observation', 'Scénarios de transfert différé', 'Fiche d’analyse de cohorte']) if (!doc.includes(marker)) errors.push(`Field Trial doc: section absente ${marker}`);
+} catch {
+  errors.push('Field Trial doc: P1_FIELD_TRIAL_SESSION_PACK_2026-10-05.md absent');
+}
 
 if (errors.length) {
   console.error(`\n❌ P1 INTEGRATION FREEZE INVALIDE\n- ${errors.join('\n- ')}`);
   process.exit(1);
 }
-console.log('✅ P1 Integration Freeze valide — P0→P1S4 gelé, P2 verrouillé, Learner Gate privacy-first, Visual/A11y et décision humaine protégés.');
+console.log('✅ P1 Integration Freeze valide — P0→P1S4 gelé, P2 verrouillé, Learner Gate + Session Pack privacy-first, imprimable, Visual/A11y et décision humaine protégés.');
