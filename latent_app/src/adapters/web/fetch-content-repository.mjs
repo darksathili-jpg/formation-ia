@@ -7,6 +7,8 @@ export class FetchContentRepository extends ContentRepository {
     if (typeof fetchImpl !== 'function') throw new Error('fetch implementation is required');
     this.contentRoot = contentRoot instanceof URL ? contentRoot : new URL(String(contentRoot), globalThis.location?.href || 'http://localhost/');
     this.fetchImpl = fetchImpl.bind(globalThis);
+    this.courseCache = new Map();
+    this.gateCache = new Map();
     this.moduleCache = new Map();
     this.bankCache = new Map();
     this.activityCache = new Map();
@@ -17,6 +19,16 @@ export class FetchContentRepository extends ContentRepository {
     const response = await this.fetchImpl(url, { cache: 'no-store' });
     if (!response.ok) throw new Error(`Content load failed: ${relativePath} (${response.status})`);
     return response.json();
+  }
+
+  async getCourse(courseId) {
+    if (!this.courseCache.has(courseId)) this.courseCache.set(courseId, this.#json(`courses/${courseId}.json`));
+    return structuredClone(await this.courseCache.get(courseId));
+  }
+
+  async getLearnerGate(gateId) {
+    if (!this.gateCache.has(gateId)) this.gateCache.set(gateId, this.#json(`learner-gates/${gateId}.json`));
+    return structuredClone(await this.gateCache.get(gateId));
   }
 
   async getModule(moduleId) {
